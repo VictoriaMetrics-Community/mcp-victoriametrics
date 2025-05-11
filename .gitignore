@@ -1,2 +1,15 @@
 .idea
+.zed
+.vscode
+tmp/
+*.pprof
+main
+*.test
+*.swp
+/gocache-for-docker
 .DS_store
+*.tmp
+coverage.txt
+*~
+dist/
+bin/
