@@ -1,0 +1,70 @@
+package tools
+
+import (
+	"context"
+	"log"
+
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+
+	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
+	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/resources"
+)
+
+var (
+	toolDocumentation = mcp.NewTool("documentation",
+		mcp.WithDescription("Search documentation resources for the given search query, returning the URIs of the resources that match the search criteria sorted by relevance. This tool can help to get context for any VictoriaMetrics related question."),
+		mcp.WithToolAnnotation(mcp.ToolAnnotation{
+			Title:           "Search documentation resources",
+			ReadOnlyHint:    true,
+			DestructiveHint: false,
+			OpenWorldHint:   false,
+		}),
+		mcp.WithString("query",
+			mcp.Required(),
+			mcp.Title("Search query"),
+			mcp.Description("Query for search (for example, list of keywords)"),
+		),
+		mcp.WithNumber("limit",
+			mcp.Title("Maximum number of results"),
+			mcp.Description("Maximum number of results to return"),
+			mcp.DefaultNumber(50),
+			mcp.Min(1),
+		),
+	)
+)
+
+func toolDocumentationHandler(_ context.Context, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	keywords, err := GetToolReqParam[string](tcr, "keywords", true)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	limit, err := GetToolReqParam[float64](tcr, "limit", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+	if limit < 1 {
+		limit = 50
+	}
+
+	rs, err := resources.SearchDocResources(keywords, int(limit))
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	result := &mcp.CallToolResult{Content: []mcp.Content{}}
+	for _, resource := range rs {
+		content, err := resources.GetDocResourceContent(resource.URI)
+		if err != nil {
+			log.Printf("error getting content for resource %s: %v", resource.URI, err)
+			continue
+		}
+		result.Content = append(result.Content, mcp.EmbeddedResource{Type: "resource", Resource: content})
+	}
+	return result, nil
+}
+
+func RegisterToolDocumentation(s *server.MCPServer, _ *config.Config) {
+	s.AddTool(toolDocumentation, toolDocumentationHandler)
+}

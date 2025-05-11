@@ -1,0 +1,130 @@
+package tools
+
+import (
+	"context"
+	"fmt"
+	"net/http"
+
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+
+	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
+)
+
+var (
+	toolRules = mcp.NewTool("rules",
+		mcp.WithDescription("List of alerting and recording rules of VictoriaMetrics instance. This tool uses `/api/v1/rules` endpoint of vmalert API proxied by VictoriaMetrics API."),
+		mcp.WithToolAnnotation(mcp.ToolAnnotation{
+			Title:           "List of alerting and recording rules",
+			ReadOnlyHint:    true,
+			DestructiveHint: false,
+			OpenWorldHint:   true,
+		}),
+		mcp.WithString("tenant",
+			mcp.Title("Tenant name"),
+			mcp.Description("Name of the tenant for which the list of rules will be displayed"),
+			mcp.DefaultString("0"),
+			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+		),
+		mcp.WithString("type",
+			mcp.Title("Rules type"),
+			mcp.Description("Rules type to be displayed: alert or record"),
+			mcp.DefaultString(""),
+			mcp.Enum("alert", "record"),
+		),
+		mcp.WithString("filter",
+			mcp.Title("Extra filter for rules"),
+			mcp.Description("Extra filter for rules with possible problems: unhealthy (rules that get some errors during evaluation) or noMatch (rules that don't match any time series)"),
+			mcp.DefaultString(""),
+			mcp.Enum("unhealthy", "noMatch"),
+		),
+		mcp.WithBoolean("exclude_alerts",
+			mcp.Title("Exclude alerts"),
+			mcp.Description("Exclude alerts from the list"),
+			mcp.DefaultBool(false),
+		),
+		mcp.WithArray("rule_names",
+			mcp.Title("Rule names"),
+			mcp.Description("Filter rules by name"),
+		),
+		mcp.WithArray("rule_groups",
+			mcp.Title("Rule groups"),
+			mcp.Description("Filter rules by group names"),
+		),
+		mcp.WithArray("rule_files",
+			mcp.Title("Rule files"),
+			mcp.Description("Filter rules by file names"),
+		),
+	)
+)
+
+func toolRulesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	ruleType, err := GetToolReqParam[string](tcr, "type", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	filter, err := GetToolReqParam[string](tcr, "filter", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	excludeAlerts, err := GetToolReqParam[bool](tcr, "exclude_alerts", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	ruleNames, err := GetToolReqParam[[]string](tcr, "rule_names", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	ruleGroups, err := GetToolReqParam[[]string](tcr, "rule_groups", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	ruleFiles, err := GetToolReqParam[[]string](tcr, "rule_files", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, cfg.SelectAPIURL(tenant, "vmalert", "api", "v1", "rules"), nil)
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("failed to create request: %v", err)), nil
+	}
+
+	q := req.URL.Query()
+	if ruleType != "" {
+		q.Add("type", ruleType)
+	}
+	if filter != "" {
+		q.Add("filter", filter)
+	}
+	if excludeAlerts {
+		q.Add("exclude_alerts", "true")
+	}
+	for _, ruleName := range ruleNames {
+		q.Add("rule_names", ruleName)
+	}
+	for _, ruleGroup := range ruleGroups {
+		q.Add("rule_groups", ruleGroup)
+	}
+	for _, ruleFile := range ruleFiles {
+		q.Add("rule_files", ruleFile)
+	}
+	req.URL.RawQuery = q.Encode()
+
+	return GetTextBodyForRequest(req, cfg), nil
+}
+
+func RegisterToolRules(s *server.MCPServer, c *config.Config) {
+	s.AddTool(toolRules, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		return toolRulesHandler(ctx, c, request)
+	})
+}

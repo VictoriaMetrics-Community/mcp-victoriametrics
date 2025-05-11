@@ -1,0 +1,3 @@
+set -e
+set -o pipefail
+go test ./cmd/...
