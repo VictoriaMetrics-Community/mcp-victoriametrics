@@ -18,7 +18,7 @@ jobs:
       - name: Check licenses and vulnerabilities
         run: make check
       - name: Lint source code
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v8
         with:
           version: v1.64.7
       - name: Tests
