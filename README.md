@@ -36,7 +36,7 @@ You can also combine the MCP server with other observability or doc search relat
 ### Go
 
 ```bash
-go install github.com/VictoriaMetrics-Community/mcp-victoriametrics@latest
+go install github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics@latest
 ```
 
 ### Source Code
@@ -54,6 +54,8 @@ Just download the latest release from [Releases](https://github.com/VictoriaMetr
 ### Docker
 
 Coming soon...
+
+<!--
 
 ### Smithery
 
@@ -79,6 +81,8 @@ npx -y @smithery/cli list clients
 npx -y @smithery/cli install @VictoriaMetrics-Community/mcp-victoriametrics --client <YOUR-CLIENT-NAME>
 # and follow the instructions
 ```
+
+-->
 
 ## Configuration
 
