@@ -1,13 +1,13 @@
 # VictoriaMetrics MCP Server
 
-The implementation of [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for VictoriaMetrics.
+The implementation of [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for [VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/).
 
-This provides access to your VictoriaMetrics instance and seamless integration with VictoriaMetrics APIs and documentations.
+This provides access to your VictoriaMetrics instance and seamless integration with [VictoriaMetrics APIs](https://docs.victoriametrics.com/victoriametrics/url-examples/) and [documentation](https://docs.victoriametrics.com/).
 It can give you a comprehensive interface for monitoring, observability, and debugging tasks related to your VictoriaMetrics instances, enable advanced automation and interaction capabilities for engineers and tools.
 
 ## Features
 
-This MCP server allows you to use almost all read-only APIs of VictoriaMetrics, i.e. all functions available in VMUI:
+This MCP server allows you to use almost all read-only APIs of VictoriaMetrics, i.e. all functions available in [VMUI](https://docs.victoriametrics.com/#vmui):
 - Querying metrics and exploring data (even drawing graphs if your client supports it)
 - Listing and exporting available metrics, labels, labels values and entire series
 - Analyzing your alerting and recording rules and alerts
@@ -28,7 +28,7 @@ You can also combine the MCP server with other observability or doc search relat
 
 ## Requirements
 
-- VictoriaMetrics instance (single-node or cluster)
+- [VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/) instance ([single-node]()https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/ or [cluster](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/))
 - Go 1.24 or higher (if you want to build from source)
 
 ## Installation
