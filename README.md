@@ -277,7 +277,7 @@ Use MCP VictoriaMetrics in the following answers
 ```
 
 But it's not required, you can just start asking questions and the assistant will automatically use the tools and documentation to provide you with the best answers.
-Just take a look into [Example dialog](#example-dialog) section for better understanding what you can do with it.
+Just take a look into [Dialog example](#dialog-example) section for better understanding what you can do with it.
 
 ### Toolset
 
@@ -320,9 +320,9 @@ These are just examples at the moment, the prompt library will be added to in th
 | `rarely_used_metrics_with_high_cardinality` | Identify high-cardinality metrics that are rarely queried |
   > *Note that downsampling is an Enterprise feature in VictoriaMetrics. Your current license allows you to use it, as I can see the license file is configured.*
 
-## Example dialog
+## Dialog example
 
-This is just example that can help to understand how it can work (but's it's real dialog with using the Victoria Metrics MCP server with Claude Desktop and configured to [public playground instance](https://play.victoriametrics.com)):
+This is just example of dialog with Assistant using MCP Server that can help to understand how it can work (but's it's real dialog with using the Victoria Metrics MCP server with Claude Desktop and configured to [public playground instance](https://play.victoriametrics.com)):
 
 - > **You**: What tenants are available in my VM?
 - > **Assistant** *In your VictoriaMetrics instance, the following tenants are available 0:0 (default tenant), 1:0, 10:0, 100:0*
