@@ -331,16 +331,16 @@ This is just example of dialog with Assistant using MCP Server that can help to 
 - > **You**: From now on, please use only default tenant
 - > **Assistant**: *I understand. From now on, I'll use only the default tenant (0:0) for all operations with your VictoriaMetrics instance.*
 - > **You**: Which metrics do we have?
-- > **Assistant**: *There are many metrics available in your VictoriaMetrics instance. The list includes metrics from various systems and components, such as:
+- > **Assistant**: *There are many metrics available in your VictoriaMetrics instance. The list includes metrics from various systems and components, such as:*
   >
-  > - System metrics (`node_`, `machine_`, etc.),
-  > - Kubernetes metrics (`kube_`, `container_`, `apiserver_`, etc.),
-  > - VictoriaMetrics-specific metrics (`vm_`, `vmagent_`, `vmalert_`, etc.),
-  > - Go runtime metrics (`go_`),
-  > - Prometheus-related metrics (`scrape_`, `promhttp_`),
-  > - Various application metrics (`argocd_`, `alertmanager_`).
+  > - *System metrics (`node_`, `machine_`, etc.),*
+  > - *Kubernetes metrics (`kube_`, `container_`, `apiserver_`, etc.),*
+  > - *VictoriaMetrics-specific metrics (`vm_`, `vmagent_`, `vmalert_`, etc.),*
+  > - *Go runtime metrics (`go_`),*
+  > - *Prometheus-related metrics (`scrape_`, `promhttp_`),*
+  > - *Various application metrics (`argocd_`, `alertmanager_`).*
   >
-  > This is a comprehensive list of over 2000 metrics that are available for querying. Is there a specific type of metric you're interested in exploring further?*
+  > *This is a comprehensive list of over 2000 metrics that are available for querying. Is there a specific type of metric you're interested in exploring further?**
 - > **You**: Ok, let's work with kubernetes metrics from now on. Please show me which of these metrics never queried?
 - > **Assistant**: *Based on the results, I can see that there are two Kubernetes metrics that have never been queried (query count is 0):*
   >
