@@ -44,7 +44,9 @@ go install github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-vict
 ```bash
 git clone https://github.com/VictoriaMetrics-Community/mcp-victoriametrics.git
 cd mcp-victoriametrics
-go build -o mcp-victoriametrics ./cmd/mcp-victoriametrics
+go build -o bin/mcp-victoriametrics ./cmd/mcp-victoriametrics/main.go
+
+# after that add bin/mcp-victoriametrics file to your PATH
 ```
 
 ### Binaries
