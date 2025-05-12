@@ -21,7 +21,7 @@ In addition, the MCP server contains embedded up-to-date documentation and is ab
 More details about the exact available tools and prompts can be found in the [Usage](#usage) section.
 
 You can combine functionality of tools, docs search in your prompts and invent great usage scenarios for your VictoriaMetrics instance.
-Just check the [Example dialog](#example-dialog) section to see how it can work.
+Just check the [Dialog example](#dialog-example) section to see how it can work.
 And please note the fact that the quality of the MCP Server and its responses depends very much on the capabilities of your client and the quality of the model you are using.
 
 You can also combine the MCP server with other observability or doc search related MCP Servers and get even more powerful results.
