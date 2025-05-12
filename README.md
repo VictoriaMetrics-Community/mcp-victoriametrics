@@ -327,7 +327,7 @@ These are just examples at the moment, the prompt library will be added to in th
 This is just example of dialog with Assistant using MCP Server that can help to understand how it can work (but's it's real dialog with using the Victoria Metrics MCP server with Claude Desktop and configured to [public playground instance](https://play.victoriametrics.com)):
 
 - > **You**: What tenants are available in my VM?
-- > **Assistant** *In your VictoriaMetrics instance, the following tenants are available 0:0 (default tenant), 1:0, 10:0, 100:0*
+- > **Assistant** *In your VictoriaMetrics instance, the following tenants are available `0:0` (default tenant), `1:0`, `10:0`, `100:0`*
 - > **You**: From now on, please use only default tenant
 - > **Assistant**: *I understand. From now on, I'll use only the default tenant (0:0) for all operations with your VictoriaMetrics instance.*
 - > **You**: Which metrics do we have?
