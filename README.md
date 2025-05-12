@@ -98,7 +98,7 @@ MCP Server for VictoriaMetrics is configured via environment variables:
 | `MCP_SERVER_MODE` | Server operation mode | No | `stdio` | `stdio`, `sse` |
 | `MCP_SSE_ADDR` | Address for SSE server to listen on | No | `localhost:8080` | - |
 
-### Example Configuration
+### Сonfiguration examples
 
 ```bash
 # For a single-node instance
