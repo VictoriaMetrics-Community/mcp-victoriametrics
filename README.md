@@ -28,7 +28,7 @@ You can also combine the MCP server with other observability or doc search relat
 
 ## Requirements
 
-- [VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/) instance ([single-node]()https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/ or [cluster](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/))
+- [VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/) instance ([single-node](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) or [cluster](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/))
 - Go 1.24 or higher (if you want to build from source)
 
 ## Installation
