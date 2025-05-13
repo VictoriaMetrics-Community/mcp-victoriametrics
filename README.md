@@ -433,12 +433,7 @@ This is just example of dialog with Assistant using MCP Server that can help to 
   >   # Update the vmstorage section with the new downsampling parameters
   >   vmstorage:
   >     extraArgs:
-  >       downsampling.period:
-  >         - "{__name__=\"kube_persistentvolumeclaim_deletion_timestamp\"}:1d:10m"
-  >         - "{__name__=\"kube_pod_init_container_status_last_terminated_reason\"}:1d:10m"
-  >         - "7d:1m"
-  >         - "30d:5m"
-  >         - "180d:30m"
+  >       downsampling.period: '{__name__=\"kube_persistentvolumeclaim_deletion_timestamp\"}:1d:10m,{__name__=\"kube_pod_init_container_status_last_terminated_reason\"}:1d:10m,7d:1m,30d:5m,180d:30m'
   >   
   >   # ... rest of your configuration ...
   > ``` 
