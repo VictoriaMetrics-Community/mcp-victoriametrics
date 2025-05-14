@@ -35,7 +35,7 @@ var (
 )
 
 func toolDocumentationHandler(_ context.Context, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	keywords, err := GetToolReqParam[string](tcr, "keywords", true)
+	query, err := GetToolReqParam[string](tcr, "query", true)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
@@ -48,7 +48,7 @@ func toolDocumentationHandler(_ context.Context, tcr mcp.CallToolRequest) (*mcp.
 		limit = 50
 	}
 
-	rs, err := resources.SearchDocResources(keywords, int(limit))
+	rs, err := resources.SearchDocResources(query, int(limit))
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
