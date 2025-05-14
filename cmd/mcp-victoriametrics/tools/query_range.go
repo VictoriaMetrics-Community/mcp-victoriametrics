@@ -101,7 +101,7 @@ func toolQuerysRangeHandler(ctx context.Context, cfg *config.Config, tcr mcp.Cal
 		q.Add("step", step)
 	}
 	if timeout != "" {
-		q.Add("timeout", step)
+		q.Add("timeout", timeout)
 	}
 	req.URL.RawQuery = q.Encode()
 
