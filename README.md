@@ -8,6 +8,7 @@ It can give you a comprehensive interface for monitoring, observability, and deb
 ## Features
 
 This MCP server allows you to use almost all read-only APIs of VictoriaMetrics, i.e. all functions available in [VMUI](https://docs.victoriametrics.com/#vmui):
+
 - Querying metrics and exploring data (even drawing graphs if your client supports it)
 - Listing and exporting available metrics, labels, labels values and entire series
 - Analyzing your alerting and recording rules and alerts
@@ -445,6 +446,7 @@ This is just example of dialog with Assistant using MCP Server that can help to 
   > *The order of the downsampling rules is important - more specific rules should be listed first.*
 
 During this dialog, the assistant was using the following tools:
+
 - `tenants` to get the list of available tenants
 - `documentation` to get information about functionality and data formats
 - `metrics` to get the list of available metrics
