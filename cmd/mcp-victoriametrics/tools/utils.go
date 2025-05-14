@@ -16,19 +16,15 @@ func GetTextBodyForRequest(req *http.Request, cfg *config.Config) *mcp.CallToolR
 	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return mcp.NewToolResultError(fmt.Sprintf("failed to list metrics: %v", err))
-	}
-	defer func() { _ = resp.Body.Close() }()
-	if resp.StatusCode != http.StatusOK {
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return mcp.NewToolResultError(fmt.Sprintf("failed to read response body: %v", err))
-		}
-		return mcp.NewToolResultError(fmt.Sprintf("failed to list metrics: %s", string(body)))
+		return mcp.NewToolResultError(fmt.Sprintf("failed to do request: %v", err))
 	}
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("failed to read response body: %v", err))
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return mcp.NewToolResultError(fmt.Sprintf("unexpected response status code %v: %s", resp.StatusCode, string(body)))
 	}
 	return mcp.NewToolResultText(string(body))
 }
