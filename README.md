@@ -320,7 +320,6 @@ These are just examples at the moment, the prompt library will be added to in th
 | `unused_metrics` | Find metrics that are never queried and create relabel configs to stop ingesting them |
 | `documentation` | Search VictoriaMetrics documentation for specific topics |
 | `rarely_used_metrics_with_high_cardinality` | Identify high-cardinality metrics that are rarely queried |
-  > *Note that downsampling is an Enterprise feature in VictoriaMetrics. Your current license allows you to use it, as I can see the license file is configured.*
 
 ## Dialog example
 
