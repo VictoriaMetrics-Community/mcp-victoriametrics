@@ -89,7 +89,7 @@ func toolQuerysHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 		q.Add("step", step)
 	}
 	if timeout != "" {
-		q.Add("timeout", step)
+		q.Add("timeout", timeout)
 	}
 	req.URL.RawQuery = q.Encode()
 
