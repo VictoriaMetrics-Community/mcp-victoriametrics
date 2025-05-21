@@ -24,9 +24,9 @@ This tool returns TSDB stats from "/api/v1/status/tsdb" endpoint of VictoriaMetr
 `),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "TSDB Stats (information about cardinality of the data)",
-			ReadOnlyHint:    true,
-			DestructiveHint: false,
-			OpenWorldHint:   true,
+			ReadOnlyHint:    ptr(true),
+			DestructiveHint: ptr(false),
+			OpenWorldHint:   ptr(true),
 		}),
 		mcp.WithString("tenant",
 			mcp.Title("Tenant name"),

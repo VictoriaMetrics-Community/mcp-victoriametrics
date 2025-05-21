@@ -17,9 +17,9 @@ var (
 This tool use "/retention-filters-debug" API endpoint of VictoriaMetrics API.`),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "Retention filters debugger ",
-			ReadOnlyHint:    true,
-			DestructiveHint: false,
-			OpenWorldHint:   true,
+			ReadOnlyHint:    ptr(true),
+			DestructiveHint: ptr(false),
+			OpenWorldHint:   ptr(true),
 		}),
 		mcp.WithString("flags",
 			mcp.Required(),

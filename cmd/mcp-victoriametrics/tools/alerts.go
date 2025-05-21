@@ -16,9 +16,9 @@ var (
 		mcp.WithDescription("List of firing and pending alerts of the VictoriaMetrics instance. This tool uses `/api/v1/alerts` endpoint of vmalert API, proxied by VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "List of alerts",
-			ReadOnlyHint:    true,
-			DestructiveHint: false,
-			OpenWorldHint:   true,
+			ReadOnlyHint:    ptr(true),
+			DestructiveHint: ptr(false),
+			OpenWorldHint:   ptr(true),
 		}),
 		mcp.WithString("tenant",
 			mcp.Title("Tenant name"),

@@ -16,9 +16,9 @@ var (
 		mcp.WithDescription("List of non-default flags (parameters) of the VictoriaMetrics instance. This tools uses `/flags` endpoint of VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "List of non-default flags (parameters)",
-			ReadOnlyHint:    true,
-			DestructiveHint: false,
-			OpenWorldHint:   true,
+			ReadOnlyHint:    ptr(true),
+			DestructiveHint: ptr(false),
+			OpenWorldHint:   ptr(true),
 		}),
 	)
 )

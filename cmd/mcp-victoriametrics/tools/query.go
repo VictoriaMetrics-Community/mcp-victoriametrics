@@ -16,9 +16,9 @@ var (
 		mcp.WithDescription("Instant query executes PromQL or MetricsQL query expression at the given time. The result of Instant query is a list of time series matching the filter in query expression. Each returned series contains exactly one (timestamp, value) entry, where timestamp equals to the time query arg, while the value contains query result at the requested time. This tool uses `/api/v1/query` endpoint of VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "Instant Query",
-			ReadOnlyHint:    true,
-			DestructiveHint: false,
-			OpenWorldHint:   true,
+			ReadOnlyHint:    ptr(true),
+			DestructiveHint: ptr(false),
+			OpenWorldHint:   ptr(true),
 		}),
 		mcp.WithString("tenant",
 			mcp.Title("Tenant name"),

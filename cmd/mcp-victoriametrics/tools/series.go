@@ -16,9 +16,9 @@ var (
 		mcp.WithDescription("List of available time series of the VictoriaMetrics instance. This tool uses `/api/v1/series` endpoint of VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "List of time series",
-			ReadOnlyHint:    true,
-			DestructiveHint: false,
-			OpenWorldHint:   true,
+			ReadOnlyHint:    ptr(true),
+			DestructiveHint: ptr(false),
+			OpenWorldHint:   ptr(true),
 		}),
 		mcp.WithString("tenant",
 			mcp.Title("Tenant name"),

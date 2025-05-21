@@ -16,9 +16,9 @@ var (
 		mcp.WithDescription("Range query executes the query expression at the given [start…end] time range with the given step. The result of Range query is a list of time series matching the filter in query expression. Each returned series contains (timestamp, value) results for the query executed at start, start+step, start+2*step, …, start+N*step timestamps. In other words, Range query is an Instant query executed independently at start, start+step, …, start+N*step timestamps with the only difference that an instant query does not return ephemeral samples (see below). Instead, if the database does not contain any samples for the requested time and step, it simply returns an empty result. This tool uses `/api/v1/query_range` endpoint of VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "Range Query",
-			ReadOnlyHint:    true,
-			DestructiveHint: false,
-			OpenWorldHint:   true,
+			ReadOnlyHint:    ptr(true),
+			DestructiveHint: ptr(false),
+			OpenWorldHint:   ptr(true),
 		}),
 		mcp.WithString("tenant",
 			mcp.Title("Tenant name"),

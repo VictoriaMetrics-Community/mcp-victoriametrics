@@ -1,4 +1,4 @@
-# github.com/RoaringBitmap/roaring/v2 v2.4.5
+# github.com/RoaringBitmap/roaring/v2 v2.5.0
 ## explicit; go 1.15
 github.com/RoaringBitmap/roaring/v2
 github.com/RoaringBitmap/roaring/v2/internal
@@ -6,7 +6,7 @@ github.com/RoaringBitmap/roaring/v2/roaring64
 # github.com/bits-and-blooms/bitset v1.22.0
 ## explicit; go 1.16
 github.com/bits-and-blooms/bitset
-# github.com/blevesearch/bleve/v2 v2.5.0
+# github.com/blevesearch/bleve/v2 v2.5.1
 ## explicit; go 1.23
 github.com/blevesearch/bleve/v2
 github.com/blevesearch/bleve/v2/analysis
@@ -50,7 +50,7 @@ github.com/blevesearch/bleve/v2/util
 # github.com/blevesearch/bleve_index_api v1.2.8
 ## explicit; go 1.21
 github.com/blevesearch/bleve_index_api
-# github.com/blevesearch/geo v0.2.0
+# github.com/blevesearch/geo v0.2.3
 ## explicit; go 1.21.0
 github.com/blevesearch/geo/geojson
 github.com/blevesearch/geo/r1
@@ -107,31 +107,23 @@ github.com/blevesearch/zapx/v15
 # github.com/blevesearch/zapx/v16 v16.2.3
 ## explicit; go 1.21
 github.com/blevesearch/zapx/v16
-# github.com/dlclark/regexp2 v1.10.0
+# github.com/dlclark/regexp2 v1.11.5
 ## explicit; go 1.13
 github.com/dlclark/regexp2
 github.com/dlclark/regexp2/syntax
-# github.com/emicklei/dot v1.8.0
-## explicit; go 1.13
-# github.com/frapposelli/wwhrd v0.4.0
-## explicit; go 1.15
 # github.com/golang/protobuf v1.5.4
 ## explicit; go 1.17
 github.com/golang/protobuf/proto
 # github.com/golang/snappy v1.0.0
 ## explicit
 github.com/golang/snappy
-# github.com/google/licensecheck v0.3.1
-## explicit; go 1.12
 # github.com/google/uuid v1.6.0
 ## explicit
 github.com/google/uuid
-# github.com/jessevdk/go-flags v1.6.1
-## explicit; go 1.20
 # github.com/json-iterator/go v1.1.12
 ## explicit; go 1.12
 github.com/json-iterator/go
-# github.com/mark3labs/mcp-go v0.26.0
+# github.com/mark3labs/mcp-go v0.29.0
 ## explicit; go 1.23
 github.com/mark3labs/mcp-go/mcp
 github.com/mark3labs/mcp-go/server
@@ -144,11 +136,9 @@ github.com/modern-go/reflect2
 # github.com/mschoch/smat v0.2.0
 ## explicit; go 1.13
 github.com/mschoch/smat
-# github.com/pkoukk/tiktoken-go v0.1.6
+# github.com/pkoukk/tiktoken-go v0.1.7
 ## explicit; go 1.19
 github.com/pkoukk/tiktoken-go
-# github.com/sirupsen/logrus v1.9.3
-## explicit; go 1.13
 # github.com/spf13/cast v1.8.0
 ## explicit; go 1.19
 github.com/spf13/cast
@@ -163,7 +153,7 @@ github.com/yosida95/uritemplate/v3
 # gitlab.com/golang-commonmark/html v0.0.0-20191124015941-a22733972181
 ## explicit; go 1.13
 gitlab.com/golang-commonmark/html
-# gitlab.com/golang-commonmark/linkify v0.0.0-20191026162114-a0c2df6c8f82
+# gitlab.com/golang-commonmark/linkify v0.0.0-20200225224916-64bca66f6ad3
 ## explicit
 gitlab.com/golang-commonmark/linkify
 # gitlab.com/golang-commonmark/markdown v0.0.0-20211110145824-bf3e522c626a
@@ -185,8 +175,8 @@ go.etcd.io/bbolt/internal/freelist
 ## explicit; go 1.23.0
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.20.0
-## explicit; go 1.18
+# golang.org/x/text v0.25.0
+## explicit; go 1.23.0
 golang.org/x/text/unicode/rangetable
 # google.golang.org/protobuf v1.36.6
 ## explicit; go 1.22
@@ -221,5 +211,3 @@ google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/gofeaturespb
-# gopkg.in/yaml.v2 v2.4.0
-## explicit; go 1.15

@@ -17,9 +17,9 @@ var (
 This information is obtained from the "/api/v1/status/active_queries" HTTP endpoint of VictoriaMetrics API.`),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "Active queries",
-			ReadOnlyHint:    true,
-			DestructiveHint: false,
-			OpenWorldHint:   true,
+			ReadOnlyHint:    ptr(true),
+			DestructiveHint: ptr(false),
+			OpenWorldHint:   ptr(true),
 		}),
 		mcp.WithString("tenant",
 			mcp.Title("Tenant name"),
