@@ -17,9 +17,9 @@ var (
 The tool use "/metric-relabel-debug" endpoint of the VictoriaMetrics API. `),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "Metric relabel debugger",
-			ReadOnlyHint:    true,
-			DestructiveHint: false,
-			OpenWorldHint:   true,
+			ReadOnlyHint:    ptr(true),
+			DestructiveHint: ptr(false),
+			OpenWorldHint:   ptr(true),
 		}),
 		mcp.WithString("relabel_configs",
 			mcp.Required(),

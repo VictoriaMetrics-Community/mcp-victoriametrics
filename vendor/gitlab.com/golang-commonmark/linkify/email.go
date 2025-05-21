@@ -33,7 +33,7 @@ func findEmailStart(s string, start int) (_ int, _ bool) {
 			if r == utf8.RuneError {
 				return
 			}
-			if !unicode.IsSpace(r) {
+			if !unicode.IsSpace(r) && r != '<' {
 				return
 			}
 			return end + 1, true

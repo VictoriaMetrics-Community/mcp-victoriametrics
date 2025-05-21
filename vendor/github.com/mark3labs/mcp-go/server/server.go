@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"sort"
 	"sync"
 
@@ -102,7 +101,7 @@ func (e *requestError) Error() string {
 func (e *requestError) ToJSONRPCError() mcp.JSONRPCError {
 	return mcp.JSONRPCError{
 		JSONRPC: mcp.JSONRPC_VERSION,
-		ID:      e.id,
+		ID:      mcp.NewRequestId(e.id),
 		Error: struct {
 			Code    int    `json:"code"`
 			Message string `json:"message"`
@@ -162,7 +161,7 @@ type serverCapabilities struct {
 	tools     *toolCapabilities
 	resources *resourceCapabilities
 	prompts   *promptCapabilities
-	logging   bool
+	logging   *bool
 }
 
 // resourceCapabilities defines the supported resource-related features
@@ -221,7 +220,11 @@ func WithRecovery() ServerOption {
 		return func(ctx context.Context, request mcp.CallToolRequest) (result *mcp.CallToolResult, err error) {
 			defer func() {
 				if r := recover(); r != nil {
-					err = fmt.Errorf("panic recovered in %s tool handler: %v", request.Params.Name, r)
+					err = fmt.Errorf(
+						"panic recovered in %s tool handler: %v",
+						request.Params.Name,
+						r,
+					)
 				}
 			}()
 			return next(ctx, request)
@@ -261,7 +264,7 @@ func WithToolCapabilities(listChanged bool) ServerOption {
 // WithLogging enables logging capabilities for the server
 func WithLogging() ServerOption {
 	return func(s *MCPServer) {
-		s.capabilities.logging = true
+		s.capabilities.logging = mcp.ToBoolPtr(true)
 	}
 }
 
@@ -290,7 +293,7 @@ func NewMCPServer(
 			tools:     nil,
 			resources: nil,
 			prompts:   nil,
-			logging:   false,
+			logging:   nil,
 		},
 	}
 
@@ -336,12 +339,15 @@ func (s *MCPServer) AddResource(
 // RemoveResource removes a resource from the server
 func (s *MCPServer) RemoveResource(uri string) {
 	s.resourcesMu.Lock()
-	delete(s.resources, uri)
+	_, exists := s.resources[uri]
+	if exists {
+		delete(s.resources, uri)
+	}
 	s.resourcesMu.Unlock()
 
-	// Send notification to all initialized sessions if listChanged capability is enabled
-	if s.capabilities.resources != nil && s.capabilities.resources.listChanged {
-		s.SendNotificationToAllClients("resources/list_changed", nil)
+	// Send notification to all initialized sessions if listChanged capability is enabled and we actually remove a resource
+	if exists && s.capabilities.resources != nil && s.capabilities.resources.listChanged {
+		s.SendNotificationToAllClients(mcp.MethodNotificationResourcesListChanged, nil)
 	}
 }
 
@@ -409,20 +415,29 @@ func (s *MCPServer) AddTool(tool mcp.Tool, handler ToolHandlerFunc) {
 	s.AddTools(ServerTool{Tool: tool, Handler: handler})
 }
 
-// AddTools registers multiple tools at once
-func (s *MCPServer) AddTools(tools ...ServerTool) {
+// Register tool capabilities due to a tool being added.  Default to
+// listChanged: true, but don't change the value if we've already explicitly
+// registered tools.listChanged false.
+func (s *MCPServer) implicitlyRegisterToolCapabilities() {
 	s.capabilitiesMu.RLock()
 	if s.capabilities.tools == nil {
 		s.capabilitiesMu.RUnlock()
 
 		s.capabilitiesMu.Lock()
 		if s.capabilities.tools == nil {
-			s.capabilities.tools = &toolCapabilities{}
+			s.capabilities.tools = &toolCapabilities{
+				listChanged: true,
+			}
 		}
 		s.capabilitiesMu.Unlock()
 	} else {
 		s.capabilitiesMu.RUnlock()
 	}
+}
+
+// AddTools registers multiple tools at once
+func (s *MCPServer) AddTools(tools ...ServerTool) {
+	s.implicitlyRegisterToolCapabilities()
 
 	s.toolsMu.Lock()
 	for _, entry := range tools {
@@ -448,13 +463,17 @@ func (s *MCPServer) SetTools(tools ...ServerTool) {
 // DeleteTools removes a tool from the server
 func (s *MCPServer) DeleteTools(names ...string) {
 	s.toolsMu.Lock()
+	var exists bool
 	for _, name := range names {
-		delete(s.tools, name)
+		if _, ok := s.tools[name]; ok {
+			delete(s.tools, name)
+			exists = true
+		}
 	}
 	s.toolsMu.Unlock()
 
 	// When the list of available tools changes, servers that declared the listChanged capability SHOULD send a notification.
-	if s.capabilities.tools.listChanged {
+	if exists && s.capabilities.tools != nil && s.capabilities.tools.listChanged {
 		// Send notification to all initialized sessions
 		s.SendNotificationToAllClients(mcp.MethodNotificationToolsListChanged, nil)
 	}
@@ -472,8 +491,8 @@ func (s *MCPServer) AddNotificationHandler(
 
 func (s *MCPServer) handleInitialize(
 	ctx context.Context,
-	id interface{},
-	request mcp.InitializeRequest,
+	_ any,
+	_ mcp.InitializeRequest,
 ) (*mcp.InitializeResult, *requestError) {
 	capabilities := mcp.ServerCapabilities{}
 
@@ -506,7 +525,7 @@ func (s *MCPServer) handleInitialize(
 		}
 	}
 
-	if s.capabilities.logging {
+	if s.capabilities.logging != nil && *s.capabilities.logging {
 		capabilities.Logging = &struct{}{}
 	}
 
@@ -527,15 +546,58 @@ func (s *MCPServer) handleInitialize(
 }
 
 func (s *MCPServer) handlePing(
-	ctx context.Context,
-	id interface{},
-	request mcp.PingRequest,
+	_ context.Context,
+	_ any,
+	_ mcp.PingRequest,
 ) (*mcp.EmptyResult, *requestError) {
 	return &mcp.EmptyResult{}, nil
 }
 
-func listByPagination[T any](
+func (s *MCPServer) handleSetLevel(
 	ctx context.Context,
+	id any,
+	request mcp.SetLevelRequest,
+) (*mcp.EmptyResult, *requestError) {
+	clientSession := ClientSessionFromContext(ctx)
+	if clientSession == nil || !clientSession.Initialized() {
+		return nil, &requestError{
+			id:   id,
+			code: mcp.INTERNAL_ERROR,
+			err:  ErrSessionNotInitialized,
+		}
+	}
+
+	sessionLogging, ok := clientSession.(SessionWithLogging)
+	if !ok {
+		return nil, &requestError{
+			id:   id,
+			code: mcp.INTERNAL_ERROR,
+			err:  ErrSessionDoesNotSupportLogging,
+		}
+	}
+
+	level := request.Params.Level
+	// Validate logging level
+	switch level {
+	case mcp.LoggingLevelDebug, mcp.LoggingLevelInfo, mcp.LoggingLevelNotice,
+		mcp.LoggingLevelWarning, mcp.LoggingLevelError, mcp.LoggingLevelCritical,
+		mcp.LoggingLevelAlert, mcp.LoggingLevelEmergency:
+		// Valid level
+	default:
+		return nil, &requestError{
+			id:   id,
+			code: mcp.INVALID_PARAMS,
+			err:  fmt.Errorf("invalid logging level '%s'", level),
+		}
+	}
+
+	sessionLogging.SetLogLevel(level)
+
+	return &mcp.EmptyResult{}, nil
+}
+
+func listByPagination[T mcp.Named](
+	_ context.Context,
 	s *MCPServer,
 	cursor mcp.Cursor,
 	allElements []T,
@@ -548,7 +610,7 @@ func listByPagination[T any](
 		}
 		cString := string(c)
 		startPos = sort.Search(len(allElements), func(i int) bool {
-			return reflect.ValueOf(allElements[i]).FieldByName("Name").String() > cString
+			return allElements[i].GetName() > cString
 		})
 	}
 	endPos := len(allElements)
@@ -561,7 +623,7 @@ func listByPagination[T any](
 	// set the next cursor
 	nextCursor := func() mcp.Cursor {
 		if s.paginationLimit != nil && len(elementsToReturn) >= *s.paginationLimit {
-			nc := reflect.ValueOf(elementsToReturn[len(elementsToReturn)-1]).FieldByName("Name").String()
+			nc := elementsToReturn[len(elementsToReturn)-1].GetName()
 			toString := base64.StdEncoding.EncodeToString([]byte(nc))
 			return mcp.Cursor(toString)
 		}
@@ -572,7 +634,7 @@ func listByPagination[T any](
 
 func (s *MCPServer) handleListResources(
 	ctx context.Context,
-	id interface{},
+	id any,
 	request mcp.ListResourcesRequest,
 ) (*mcp.ListResourcesResult, *requestError) {
 	s.resourcesMu.RLock()
@@ -586,7 +648,12 @@ func (s *MCPServer) handleListResources(
 	sort.Slice(resources, func(i, j int) bool {
 		return resources[i].Name < resources[j].Name
 	})
-	resourcesToReturn, nextCursor, err := listByPagination[mcp.Resource](ctx, s, request.Params.Cursor, resources)
+	resourcesToReturn, nextCursor, err := listByPagination(
+		ctx,
+		s,
+		request.Params.Cursor,
+		resources,
+	)
 	if err != nil {
 		return nil, &requestError{
 			id:   id,
@@ -605,7 +672,7 @@ func (s *MCPServer) handleListResources(
 
 func (s *MCPServer) handleListResourceTemplates(
 	ctx context.Context,
-	id interface{},
+	id any,
 	request mcp.ListResourceTemplatesRequest,
 ) (*mcp.ListResourceTemplatesResult, *requestError) {
 	s.resourcesMu.RLock()
@@ -617,7 +684,12 @@ func (s *MCPServer) handleListResourceTemplates(
 	sort.Slice(templates, func(i, j int) bool {
 		return templates[i].Name < templates[j].Name
 	})
-	templatesToReturn, nextCursor, err := listByPagination[mcp.ResourceTemplate](ctx, s, request.Params.Cursor, templates)
+	templatesToReturn, nextCursor, err := listByPagination(
+		ctx,
+		s,
+		request.Params.Cursor,
+		templates,
+	)
 	if err != nil {
 		return nil, &requestError{
 			id:   id,
@@ -636,7 +708,7 @@ func (s *MCPServer) handleListResourceTemplates(
 
 func (s *MCPServer) handleReadResource(
 	ctx context.Context,
-	id interface{},
+	id any,
 	request mcp.ReadResourceRequest,
 ) (*mcp.ReadResourceResult, *requestError) {
 	s.resourcesMu.RLock()
@@ -665,7 +737,7 @@ func (s *MCPServer) handleReadResource(
 			matched = true
 			matchedVars := template.URITemplate.Match(request.Params.URI)
 			// Convert matched variables to a map
-			request.Params.Arguments = make(map[string]interface{}, len(matchedVars))
+			request.Params.Arguments = make(map[string]any, len(matchedVars))
 			for name, value := range matchedVars {
 				request.Params.Arguments[name] = value.V
 			}
@@ -689,7 +761,11 @@ func (s *MCPServer) handleReadResource(
 	return nil, &requestError{
 		id:   id,
 		code: mcp.RESOURCE_NOT_FOUND,
-		err:  fmt.Errorf("handler not found for resource URI '%s': %w", request.Params.URI, ErrResourceNotFound),
+		err: fmt.Errorf(
+			"handler not found for resource URI '%s': %w",
+			request.Params.URI,
+			ErrResourceNotFound,
+		),
 	}
 }
 
@@ -700,7 +776,7 @@ func matchesTemplate(uri string, template *mcp.URITemplate) bool {
 
 func (s *MCPServer) handleListPrompts(
 	ctx context.Context,
-	id interface{},
+	id any,
 	request mcp.ListPromptsRequest,
 ) (*mcp.ListPromptsResult, *requestError) {
 	s.promptsMu.RLock()
@@ -714,7 +790,12 @@ func (s *MCPServer) handleListPrompts(
 	sort.Slice(prompts, func(i, j int) bool {
 		return prompts[i].Name < prompts[j].Name
 	})
-	promptsToReturn, nextCursor, err := listByPagination[mcp.Prompt](ctx, s, request.Params.Cursor, prompts)
+	promptsToReturn, nextCursor, err := listByPagination(
+		ctx,
+		s,
+		request.Params.Cursor,
+		prompts,
+	)
 	if err != nil {
 		return nil, &requestError{
 			id:   id,
@@ -733,7 +814,7 @@ func (s *MCPServer) handleListPrompts(
 
 func (s *MCPServer) handleGetPrompt(
 	ctx context.Context,
-	id interface{},
+	id any,
 	request mcp.GetPromptRequest,
 ) (*mcp.GetPromptResult, *requestError) {
 	s.promptsMu.RLock()
@@ -762,7 +843,7 @@ func (s *MCPServer) handleGetPrompt(
 
 func (s *MCPServer) handleListTools(
 	ctx context.Context,
-	id interface{},
+	id any,
 	request mcp.ListToolsRequest,
 ) (*mcp.ListToolsResult, *requestError) {
 	// Get the base tools from the server
@@ -827,7 +908,12 @@ func (s *MCPServer) handleListTools(
 	s.toolFiltersMu.RUnlock()
 
 	// Apply pagination
-	toolsToReturn, nextCursor, err := listByPagination[mcp.Tool](ctx, s, request.Params.Cursor, tools)
+	toolsToReturn, nextCursor, err := listByPagination(
+		ctx,
+		s,
+		request.Params.Cursor,
+		tools,
+	)
 	if err != nil {
 		return nil, &requestError{
 			id:   id,
@@ -847,7 +933,7 @@ func (s *MCPServer) handleListTools(
 
 func (s *MCPServer) handleToolCall(
 	ctx context.Context,
-	id interface{},
+	id any,
 	request mcp.CallToolRequest,
 ) (*mcp.CallToolResult, *requestError) {
 	// First check session-specific tools
@@ -919,26 +1005,26 @@ func (s *MCPServer) handleNotification(
 	return nil
 }
 
-func createResponse(id interface{}, result interface{}) mcp.JSONRPCMessage {
+func createResponse(id any, result any) mcp.JSONRPCMessage {
 	return mcp.JSONRPCResponse{
 		JSONRPC: mcp.JSONRPC_VERSION,
-		ID:      id,
+		ID:      mcp.NewRequestId(id),
 		Result:  result,
 	}
 }
 
 func createErrorResponse(
-	id interface{},
+	id any,
 	code int,
 	message string,
 ) mcp.JSONRPCMessage {
 	return mcp.JSONRPCError{
 		JSONRPC: mcp.JSONRPC_VERSION,
-		ID:      id,
+		ID:      mcp.NewRequestId(id),
 		Error: struct {
-			Code    int         `json:"code"`
-			Message string      `json:"message"`
-			Data    interface{} `json:"data,omitempty"`
+			Code    int    `json:"code"`
+			Message string `json:"message"`
+			Data    any    `json:"data,omitempty"`
 		}{
 			Code:    code,
 			Message: message,

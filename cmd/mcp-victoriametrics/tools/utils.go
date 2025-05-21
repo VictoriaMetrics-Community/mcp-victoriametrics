@@ -35,7 +35,7 @@ type ToolReqParamType interface {
 
 func GetToolReqParam[T ToolReqParamType](tcr mcp.CallToolRequest, param string, required bool) (T, error) {
 	var value T
-	matchArg, ok := tcr.Params.Arguments[param]
+	matchArg, ok := tcr.GetArguments()[param]
 	if ok {
 		value, ok = matchArg.(T)
 		if !ok {
@@ -45,4 +45,8 @@ func GetToolReqParam[T ToolReqParamType](tcr mcp.CallToolRequest, param string, 
 		return value, fmt.Errorf("%s param is required", param)
 	}
 	return value, nil
+}
+
+func ptr[T any](v T) *T {
+	return &v
 }

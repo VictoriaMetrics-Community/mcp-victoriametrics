@@ -50,6 +50,11 @@ type Prompt struct {
 	Arguments []PromptArgument `json:"arguments,omitempty"`
 }
 
+// GetName returns the name of the prompt.
+func (p Prompt) GetName() string {
+	return p.Name
+}
+
 // PromptArgument describes an argument that a prompt template can accept.
 // When a prompt includes arguments, clients must provide values for all
 // required arguments when making a prompts/get request.
@@ -78,7 +83,7 @@ const (
 // resources from the MCP server.
 type PromptMessage struct {
 	Role    Role    `json:"role"`
-	Content Content `json:"content"` // Can be TextContent, ImageContent, or EmbeddedResource
+	Content Content `json:"content"` // Can be TextContent, ImageContent, AudioContent or EmbeddedResource
 }
 
 // PromptListChangedNotification is an optional notification from the server

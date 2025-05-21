@@ -129,6 +129,14 @@ func (s *ShapeIndexCell) numEdges() int {
 	return e
 }
 
+// clipped returns the clipped shape at the given index. Shapes are kept sorted in
+// increasing order of shape id.
+//
+// Requires: 0 <= i < len(shapes)
+func (s *ShapeIndexCell) clipped(i int) *clippedShape {
+	return s.shapes[i]
+}
+
 // add adds the given clipped shape to this index cell.
 func (s *ShapeIndexCell) add(c *clippedShape) {
 	// C++ uses a set, so it's ordered and unique. We don't currently catch
@@ -1026,15 +1034,18 @@ func (s *ShapeIndex) updateEdges(pcell *PaddedCell, edges []*clippedEdge, t *tra
 		// the existing cell contents by absorbing the cell.
 		iter := s.Iterator()
 		r := iter.LocateCellID(pcell.id)
-		if r == Disjoint {
+		switch r {
+		case Disjoint:
 			disjointFromIndex = true
-		} else if r == Indexed {
+		case Indexed:
 			// Absorb the index cell by transferring its contents to edges and
 			// deleting it. We also start tracking the interior of any new shapes.
 			s.absorbIndexCell(pcell, iter, edges, t)
 			indexCellAbsorbed = true
 			disjointFromIndex = true
-		} else {
+		case Subdivided:
+			// TODO(rsned): Figure out the right way to deal with
+			// this case since we don't DCHECK.
 			// ABSL_DCHECK_EQ(SUBDIVIDED, r)
 		}
 	}
@@ -1338,7 +1349,7 @@ func (s *ShapeIndex) clipVBound(edge *clippedEdge, vEnd int, v float64) *clipped
 	return s.updateBound(edge, uEnd, u, vEnd, v)
 }
 
-// cliupVAxis returns the given edge clipped to within the boundaries of the middle
+// clipVAxis returns the given edge clipped to within the boundaries of the middle
 // interval along the v-axis, and adds the result to its children.
 func (s *ShapeIndex) clipVAxis(edge *clippedEdge, middle r1.Interval) (a, b *clippedEdge) {
 	if edge.bound.Y.Hi <= middle.Lo {

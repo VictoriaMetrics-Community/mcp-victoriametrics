@@ -20,14 +20,13 @@ import (
 
 // sseSession represents an active SSE connection.
 type sseSession struct {
-	writer              http.ResponseWriter
-	flusher             http.Flusher
 	done                chan struct{}
 	eventQueue          chan string // Channel for queuing events
 	sessionID           string
 	requestID           atomic.Int64
 	notificationChannel chan mcp.JSONRPCNotification
 	initialized         atomic.Bool
+	loggingLevel        atomic.Value
 	tools               sync.Map // stores session-specific tools
 }
 
@@ -35,13 +34,6 @@ type sseSession struct {
 // request and returns a potentially modified context based on the request
 // content. This can be used to inject context values from headers, for example.
 type SSEContextFunc func(ctx context.Context, r *http.Request) context.Context
-
-// DynamicBasePathFunc allows the user to provide a function to generate the
-// base path for a given request and sessionID. This is useful for cases where
-// the base path is not known at the time of SSE server creation, such as when
-// using a reverse proxy or when the base path is dynamically generated. The
-// function should return the base path (e.g., "/mcp/tenant123").
-type DynamicBasePathFunc func(r *http.Request, sessionID string) string
 
 func (s *sseSession) SessionID() string {
 	return s.sessionID
@@ -52,6 +44,8 @@ func (s *sseSession) NotificationChannel() chan<- mcp.JSONRPCNotification {
 }
 
 func (s *sseSession) Initialize() {
+	// set default logging level
+	s.loggingLevel.Store(mcp.LoggingLevelError)
 	s.initialized.Store(true)
 }
 
@@ -59,9 +53,21 @@ func (s *sseSession) Initialized() bool {
 	return s.initialized.Load()
 }
 
+func (s *sseSession) SetLogLevel(level mcp.LoggingLevel) {
+	s.loggingLevel.Store(level)
+}
+
+func (s *sseSession) GetLogLevel() mcp.LoggingLevel {
+	level := s.loggingLevel.Load()
+	if level == nil {
+		return mcp.LoggingLevelError
+	}
+	return level.(mcp.LoggingLevel)
+}
+
 func (s *sseSession) GetSessionTools() map[string]ServerTool {
 	tools := make(map[string]ServerTool)
-	s.tools.Range(func(key, value interface{}) bool {
+	s.tools.Range(func(key, value any) bool {
 		if tool, ok := value.(ServerTool); ok {
 			tools[key.(string)] = tool
 		}
@@ -72,10 +78,7 @@ func (s *sseSession) GetSessionTools() map[string]ServerTool {
 
 func (s *sseSession) SetSessionTools(tools map[string]ServerTool) {
 	// Clear existing tools
-	s.tools.Range(func(key, _ interface{}) bool {
-		s.tools.Delete(key)
-		return true
-	})
+	s.tools.Clear()
 
 	// Set new tools
 	for name, tool := range tools {
@@ -84,8 +87,9 @@ func (s *sseSession) SetSessionTools(tools map[string]ServerTool) {
 }
 
 var (
-	_ ClientSession    = (*sseSession)(nil)
-	_ SessionWithTools = (*sseSession)(nil)
+	_ ClientSession      = (*sseSession)(nil)
+	_ SessionWithTools   = (*sseSession)(nil)
+	_ SessionWithLogging = (*sseSession)(nil)
 )
 
 // SSEServer implements a Server-Sent Events (SSE) based MCP server.
@@ -100,7 +104,7 @@ type SSEServer struct {
 	sseEndpoint                  string
 	sessions                     sync.Map
 	srv                          *http.Server
-	contextFunc                  SSEContextFunc
+	contextFunc                  HTTPContextFunc
 	dynamicBasePathFunc          DynamicBasePathFunc
 
 	keepAlive         bool
@@ -109,37 +113,41 @@ type SSEServer struct {
 	mu sync.RWMutex
 }
 
-// SSEOption defines a function type for configuring SSEServer
-type SSEOption func(*SSEServer)
+// Ensure SSEServer implements httpTransportConfigurable
+var _ httpTransportConfigurable = (*SSEServer)(nil)
 
-// WithBaseURL sets the base URL for the SSE server
-func WithBaseURL(baseURL string) SSEOption {
-	return func(s *SSEServer) {
-		if baseURL != "" {
-			u, err := url.Parse(baseURL)
-			if err != nil {
-				return
-			}
-			if u.Scheme != "http" && u.Scheme != "https" {
-				return
-			}
-			// Check if the host is empty or only contains a port
-			if u.Host == "" || strings.HasPrefix(u.Host, ":") {
-				return
-			}
-			if len(u.Query()) > 0 {
-				return
-			}
+func (s *SSEServer) setBasePath(basePath string) {
+	s.basePath = normalizeURLPath(basePath)
+}
+
+func (s *SSEServer) setDynamicBasePath(fn DynamicBasePathFunc) {
+	if fn != nil {
+		s.dynamicBasePathFunc = func(r *http.Request, sid string) string {
+			bp := fn(r, sid)
+			return normalizeURLPath(bp)
 		}
-		s.baseURL = strings.TrimSuffix(baseURL, "/")
 	}
 }
 
-// WithStaticBasePath adds a new option for setting a static base path
-func WithStaticBasePath(basePath string) SSEOption {
-	return func(s *SSEServer) {
-		s.basePath = normalizeURLPath(basePath)
-	}
+func (s *SSEServer) setKeepAliveInterval(interval time.Duration) {
+	s.keepAlive = true
+	s.keepAliveInterval = interval
+}
+
+func (s *SSEServer) setKeepAlive(keepAlive bool) {
+	s.keepAlive = keepAlive
+}
+
+func (s *SSEServer) setContextFunc(fn HTTPContextFunc) {
+	s.contextFunc = fn
+}
+
+func (s *SSEServer) setHTTPServer(srv *http.Server) {
+	s.srv = srv
+}
+
+func (s *SSEServer) setBaseURL(baseURL string) {
+	s.baseURL = baseURL
 }
 
 // WithBasePath adds a new option for setting a static base path.
@@ -151,26 +159,11 @@ func WithBasePath(basePath string) SSEOption {
 	return WithStaticBasePath(basePath)
 }
 
-// WithDynamicBasePath accepts a function for generating the base path. This is
-// useful for cases where the base path is not known at the time of SSE server
-// creation, such as when using a reverse proxy or when the server is mounted
-// at a dynamic path.
-func WithDynamicBasePath(fn DynamicBasePathFunc) SSEOption {
-	return func(s *SSEServer) {
-		if fn != nil {
-			s.dynamicBasePathFunc = func(r *http.Request, sid string) string {
-				bp := fn(r, sid)
-				return normalizeURLPath(bp)
-			}
-		}
-	}
-}
-
 // WithMessageEndpoint sets the message endpoint path
 func WithMessageEndpoint(endpoint string) SSEOption {
-	return func(s *SSEServer) {
+	return sseOption(func(s *SSEServer) {
 		s.messageEndpoint = endpoint
-	}
+	})
 }
 
 // WithAppendQueryToMessageEndpoint configures the SSE server to append the original request's
@@ -179,53 +172,37 @@ func WithMessageEndpoint(endpoint string) SSEOption {
 // SSE connection request and carry them over to subsequent message requests, maintaining
 // context or authentication details across the communication channel.
 func WithAppendQueryToMessageEndpoint() SSEOption {
-	return func(s *SSEServer) {
+	return sseOption(func(s *SSEServer) {
 		s.appendQueryToMessageEndpoint = true
-	}
+	})
 }
 
 // WithUseFullURLForMessageEndpoint controls whether the SSE server returns a complete URL (including baseURL)
 // or just the path portion for the message endpoint. Set to false when clients will concatenate
 // the baseURL themselves to avoid malformed URLs like "http://localhost/mcphttp://localhost/mcp/message".
 func WithUseFullURLForMessageEndpoint(useFullURLForMessageEndpoint bool) SSEOption {
-	return func(s *SSEServer) {
+	return sseOption(func(s *SSEServer) {
 		s.useFullURLForMessageEndpoint = useFullURLForMessageEndpoint
-	}
+	})
 }
 
 // WithSSEEndpoint sets the SSE endpoint path
 func WithSSEEndpoint(endpoint string) SSEOption {
-	return func(s *SSEServer) {
+	return sseOption(func(s *SSEServer) {
 		s.sseEndpoint = endpoint
-	}
-}
-
-// WithHTTPServer sets the HTTP server instance
-func WithHTTPServer(srv *http.Server) SSEOption {
-	return func(s *SSEServer) {
-		s.srv = srv
-	}
-}
-
-func WithKeepAliveInterval(keepAliveInterval time.Duration) SSEOption {
-	return func(s *SSEServer) {
-		s.keepAlive = true
-		s.keepAliveInterval = keepAliveInterval
-	}
-}
-
-func WithKeepAlive(keepAlive bool) SSEOption {
-	return func(s *SSEServer) {
-		s.keepAlive = keepAlive
-	}
+	})
 }
 
 // WithSSEContextFunc sets a function that will be called to customise the context
 // to the server using the incoming request.
+//
+// Deprecated: Use WithHTTPContextFunc instead. This will be removed in a future version.
+//
+//go:deprecated
 func WithSSEContextFunc(fn SSEContextFunc) SSEOption {
-	return func(s *SSEServer) {
-		s.contextFunc = fn
-	}
+	return sseOption(func(s *SSEServer) {
+		WithHTTPContextFunc(HTTPContextFunc(fn)).applyToSSE(s)
+	})
 }
 
 // NewSSEServer creates a new SSE server instance with the given MCP server and options.
@@ -241,16 +218,15 @@ func NewSSEServer(server *MCPServer, opts ...SSEOption) *SSEServer {
 
 	// Apply all options
 	for _, opt := range opts {
-		opt(s)
+		opt.applyToSSE(s)
 	}
 
 	return s
 }
 
-// NewTestServer creates a test server for testing purposes
+// NewTestServer creates a test server for testing purposes.
 func NewTestServer(server *MCPServer, opts ...SSEOption) *httptest.Server {
 	sseServer := NewSSEServer(server, opts...)
-
 	testServer := httptest.NewServer(sseServer)
 	sseServer.baseURL = testServer.URL
 	return testServer
@@ -260,8 +236,6 @@ func NewTestServer(server *MCPServer, opts ...SSEOption) *httptest.Server {
 // It sets up HTTP handlers for SSE and message endpoints.
 func (s *SSEServer) Start(addr string) error {
 	s.mu.Lock()
-	defer s.mu.Unlock()
-
 	if s.srv == nil {
 		s.srv = &http.Server{
 			Addr:    addr,
@@ -274,8 +248,10 @@ func (s *SSEServer) Start(addr string) error {
 			return fmt.Errorf("conflicting listen address: WithHTTPServer(%q) vs Start(%q)", s.srv.Addr, addr)
 		}
 	}
+	srv := s.srv
+	s.mu.Unlock()
 
-	return s.srv.ListenAndServe()
+	return srv.ListenAndServe()
 }
 
 // Shutdown gracefully stops the SSE server, closing all active sessions
@@ -286,7 +262,7 @@ func (s *SSEServer) Shutdown(ctx context.Context) error {
 	s.mu.RUnlock()
 
 	if srv != nil {
-		s.sessions.Range(func(key, value interface{}) bool {
+		s.sessions.Range(func(key, value any) bool {
 			if session, ok := value.(*sseSession); ok {
 				close(session.done)
 			}
@@ -320,8 +296,6 @@ func (s *SSEServer) handleSSE(w http.ResponseWriter, r *http.Request) {
 
 	sessionID := uuid.New().String()
 	session := &sseSession{
-		writer:              w,
-		flusher:             flusher,
 		done:                make(chan struct{}),
 		eventQueue:          make(chan string, 100), // Buffer for events
 		sessionID:           sessionID,
@@ -332,7 +306,11 @@ func (s *SSEServer) handleSSE(w http.ResponseWriter, r *http.Request) {
 	defer s.sessions.Delete(sessionID)
 
 	if err := s.server.RegisterSession(r.Context(), session); err != nil {
-		http.Error(w, fmt.Sprintf("Session registration failed: %v", err), http.StatusInternalServerError)
+		http.Error(
+			w,
+			fmt.Sprintf("Session registration failed: %v", err),
+			http.StatusInternalServerError,
+		)
 		return
 	}
 	defer s.server.UnregisterSession(r.Context(), sessionID)
@@ -369,7 +347,7 @@ func (s *SSEServer) handleSSE(w http.ResponseWriter, r *http.Request) {
 				case <-ticker.C:
 					message := mcp.JSONRPCRequest{
 						JSONRPC: "2.0",
-						ID:      session.requestID.Add(1),
+						ID:      mcp.NewRequestId(session.requestID.Add(1)),
 						Request: mcp.Request{
 							Method: "ping",
 						},
@@ -486,7 +464,7 @@ func (s *SSEServer) handleMessage(w http.ResponseWriter, r *http.Request) {
 			if eventData, err := json.Marshal(response); err != nil {
 				// If there is an error marshalling the response, send a generic error response
 				log.Printf("failed to marshal response: %v", err)
-				message = fmt.Sprintf("event: message\ndata: {\"error\": \"internal error\",\"jsonrpc\": \"2.0\", \"id\": null}\n\n")
+				message = "event: message\ndata: {\"error\": \"internal error\",\"jsonrpc\": \"2.0\", \"id\": null}\n\n"
 			} else {
 				message = fmt.Sprintf("event: message\ndata: %s\n\n", eventData)
 			}
@@ -508,21 +486,28 @@ func (s *SSEServer) handleMessage(w http.ResponseWriter, r *http.Request) {
 // writeJSONRPCError writes a JSON-RPC error response with the given error details.
 func (s *SSEServer) writeJSONRPCError(
 	w http.ResponseWriter,
-	id interface{},
+	id any,
 	code int,
 	message string,
 ) {
 	response := createErrorResponse(id, code, message)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusBadRequest)
-	json.NewEncoder(w).Encode(response)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		http.Error(
+			w,
+			fmt.Sprintf("Failed to encode response: %v", err),
+			http.StatusInternalServerError,
+		)
+		return
+	}
 }
 
 // SendEventToSession sends an event to a specific SSE session identified by sessionID.
 // Returns an error if the session is not found or closed.
 func (s *SSEServer) SendEventToSession(
 	sessionID string,
-	event interface{},
+	event any,
 ) error {
 	sessionI, ok := s.sessions.Load(sessionID)
 	if !ok {
@@ -656,7 +641,11 @@ func (s *SSEServer) MessageHandler() http.Handler {
 // ServeHTTP implements the http.Handler interface.
 func (s *SSEServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if s.dynamicBasePathFunc != nil {
-		http.Error(w, (&ErrDynamicPathConfig{Method: "ServeHTTP"}).Error(), http.StatusInternalServerError)
+		http.Error(
+			w,
+			(&ErrDynamicPathConfig{Method: "ServeHTTP"}).Error(),
+			http.StatusInternalServerError,
+		)
 		return
 	}
 	path := r.URL.Path
