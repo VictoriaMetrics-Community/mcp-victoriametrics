@@ -65,8 +65,6 @@ Just download the latest release from [Releases](https://github.com/VictoriaMetr
 
 Coming soon...
 
-<!--
-
 ### Smithery
 
 To install VictoriaMetrics MCP Server for your client automatically via Smithery, yo can use the following commands:
@@ -91,8 +89,6 @@ npx -y @smithery/cli list clients
 npx -y @smithery/cli install @VictoriaMetrics-Community/mcp-victoriametrics --client <YOUR-CLIENT-NAME>
 # and follow the instructions
 ```
-
--->
 
 ## Configuration
 
