@@ -27,6 +27,7 @@ const (
 var (
 	searchIndex bleve.Index
 	resources   map[string]mcp.Resource
+	contents    map[string]mcp.ResourceContents
 )
 
 func RegisterDocsResources(s *server.MCPServer, _ *config.Config) {
@@ -41,6 +42,7 @@ func RegisterDocsResources(s *server.MCPServer, _ *config.Config) {
 		log.Fatal(fmt.Errorf("error listing docs files: %w", err))
 	}
 	resources = make(map[string]mcp.Resource, len(docFiles))
+	contents = make(map[string]mcp.ResourceContents, len(docFiles))
 	for _, docFile := range docFiles {
 		resourceURI := fmt.Sprintf("%s%s#%d", docsURIPrefix, docFile.Path, docFile.ChunkNum)
 		resource := mcp.NewResource(
@@ -50,8 +52,12 @@ func RegisterDocsResources(s *server.MCPServer, _ *config.Config) {
 			mcp.WithResourceDescription(docFile.Content[:min(len(docFile.Content), maxMarkdownDescriptionSize)]),
 		)
 		s.AddResource(resource, docResourcesHandler)
-
 		resources[resourceURI] = resource
+		contents[resourceURI] = mcp.TextResourceContents{
+			URI:      resourceURI,
+			MIMEType: "text/markdown",
+			Text:     docFile.Content,
+		}
 		if err = searchIndex.Index(resourceURI, docFile); err != nil {
 			log.Fatal(fmt.Errorf("error indexing file %s: %w", docFile.Path, err))
 		}
@@ -90,16 +96,11 @@ func docResourcesHandler(_ context.Context, rrr mcp.ReadResourceRequest) ([]mcp.
 }
 
 func GetDocResourceContent(uri string) (mcp.ResourceContents, error) {
-	path := strings.TrimPrefix(uri, docsURIPrefix)
-	content, err := GetDocFileContent(path)
-	if err != nil {
-		return nil, fmt.Errorf("error reading file %s: %w", path, err)
+	content, ok := contents[uri]
+	if !ok {
+		return nil, fmt.Errorf("resource not found: %s", uri)
 	}
-	return mcp.TextResourceContents{
-		URI:      uri,
-		MIMEType: "text/markdown",
-		Text:     content,
-	}, nil
+	return content, nil
 }
 
 func GetDocFileContent(path string) (string, error) {
