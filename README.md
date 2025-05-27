@@ -21,7 +21,7 @@ This MCP server allows you to use almost all read-only APIs of VictoriaMetrics, 
 - Analyzing your alerting and recording rules and alerts
 - Showing parameters of your VictoriaMetrics instance
 - Exploring cardinality of your data and metrics usage statistics
-- Analyzing your queries
+- Analyzing, tracing and prettifying your queries
 - Debugging your relabeling rules, downsampling and retention policy configurations 
  
 In addition, the MCP server contains embedded up-to-date documentation and is able to search it without online access.
@@ -312,6 +312,7 @@ Here's a list of available tools:
 | `metric_relabel_debug` | Debug Prometheus-compatible relabeling rules              |
 | `downsampling_filters_debug` | Debug downsampling configuration                          |
 | `retention_filters_debug` | Debug retention filters configuration                     |
+| `prettify_query` | Prettify and format PromQL/MetricsQL queries               |
 
 ### Prompts
 
