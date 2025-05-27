@@ -46,10 +46,20 @@ var (
 			mcp.Description("Optional query timeout. For example, timeout=5s. Query is canceled when the timeout is reached. By default the timeout is set to the value of -search.maxQueryDuration command-line flag passed to single-node VictoriaMetrics or to vmselect component of VictoriaMetrics cluster."),
 			mcp.Pattern(`^([0-9]+)([a-z]+)$`),
 		),
+		mcp.WithBoolean("trace",
+			mcp.Title("Enable query trace"),
+			mcp.Description("If true, the query will be traced and the trace will be returned in the response. This is useful for debugging and performance analysis."),
+			mcp.DefaultBool(false),
+		),
+		mcp.WithBoolean("nocache",
+			mcp.Title("Disable cache"),
+			mcp.Description("If true, the query will not use the rollup cache on execution."),
+			mcp.DefaultBool(false),
+		),
 	)
 )
 
-func toolQuerysHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func toolQueryHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
@@ -75,6 +85,16 @@ func toolQuerysHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
+	trace, err := GetToolReqParam[bool](tcr, "trace", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	nocache, err := GetToolReqParam[bool](tcr, "nocache", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, cfg.SelectAPIURL(tenant, "api", "v1", "query"), nil)
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("failed to create request: %v", err)), nil
@@ -91,6 +111,12 @@ func toolQuerysHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 	if timeout != "" {
 		q.Add("timeout", timeout)
 	}
+	if trace {
+		q.Add("trace", "1")
+	}
+	if nocache {
+		q.Add("nocache", "1")
+	}
 	req.URL.RawQuery = q.Encode()
 
 	return GetTextBodyForRequest(req, cfg), nil
@@ -98,6 +124,6 @@ func toolQuerysHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 
 func RegisterToolQuery(s *server.MCPServer, c *config.Config) {
 	s.AddTool(toolQuery, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		return toolQuerysHandler(ctx, c, request)
+		return toolQueryHandler(ctx, c, request)
 	})
 }
