@@ -21,7 +21,7 @@ func main() {
 
 	s := server.NewMCPServer(
 		"victoriametrics",
-		"0.0.2",
+		"0.0.5",
 		server.WithRecovery(),
 		server.WithLogging(),
 		server.WithToolCapabilities(true),
