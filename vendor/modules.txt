@@ -3,6 +3,13 @@
 github.com/RoaringBitmap/roaring/v2
 github.com/RoaringBitmap/roaring/v2/internal
 github.com/RoaringBitmap/roaring/v2/roaring64
+# github.com/VictoriaMetrics/metrics v1.35.3
+## explicit; go 1.17
+github.com/VictoriaMetrics/metrics
+# github.com/VictoriaMetrics/metricsql v0.84.5
+## explicit; go 1.24.2
+github.com/VictoriaMetrics/metricsql
+github.com/VictoriaMetrics/metricsql/binaryop
 # github.com/bits-and-blooms/bitset v1.22.0
 ## explicit; go 1.16
 github.com/bits-and-blooms/bitset
@@ -147,6 +154,12 @@ github.com/spf13/cast
 github.com/tmc/langchaingo/llms
 github.com/tmc/langchaingo/schema
 github.com/tmc/langchaingo/textsplitter
+# github.com/valyala/fastrand v1.1.0
+## explicit
+github.com/valyala/fastrand
+# github.com/valyala/histogram v1.2.0
+## explicit; go 1.12
+github.com/valyala/histogram
 # github.com/yosida95/uritemplate/v3 v3.0.2
 ## explicit; go 1.14
 github.com/yosida95/uritemplate/v3

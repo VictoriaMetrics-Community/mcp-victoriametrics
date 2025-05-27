@@ -58,6 +58,7 @@ Try not to second guess information - if you don't know something or lack inform
 	tools.RegisterToolTopQueries(s, c)
 	tools.RegisterToolMetricStats(s, c)
 	tools.RegisterToolLabelValues(s, c)
+	tools.RegisterToolExplainQuery(s, c)
 	tools.RegisterToolActiveQueries(s, c)
 	tools.RegisterToolDocumentation(s, c)
 	tools.RegisterToolPrettifyQuery(s, c)

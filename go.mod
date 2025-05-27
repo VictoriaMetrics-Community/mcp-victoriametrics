@@ -1,8 +1,11 @@
 module github.com/VictoriaMetrics-Community/mcp-victoriametrics
 
-go 1.24.0
+go 1.24.2
+
+toolchain go1.24.3
 
 require (
+	github.com/VictoriaMetrics/metricsql v0.84.5
 	github.com/blevesearch/bleve/v2 v2.5.1
 	github.com/mark3labs/mcp-go v0.29.0
 	github.com/tmc/langchaingo v0.1.13
@@ -10,6 +13,7 @@ require (
 
 require (
 	github.com/RoaringBitmap/roaring/v2 v2.5.0 // indirect
+	github.com/VictoriaMetrics/metrics v1.35.3 // indirect
 	github.com/bits-and-blooms/bitset v1.22.0 // indirect
 	github.com/blevesearch/bleve_index_api v1.2.8 // indirect
 	github.com/blevesearch/geo v0.2.3 // indirect
@@ -38,6 +42,8 @@ require (
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/pkoukk/tiktoken-go v0.1.7 // indirect
 	github.com/spf13/cast v1.8.0 // indirect
+	github.com/valyala/fastrand v1.1.0 // indirect
+	github.com/valyala/histogram v1.2.0 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 	gitlab.com/golang-commonmark/html v0.0.0-20191124015941-a22733972181 // indirect
 	gitlab.com/golang-commonmark/linkify v0.0.0-20200225224916-64bca66f6ad3 // indirect
