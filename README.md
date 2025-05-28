@@ -478,6 +478,7 @@ But you can use any other tools and combine them in your own way.
   - [ ] Alerting and recording rule sets
 - [ ] Implement multitenant version of MCP (that will support several deployments)
 - [ ] Add flags/configs validation tool
+- [ ] Support tools for vmagent API
 
 ## Disclaimer
 
