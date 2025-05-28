@@ -17,7 +17,7 @@ import (
 )
 
 //go:embed vm/docs
-var docsDir embed.FS
+var DocsDir embed.FS
 
 const (
 	docsURIPrefix              = "docs://"
@@ -104,7 +104,7 @@ func GetDocResourceContent(uri string) (mcp.ResourceContents, error) {
 }
 
 func GetDocFileContent(path string) (string, error) {
-	file, err := fs.ReadFile(docsDir, path)
+	file, err := fs.ReadFile(DocsDir, path)
 	if err != nil {
 		return "", fmt.Errorf("error reading file %s: %w", path, err)
 	}
@@ -119,7 +119,7 @@ type DocFileInfo struct {
 }
 
 func ListDocFiles() ([]DocFileInfo, error) {
-	docFiles, err := glob(docsDir, "vm", func(s string) bool {
+	docFiles, err := glob(DocsDir, "vm", func(s string) bool {
 		return strings.ToLower(filepath.Ext(s)) == ".md"
 	})
 	if err != nil {
