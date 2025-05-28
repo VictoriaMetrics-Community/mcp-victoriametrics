@@ -264,10 +264,6 @@ Add the following to your Windsurf MCP config file.
 
 See [Windsurf MCP docs](https://docs.windsurf.com/windsurf/mcp) for more info.
 
-### Amazon Bedrock
-
-Coming soon....
-
 ### Using Docker instead of binary
 
 Coming soon...
@@ -467,6 +463,7 @@ But you can use any other tools and combine them in your own way.
 
 - [x] Support "Prettify query" tool (done in [`v0.0.5`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.65))
 - [x] Support "Explain query" tool (done in [`v0.0.6`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.6))
+- [ ] Support CI pipeline for building and pushing multiarch docker images
 - [ ] Support tool for analysis of [Query execution statistics](https://docs.victoriametrics.com/victoriametrics/query-stats/)
 - [ ] Suppport tool for [unit-testing of alerting and recording rules](https://docs.victoriametrics.com/victoriametrics/vmalert-tool/)
 - [ ] Support optional integration with [VictoriaMetrics Cloud](https://victoriametrics.com/products/cloud/) (via [API keys](https://docs.victoriametrics.com/victoriametrics-cloud/api/))
