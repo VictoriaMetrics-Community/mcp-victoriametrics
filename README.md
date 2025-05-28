@@ -476,6 +476,7 @@ But you can use any other tools and combine them in your own way.
   - [ ] Public slack chat history
   - [ ] CRD schemas
   - [ ] Alerting and recording rule sets
+- [ ] Implement multitenant version of MCP (that will support several deployments)
 
 ## Disclaimer
 
