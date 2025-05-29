@@ -476,6 +476,7 @@ But you can use any other tools and combine them in your own way.
 - [ ] Implement multitenant version of MCP (that will support several deployments)
 - [ ] Add flags/configs validation tool
 - [ ] Support tools for vmagent API
+- [ ] Support new vmalert API (https://github.com/VictoriaMetrics/VictoriaMetrics/pull/9046/files)
 
 ## Disclaimer
 
