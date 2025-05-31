@@ -477,6 +477,9 @@ But you can use any other tools and combine them in your own way.
 - [ ] Add flags/configs validation tool
 - [ ] Support tools for vmagent API
 - [ ] Support [new vmalert API](https://github.com/VictoriaMetrics/VictoriaMetrics/pull/9046/files)
+- [ ] Enabling/disabling tools via configuration
+- [ ] Tools for Alertmanager APIs (#6)
+- [ ] Support for [metrics metadata](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/2974) in case of implementation in VictoriaMetrics
 
 ## Disclaimer
 
