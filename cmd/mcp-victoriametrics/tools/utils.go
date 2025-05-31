@@ -30,7 +30,7 @@ func GetTextBodyForRequest(req *http.Request, cfg *config.Config) *mcp.CallToolR
 }
 
 type ToolReqParamType interface {
-	string | float64 | bool | []string
+	string | float64 | bool | []string | []any
 }
 
 func GetToolReqParam[T ToolReqParamType](tcr mcp.CallToolRequest, param string, required bool) (T, error) {

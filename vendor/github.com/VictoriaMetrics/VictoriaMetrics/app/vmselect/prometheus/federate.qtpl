@@ -1,0 +1,33 @@
+{% import (
+	"math"
+
+	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/netstorage"
+) %}
+
+{% stripspace %}
+
+// Federate writes rs in /federate format.
+// See https://prometheus.io/docs/prometheus/latest/federation/
+{% func Federate(rs *netstorage.Result) %}
+	{% code
+		values := rs.Values
+		timestamps := rs.Timestamps
+	%}
+	{% if len(timestamps) == 0 || len(values) == 0 %}{% return %}{% endif %}
+	{% code
+		lastValue := values[len(values)-1]
+	%}
+	{% if math.IsNaN(lastValue) %}
+		{% comment %}
+			This is most likely a staleness marker.
+			Return nothing after the staleness marker.
+			See https://github.com/VictoriaMetrics/VictoriaMetrics/issues/3185
+		{% endcomment %}
+		{% return %}
+	{% endif %}
+	{%= prometheusMetricName(&rs.MetricName) %}{% space %}
+	{%f= lastValue %}{% space %}
+	{%dl= timestamps[len(timestamps)-1] %}{% newline %}
+{% endfunc %}
+
+{% endstripspace %}

@@ -21,7 +21,7 @@ func main() {
 
 	s := server.NewMCPServer(
 		"victoriametrics",
-		"0.0.6",
+		"0.0.7",
 		server.WithRecovery(),
 		server.WithLogging(),
 		server.WithToolCapabilities(true),
@@ -53,6 +53,7 @@ Try not to second guess information - if you don't know something or lack inform
 	tools.RegisterToolSeries(s, c)
 	tools.RegisterToolExport(s, c)
 	tools.RegisterToolMetrics(s, c)
+	tools.RegisterToolTestRules(s, c)
 	tools.RegisterToolTSDBStatus(s, c)
 	tools.RegisterToolQueryRange(s, c)
 	tools.RegisterToolTopQueries(s, c)

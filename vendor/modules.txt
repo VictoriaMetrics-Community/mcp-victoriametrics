@@ -1,8 +1,176 @@
+# cloud.google.com/go/compute/metadata v0.6.0
+## explicit; go 1.21
+cloud.google.com/go/compute/metadata
 # github.com/RoaringBitmap/roaring/v2 v2.5.0
 ## explicit; go 1.15
 github.com/RoaringBitmap/roaring/v2
 github.com/RoaringBitmap/roaring/v2/internal
 github.com/RoaringBitmap/roaring/v2/roaring64
+# github.com/VictoriaMetrics/VictoriaMetrics v1.118.0
+## explicit; go 1.24.3
+github.com/VictoriaMetrics/VictoriaMetrics/app/victoria-metrics/test
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert-tool/unittest
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/config
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/config/fslocal
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/config/fsurl
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/config/log
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/datasource
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/notifier
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/remotewrite
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/rule
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/templates
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/vmalertutil
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/common
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/csvimport
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/datadogsketches
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/datadogv1
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/datadogv2
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/graphite
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/influx
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/native
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/newrelic
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/opentelemetry
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/opentsdb
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/opentsdbhttp
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/prometheusimport
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/prompush
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/promremotewrite
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/relabel
+github.com/VictoriaMetrics/VictoriaMetrics/app/vminsert/vmimport
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/graphite
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/graphiteql
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/netstorage
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/prometheus
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/promql
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/querystats
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/searchutil
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/stats
+github.com/VictoriaMetrics/VictoriaMetrics/app/vmstorage
+github.com/VictoriaMetrics/VictoriaMetrics/lib/appmetrics
+github.com/VictoriaMetrics/VictoriaMetrics/lib/atomicutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/auth
+github.com/VictoriaMetrics/VictoriaMetrics/lib/awsapi
+github.com/VictoriaMetrics/VictoriaMetrics/lib/backup/backupnames
+github.com/VictoriaMetrics/VictoriaMetrics/lib/blockcache
+github.com/VictoriaMetrics/VictoriaMetrics/lib/bloomfilter
+github.com/VictoriaMetrics/VictoriaMetrics/lib/bufferedwriter
+github.com/VictoriaMetrics/VictoriaMetrics/lib/buildinfo
+github.com/VictoriaMetrics/VictoriaMetrics/lib/bytesutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/cgroup
+github.com/VictoriaMetrics/VictoriaMetrics/lib/chunkedbuffer
+github.com/VictoriaMetrics/VictoriaMetrics/lib/contextutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/decimal
+github.com/VictoriaMetrics/VictoriaMetrics/lib/encoding
+github.com/VictoriaMetrics/VictoriaMetrics/lib/encoding/zstd
+github.com/VictoriaMetrics/VictoriaMetrics/lib/envtemplate
+github.com/VictoriaMetrics/VictoriaMetrics/lib/fastnum
+github.com/VictoriaMetrics/VictoriaMetrics/lib/fasttime
+github.com/VictoriaMetrics/VictoriaMetrics/lib/filestream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/flagutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/formatutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/fs
+github.com/VictoriaMetrics/VictoriaMetrics/lib/fs/fscore
+github.com/VictoriaMetrics/VictoriaMetrics/lib/fs/fsutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/htmlcomponents
+github.com/VictoriaMetrics/VictoriaMetrics/lib/httpserver
+github.com/VictoriaMetrics/VictoriaMetrics/lib/httputil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/influxutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/ingestserver
+github.com/VictoriaMetrics/VictoriaMetrics/lib/ingestserver/graphite
+github.com/VictoriaMetrics/VictoriaMetrics/lib/ingestserver/influx
+github.com/VictoriaMetrics/VictoriaMetrics/lib/ingestserver/opentsdb
+github.com/VictoriaMetrics/VictoriaMetrics/lib/ingestserver/opentsdbhttp
+github.com/VictoriaMetrics/VictoriaMetrics/lib/leveledbytebufferpool
+github.com/VictoriaMetrics/VictoriaMetrics/lib/logger
+github.com/VictoriaMetrics/VictoriaMetrics/lib/logstorage
+github.com/VictoriaMetrics/VictoriaMetrics/lib/lrucache
+github.com/VictoriaMetrics/VictoriaMetrics/lib/memory
+github.com/VictoriaMetrics/VictoriaMetrics/lib/mergeset
+github.com/VictoriaMetrics/VictoriaMetrics/lib/netutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/prefixfilter
+github.com/VictoriaMetrics/VictoriaMetrics/lib/procutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promauth
+github.com/VictoriaMetrics/VictoriaMetrics/lib/prompb
+github.com/VictoriaMetrics/VictoriaMetrics/lib/prompbmarshal
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promrelabel
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/azure
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/consul
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/consulagent
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/digitalocean
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/dns
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/docker
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/dockerswarm
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/ec2
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/eureka
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/gce
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/hetzner
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/http
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/kubernetes
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/kuma
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/marathon
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/nomad
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/openstack
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/ovhcloud
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/puppetdb
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/vultr
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/yandexcloud
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discoveryutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/promutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/csvimport
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/csvimport/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/datadogsketches
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/datadogsketches/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/datadogutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/datadogv1
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/datadogv1/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/datadogv2
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/datadogv2/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/graphite
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/graphite/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/influx
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/influx/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/native/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/newrelic
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/newrelic/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/opentelemetry/firehose
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/opentelemetry/pb
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/opentelemetry/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/opentsdb
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/opentsdb/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/opentsdbhttp
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/opentsdbhttp/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/prometheus
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/prometheus/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/promremotewrite/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/protoparserutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/vmimport
+github.com/VictoriaMetrics/VictoriaMetrics/lib/protoparser/vmimport/stream
+github.com/VictoriaMetrics/VictoriaMetrics/lib/proxy
+github.com/VictoriaMetrics/VictoriaMetrics/lib/querytracer
+github.com/VictoriaMetrics/VictoriaMetrics/lib/ratelimiter
+github.com/VictoriaMetrics/VictoriaMetrics/lib/regexutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/slicesutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/snapshot/snapshotutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/storage
+github.com/VictoriaMetrics/VictoriaMetrics/lib/storage/metricnamestats
+github.com/VictoriaMetrics/VictoriaMetrics/lib/streamaggr
+github.com/VictoriaMetrics/VictoriaMetrics/lib/stringsutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/syncwg
+github.com/VictoriaMetrics/VictoriaMetrics/lib/timerpool
+github.com/VictoriaMetrics/VictoriaMetrics/lib/timeserieslimits
+github.com/VictoriaMetrics/VictoriaMetrics/lib/timeutil
+github.com/VictoriaMetrics/VictoriaMetrics/lib/uint64set
+github.com/VictoriaMetrics/VictoriaMetrics/lib/workingsetcache
+github.com/VictoriaMetrics/VictoriaMetrics/lib/writeconcurrencylimiter
+# github.com/VictoriaMetrics/easyproto v0.1.4
+## explicit; go 1.18
+github.com/VictoriaMetrics/easyproto
+# github.com/VictoriaMetrics/fastcache v1.12.2
+## explicit; go 1.13
+github.com/VictoriaMetrics/fastcache
 # github.com/VictoriaMetrics/metrics v1.37.0
 ## explicit; go 1.17
 github.com/VictoriaMetrics/metrics
@@ -10,6 +178,9 @@ github.com/VictoriaMetrics/metrics
 ## explicit; go 1.24.2
 github.com/VictoriaMetrics/metricsql
 github.com/VictoriaMetrics/metricsql/binaryop
+# github.com/VividCortex/ewma v1.2.0
+## explicit; go 1.12
+github.com/VividCortex/ewma
 # github.com/bits-and-blooms/bitset v1.22.0
 ## explicit; go 1.16
 github.com/bits-and-blooms/bitset
@@ -114,10 +285,23 @@ github.com/blevesearch/zapx/v15
 # github.com/blevesearch/zapx/v16 v16.2.4
 ## explicit; go 1.23
 github.com/blevesearch/zapx/v16
+# github.com/bmatcuk/doublestar/v4 v4.8.1
+## explicit; go 1.16
+github.com/bmatcuk/doublestar/v4
+# github.com/cespare/xxhash/v2 v2.3.0
+## explicit; go 1.11
+github.com/cespare/xxhash/v2
+# github.com/cheggaaa/pb/v3 v3.1.7
+## explicit; go 1.18
+github.com/cheggaaa/pb/v3
+github.com/cheggaaa/pb/v3/termutil
 # github.com/dlclark/regexp2 v1.11.5
 ## explicit; go 1.13
 github.com/dlclark/regexp2
 github.com/dlclark/regexp2/syntax
+# github.com/fatih/color v1.18.0
+## explicit; go 1.17
+github.com/fatih/color
 # github.com/golang/protobuf v1.5.4
 ## explicit; go 1.17
 github.com/golang/protobuf/proto
@@ -130,11 +314,36 @@ github.com/google/uuid
 # github.com/json-iterator/go v1.1.12
 ## explicit; go 1.12
 github.com/json-iterator/go
+# github.com/klauspost/compress v1.18.0
+## explicit; go 1.22
+github.com/klauspost/compress
+github.com/klauspost/compress/flate
+github.com/klauspost/compress/fse
+github.com/klauspost/compress/gzhttp
+github.com/klauspost/compress/gzhttp/writer
+github.com/klauspost/compress/gzhttp/writer/gzkp
+github.com/klauspost/compress/gzip
+github.com/klauspost/compress/huff0
+github.com/klauspost/compress/internal/cpuinfo
+github.com/klauspost/compress/internal/le
+github.com/klauspost/compress/internal/snapref
+github.com/klauspost/compress/zlib
+github.com/klauspost/compress/zstd
+github.com/klauspost/compress/zstd/internal/xxhash
 # github.com/mark3labs/mcp-go v0.31.0
 ## explicit; go 1.23
 github.com/mark3labs/mcp-go/mcp
 github.com/mark3labs/mcp-go/server
 github.com/mark3labs/mcp-go/util
+# github.com/mattn/go-colorable v0.1.14
+## explicit; go 1.18
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.20
+## explicit; go 1.15
+github.com/mattn/go-isatty
+# github.com/mattn/go-runewidth v0.0.16
+## explicit; go 1.9
+github.com/mattn/go-runewidth
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 ## explicit
 github.com/modern-go/concurrent
@@ -147,6 +356,9 @@ github.com/mschoch/smat
 # github.com/pkoukk/tiktoken-go v0.1.7
 ## explicit; go 1.19
 github.com/pkoukk/tiktoken-go
+# github.com/rivo/uniseg v0.4.7
+## explicit; go 1.18
+github.com/rivo/uniseg
 # github.com/spf13/cast v1.8.0
 ## explicit; go 1.19
 github.com/spf13/cast
@@ -155,12 +367,28 @@ github.com/spf13/cast
 github.com/tmc/langchaingo/llms
 github.com/tmc/langchaingo/schema
 github.com/tmc/langchaingo/textsplitter
+# github.com/valyala/bytebufferpool v1.0.0
+## explicit
+github.com/valyala/bytebufferpool
+# github.com/valyala/fastjson v1.6.4
+## explicit; go 1.12
+github.com/valyala/fastjson
+github.com/valyala/fastjson/fastfloat
 # github.com/valyala/fastrand v1.1.0
 ## explicit
 github.com/valyala/fastrand
+# github.com/valyala/fasttemplate v1.2.2
+## explicit; go 1.12
+github.com/valyala/fasttemplate
+# github.com/valyala/gozstd v1.21.2
+## explicit; go 1.12
+github.com/valyala/gozstd
 # github.com/valyala/histogram v1.2.0
 ## explicit; go 1.12
 github.com/valyala/histogram
+# github.com/valyala/quicktemplate v1.8.0
+## explicit; go 1.17
+github.com/valyala/quicktemplate
 # github.com/yosida95/uritemplate/v3 v3.0.2
 ## explicit; go 1.14
 github.com/yosida95/uritemplate/v3
@@ -185,10 +413,28 @@ go.etcd.io/bbolt
 go.etcd.io/bbolt/errors
 go.etcd.io/bbolt/internal/common
 go.etcd.io/bbolt/internal/freelist
+# golang.org/x/net v0.39.0
+## explicit; go 1.23.0
+golang.org/x/net/internal/socks
+golang.org/x/net/proxy
+# golang.org/x/oauth2 v0.29.0
+## explicit; go 1.23.0
+golang.org/x/oauth2
+golang.org/x/oauth2/authhandler
+golang.org/x/oauth2/clientcredentials
+golang.org/x/oauth2/google
+golang.org/x/oauth2/google/externalaccount
+golang.org/x/oauth2/google/internal/externalaccountauthorizeduser
+golang.org/x/oauth2/google/internal/impersonate
+golang.org/x/oauth2/google/internal/stsexchange
+golang.org/x/oauth2/internal
+golang.org/x/oauth2/jws
+golang.org/x/oauth2/jwt
 # golang.org/x/sys v0.33.0
 ## explicit; go 1.23.0
 golang.org/x/sys/unix
 golang.org/x/sys/windows
+golang.org/x/sys/windows/registry
 # golang.org/x/text v0.25.0
 ## explicit; go 1.23.0
 golang.org/x/text/unicode/rangetable
@@ -225,3 +471,6 @@ google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/gofeaturespb
+# gopkg.in/yaml.v2 v2.4.0
+## explicit; go 1.15
+gopkg.in/yaml.v2

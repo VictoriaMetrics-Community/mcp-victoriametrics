@@ -465,7 +465,7 @@ But you can use any other tools and combine them in your own way.
 - [x] Support "Explain query" tool (done in [`v0.0.6`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.6))
 - [ ] Support CI pipeline for building and pushing multiarch docker images
 - [ ] Support tool for analysis of [Query execution statistics](https://docs.victoriametrics.com/victoriametrics/query-stats/)
-- [ ] Suppport tool for [unit-testing of alerting and recording rules](https://docs.victoriametrics.com/victoriametrics/vmalert-tool/)
+- [x] Suppport tool for [unit-testing of alerting and recording rules](https://docs.victoriametrics.com/victoriametrics/vmalert-tool/)
 - [ ] Support optional integration with [VictoriaMetrics Cloud](https://victoriametrics.com/products/cloud/) (via [API keys](https://docs.victoriametrics.com/victoriametrics-cloud/api/))
 - [ ] Add some extra knowledge to server in addition to current documentation tool:
   - [ ] [VictoriaMetrics blog](https://victoriametrics.com/blog/) posts

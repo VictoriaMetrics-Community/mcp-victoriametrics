@@ -1,0 +1,58 @@
+{% import (
+	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/netstorage"
+	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/promql"
+	"github.com/VictoriaMetrics/VictoriaMetrics/lib/querytracer"
+) %}
+
+{% stripspace %}
+QueryRangeResponse generates response for /api/v1/query_range.
+See https://prometheus.io/docs/prometheus/latest/querying/api/#range-queries
+{% func QueryRangeResponse(rs []netstorage.Result, qt *querytracer.Tracer, qtDone func(), qs *promql.QueryStats) %}
+{
+	{% code
+		seriesCount := len(rs)
+		pointsCount := 0
+	%}
+	"status":"success",
+	"data":{
+		"resultType":"matrix",
+		"result":[
+			{% if len(rs) > 0 %}
+				{%= queryRangeLine(&rs[0]) %}
+				{% code pointsCount += len(rs[0].Values) %}
+				{% code rs = rs[1:] %}
+				{% for i := range rs %}
+					,{%= queryRangeLine(&rs[i]) %}
+					{% code pointsCount += len(rs[i].Values) %}
+				{% endfor %}
+			{% endif %}
+		]
+	},
+	"stats":{
+		{% code
+			// seriesFetched is string instead of int because of historical reasons.
+			// It cannot be converted to int without breaking backwards compatibility at vmalert :(
+			executionDuration := int64(0)
+			if ed := qs.ExecutionDuration.Load(); ed != nil {
+				executionDuration = ed.Milliseconds()
+			}
+		%}
+		"seriesFetched": "{%dl qs.SeriesFetched.Load() %}",
+		"executionTimeMsec": {%dl executionDuration %}
+	}
+	{% code
+		qt.Printf("generate /api/v1/query_range response for series=%d, points=%d", seriesCount, pointsCount)
+		qtDone()
+	%}
+	{%= dumpQueryTrace(qt) %}
+}
+{% endfunc %}
+
+{% func queryRangeLine(r *netstorage.Result) %}
+{
+	"metric": {%= metricNameObject(&r.MetricName) %},
+	"values": {%= valuesWithTimestamps(r.Values, r.Timestamps) %}
+}
+{% endfunc %}
+
+{% endstripspace %}

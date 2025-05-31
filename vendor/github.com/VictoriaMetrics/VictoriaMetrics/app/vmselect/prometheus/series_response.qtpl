@@ -1,0 +1,31 @@
+{% import (
+	"github.com/VictoriaMetrics/VictoriaMetrics/lib/storage"
+	"github.com/VictoriaMetrics/VictoriaMetrics/lib/querytracer"
+) %}
+
+{% stripspace %}
+SeriesResponse generates response for /api/v1/series.
+See https://prometheus.io/docs/prometheus/latest/querying/api/#finding-series-by-label-matchers
+{% func SeriesResponse(metricNames []string, qt *querytracer.Tracer, qtDone func()) %}
+{
+	"status":"success",
+	"data":[
+		{% code var mn storage.MetricName %}
+		{% for i, metricName := range metricNames %}
+			{% code err := mn.UnmarshalString(metricName) %}
+			{% if err != nil %}
+				{%q= err.Error() %}
+			{% else %}
+				{%= metricNameObject(&mn) %}
+			{% endif %}
+			{% if i+1 < len(metricNames) %},{% endif %}
+		{% endfor %}
+	]
+	{% code
+		qt.Printf("generate response: series=%d", len(metricNames))
+		qtDone()
+	%}
+	{%= dumpQueryTrace(qt) %}
+}
+{% endfunc %}
+{% endstripspace %}

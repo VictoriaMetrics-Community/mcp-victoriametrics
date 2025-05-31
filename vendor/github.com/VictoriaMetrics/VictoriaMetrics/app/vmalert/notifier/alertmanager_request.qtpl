@@ -1,0 +1,36 @@
+{% import (
+    "time"
+
+    "github.com/VictoriaMetrics/VictoriaMetrics/lib/prompbmarshal"
+) %}
+{% stripspace %}
+
+{% func amRequest(alerts []Alert, generatorURL func(Alert) string, lblss [][]prompbmarshal.Label) %}
+[
+{% for i, alert := range alerts %}
+{% code lbls := lblss[i] %}
+{
+    "startsAt":{%q= alert.Start.Format(time.RFC3339Nano) %},
+    "generatorURL": {%q= generatorURL(alert) %},
+    {% if !alert.End.IsZero() %}
+    "endsAt":{%q= alert.End.Format(time.RFC3339Nano) %},
+    {% endif %}
+    "labels": {
+        {% code ll := len(lbls) %}
+        {% for idx, l := range lbls %}
+            {%q= l.Name %}:{%q= l.Value %}{% if idx != ll-1 %}, {% endif %}
+        {% endfor %}
+    },
+    "annotations": {
+        {% code c := len(alert.Annotations) %}
+        {% for k,v := range alert.Annotations %}
+          {% code c = c-1 %}
+          {%q= k %}:{%q= v %}{% if c > 0 %},{% endif %}
+        {% endfor %}
+    }
+}
+{% if i != len(alerts)-1 %},{% endif %}
+{% endfor %}
+]
+{% endfunc %}
+{% endstripspace %}

@@ -22,7 +22,7 @@ var (
 			Title:           "Explain Query",
 			ReadOnlyHint:    ptr(true),
 			DestructiveHint: ptr(false),
-			OpenWorldHint:   ptr(true),
+			OpenWorldHint:   ptr(false),
 		}),
 		mcp.WithString("query",
 			mcp.Required(),
