@@ -39,6 +39,31 @@ type SessionWithTools interface {
 	SetSessionTools(tools map[string]ServerTool)
 }
 
+// SessionWithClientInfo is an extension of ClientSession that can store client info
+type SessionWithClientInfo interface {
+	ClientSession
+	// GetClientInfo returns the client information for this session
+	GetClientInfo() mcp.Implementation
+	// SetClientInfo sets the client information for this session
+	SetClientInfo(clientInfo mcp.Implementation)
+}
+
+// SessionWithStreamableHTTPConfig extends ClientSession to support streamable HTTP transport configurations
+type SessionWithStreamableHTTPConfig interface {
+	ClientSession
+	// UpgradeToSSEWhenReceiveNotification upgrades the client-server communication to SSE stream when the server
+	// sends notifications to the client
+	//
+	// The protocol specification:
+	// - If the server response contains any JSON-RPC notifications, it MUST either:
+	//   - Return Content-Type: text/event-stream to initiate an SSE stream, OR
+	//   - Return Content-Type: application/json for a single JSON object
+	// - The client MUST support both response types.
+	//
+	// Reference: https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#sending-messages-to-the-server
+	UpgradeToSSEWhenReceiveNotification()
+}
+
 // clientSessionKey is the context key for storing current client notification channel.
 type clientSessionKey struct{}
 
@@ -137,6 +162,11 @@ func (s *MCPServer) SendNotificationToClient(
 		return ErrNotificationNotInitialized
 	}
 
+	// upgrades the client-server communication to SSE stream when the server sends notifications to the client
+	if sessionWithStreamableHTTPConfig, ok := session.(SessionWithStreamableHTTPConfig); ok {
+		sessionWithStreamableHTTPConfig.UpgradeToSSEWhenReceiveNotification()
+	}
+
 	notification := mcp.JSONRPCNotification{
 		JSONRPC: mcp.JSONRPC_VERSION,
 		Notification: mcp.Notification{
@@ -182,6 +212,11 @@ func (s *MCPServer) SendNotificationToSpecificClient(
 	session, ok := sessionValue.(ClientSession)
 	if !ok || !session.Initialized() {
 		return ErrSessionNotInitialized
+	}
+
+	// upgrades the client-server communication to SSE stream when the server sends notifications to the client
+	if sessionWithStreamableHTTPConfig, ok := session.(SessionWithStreamableHTTPConfig); ok {
+		sessionWithStreamableHTTPConfig.UpgradeToSSEWhenReceiveNotification()
 	}
 
 	notification := mcp.JSONRPCNotification{

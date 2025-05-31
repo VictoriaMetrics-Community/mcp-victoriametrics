@@ -7,13 +7,13 @@ toolchain go1.24.3
 require (
 	github.com/VictoriaMetrics/metricsql v0.84.5
 	github.com/blevesearch/bleve/v2 v2.5.1
-	github.com/mark3labs/mcp-go v0.29.0
+	github.com/mark3labs/mcp-go v0.31.0
 	github.com/tmc/langchaingo v0.1.13
 )
 
 require (
 	github.com/RoaringBitmap/roaring/v2 v2.5.0 // indirect
-	github.com/VictoriaMetrics/metrics v1.35.3 // indirect
+	github.com/VictoriaMetrics/metrics v1.37.0 // indirect
 	github.com/bits-and-blooms/bitset v1.22.0 // indirect
 	github.com/blevesearch/bleve_index_api v1.2.8 // indirect
 	github.com/blevesearch/geo v0.2.3 // indirect
@@ -31,7 +31,7 @@ require (
 	github.com/blevesearch/zapx/v13 v13.4.2 // indirect
 	github.com/blevesearch/zapx/v14 v14.4.2 // indirect
 	github.com/blevesearch/zapx/v15 v15.4.2 // indirect
-	github.com/blevesearch/zapx/v16 v16.2.3 // indirect
+	github.com/blevesearch/zapx/v16 v16.2.4 // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
