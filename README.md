@@ -18,7 +18,7 @@ This MCP server allows you to use almost all read-only APIs of VictoriaMetrics, 
 
 - Querying metrics and exploring data (even drawing graphs if your client supports it)
 - Listing and exporting available metrics, labels, labels values and entire series
-- Analyzing your alerting and recording rules and alerts
+- Analyzing and testing your alerting and recording rules and alerts
 - Showing parameters of your VictoriaMetrics instance
 - Exploring cardinality of your data and metrics usage statistics
 - Analyzing, tracing, prettifying and explaining your queries
@@ -310,6 +310,7 @@ Here's a list of available tools:
 | `retention_filters_debug` | Debug retention filters configuration                     |
 | `prettify_query` | Prettify and format PromQL/MetricsQL queries              |
 | `explain_query` | Parse PromQL/MetricsQL queries and explain how it works   |
+| `test_rules` | Unit-test alerting and recording rules using vmalert tool |
 
 ### Prompts
 
