@@ -486,11 +486,11 @@ But you can use any other tools and combine them in your own way.
 
 ## Roadmap
 
-- [x] Support "Prettify query" tool (done in [`v0.0.5`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.65))
+- [x] Support "Prettify query" tool (done in [`v0.0.5`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.5))
 - [x] Support "Explain query" tool (done in [`v0.0.6`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.6))
 - [ ] Support CI pipeline for building and pushing multiarch docker images
 - [ ] Support tool for analysis of [Query execution statistics](https://docs.victoriametrics.com/victoriametrics/query-stats/)
-- [x] Suppport tool for [unit-testing of alerting and recording rules](https://docs.victoriametrics.com/victoriametrics/vmalert-tool/)
+- [x] Suppport tool for [unit-testing of alerting and recording rules](https://docs.victoriametrics.com/victoriametrics/vmalert-tool/) (done in [`v0.0.7`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.7))
 - [x] Support optional integration with [VictoriaMetrics Cloud](https://victoriametrics.com/products/cloud/) (via [API keys](https://docs.victoriametrics.com/victoriametrics-cloud/api/))
 - [ ] Add some extra knowledge to server in addition to current documentation tool:
   - [ ] [VictoriaMetrics blog](https://victoriametrics.com/blog/) posts
@@ -502,7 +502,7 @@ But you can use any other tools and combine them in your own way.
 - [ ] Add flags/configs validation tool
 - [ ] Support tools for vmagent API
 - [ ] Support [new vmalert API](https://github.com/VictoriaMetrics/VictoriaMetrics/pull/9046/files)
-- [x] Enabling/disabling tools via configuration
+- [x] Enabling/disabling tools via configuration (done in [`v0.0.8`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.8))
 - [ ] Tools for Alertmanager APIs (#6)
 - [ ] Support for [metrics metadata](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/2974) in case of implementation in VictoriaMetrics
 
