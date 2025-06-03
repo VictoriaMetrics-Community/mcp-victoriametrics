@@ -5,6 +5,8 @@ import (
 	"net/url"
 	"os"
 	"strings"
+
+	vmcloud "github.com/VictoriaMetrics/victoriametrics-cloud-api-go/v1"
 )
 
 type Config struct {
@@ -14,8 +16,10 @@ type Config struct {
 	instanceType  string
 	bearerToken   string
 	disabledTools map[string]bool
+	apiKey        string
 
 	entryPointURL *url.URL
+	vmc           *vmcloud.VMCloudAPIClient
 }
 
 func InitConfig() (*Config, error) {
@@ -36,14 +40,18 @@ func InitConfig() (*Config, error) {
 		instanceType:  os.Getenv("VM_INSTANCE_TYPE"),
 		bearerToken:   os.Getenv("VM_INSTANCE_BEARER_TOKEN"),
 		disabledTools: disabledToolsMap,
+		apiKey:        os.Getenv("VMC_API_KEY"),
 	}
-	if result.entrypoint == "" {
-		return nil, fmt.Errorf("VM_INSTANCE_ENTRYPOINT is not set")
+	if result.entrypoint == "" && result.apiKey == "" {
+		return nil, fmt.Errorf("VM_INSTANCE_ENTRYPOINT or VMC_API_KEY is not set")
 	}
-	if result.instanceType == "" {
+	if result.entrypoint != "" && result.apiKey != "" {
+		return nil, fmt.Errorf("VM_INSTANCE_ENTRYPOINT and VMC_API_KEY cannot be set at the same time")
+	}
+	if result.entrypoint != "" && result.instanceType == "" {
 		return nil, fmt.Errorf("VM_INSTANCE_TYPE is not set")
 	}
-	if result.instanceType != "cluster" && result.instanceType != "single" {
+	if result.entrypoint != "" && result.instanceType != "cluster" && result.instanceType != "single" {
 		return nil, fmt.Errorf("VM_INSTANCE_TYPE must be 'single' or 'cluster'")
 	}
 	if result.serverMode != "" && result.serverMode != "stdio" && result.serverMode != "sse" {
@@ -57,9 +65,17 @@ func InitConfig() (*Config, error) {
 	}
 
 	var err error
-	result.entryPointURL, err = url.Parse(result.entrypoint)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse URL from VM_INSTANCE_ENTRYPOINT: %w", err)
+	if result.apiKey == "" {
+		result.entryPointURL, err = url.Parse(result.entrypoint)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse URL from VM_INSTANCE_ENTRYPOINT: %w", err)
+		}
+	}
+	if result.apiKey != "" {
+		result.vmc, err = vmcloud.New(result.apiKey)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create VMCloud API client: %w", err)
+		}
 	}
 
 	return result, nil
@@ -81,6 +97,14 @@ func (c *Config) IsSSE() bool {
 	return c.serverMode == "sse"
 }
 
+func (c *Config) IsCloud() bool {
+	return c.vmc != nil
+}
+
+func (c *Config) VMC() *vmcloud.VMCloudAPIClient {
+	return c.vmc
+}
+
 func (c *Config) SSEAddr() string {
 	return c.sseAddr
 }
@@ -91,21 +115,6 @@ func (c *Config) BearerToken() string {
 
 func (c *Config) EntryPointURL() *url.URL {
 	return c.entryPointURL
-}
-
-func (c *Config) AdminAPIURL(path ...string) string {
-	return c.entryPointURL.JoinPath(path...).String()
-}
-
-func (c *Config) SelectAPIURL(tenant string, path ...string) string {
-	if c.IsSingle() {
-		return c.entryPointURL.JoinPath(path...).String()
-	}
-	if tenant == "" {
-		tenant = "0"
-	}
-	args := []string{"select", tenant, "prometheus"}
-	return c.entryPointURL.JoinPath(append(args, path...)...).String()
 }
 
 func (c *Config) IsToolDisabled(toolName string) bool {

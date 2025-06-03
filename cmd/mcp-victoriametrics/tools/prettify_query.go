@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
-
 	"github.com/VictoriaMetrics/metricsql"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -25,7 +23,17 @@ func toolPrettifyQuery(c *config.Config) mcp.Tool {
 			OpenWorldHint:   ptr(true),
 		}),
 	}
-	if c.IsCluster() {
+	if c.IsCloud() {
+		options = append(
+			options,
+			mcp.WithString("deployment_id",
+				mcp.Title("Deployment ID"),
+				mcp.Description("Unique identifier of the deployment in VictoriaMetrics Cloud"),
+				mcp.Pattern(`^[a-zA-Z0-9\-_]+$`),
+			),
+		)
+	}
+	if c.IsCluster() || c.IsCloud() {
 		options = append(
 			options,
 			mcp.WithString("tenant",
@@ -48,18 +56,13 @@ func toolPrettifyQuery(c *config.Config) mcp.Tool {
 }
 
 func toolPrettifyQueryHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
-	if err != nil {
-		return mcp.NewToolResultError(err.Error()), nil
-	}
-
 	query, err := GetToolReqParam[string](tcr, "query", true)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
 	prettifiedQuery, err := metricsql.Prettify(query)
-	if err == nil {
+	if err != nil {
 		result := map[string]string{
 			"status": "success",
 			"query":  prettifiedQuery,
@@ -69,9 +72,17 @@ func toolPrettifyQueryHandler(ctx context.Context, cfg *config.Config, tcr mcp.C
 			return mcp.NewToolResultError(fmt.Sprintf("failed to marshal result: %v", err)), nil
 		}
 		return mcp.NewToolResultText(string(data)), nil
+	} else if cfg.IsCloud() {
+		deploymentID, err := GetToolReqParam[string](tcr, "deployment_id", false)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to get deployment_id parameter: %v", err)), nil
+		}
+		if deploymentID == "" {
+			return mcp.NewToolResultErrorFromErr("failed to prettify query: ", err), nil
+		}
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, cfg.SelectAPIURL(tenant, "prettify-query"), nil)
+	req, err := CreateSelectRequest(ctx, cfg, tcr, "prettify-query")
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("failed to create request: %v", err)), nil
 	}

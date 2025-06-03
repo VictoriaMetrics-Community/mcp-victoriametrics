@@ -3,8 +3,6 @@ package tools
 import (
 	"context"
 	"fmt"
-	"net/http"
-
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
@@ -13,8 +11,8 @@ import (
 
 const toolNameRetentionFiltersDebug = "retention_filters_debug"
 
-var (
-	toolRetentionFiltersDebug = mcp.NewTool(toolNameRetentionFiltersDebug,
+func toolRetentionFiltersDebug(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription(`Retention filters debug tool is used to debug flag "retentionFilter" and "retentionPeriod" with some series and see what retention policy will be applied for which series in Enterprise version of VictoriaMetrics.
 This tool use "/retention-filters-debug" API endpoint of VictoriaMetrics API.`),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
@@ -23,6 +21,20 @@ This tool use "/retention-filters-debug" API endpoint of VictoriaMetrics API.`),
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
+	}
+	if c.IsCloud() {
+		options = append(
+			options,
+			mcp.WithString("deployment_id",
+				mcp.Required(),
+				mcp.Title("Deployment ID"),
+				mcp.Description("Unique identifier of the deployment in VictoriaMetrics Cloud"),
+				mcp.Pattern(`^[a-zA-Z0-9\-_]+$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithString("flags",
 			mcp.Required(),
 			mcp.Title("Value of `retentionFilter` and `retentionPeriod` flags"),
@@ -35,7 +47,8 @@ This tool use "/retention-filters-debug" API endpoint of VictoriaMetrics API.`),
 			mcp.Pattern(`^([a-zA-Z_]*\{\s*(([a-zA-Z-_]+\s*\=\s*\".*\"))?(\s*,\s*([a-zA-Z-_]+\s*\=\s*\".*\"))*\s*\}\n)+$`),
 		),
 	)
-)
+	return mcp.NewTool(toolNameRetentionFiltersDebug, options...)
+}
 
 func toolRetentionFiltersDebugHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	flags, err := GetToolReqParam[string](tcr, "flags", true)
@@ -48,7 +61,7 @@ func toolRetentionFiltersDebugHandler(ctx context.Context, cfg *config.Config, t
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, cfg.SelectAPIURL("0", "retention-filters-debug"), nil)
+	req, err := CreateSelectRequest(ctx, cfg, tcr, "retention-filters-debug")
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("failed to create request: %v", err)), nil
 	}
@@ -65,7 +78,7 @@ func RegisterToolRetentionFiltersDebug(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameRetentionFiltersDebug) {
 		return
 	}
-	s.AddTool(toolRetentionFiltersDebug, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	s.AddTool(toolRetentionFiltersDebug(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolRetentionFiltersDebugHandler(ctx, c, request)
 	})
 }

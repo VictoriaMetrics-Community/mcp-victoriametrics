@@ -3,7 +3,6 @@ package tools
 import (
 	"context"
 	"fmt"
-	"net/http"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -13,8 +12,8 @@ import (
 
 const toolNameMetricRelabelDebug = "metric_relabel_debug"
 
-var (
-	toolMetricRelabelDebug = mcp.NewTool(toolNameMetricRelabelDebug,
+func toolMetricRelabelDebug(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription(`Metric relabel debug tool can help with step-by-step debugging of Prometheus-compatible relabeling rules. It can be used to check how the relabeling rules are applied to the given metric. 
 The tool use "/metric-relabel-debug" endpoint of the VictoriaMetrics API. `),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
@@ -23,6 +22,20 @@ The tool use "/metric-relabel-debug" endpoint of the VictoriaMetrics API. `),
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
+	}
+	if c.IsCloud() {
+		options = append(
+			options,
+			mcp.WithString("deployment_id",
+				mcp.Required(),
+				mcp.Title("Deployment ID"),
+				mcp.Description("Unique identifier of the deployment in VictoriaMetrics Cloud"),
+				mcp.Pattern(`^[a-zA-Z0-9\-_]+$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithString("relabel_configs",
 			mcp.Required(),
 			mcp.Title("Relabel config"),
@@ -35,7 +48,8 @@ The tool use "/metric-relabel-debug" endpoint of the VictoriaMetrics API. `),
 			mcp.Pattern(`^\{\s*(([a-zA-Z-_]+\s*\=\s*\".*\"))?(\s*,\s*([a-zA-Z-_]+\s*\=\s*\".*\"))*\s*\}$`),
 		),
 	)
-)
+	return mcp.NewTool(toolNameMetricRelabelDebug, options...)
+}
 
 func toolMetricRelabelDebugHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	relabelConfigs, err := GetToolReqParam[string](tcr, "relabel_configs", true)
@@ -48,9 +62,9 @@ func toolMetricRelabelDebugHandler(ctx context.Context, cfg *config.Config, tcr 
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, cfg.SelectAPIURL("0", "metric-relabel-debug"), nil)
+	req, err := CreateSelectRequest(ctx, cfg, tcr, "metric-relabel-debug")
 	if err != nil {
-		return mcp.NewToolResultError(fmt.Sprintf("failed to create request: %v", err)), nil
+		return mcp.NewToolResultError(fmt.Sprintf("failed to create select request: %v", err)), nil
 	}
 
 	query := req.URL.Query()
@@ -66,7 +80,7 @@ func RegisterToolMetricRelabelDebug(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameMetricRelabelDebug) {
 		return
 	}
-	s.AddTool(toolMetricRelabelDebug, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	s.AddTool(toolMetricRelabelDebug(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolMetricRelabelDebugHandler(ctx, c, request)
 	})
 }

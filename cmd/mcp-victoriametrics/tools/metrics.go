@@ -21,7 +21,18 @@ func toolMetrics(c *config.Config) mcp.Tool {
 			OpenWorldHint:   ptr(true),
 		}),
 	}
-	if c.IsCluster() {
+	if c.IsCloud() {
+		options = append(
+			options,
+			mcp.WithString("deployment_id",
+				mcp.Required(),
+				mcp.Title("Deployment ID"),
+				mcp.Description("Unique identifier of the deployment in VictoriaMetrics Cloud"),
+				mcp.Pattern(`^[a-zA-Z0-9\-_]+$`),
+			),
+		)
+	}
+	if c.IsCluster() || c.IsCloud() {
 		options = append(
 			options,
 			mcp.WithString("tenant",
@@ -62,11 +73,6 @@ func toolMetrics(c *config.Config) mcp.Tool {
 }
 
 func toolMetricsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
-	if err != nil {
-		return mcp.NewToolResultError(err.Error()), nil
-	}
-
 	match, err := GetToolReqParam[string](tcr, "match", false)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
@@ -87,7 +93,7 @@ func toolMetricsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToo
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	return getLabelValues(ctx, cfg, tenant, "__name__", match, start, end, limit)
+	return getLabelValues(ctx, cfg, tcr, "__name__", match, start, end, limit)
 }
 
 func RegisterToolMetrics(s *server.MCPServer, c *config.Config) {

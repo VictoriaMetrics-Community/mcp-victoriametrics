@@ -3,8 +3,6 @@ package tools
 import (
 	"context"
 	"fmt"
-	"net/http"
-
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
@@ -23,7 +21,18 @@ func toolQueryRange(c *config.Config) mcp.Tool {
 			OpenWorldHint:   ptr(true),
 		}),
 	}
-	if c.IsCluster() {
+	if c.IsCloud() {
+		options = append(
+			options,
+			mcp.WithString("deployment_id",
+				mcp.Required(),
+				mcp.Title("Deployment ID"),
+				mcp.Description("Unique identifier of the deployment in VictoriaMetrics Cloud"),
+				mcp.Pattern(`^[a-zA-Z0-9\-_]+$`),
+			),
+		)
+	}
+	if c.IsCluster() || c.IsCloud() {
 		options = append(
 			options,
 			mcp.WithString("tenant",
@@ -77,11 +86,6 @@ func toolQueryRange(c *config.Config) mcp.Tool {
 }
 
 func toolQueryRangeHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
-	if err != nil {
-		return mcp.NewToolResultError(err.Error()), nil
-	}
-
 	query, err := GetToolReqParam[string](tcr, "query", true)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
@@ -117,7 +121,7 @@ func toolQueryRangeHandler(ctx context.Context, cfg *config.Config, tcr mcp.Call
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, cfg.SelectAPIURL(tenant, "api", "v1", "query"), nil)
+	req, err := CreateSelectRequest(ctx, cfg, tcr, "api", "v1", "query_range")
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("failed to create request: %v", err)), nil
 	}

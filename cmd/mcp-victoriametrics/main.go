@@ -21,7 +21,7 @@ func main() {
 
 	s := server.NewMCPServer(
 		"victoriametrics",
-		"0.0.8",
+		"0.0.9",
 		server.WithRecovery(),
 		server.WithLogging(),
 		server.WithToolCapabilities(true),
@@ -40,9 +40,10 @@ Try not to second guess information - if you don't know something or lack inform
 	`),
 	)
 
+	// Registering resources
 	resources.RegisterDocsResources(s, c)
 
-	tools.RegisterToolTenants(s, c)
+	// Registering common tools
 	tools.RegisterToolQuery(s, c)
 	tools.RegisterToolFlags(s, c)
 	tools.RegisterToolRules(s, c)
@@ -50,6 +51,7 @@ Try not to second guess information - if you don't know something or lack inform
 	tools.RegisterToolLabels(s, c)
 	tools.RegisterToolSeries(s, c)
 	tools.RegisterToolExport(s, c)
+	tools.RegisterToolTenants(s, c)
 	tools.RegisterToolMetrics(s, c)
 	tools.RegisterToolTestRules(s, c)
 	tools.RegisterToolTSDBStatus(s, c)
@@ -65,6 +67,16 @@ Try not to second guess information - if you don't know something or lack inform
 	tools.RegisterToolRetentionFiltersDebug(s, c)
 	tools.RegisterToolDownsamplingFiltersDebug(s, c)
 
+	// Registering cloud-specific tools
+	tools.RegisterToolTiers(s, c)
+	tools.RegisterToolRegions(s, c)
+	tools.RegisterToolRuleFile(s, c)
+	tools.RegisterToolDeployments(s, c)
+	tools.RegisterToolAccessTokens(s, c)
+	tools.RegisterToolRuleFilenames(s, c)
+	tools.RegisterToolCloudProviders(s, c)
+
+	// Registering prompts
 	prompts.RegisterPromptUnusedMetrics(s, c)
 	prompts.RegisterPromptDocumentation(s, c)
 	prompts.RegisterPromptRarelyUsedCardinalMetrics(s, c)
