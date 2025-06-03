@@ -23,7 +23,18 @@ func toolExport(c *config.Config) mcp.Tool {
 			OpenWorldHint:   ptr(true),
 		}),
 	}
-	if c.IsCluster() {
+	if c.IsCloud() {
+		options = append(
+			options,
+			mcp.WithString("deployment_id",
+				mcp.Required(),
+				mcp.Title("Deployment ID"),
+				mcp.Description("Unique identifier of the deployment in VictoriaMetrics Cloud"),
+				mcp.Pattern(`^[a-zA-Z0-9\-_]+$`),
+			),
+		)
+	}
+	if c.IsCluster() || c.IsCloud() {
 		options = append(
 			options,
 			mcp.WithString("tenant",
@@ -65,11 +76,6 @@ func toolExport(c *config.Config) mcp.Tool {
 }
 
 func toolExportHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
-	if err != nil {
-		return mcp.NewToolResultError(err.Error()), nil
-	}
-
 	match, err := GetToolReqParam[string](tcr, "match", true)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
@@ -94,12 +100,12 @@ func toolExportHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 
 	switch format {
 	case "json":
-		req, err = http.NewRequestWithContext(ctx, http.MethodGet, cfg.SelectAPIURL(tenant, "api", "v1", "export"), nil)
+		req, err = CreateSelectRequest(ctx, cfg, tcr, "api", "v1", "export")
 		if err != nil {
 			return mcp.NewToolResultError(fmt.Sprintf("failed to create request: %v", err)), nil
 		}
 	case "csv":
-		req, err = http.NewRequestWithContext(ctx, http.MethodGet, cfg.SelectAPIURL(tenant, "api", "v1", "export", "csv"), nil)
+		req, err = CreateSelectRequest(ctx, cfg, tcr, "api", "v1", "export", "csv")
 		if err != nil {
 			return mcp.NewToolResultError(fmt.Sprintf("failed to create request: %v", err)), nil
 		}

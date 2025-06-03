@@ -5,9 +5,11 @@ go 1.24.3
 require (
 	github.com/VictoriaMetrics/VictoriaMetrics v1.118.0
 	github.com/VictoriaMetrics/metricsql v0.84.5
+	github.com/VictoriaMetrics/victoriametrics-cloud-api-go v0.0.2
 	github.com/blevesearch/bleve/v2 v2.5.1
 	github.com/mark3labs/mcp-go v0.31.0
 	github.com/tmc/langchaingo v0.1.13
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
@@ -73,5 +75,4 @@ require (
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

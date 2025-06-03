@@ -3,7 +3,6 @@ package tools
 import (
 	"context"
 	"fmt"
-	"net/http"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -13,8 +12,8 @@ import (
 
 const toolNameDownsamplingFiltersDebug = "downsampling_filters_debug"
 
-var (
-	toolDownsamplingFiltersDebug = mcp.NewTool(toolNameDownsamplingFiltersDebug,
+func toolDownsamplingFiltersDebug(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription(`Downsampling filters debug tool is used to debug flag "downsampling.period" with some series and see what downsampling strategy will be applied for which series in Enterprise version of VictoriaMetrics.
 This tool use "/downsampling-filters-debug" API endpoint of VictoriaMetrics API.`),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
@@ -23,6 +22,20 @@ This tool use "/downsampling-filters-debug" API endpoint of VictoriaMetrics API.
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
+	}
+	if c.IsCloud() {
+		options = append(
+			options,
+			mcp.WithString("deployment_id",
+				mcp.Required(),
+				mcp.Title("Deployment ID"),
+				mcp.Description("Unique identifier of the deployment in VictoriaMetrics Cloud"),
+				mcp.Pattern(`^[a-zA-Z0-9\-_]+$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithString("flags",
 			mcp.Required(),
 			mcp.Title("Value of `downsampling.period` flag"),
@@ -35,7 +48,8 @@ This tool use "/downsampling-filters-debug" API endpoint of VictoriaMetrics API.
 			mcp.Pattern(`^([a-zA-Z_]*\{\s*(([a-zA-Z-_]+\s*\=\s*\".*\"))?(\s*,\s*([a-zA-Z-_]+\s*\=\s*\".*\"))*\s*\}\n)+$`),
 		),
 	)
-)
+	return mcp.NewTool(toolNameDownsamplingFiltersDebug, options...)
+}
 
 func toolDownsamplingFiltersDebugHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	flags, err := GetToolReqParam[string](tcr, "flags", true)
@@ -48,7 +62,7 @@ func toolDownsamplingFiltersDebugHandler(ctx context.Context, cfg *config.Config
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, cfg.SelectAPIURL("0", "downsampling-filters-debug"), nil)
+	req, err := CreateSelectRequest(ctx, cfg, tcr, "downsampling-filters-debug")
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("failed to create request: %v", err)), nil
 	}
@@ -65,7 +79,7 @@ func RegisterToolDownsamplingFiltersDebug(s *server.MCPServer, c *config.Config)
 	if c.IsToolDisabled(toolNameDownsamplingFiltersDebug) {
 		return
 	}
-	s.AddTool(toolDownsamplingFiltersDebug, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	s.AddTool(toolDownsamplingFiltersDebug(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolDownsamplingFiltersDebugHandler(ctx, c, request)
 	})
 }
