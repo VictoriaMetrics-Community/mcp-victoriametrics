@@ -9,8 +9,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-var (
-	toolMetrics = mcp.NewTool("metrics",
+const toolNameMetrics = "metrics"
+
+func toolMetrics(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription("List of available metrics of the VictoriaMetrics instance. This tool uses `/api/v1/label/__name__/values` endpoint of VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "List of metric names",
@@ -18,12 +20,20 @@ var (
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
-		mcp.WithString("tenant",
-			mcp.Title("Tenant name"),
-			mcp.Description("Name of the tenant for which the list of metrics will be displayed"),
-			mcp.DefaultString("0"),
-			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
-		),
+	}
+	if c.IsCluster() {
+		options = append(
+			options,
+			mcp.WithString("tenant",
+				mcp.Title("Tenant name"),
+				mcp.Description("Name of the tenant for which the list of metrics will be displayed"),
+				mcp.DefaultString("0"),
+				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithString("match",
 			mcp.Title("Match series for metric names"),
 			mcp.Description("Time series selector argument that selects the series from which to read the metrics"),
@@ -48,7 +58,8 @@ var (
 			mcp.Min(0),
 		),
 	)
-)
+	return mcp.NewTool(toolNameMetrics, options...)
+}
 
 func toolMetricsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
@@ -80,7 +91,10 @@ func toolMetricsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToo
 }
 
 func RegisterToolMetrics(s *server.MCPServer, c *config.Config) {
-	s.AddTool(toolMetrics, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	if c.IsToolDisabled(toolNameMetrics) {
+		return
+	}
+	s.AddTool(toolMetrics(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolMetricsHandler(ctx, c, request)
 	})
 }

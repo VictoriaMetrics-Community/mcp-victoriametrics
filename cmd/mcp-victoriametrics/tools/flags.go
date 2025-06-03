@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
+const toolNameFlags = "flags"
+
 var (
-	toolFlags = mcp.NewTool("flags",
+	toolFlags = mcp.NewTool(toolNameFlags,
 		mcp.WithDescription("List of non-default flags (parameters) of the VictoriaMetrics instance. This tools uses `/flags` endpoint of VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "List of non-default flags (parameters)",
@@ -32,6 +34,9 @@ func toolFlagsHandler(ctx context.Context, cfg *config.Config, _ mcp.CallToolReq
 }
 
 func RegisterToolFlags(s *server.MCPServer, c *config.Config) {
+	if c.IsToolDisabled(toolNameFlags) {
+		return
+	}
 	s.AddTool(toolFlags, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolFlagsHandler(ctx, c, request)
 	})

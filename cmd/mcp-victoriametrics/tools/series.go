@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-var (
-	toolSeries = mcp.NewTool("series",
+const toolNameSeries = "series"
+
+func toolSeries(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription("List of available time series of the VictoriaMetrics instance. This tool uses `/api/v1/series` endpoint of VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "List of time series",
@@ -20,12 +22,20 @@ var (
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
-		mcp.WithString("tenant",
-			mcp.Title("Tenant name"),
-			mcp.Description("Name of the tenant for which the list of time series will be displayed"),
-			mcp.DefaultString("0"),
-			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
-		),
+	}
+	if c.IsCluster() {
+		options = append(
+			options,
+			mcp.WithString("tenant",
+				mcp.Title("Tenant name"),
+				mcp.Description("Name of the tenant for which the list of time series will be displayed"),
+				mcp.DefaultString("0"),
+				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithString("match",
 			mcp.Title("Match series"),
 			mcp.Description("Time series selector argument that selects the series"),
@@ -50,7 +60,8 @@ var (
 			mcp.Min(0),
 		),
 	)
-)
+	return mcp.NewTool(toolNameSeries, options...)
+}
 
 func toolSeriesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
@@ -102,7 +113,10 @@ func toolSeriesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 }
 
 func RegisterToolSeries(s *server.MCPServer, c *config.Config) {
-	s.AddTool(toolSeries, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	if c.IsToolDisabled(toolNameSeries) {
+		return
+	}
+	s.AddTool(toolSeries(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolSeriesHandler(ctx, c, request)
 	})
 }

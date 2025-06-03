@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
+const toolNameTenants = "tenants"
+
 var (
-	toolTenants = mcp.NewTool("tenants",
+	toolTenants = mcp.NewTool(toolNameTenants,
 		mcp.WithDescription("List of tenants of the VictoriaMetrics instance.  This tool uses `/admin/tenants` endpoint of VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "List of tenants",
@@ -32,6 +34,12 @@ func toolTenantsHandler(ctx context.Context, cfg *config.Config, _ mcp.CallToolR
 }
 
 func RegisterToolTenants(s *server.MCPServer, c *config.Config) {
+	if !c.IsCluster() {
+		return
+	}
+	if c.IsToolDisabled(toolNameTenants) {
+		return
+	}
 	s.AddTool(toolTenants, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolTenantsHandler(ctx, c, request)
 	})

@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-var (
-	toolTopQueries = mcp.NewTool("top_queries",
+const toolNameTopQueries = "top_queries"
+
+func toolTopQueries(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription(`Top queries.
 This tool can determine top queries of the following query types:
 - the most frequently executed queries;
@@ -26,12 +28,20 @@ This information is obtained from the "/api/v1/status/top_queries" HTTP endpoint
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
-		mcp.WithString("tenant",
-			mcp.Title("Tenant name"),
-			mcp.Description("Name of the tenant for which the top queries will be displayed"),
-			mcp.DefaultString("0"),
-			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
-		),
+	}
+	if c.IsCluster() {
+		options = append(
+			options,
+			mcp.WithString("tenant",
+				mcp.Title("Tenant name"),
+				mcp.Description("Name of the tenant for which the top queries will be displayed"),
+				mcp.DefaultString("0"),
+				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithNumber("topN",
 			mcp.Required(),
 			mcp.Title("Top N"),
@@ -46,7 +56,8 @@ This information is obtained from the "/api/v1/status/top_queries" HTTP endpoint
 			mcp.Pattern(`^([0-9]+)([a-z]+)$`),
 		),
 	)
-)
+	return mcp.NewTool(toolNameTopQueries, options...)
+}
 
 func toolTopQueriesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
@@ -83,7 +94,10 @@ func toolTopQueriesHandler(ctx context.Context, cfg *config.Config, tcr mcp.Call
 }
 
 func RegisterToolTopQueries(s *server.MCPServer, c *config.Config) {
-	s.AddTool(toolTopQueries, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	if c.IsToolDisabled(toolNameTopQueries) {
+		return
+	}
+	s.AddTool(toolTopQueries(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolTopQueriesHandler(ctx, c, request)
 	})
 }

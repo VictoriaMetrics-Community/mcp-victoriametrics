@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-var (
-	toolRules = mcp.NewTool("rules",
+const toolNameRules = "rules"
+
+func toolRules(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription("List of alerting and recording rules of VictoriaMetrics instance. This tool uses `/api/v1/rules` endpoint of vmalert API proxied by VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "List of alerting and recording rules",
@@ -20,12 +22,20 @@ var (
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
-		mcp.WithString("tenant",
-			mcp.Title("Tenant name"),
-			mcp.Description("Name of the tenant for which the list of rules will be displayed"),
-			mcp.DefaultString("0"),
-			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
-		),
+	}
+	if c.IsCluster() {
+		options = append(
+			options,
+			mcp.WithString("tenant",
+				mcp.Title("Tenant name"),
+				mcp.Description("Name of the tenant for which the list of rules will be displayed"),
+				mcp.DefaultString("0"),
+				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithString("type",
 			mcp.Title("Rules type"),
 			mcp.Description("Rules type to be displayed: alert or record"),
@@ -59,7 +69,8 @@ var (
 			mcp.Items(map[string]any{"type": "string"}),
 		),
 	)
-)
+	return mcp.NewTool(toolNameRules, options...)
+}
 
 func toolRulesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
@@ -127,7 +138,10 @@ func toolRulesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolR
 }
 
 func RegisterToolRules(s *server.MCPServer, c *config.Config) {
-	s.AddTool(toolRules, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	if c.IsToolDisabled(toolNameRules) {
+		return
+	}
+	s.AddTool(toolRules(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolRulesHandler(ctx, c, request)
 	})
 }

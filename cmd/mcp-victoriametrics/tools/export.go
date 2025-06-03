@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-var (
-	toolExport = mcp.NewTool("export",
+const toolNameExport = "export"
+
+func toolExport(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription("Export time series to file (json or csv) from VictoriaMetrics instance. This tool uses `/api/v1/export` or `/api/v1/export/csv` endpoints of VictoriaMetrics API)"),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "Export time series",
@@ -20,12 +22,20 @@ var (
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
-		mcp.WithString("tenant",
-			mcp.Title("Tenant name"),
-			mcp.Description("Name of the tenant for which the data will be exported"),
-			mcp.DefaultString("0"),
-			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
-		),
+	}
+	if c.IsCluster() {
+		options = append(
+			options,
+			mcp.WithString("tenant",
+				mcp.Title("Tenant name"),
+				mcp.Description("Name of the tenant for which the data will be exported"),
+				mcp.DefaultString("0"),
+				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithString("match",
 			mcp.Required(),
 			mcp.Title("Match series for export"),
@@ -50,7 +60,9 @@ var (
 			mcp.Enum("csv", "json"),
 		),
 	)
-)
+
+	return mcp.NewTool(toolNameExport, options...)
+}
 
 func toolExportHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
@@ -110,7 +122,10 @@ func toolExportHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 }
 
 func RegisterToolExport(s *server.MCPServer, c *config.Config) {
-	s.AddTool(toolExport, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	if c.IsToolDisabled(toolNameExport) {
+		return
+	}
+	s.AddTool(toolExport(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolExportHandler(ctx, c, request)
 	})
 }

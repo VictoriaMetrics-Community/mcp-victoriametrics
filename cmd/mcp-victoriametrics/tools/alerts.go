@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-var (
-	toolAlerts = mcp.NewTool("alerts",
+const toolNameAlerts = "alerts"
+
+func toolAlerts(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription("List of firing and pending alerts of the VictoriaMetrics instance. This tool uses `/api/v1/alerts` endpoint of vmalert API, proxied by VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "List of alerts",
@@ -20,14 +22,17 @@ var (
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
+	}
+	if c.IsCluster() {
 		mcp.WithString("tenant",
 			mcp.Title("Tenant name"),
 			mcp.Description("Name of the tenant for which the list of alerts will be displayed"),
 			mcp.DefaultString("0"),
 			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
-		),
-	)
-)
+		)
+	}
+	return mcp.NewTool(toolNameAlerts, options...)
+}
 
 func toolAlertsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
@@ -42,7 +47,10 @@ func toolAlertsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 }
 
 func RegisterToolAlerts(s *server.MCPServer, c *config.Config) {
-	s.AddTool(toolAlerts, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	if c.IsToolDisabled(toolNameAlerts) {
+		return
+	}
+	s.AddTool(toolAlerts(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolAlertsHandler(ctx, c, request)
 	})
 }

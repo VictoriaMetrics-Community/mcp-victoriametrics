@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-var (
-	toolTSDBStatus = mcp.NewTool("tsdb_status",
+const toolNameTSDBStatus = "tsdb_status"
+
+func toolTSDBStatus(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription(`The following tool returns various cardinality statistics about the VictoriaMetrics TSDB:
 - Metric names with the highest number of series.
 - Labels with the highest number of series.
@@ -28,12 +30,20 @@ This tool returns TSDB stats from "/api/v1/status/tsdb" endpoint of VictoriaMetr
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
-		mcp.WithString("tenant",
-			mcp.Title("Tenant name"),
-			mcp.Description("Name of the tenant for which the TSDB stats will be displayed"),
-			mcp.DefaultString("0"),
-			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
-		),
+	}
+	if c.IsCluster() {
+		options = append(
+			options,
+			mcp.WithString("tenant",
+				mcp.Title("Tenant name"),
+				mcp.Description("Name of the tenant for which the TSDB stats will be displayed"),
+				mcp.DefaultString("0"),
+				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithNumber("topN",
 			mcp.Title("Top N"),
 			mcp.Description("is the number of top entries to return in the response"),
@@ -62,7 +72,8 @@ This tool returns TSDB stats from "/api/v1/status/tsdb" endpoint of VictoriaMetr
 			mcp.DefaultString(""),
 		),
 	)
-)
+	return mcp.NewTool(toolNameTSDBStatus, options...)
+}
 
 func toolTSDBStatusHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
@@ -123,7 +134,10 @@ func toolTSDBStatusHandler(ctx context.Context, cfg *config.Config, tcr mcp.Call
 }
 
 func RegisterToolTSDBStatus(s *server.MCPServer, c *config.Config) {
-	s.AddTool(toolTSDBStatus, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	if c.IsToolDisabled(toolNameTSDBStatus) {
+		return
+	}
+	s.AddTool(toolTSDBStatus(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolTSDBStatusHandler(ctx, c, request)
 	})
 }

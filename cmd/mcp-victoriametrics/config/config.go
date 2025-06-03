@@ -4,25 +4,38 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"strings"
 )
 
 type Config struct {
-	serverMode   string
-	sseAddr      string
-	entrypoint   string
-	instanceType string
-	bearerToken  string
+	serverMode    string
+	sseAddr       string
+	entrypoint    string
+	instanceType  string
+	bearerToken   string
+	disabledTools map[string]bool
 
 	entryPointURL *url.URL
 }
 
 func InitConfig() (*Config, error) {
+	disabledTools := os.Getenv("MCP_DISABLED_TOOLS")
+	disabledToolsMap := make(map[string]bool)
+	if disabledTools != "" {
+		for _, tool := range strings.Split(disabledTools, ",") {
+			tool = strings.Trim(tool, " ,")
+			if tool != "" {
+				disabledToolsMap[tool] = true
+			}
+		}
+	}
 	result := &Config{
-		serverMode:   os.Getenv("MCP_SERVER_MODE"),
-		sseAddr:      os.Getenv("MCP_SSE_ADDR"),
-		entrypoint:   os.Getenv("VM_INSTANCE_ENTRYPOINT"),
-		instanceType: os.Getenv("VM_INSTANCE_TYPE"),
-		bearerToken:  os.Getenv("VM_INSTANCE_BEARER_TOKEN"),
+		serverMode:    os.Getenv("MCP_SERVER_MODE"),
+		sseAddr:       os.Getenv("MCP_SSE_ADDR"),
+		entrypoint:    os.Getenv("VM_INSTANCE_ENTRYPOINT"),
+		instanceType:  os.Getenv("VM_INSTANCE_TYPE"),
+		bearerToken:   os.Getenv("VM_INSTANCE_BEARER_TOKEN"),
+		disabledTools: disabledToolsMap,
 	}
 	if result.entrypoint == "" {
 		return nil, fmt.Errorf("VM_INSTANCE_ENTRYPOINT is not set")
@@ -93,4 +106,12 @@ func (c *Config) SelectAPIURL(tenant string, path ...string) string {
 	}
 	args := []string{"select", tenant, "prometheus"}
 	return c.entryPointURL.JoinPath(append(args, path...)...).String()
+}
+
+func (c *Config) IsToolDisabled(toolName string) bool {
+	if c.disabledTools == nil {
+		return false
+	}
+	disabled, ok := c.disabledTools[toolName]
+	return ok && disabled
 }

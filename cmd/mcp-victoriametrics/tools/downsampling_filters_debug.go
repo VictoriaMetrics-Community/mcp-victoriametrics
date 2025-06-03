@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
+const toolNameDownsamplingFiltersDebug = "downsampling_filters_debug"
+
 var (
-	toolDownsamplingFiltersDebug = mcp.NewTool("downsampling_filters_debug",
+	toolDownsamplingFiltersDebug = mcp.NewTool(toolNameDownsamplingFiltersDebug,
 		mcp.WithDescription(`Downsampling filters debug tool is used to debug flag "downsampling.period" with some series and see what downsampling strategy will be applied for which series in Enterprise version of VictoriaMetrics.
 This tool use "/downsampling-filters-debug" API endpoint of VictoriaMetrics API.`),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
@@ -60,6 +62,9 @@ func toolDownsamplingFiltersDebugHandler(ctx context.Context, cfg *config.Config
 }
 
 func RegisterToolDownsamplingFiltersDebug(s *server.MCPServer, c *config.Config) {
+	if c.IsToolDisabled(toolNameDownsamplingFiltersDebug) {
+		return
+	}
 	s.AddTool(toolDownsamplingFiltersDebug, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolDownsamplingFiltersDebugHandler(ctx, c, request)
 	})

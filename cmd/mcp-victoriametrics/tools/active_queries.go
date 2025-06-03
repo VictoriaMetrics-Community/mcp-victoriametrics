@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-var (
-	toolActiveQueries = mcp.NewTool("active_queries",
+const toolNameActiveQueries = "active_queries"
+
+func toolActiveQueries(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription(`Active queries. This tool can determine currently active queries in the VictoriaMetrics instance.
 This information is obtained from the "/api/v1/status/active_queries" HTTP endpoint of VictoriaMetrics API.`),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
@@ -21,14 +23,19 @@ This information is obtained from the "/api/v1/status/active_queries" HTTP endpo
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
-		mcp.WithString("tenant",
-			mcp.Title("Tenant name"),
-			mcp.Description("Name of the tenant for which the active queries will be displayed"),
-			mcp.DefaultString("0"),
-			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
-		),
-	)
-)
+	}
+	if c.IsCluster() {
+		options = append(options,
+			mcp.WithString("tenant",
+				mcp.Title("Tenant name"),
+				mcp.Description("Name of the tenant for which the active queries will be displayed"),
+				mcp.DefaultString("0"),
+				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+			),
+		)
+	}
+	return mcp.NewTool(toolNameActiveQueries, options...)
+}
 
 func toolActiveQueriesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
@@ -45,7 +52,10 @@ func toolActiveQueriesHandler(ctx context.Context, cfg *config.Config, tcr mcp.C
 }
 
 func RegisterToolActiveQueries(s *server.MCPServer, c *config.Config) {
-	s.AddTool(toolActiveQueries, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	if c.IsToolDisabled(toolNameActiveQueries) {
+		return
+	}
+	s.AddTool(toolActiveQueries(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolActiveQueriesHandler(ctx, c, request)
 	})
 }
