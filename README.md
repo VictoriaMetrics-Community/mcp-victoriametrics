@@ -23,6 +23,7 @@ This MCP server allows you to use almost all read-only APIs of VictoriaMetrics, 
 - Exploring cardinality of your data and metrics usage statistics
 - Analyzing, tracing, prettifying and explaining your queries
 - Debugging your relabeling rules, downsampling and retention policy configurations 
+- Integration with [VictoriaMetrics Cloud](https://docs.victoriametrics.com/victoriametrics-cloud/)
  
 In addition, the MCP server contains embedded up-to-date documentation and is able to search it without online access.
 
@@ -36,7 +37,7 @@ You can also combine the MCP server with other observability or doc search relat
 
 ## Requirements
 
-- [VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/) instance ([single-node](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) or [cluster](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/))
+- [VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/) or [VictoriaMetrics Cloud](https://docs.victoriametrics.com/victoriametrics-cloud/) instance ([single-node](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) or [cluster](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/))
 - Go 1.24 or higher (if you want to build from source)
 
 ## Installation
@@ -94,14 +95,20 @@ npx -y @smithery/cli install @VictoriaMetrics-Community/mcp-victoriametrics --cl
 
 MCP Server for VictoriaMetrics is configured via environment variables:
 
-| Variable                   | Description | Required | Default | Allowed values |
-|----------------------------|-------------|----------|---------|---------|
-| `VM_INSTANCE_ENTRYPOINT`   | URL to VictoriaMetrics instance | Yes | - | - |
-| `VM_INSTANCE_TYPE`         | Type of VictoriaMetrics instance | Yes | - | `single`, `cluster` |
-| `VM_INSTANCE_BEARER_TOKEN` | Authentication token for VictoriaMetrics API | No | - | - |
-| `MCP_SERVER_MODE`          | Server operation mode | No | `stdio` | `stdio`, `sse` |
-| `MCP_SSE_ADDR`             | Address for SSE server to listen on | No | `localhost:8080` | - |
-| `MCP_DISABLED_TOOLS`       | Comma-separated list of tools to disable | No | - | - |
+| Variable                                 | Description                                    | Required                               | Default | Allowed values |
+|------------------------------------------|------------------------------------------------|----------------------------------------|---------|---------|
+| `VM_INSTANCE_ENTRYPOINT` / `VMC_API_KEY` | URL to VictoriaMetrics instance                | Yes (if you don't use `VMC_API_KEY`)   | - | - |
+| `VM_INSTANCE_TYPE`                       | Type of VictoriaMetrics instance               | Yes (if you don't use ``VMC_API_KEY``) | - | `single`, `cluster` |
+| `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API   | No                                     | - | - |
+| `VMC_API_KEY` | [API key from VictoriaMetrics Cloud Console](https://docs.victoriametrics.com/victoriametrics-cloud/api/) | No                                     | - | - |
+| `MCP_SERVER_MODE`                        | Server operation mode                          | No                                     | `stdio` | `stdio`, `sse` |
+| `MCP_SSE_ADDR`                           | Address for SSE server to listen on            | No                                     | `localhost:8080` | - |
+| `MCP_DISABLED_TOOLS`                     | Comma-separated list of tools to disable       | No                                     | - | - |
+
+You can use two options to connect to your VictoriaMetrics instance:
+
+- Using `VM_INSTANCE_ENTRYPOINT` + `VM_INSTANCE_TYPE` + `VM_INSTANCE_BEARER_TOKEN` (optional) environment variables to connect to any single-node or cluster instance of VictoriaMetrics.
+- Using `VMC_API_KEY` environment variable to work with your [VictoriaMetrics Cloud](https://victoriametrics.com/products/cloud/) instances.
 
 ### Сonfiguration examples
 
@@ -115,6 +122,9 @@ export VM_INSTANCE_BEARER_TOKEN="your-token"
 export VM_INSTANCE_ENTRYPOINT="https://play.victoriametrics.com"
 export VM_INSTANCE_TYPE="cluster"
 export MCP_DISABLED_TOOLS="export,metric_statistics,test_rules" # disable export, statistics and rules unit test tools
+
+# For VictoriaMetrics Cloud
+export VMC_API_KEY="<you-api-key>"
 
 # Server mode
 export MCP_SERVER_MODE="sse"
@@ -287,7 +297,7 @@ Just take a look into [Dialog example](#dialog-example) section for better under
 
 MCP VictoriaMetrics provides numerous tools for interacting with your VictoriaMetrics instance.
 
-Here's a list of available tools:
+Here's a list of common available tools:
 
 | Tool | Description                                               |
 |------|-----------------------------------------------------------|
@@ -313,6 +323,18 @@ Here's a list of available tools:
 | `prettify_query` | Prettify and format PromQL/MetricsQL queries              |
 | `explain_query` | Parse PromQL/MetricsQL queries and explain how it works   |
 | `test_rules` | Unit-test alerting and recording rules using vmalert tool |
+
+Here are some additional tools that are available for [VictoriaMetrics Cloud](https://docs.victoriametrics.com/victoriametrics-cloud/) (with specifying `VMC_API_KEY` parameter) users:
+
+| Tool              | Description                                                      |
+|-------------------|------------------------------------------------------------------|
+| `deployments`     | List available deployments in VictoriaMetrics Cloud              |
+| `cloud_providers` | List available cloud providers in VictoriaMetrics Cloud          |
+| `regions`         | List available cloud providers regions in VictoriaMetrics Cloud  |
+| `tiers`           | List available deployment tiers in VictoriaMetrics Cloud         |
+| `access_tokens`   | List available deployment access tokens in VictoriaMetrics Cloud |
+| `rule_filenames`  | List available alerting and recording rule filenames in VictoriaMetrics Cloud |
+| `rule_file`       | Content of a specific alerting or recording rule file in VictoriaMetrics Cloud |
 
 ### Prompts
 
