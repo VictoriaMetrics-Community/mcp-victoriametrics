@@ -94,13 +94,14 @@ npx -y @smithery/cli install @VictoriaMetrics-Community/mcp-victoriametrics --cl
 
 MCP Server for VictoriaMetrics is configured via environment variables:
 
-| Variable | Description | Required | Default | Allowed values |
-|----------|-------------|----------|---------|---------|
-| `VM_INSTANCE_ENTRYPOINT` | URL to VictoriaMetrics instance | Yes | - | - |
-| `VM_INSTANCE_TYPE` | Type of VictoriaMetrics instance | Yes | - | `single`, `cluster` |
+| Variable                   | Description | Required | Default | Allowed values |
+|----------------------------|-------------|----------|---------|---------|
+| `VM_INSTANCE_ENTRYPOINT`   | URL to VictoriaMetrics instance | Yes | - | - |
+| `VM_INSTANCE_TYPE`         | Type of VictoriaMetrics instance | Yes | - | `single`, `cluster` |
 | `VM_INSTANCE_BEARER_TOKEN` | Authentication token for VictoriaMetrics API | No | - | - |
-| `MCP_SERVER_MODE` | Server operation mode | No | `stdio` | `stdio`, `sse` |
-| `MCP_SSE_ADDR` | Address for SSE server to listen on | No | `localhost:8080` | - |
+| `MCP_SERVER_MODE`          | Server operation mode | No | `stdio` | `stdio`, `sse` |
+| `MCP_SSE_ADDR`             | Address for SSE server to listen on | No | `localhost:8080` | - |
+| `MCP_DISABLED_TOOLS`       | Comma-separated list of tools to disable | No | - | - |
 
 ### Сonfiguration examples
 
@@ -113,6 +114,7 @@ export VM_INSTANCE_BEARER_TOKEN="your-token"
 # For a cluster
 export VM_INSTANCE_ENTRYPOINT="https://play.victoriametrics.com"
 export VM_INSTANCE_TYPE="cluster"
+export VM_DISABLED_TOOLS="export,metric_statistics,test_rules" # disable export, statistics and rules unit test tools
 
 # Server mode
 export MCP_SERVER_MODE="sse"
@@ -478,7 +480,7 @@ But you can use any other tools and combine them in your own way.
 - [ ] Add flags/configs validation tool
 - [ ] Support tools for vmagent API
 - [ ] Support [new vmalert API](https://github.com/VictoriaMetrics/VictoriaMetrics/pull/9046/files)
-- [ ] Enabling/disabling tools via configuration
+- [x] Enabling/disabling tools via configuration
 - [ ] Tools for Alertmanager APIs (#6)
 - [ ] Support for [metrics metadata](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/2974) in case of implementation in VictoriaMetrics
 
