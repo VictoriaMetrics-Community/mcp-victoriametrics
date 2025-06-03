@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-var (
-	toolPrettifyQuery = mcp.NewTool("prettify_query",
+const toolNamePrettifyQuery = "prettify_query"
+
+func toolPrettifyQuery(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription("Prettify (format) MetricsQL query. This tool uses `/prettify-query` endpoint of VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "Prettify Query",
@@ -20,19 +22,28 @@ var (
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
-		mcp.WithString("tenant",
-			mcp.Title("Tenant name"),
-			mcp.Description("Name of the tenant for which the data will be displayed"),
-			mcp.DefaultString("0"),
-			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
-		),
+	}
+	if c.IsCluster() {
+		options = append(
+			options,
+			mcp.WithString("tenant",
+				mcp.Title("Tenant name"),
+				mcp.Description("Name of the tenant for which the data will be displayed"),
+				mcp.DefaultString("0"),
+				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithString("query",
 			mcp.Required(),
 			mcp.Title("MetricsQL or PromQL expression"),
 			mcp.Description(`MetricsQL or PromQL expression for prettification. This is the query that will be formatted.`),
 		),
 	)
-)
+	return mcp.NewTool(toolNamePrettifyQuery, options...)
+}
 
 func toolPrettifyQueryHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
@@ -58,7 +69,10 @@ func toolPrettifyQueryHandler(ctx context.Context, cfg *config.Config, tcr mcp.C
 }
 
 func RegisterToolPrettifyQuery(s *server.MCPServer, c *config.Config) {
-	s.AddTool(toolPrettifyQuery, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	if c.IsToolDisabled(toolNamePrettifyQuery) {
+		return
+	}
+	s.AddTool(toolPrettifyQuery(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolPrettifyQueryHandler(ctx, c, request)
 	})
 }

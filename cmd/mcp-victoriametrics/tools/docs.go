@@ -11,8 +11,11 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/resources"
 )
 
+const toolNameDocumentation = "documentation"
+const defaultDocSearchLimit = 30
+
 var (
-	toolDocumentation = mcp.NewTool("documentation",
+	toolDocumentation = mcp.NewTool(toolNameDocumentation,
 		mcp.WithDescription("Search documentation resources for the given search query, returning the URIs of the resources that match the search criteria sorted by relevance. This tool can help to get context for any VictoriaMetrics related question."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "Search documentation resources",
@@ -28,7 +31,7 @@ var (
 		mcp.WithNumber("limit",
 			mcp.Title("Maximum number of results"),
 			mcp.Description("Maximum number of results to return"),
-			mcp.DefaultNumber(50),
+			mcp.DefaultNumber(defaultDocSearchLimit),
 			mcp.Min(1),
 		),
 	)
@@ -45,7 +48,7 @@ func toolDocumentationHandler(_ context.Context, tcr mcp.CallToolRequest) (*mcp.
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 	if limit < 1 {
-		limit = 50
+		limit = defaultDocSearchLimit
 	}
 
 	rs, err := resources.SearchDocResources(query, int(limit))
@@ -65,6 +68,9 @@ func toolDocumentationHandler(_ context.Context, tcr mcp.CallToolRequest) (*mcp.
 	return result, nil
 }
 
-func RegisterToolDocumentation(s *server.MCPServer, _ *config.Config) {
+func RegisterToolDocumentation(s *server.MCPServer, c *config.Config) {
+	if c.IsToolDisabled(toolNameDocumentation) {
+		return
+	}
 	s.AddTool(toolDocumentation, toolDocumentationHandler)
 }

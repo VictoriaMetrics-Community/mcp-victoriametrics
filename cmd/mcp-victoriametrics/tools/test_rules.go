@@ -17,9 +17,11 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
+const toolNameTestRules = "test_rules"
+
 var (
-	toolTestRules = mcp.NewTool("test_rules",
-		mcp.WithDescription("Unit test alerting and recording rules. It use vmalert-tool (https://docs.victoriametrics.com/victoriametrics/vmalert-tool/) under the hood . vmalert-tool unittest is compatible with Prometheus config format for tests."),
+	toolTestRules = mcp.NewTool(toolNameTestRules,
+		mcp.WithDescription("Unit test alerting and recording rules. It use **[vmalert-tool](https://docs.victoriametrics.com/victoriametrics/vmalert-tool/)** under the hood . vmalert-tool unittest is compatible with Prometheus config format for tests."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "Unit test rules",
 			ReadOnlyHint:    ptr(true),
@@ -53,7 +55,7 @@ var (
 		mcp.WithArray("tests",
 			mcp.Required(),
 			mcp.Title("List of unit tests"),
-			mcp.Description(`The list of unit test files to be checked during evaluation.`),
+			mcp.Description(`The list of unit test files to be checked during evaluation. See "vmalert-tool" docs for details on the format of the tests.`),
 			mcp.Items(map[string]any{
 				"type":  "object",
 				"title": "Unit test group configuration",
@@ -279,9 +281,8 @@ func toolTestRulesHandler(_ context.Context, _ *config.Config, tcr mcp.CallToolR
 }
 
 func RegisterToolTestRules(s *server.MCPServer, c *config.Config) {
-	err := initFunctionsInfo()
-	if err != nil {
-		panic(fmt.Sprintf("error initializing functions info: %s", err))
+	if c.IsToolDisabled(toolNameTestRules) {
+		return
 	}
 	s.AddTool(toolTestRules, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolTestRulesHandler(ctx, c, request)

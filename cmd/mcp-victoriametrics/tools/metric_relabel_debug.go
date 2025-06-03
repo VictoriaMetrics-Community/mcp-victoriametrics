@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
+const toolNameMetricRelabelDebug = "metric_relabel_debug"
+
 var (
-	toolMetricRelabelDebug = mcp.NewTool("metric_relabel_debug",
+	toolMetricRelabelDebug = mcp.NewTool(toolNameMetricRelabelDebug,
 		mcp.WithDescription(`Metric relabel debug tool can help with step-by-step debugging of Prometheus-compatible relabeling rules. It can be used to check how the relabeling rules are applied to the given metric. 
 The tool use "/metric-relabel-debug" endpoint of the VictoriaMetrics API. `),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
@@ -61,6 +63,9 @@ func toolMetricRelabelDebugHandler(ctx context.Context, cfg *config.Config, tcr 
 }
 
 func RegisterToolMetricRelabelDebug(s *server.MCPServer, c *config.Config) {
+	if c.IsToolDisabled(toolNameMetricRelabelDebug) {
+		return
+	}
 	s.AddTool(toolMetricRelabelDebug, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolMetricRelabelDebugHandler(ctx, c, request)
 	})

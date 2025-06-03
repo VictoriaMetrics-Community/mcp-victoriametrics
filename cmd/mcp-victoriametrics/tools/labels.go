@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-var (
-	toolLabels = mcp.NewTool("labels",
+const toolNameLabels = "labels"
+
+func toolLabels(c *config.Config) mcp.Tool {
+	options := []mcp.ToolOption{
 		mcp.WithDescription("List of label names of the VictoriaMetrics instance. This tools uses `/api/v1/labels` endpoint of VictoriaMetrics API."),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "List of label names",
@@ -20,12 +22,20 @@ var (
 			DestructiveHint: ptr(false),
 			OpenWorldHint:   ptr(true),
 		}),
-		mcp.WithString("tenant",
-			mcp.Title("Tenant name"),
-			mcp.Description("Name of the tenant for which the list of labels will be displayed"),
-			mcp.DefaultString("0"),
-			mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
-		),
+	}
+	if c.IsCluster() {
+		options = append(
+			options,
+			mcp.WithString("tenant",
+				mcp.Title("Tenant name"),
+				mcp.Description("Name of the tenant for which the list of labels will be displayed"),
+				mcp.DefaultString("0"),
+				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+			),
+		)
+	}
+	options = append(
+		options,
 		mcp.WithString("match",
 			mcp.Title("Match series for label names"),
 			mcp.Description("Time series selector argument that selects the series from which to read the label names"),
@@ -50,7 +60,8 @@ var (
 			mcp.Min(0),
 		),
 	)
-)
+	return mcp.NewTool(toolNameLabels, options...)
+}
 
 func toolLabelsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
@@ -102,7 +113,10 @@ func toolLabelsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 }
 
 func RegisterToolLabels(s *server.MCPServer, c *config.Config) {
-	s.AddTool(toolLabels, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	if c.IsToolDisabled(toolNameLabels) {
+		return
+	}
+	s.AddTool(toolLabels(c), func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolLabelsHandler(ctx, c, request)
 	})
 }

@@ -11,8 +11,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
+const toolNameRetentionFiltersDebug = "retention_filters_debug"
+
 var (
-	toolRetentionFiltersDebug = mcp.NewTool("retention_filters_debug",
+	toolRetentionFiltersDebug = mcp.NewTool(toolNameRetentionFiltersDebug,
 		mcp.WithDescription(`Retention filters debug tool is used to debug flag "retentionFilter" and "retentionPeriod" with some series and see what retention policy will be applied for which series in Enterprise version of VictoriaMetrics.
 This tool use "/retention-filters-debug" API endpoint of VictoriaMetrics API.`),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
@@ -60,6 +62,9 @@ func toolRetentionFiltersDebugHandler(ctx context.Context, cfg *config.Config, t
 }
 
 func RegisterToolRetentionFiltersDebug(s *server.MCPServer, c *config.Config) {
+	if c.IsToolDisabled(toolNameRetentionFiltersDebug) {
+		return
+	}
 	s.AddTool(toolRetentionFiltersDebug, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolRetentionFiltersDebugHandler(ctx, c, request)
 	})

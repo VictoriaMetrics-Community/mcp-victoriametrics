@@ -15,8 +15,10 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/resources"
 )
 
+const toolNameExplainQuery = "explain_query"
+
 var (
-	toolExplainQuery = mcp.NewTool("explain_query",
+	toolExplainQuery = mcp.NewTool(toolNameExplainQuery,
 		mcp.WithDescription("Explain how MetricsQL query works"),
 		mcp.WithToolAnnotation(mcp.ToolAnnotation{
 			Title:           "Explain Query",
@@ -49,6 +51,19 @@ func toolExplainQueryHandler(_ context.Context, _ *config.Config, tcr mcp.CallTo
 	}
 
 	return mcp.NewToolResultText(string(data)), nil
+}
+
+func RegisterToolExplainQuery(s *server.MCPServer, c *config.Config) {
+	if c.IsToolDisabled(toolNameExplainQuery) {
+		return
+	}
+	err := initFunctionsInfo()
+	if err != nil {
+		panic(fmt.Sprintf("error initializing functions info: %s", err))
+	}
+	s.AddTool(toolExplainQuery, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		return toolExplainQueryHandler(ctx, c, request)
+	})
 }
 
 func getQueryInfo(query string) (map[string]any, error) {
@@ -467,14 +482,4 @@ func getSyntaxTree(
 		result["value"] = n.S
 	}
 	return result
-}
-
-func RegisterToolExplainQuery(s *server.MCPServer, c *config.Config) {
-	err := initFunctionsInfo()
-	if err != nil {
-		panic(fmt.Sprintf("error initializing functions info: %s", err))
-	}
-	s.AddTool(toolExplainQuery, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		return toolExplainQueryHandler(ctx, c, request)
-	})
 }

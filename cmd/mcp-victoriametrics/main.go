@@ -42,9 +42,7 @@ Try not to second guess information - if you don't know something or lack inform
 
 	resources.RegisterDocsResources(s, c)
 
-	if c.IsCluster() {
-		tools.RegisterToolTenants(s, c)
-	}
+	tools.RegisterToolTenants(s, c)
 	tools.RegisterToolQuery(s, c)
 	tools.RegisterToolFlags(s, c)
 	tools.RegisterToolRules(s, c)
