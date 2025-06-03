@@ -114,7 +114,7 @@ export VM_INSTANCE_BEARER_TOKEN="your-token"
 # For a cluster
 export VM_INSTANCE_ENTRYPOINT="https://play.victoriametrics.com"
 export VM_INSTANCE_TYPE="cluster"
-export VM_DISABLED_TOOLS="export,metric_statistics,test_rules" # disable export, statistics and rules unit test tools
+export MCP_DISABLED_TOOLS="export,metric_statistics,test_rules" # disable export, statistics and rules unit test tools
 
 # Server mode
 export MCP_SERVER_MODE="sse"
