@@ -1,0 +1,395 @@
+[
+  {
+    "name": "cluster:namespace:pod_cpu:active:kube_pod_container_resource_limits",
+    "type": "recording_rule",
+    "description": "kube_pod_container_resource_limits{resource=\"cpu\",job=\"kube-state-metrics\"}  * on (namespace,pod,cluster)\ngroup_left() max by (namespace,pod,cluster) (\n (kube_pod_status_phase{phase=~\"Pending|Running\"} == 1)\n )",
+    "labels": []
+  },
+  {
+    "name": "namespace_cpu:kube_pod_container_resource_limits:sum",
+    "type": "recording_rule",
+    "description": "sum by (namespace,cluster) (\n    sum by (namespace,pod,cluster) (\n        max by (namespace,pod,container,cluster) (\n          kube_pod_container_resource_limits{resource=\"cpu\",job=\"kube-state-metrics\"}\n        ) * on (namespace,pod,cluster) group_left() max by (namespace,pod,cluster) (\n          kube_pod_status_phase{phase=~\"Pending|Running\"} == 1\n        )\n    )\n)",
+    "labels": []
+  },
+  {
+    "name": "cluster:namespace:pod_cpu:active:kube_pod_container_resource_requests",
+    "type": "recording_rule",
+    "description": "kube_pod_container_resource_requests{resource=\"cpu\",job=\"kube-state-metrics\"}  * on (namespace,pod,cluster)\ngroup_left() max by (namespace,pod,cluster) (\n  (kube_pod_status_phase{phase=~\"Pending|Running\"} == 1)\n)",
+    "labels": []
+  },
+  {
+    "name": "namespace_cpu:kube_pod_container_resource_requests:sum",
+    "type": "recording_rule",
+    "description": "sum by (namespace,cluster) (\n    sum by (namespace,pod,cluster) (\n        max by (namespace,pod,container,cluster) (\n          kube_pod_container_resource_requests{resource=\"cpu\",job=\"kube-state-metrics\"}\n        ) * on (namespace,pod,cluster) group_left() max by (namespace,pod,cluster) (\n          kube_pod_status_phase{phase=~\"Pending|Running\"} == 1\n        )\n    )\n)",
+    "labels": []
+  },
+  {
+    "name": "node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate5m",
+    "type": "recording_rule",
+    "description": "sum by (namespace,pod,container,cluster) (\n  rate(container_cpu_usage_seconds_total{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", image!=\"\"}[5m])\n) * on (namespace,pod,cluster) group_left(node) topk by (namespace,pod,cluster) (\n  1, max by (namespace,pod,node,cluster) (kube_pod_info{node!=\"\"})\n)",
+    "labels": []
+  },
+  {
+    "name": "node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate",
+    "type": "recording_rule",
+    "description": "sum by (namespace,pod,container,cluster) (\n  irate(container_cpu_usage_seconds_total{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", image!=\"\"}[5m])\n) * on (namespace,pod,cluster) group_left(node) topk by (namespace,pod,cluster) (\n  1, max by (namespace,pod,node,cluster) (kube_pod_info{node!=\"\"})\n)",
+    "labels": []
+  },
+  {
+    "name": "node_namespace_pod_container:container_memory_cache",
+    "type": "recording_rule",
+    "description": "container_memory_cache{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", image!=\"\"}\n* on (namespace,pod,cluster) group_left(node) topk by (namespace,pod,cluster) (1,\n  max by (namespace,pod,node,cluster) (kube_pod_info{node!=\"\"})\n)",
+    "labels": []
+  },
+  {
+    "name": "cluster:namespace:pod_memory:active:kube_pod_container_resource_limits",
+    "type": "recording_rule",
+    "description": "kube_pod_container_resource_limits{resource=\"memory\",job=\"kube-state-metrics\"}  * on (namespace,pod,cluster)\ngroup_left() max by (namespace,pod,cluster) (\n  (kube_pod_status_phase{phase=~\"Pending|Running\"} == 1)\n)",
+    "labels": []
+  },
+  {
+    "name": "namespace_memory:kube_pod_container_resource_limits:sum",
+    "type": "recording_rule",
+    "description": "sum by (namespace,cluster) (\n    sum by (namespace,pod,cluster) (\n        max by (namespace,pod,container,cluster) (\n          kube_pod_container_resource_limits{resource=\"memory\",job=\"kube-state-metrics\"}\n        ) * on (namespace,pod,cluster) group_left() max by (namespace,pod,cluster) (\n          kube_pod_status_phase{phase=~\"Pending|Running\"} == 1\n        )\n    )\n)",
+    "labels": []
+  },
+  {
+    "name": "cluster:namespace:pod_memory:active:kube_pod_container_resource_requests",
+    "type": "recording_rule",
+    "description": "kube_pod_container_resource_requests{resource=\"memory\",job=\"kube-state-metrics\"}  * on (namespace,pod,cluster)\ngroup_left() max by (namespace,pod,cluster) (\n  (kube_pod_status_phase{phase=~\"Pending|Running\"} == 1)\n)",
+    "labels": []
+  },
+  {
+    "name": "namespace_memory:kube_pod_container_resource_requests:sum",
+    "type": "recording_rule",
+    "description": "sum by (namespace,cluster) (\n    sum by (namespace,pod,cluster) (\n        max by (namespace,pod,container,cluster) (\n          kube_pod_container_resource_requests{resource=\"memory\",job=\"kube-state-metrics\"}\n        ) * on (namespace,pod,cluster) group_left() max by (namespace,pod,cluster) (\n          kube_pod_status_phase{phase=~\"Pending|Running\"} == 1\n        )\n    )\n)",
+    "labels": []
+  },
+  {
+    "name": "node_namespace_pod_container:container_memory_rss",
+    "type": "recording_rule",
+    "description": "container_memory_rss{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", image!=\"\"}\n* on (namespace,pod,cluster) group_left(node) topk by (namespace,pod,cluster) (1,\n  max by (namespace,pod,node,cluster) (kube_pod_info{node!=\"\"})\n)",
+    "labels": []
+  },
+  {
+    "name": "node_namespace_pod_container:container_memory_swap",
+    "type": "recording_rule",
+    "description": "container_memory_swap{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", image!=\"\"}\n* on (namespace,pod,cluster) group_left(node) topk by (namespace,pod,cluster) (1,\n  max by (namespace,pod,node,cluster) (kube_pod_info{node!=\"\"})\n)",
+    "labels": []
+  },
+  {
+    "name": "node_namespace_pod_container:container_memory_working_set_bytes",
+    "type": "recording_rule",
+    "description": "container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", image!=\"\"}\n* on (namespace,pod,cluster) group_left(node) topk by (namespace,pod,cluster) (1,\n  max by (namespace,pod,node,cluster) (kube_pod_info{node!=\"\"})\n)",
+    "labels": []
+  },
+  {
+    "name": "namespace_workload_pod:kube_pod_owner:relabel",
+    "type": "recording_rule",
+    "description": "max by (namespace,workload,pod,cluster) (\n  label_replace(\n    kube_pod_owner{job=\"kube-state-metrics\", owner_kind=\"Job\"},\n    \"workload\", \"$1\", \"owner_name\", \"(.*)\"\n  )\n)",
+    "labels": [
+      "workload_type"
+    ]
+  },
+  {
+    "name": "code_verb:apiserver_request_total:increase30d",
+    "type": "recording_rule",
+    "description": "avg_over_time(code_verb:apiserver_request_total:increase1h[30d]) * 24 * 30",
+    "labels": []
+  },
+  {
+    "name": "code:apiserver_request_total:increase30d",
+    "type": "recording_rule",
+    "description": "sum by (code,cluster) (code_verb:apiserver_request_total:increase30d{verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"})",
+    "labels": [
+      "verb"
+    ]
+  },
+  {
+    "name": "cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase1h",
+    "type": "recording_rule",
+    "description": "sum by (verb,scope,le,cluster) (increase(apiserver_request_sli_duration_seconds_bucket[1h]))",
+    "labels": []
+  },
+  {
+    "name": "cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d",
+    "type": "recording_rule",
+    "description": "sum by (verb,scope,le,cluster) (avg_over_time(cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase1h[30d]) * 24 * 30)",
+    "labels": []
+  },
+  {
+    "name": "cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase1h",
+    "type": "recording_rule",
+    "description": "sum by (verb,scope,cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase1h{le=\"+Inf\"})",
+    "labels": []
+  },
+  {
+    "name": "cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d",
+    "type": "recording_rule",
+    "description": "sum by (verb,scope,cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{le=\"+Inf\"})",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request:availability30d",
+    "type": "recording_rule",
+    "description": "1 - (\n  (\n    # write too slow\n    sum by (cluster) (cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d{verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"})\n    -\n    sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",le=~\"1(\\\\.0)?\"} or vector(0))\n  ) +\n  (\n    # read too slow\n    sum by (cluster) (cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d{verb=~\"LIST|GET\"})\n    -\n    (\n      sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~\"LIST|GET\",scope=~\"resource|\",le=~\"1(\\\\.0)?\"} or vector(0))\n      +\n      sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~\"LIST|GET\",scope=\"namespace\",le=~\"5(\\\\.0)?\"} or vector(0))\n      +\n      sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~\"LIST|GET\",scope=\"cluster\",le=~\"30(\\\\.0)?\"} or vector(0))\n    )\n  ) +\n  # errors\n  sum by (cluster) (code:apiserver_request_total:increase30d{code=~\"5..\"} or vector(0))\n)\n/\nsum by (cluster) (code:apiserver_request_total:increase30d)",
+    "labels": [
+      "verb"
+    ]
+  },
+  {
+    "name": "code_resource:apiserver_request_total:rate5m",
+    "type": "recording_rule",
+    "description": "sum by (code,resource,cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"}[5m]))",
+    "labels": [
+      "verb"
+    ]
+  },
+  {
+    "name": "code_verb:apiserver_request_total:increase1h",
+    "type": "recording_rule",
+    "description": "sum by (code,verb,cluster) (increase(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"}[1h]))",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request:burnrate1d",
+    "type": "recording_rule",
+    "description": "(\n  (\n    # too slow\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_count{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\"}[1d]))\n    -\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_bucket{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\",le=~\"1(\\\\.0)?\"}[1d]))\n  )\n  +\n  sum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",code=~\"5..\"}[1d]))\n)\n/\nsum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"}[1d]))",
+    "labels": [
+      "verb"
+    ]
+  },
+  {
+    "name": "apiserver_request:burnrate1h",
+    "type": "recording_rule",
+    "description": "(\n  (\n    # too slow\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_count{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\"}[1h]))\n    -\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_bucket{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\",le=~\"1(\\\\.0)?\"}[1h]))\n  )\n  +\n  sum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",code=~\"5..\"}[1h]))\n)\n/\nsum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"}[1h]))",
+    "labels": [
+      "verb"
+    ]
+  },
+  {
+    "name": "apiserver_request:burnrate2h",
+    "type": "recording_rule",
+    "description": "(\n  (\n    # too slow\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_count{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\"}[2h]))\n    -\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_bucket{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\",le=~\"1(\\\\.0)?\"}[2h]))\n  )\n  +\n  sum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",code=~\"5..\"}[2h]))\n)\n/\nsum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"}[2h]))",
+    "labels": [
+      "verb"
+    ]
+  },
+  {
+    "name": "apiserver_request:burnrate30m",
+    "type": "recording_rule",
+    "description": "(\n  (\n    # too slow\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_count{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\"}[30m]))\n    -\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_bucket{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\",le=~\"1(\\\\.0)?\"}[30m]))\n  )\n  +\n  sum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",code=~\"5..\"}[30m]))\n)\n/\nsum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"}[30m]))",
+    "labels": [
+      "verb"
+    ]
+  },
+  {
+    "name": "apiserver_request:burnrate3d",
+    "type": "recording_rule",
+    "description": "(\n  (\n    # too slow\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_count{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\"}[3d]))\n    -\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_bucket{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\",le=~\"1(\\\\.0)?\"}[3d]))\n  )\n  +\n  sum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",code=~\"5..\"}[3d]))\n)\n/\nsum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"}[3d]))",
+    "labels": [
+      "verb"
+    ]
+  },
+  {
+    "name": "apiserver_request:burnrate5m",
+    "type": "recording_rule",
+    "description": "(\n  (\n    # too slow\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_count{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\"}[5m]))\n    -\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_bucket{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\",le=~\"1(\\\\.0)?\"}[5m]))\n  )\n  +\n  sum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",code=~\"5..\"}[5m]))\n)\n/\nsum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"}[5m]))",
+    "labels": [
+      "verb"
+    ]
+  },
+  {
+    "name": "apiserver_request:burnrate6h",
+    "type": "recording_rule",
+    "description": "(\n  (\n    # too slow\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_count{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\"}[6h]))\n    -\n    sum by (cluster) (rate(apiserver_request_sli_duration_seconds_bucket{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\",le=~\"1(\\\\.0)?\"}[6h]))\n  )\n  +\n  sum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",code=~\"5..\"}[6h]))\n)\n/\nsum by (cluster) (rate(apiserver_request_total{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\"}[6h]))",
+    "labels": [
+      "verb"
+    ]
+  },
+  {
+    "name": "cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile",
+    "type": "recording_rule",
+    "description": "histogram_quantile(0.99, sum by (le,resource,cluster) (rate(apiserver_request_sli_duration_seconds_bucket{job=\"apiserver\",verb=~\"LIST|GET|POST|PUT|PATCH|DELETE\",subresource!~\"proxy|attach|log|exec|portforward\"}[5m]))) > 0",
+    "labels": [
+      "quantile",
+      "verb"
+    ]
+  },
+  {
+    "name": "count:up1",
+    "type": "recording_rule",
+    "description": "count without(instance, pod, node) (up == 1)",
+    "labels": []
+  },
+  {
+    "name": "count:up0",
+    "type": "recording_rule",
+    "description": "count without(instance, pod, node) (up == 0)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_cpu:rate:sum",
+    "type": "recording_rule",
+    "description": "sum(rate(node_cpu_seconds_total{mode!=\"idle\",mode!=\"iowait\",mode!=\"steal\"}[3m])) BY (instance,cluster)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_network_receive_bytes:rate:sum",
+    "type": "recording_rule",
+    "description": "sum(rate(node_network_receive_bytes_total[3m])) BY (instance,cluster)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_network_transmit_bytes:rate:sum",
+    "type": "recording_rule",
+    "description": "sum(rate(node_network_transmit_bytes_total[3m])) BY (instance,cluster)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_cpu:ratio",
+    "type": "recording_rule",
+    "description": "sum(rate(node_cpu_seconds_total{mode!=\"idle\",mode!=\"iowait\",mode!=\"steal\"}[5m])) WITHOUT (cpu, mode) / ON (instance,cluster) GROUP_LEFT() count(sum(node_cpu_seconds_total) BY (instance,cpu,cluster)) BY (instance,cluster)",
+    "labels": []
+  },
+  {
+    "name": "cluster:node_cpu:sum_rate5m",
+    "type": "recording_rule",
+    "description": "sum(rate(node_cpu_seconds_total{mode!=\"idle\",mode!=\"iowait\",mode!=\"steal\"}[5m])) BY (cluster)",
+    "labels": []
+  },
+  {
+    "name": "cluster:node_cpu:ratio",
+    "type": "recording_rule",
+    "description": "cluster:node_cpu:sum_rate5m / count(sum(node_cpu_seconds_total) BY (instance,cpu,cluster)) BY (cluster)",
+    "labels": []
+  },
+  {
+    "name": "cluster_quantile:scheduler_scheduling_algorithm_duration_seconds:histogram_quantile",
+    "type": "recording_rule",
+    "description": "histogram_quantile(0.99, sum(rate(scheduler_scheduling_algorithm_duration_seconds_bucket{job=\"kube-scheduler\"}[5m])) without(instance, pod))",
+    "labels": [
+      "quantile"
+    ]
+  },
+  {
+    "name": "cluster_quantile:scheduler_binding_duration_seconds:histogram_quantile",
+    "type": "recording_rule",
+    "description": "histogram_quantile(0.99, sum(rate(scheduler_binding_duration_seconds_bucket{job=\"kube-scheduler\"}[5m])) without(instance, pod))",
+    "labels": [
+      "quantile"
+    ]
+  },
+  {
+    "name": "cluster_quantile:scheduler_e2e_scheduling_duration_seconds:histogram_quantile",
+    "type": "recording_rule",
+    "description": "histogram_quantile(0.9, sum(rate(scheduler_e2e_scheduling_duration_seconds_bucket{job=\"kube-scheduler\"}[5m])) without(instance, pod))",
+    "labels": [
+      "quantile"
+    ]
+  },
+  {
+    "name": "node_quantile:kubelet_pleg_relist_duration_seconds:histogram_quantile",
+    "type": "recording_rule",
+    "description": "histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_duration_seconds_bucket{job=\"kubelet\", metrics_path=\"/metrics\"}[5m])) by (instance,le,cluster) * on (instance,cluster) group_left(node) kubelet_node_name{job=\"kubelet\", metrics_path=\"/metrics\"})",
+    "labels": [
+      "quantile"
+    ]
+  },
+  {
+    "name": "instance:node_num_cpu:sum",
+    "type": "recording_rule",
+    "description": "count without (cpu, mode) (\n  node_cpu_seconds_total{job=\"node-exporter\",mode=\"idle\"}\n)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_cpu_utilisation:rate5m",
+    "type": "recording_rule",
+    "description": "1 - avg without (cpu) (\n  sum without (mode) (rate(node_cpu_seconds_total{job=\"node-exporter\", mode=~\"idle|iowait|steal\"}[5m]))\n)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_load1_per_cpu:ratio",
+    "type": "recording_rule",
+    "description": "(\n  node_load1{job=\"node-exporter\"}\n/\n  instance:node_num_cpu:sum{job=\"node-exporter\"}\n)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_memory_utilisation:ratio",
+    "type": "recording_rule",
+    "description": "1 - (\n  (\n    node_memory_MemAvailable_bytes{job=\"node-exporter\"}\n    or\n    (\n      node_memory_Buffers_bytes{job=\"node-exporter\"}\n      +\n      node_memory_Cached_bytes{job=\"node-exporter\"}\n      +\n      node_memory_MemFree_bytes{job=\"node-exporter\"}\n      +\n      node_memory_Slab_bytes{job=\"node-exporter\"}\n    )\n  )\n/\n  node_memory_MemTotal_bytes{job=\"node-exporter\"}\n)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_vmstat_pgmajfault:rate5m",
+    "type": "recording_rule",
+    "description": "rate(node_vmstat_pgmajfault{job=\"node-exporter\"}[5m])",
+    "labels": []
+  },
+  {
+    "name": "instance_device:node_disk_io_time_seconds:rate5m",
+    "type": "recording_rule",
+    "description": "rate(node_disk_io_time_seconds_total{job=\"node-exporter\", device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\"}[5m])",
+    "labels": []
+  },
+  {
+    "name": "instance_device:node_disk_io_time_weighted_seconds:rate5m",
+    "type": "recording_rule",
+    "description": "rate(node_disk_io_time_weighted_seconds_total{job=\"node-exporter\", device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\"}[5m])",
+    "labels": []
+  },
+  {
+    "name": "instance:node_network_receive_bytes_excluding_lo:rate5m",
+    "type": "recording_rule",
+    "description": "sum without (device) (\n  rate(node_network_receive_bytes_total{job=\"node-exporter\", device!=\"lo\"}[5m])\n)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_network_transmit_bytes_excluding_lo:rate5m",
+    "type": "recording_rule",
+    "description": "sum without (device) (\n  rate(node_network_transmit_bytes_total{job=\"node-exporter\", device!=\"lo\"}[5m])\n)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_network_receive_drop_excluding_lo:rate5m",
+    "type": "recording_rule",
+    "description": "sum without (device) (\n  rate(node_network_receive_drop_total{job=\"node-exporter\", device!=\"lo\"}[5m])\n)",
+    "labels": []
+  },
+  {
+    "name": "instance:node_network_transmit_drop_excluding_lo:rate5m",
+    "type": "recording_rule",
+    "description": "sum without (device) (\n  rate(node_network_transmit_drop_total{job=\"node-exporter\", device!=\"lo\"}[5m])\n)",
+    "labels": []
+  },
+  {
+    "name": "node_namespace_pod:kube_pod_info:",
+    "type": "recording_rule",
+    "description": "topk by (namespace,pod,cluster) (1,\n  max by (node,namespace,pod,cluster) (\n    label_replace(kube_pod_info{job=\"kube-state-metrics\",node!=\"\"}, \"pod\", \"$1\", \"pod\", \"(.*)\")\n))",
+    "labels": []
+  },
+  {
+    "name": "node:node_num_cpu:sum",
+    "type": "recording_rule",
+    "description": "count by (node,cluster) (\n  node_cpu_seconds_total{mode=\"idle\",job=\"node-exporter\"}\n  * on (namespace,pod,cluster) group_left(node)\n  topk by (namespace,pod,cluster) (1, node_namespace_pod:kube_pod_info:)\n)",
+    "labels": []
+  },
+  {
+    "name": ":node_memory_MemAvailable_bytes:sum",
+    "type": "recording_rule",
+    "description": "sum(\n  node_memory_MemAvailable_bytes{job=\"node-exporter\"} or\n  (\n    node_memory_Buffers_bytes{job=\"node-exporter\"} +\n    node_memory_Cached_bytes{job=\"node-exporter\"} +\n    node_memory_MemFree_bytes{job=\"node-exporter\"} +\n    node_memory_Slab_bytes{job=\"node-exporter\"}\n  )\n) by (cluster)",
+    "labels": []
+  },
+  {
+    "name": "node:node_cpu_utilization:ratio_rate5m",
+    "type": "recording_rule",
+    "description": "avg by (node,cluster) (\n  sum without (mode) (\n    rate(node_cpu_seconds_total{mode!=\"idle\",mode!=\"iowait\",mode!=\"steal\",job=\"node-exporter\"}[5m])\n  )\n)",
+    "labels": []
+  },
+  {
+    "name": "cluster:node_cpu:ratio_rate5m",
+    "type": "recording_rule",
+    "description": "avg by (cluster) (\n  node:node_cpu_utilization:ratio_rate5m\n)",
+    "labels": []
+  }
+]

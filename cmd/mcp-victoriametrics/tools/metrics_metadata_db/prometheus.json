@@ -1,0 +1,1133 @@
+[
+  {
+    "name": "net_conntrack_dialer_conn_attempted_total",
+    "help": "Total number of connections attempted by the given dialer a given name.",
+    "type": "counter",
+    "labels": [
+      "dialer_name"
+    ]
+  },
+  {
+    "name": "net_conntrack_dialer_conn_closed_total",
+    "help": "Total number of connections closed which originated from the dialer of a given name.",
+    "type": "counter",
+    "labels": [
+      "dialer_name"
+    ]
+  },
+  {
+    "name": "net_conntrack_dialer_conn_established_total",
+    "help": "Total number of connections successfully established by the given dialer a given name.",
+    "type": "counter",
+    "labels": [
+      "dialer_name"
+    ]
+  },
+  {
+    "name": "net_conntrack_dialer_conn_failed_total",
+    "help": "Total number of connections failed to dial by the dialer a given name.",
+    "type": "counter",
+    "labels": [
+      "dialer_name",
+      "reason"
+    ]
+  },
+  {
+    "name": "net_conntrack_listener_conn_accepted_total",
+    "help": "Total number of connections opened to the listener of a given name.",
+    "type": "counter",
+    "labels": [
+      "listener_name"
+    ]
+  },
+  {
+    "name": "net_conntrack_listener_conn_closed_total",
+    "help": "Total number of connections closed that were made to the listener of a given name.",
+    "type": "counter",
+    "labels": [
+      "listener_name"
+    ]
+  },
+  {
+    "name": "prometheus_api_notification_active_subscribers",
+    "help": "The current number of active notification subscribers.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_api_notification_updates_dropped_total",
+    "help": "Total number of notification updates dropped.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_api_notification_updates_sent_total",
+    "help": "Total number of notification updates sent.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_build_info",
+    "help": "A metric with a constant '1' value labeled by version, revision, branch, goversion from which prometheus was built, and the goos and goarch for the build.",
+    "type": "gauge",
+    "labels": [
+      "branch",
+      "goarch",
+      "goos",
+      "goversion",
+      "revision",
+      "tags",
+      "version"
+    ]
+  },
+  {
+    "name": "prometheus_config_last_reload_success_timestamp_seconds",
+    "help": "Timestamp of the last successful configuration reload.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_config_last_reload_successful",
+    "help": "Whether the last configuration reload attempt was successful.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_engine_queries",
+    "help": "The current number of queries being executed or waiting.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_engine_queries_concurrent_max",
+    "help": "The max number of concurrent queries.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_engine_query_duration_seconds",
+    "help": "Query timings",
+    "type": "summary",
+    "labels": [
+      "slice"
+    ]
+  },
+  {
+    "name": "prometheus_engine_query_log_enabled",
+    "help": "State of the query log.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_engine_query_log_failures_total",
+    "help": "The number of query log failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_engine_query_samples_total",
+    "help": "The total number of samples loaded by all queries.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_http_request_duration_seconds",
+    "help": "Histogram of latencies for HTTP requests.",
+    "type": "histogram",
+    "labels": [
+      "handler"
+    ]
+  },
+  {
+    "name": "prometheus_http_requests_total",
+    "help": "Counter of HTTP requests.",
+    "type": "counter",
+    "labels": [
+      "code",
+      "handler"
+    ]
+  },
+  {
+    "name": "prometheus_http_response_size_bytes",
+    "help": "Histogram of response size for HTTP requests.",
+    "type": "histogram",
+    "labels": [
+      "handler"
+    ]
+  },
+  {
+    "name": "prometheus_notifications_alertmanagers_discovered",
+    "help": "The number of alertmanagers discovered and active.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_notifications_dropped_total",
+    "help": "Total number of alerts dropped due to errors when sending to Alertmanager.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_notifications_errors_total",
+    "help": "Total number of sent alerts affected by errors.",
+    "type": "counter",
+    "labels": [
+      "alertmanager"
+    ]
+  },
+  {
+    "name": "prometheus_notifications_latency_seconds",
+    "help": "Latency quantiles for sending alert notifications.",
+    "type": "summary",
+    "labels": [
+      "alertmanager"
+    ]
+  },
+  {
+    "name": "prometheus_notifications_queue_capacity",
+    "help": "The capacity of the alert notifications queue.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_notifications_queue_length",
+    "help": "The number of alert notifications in the queue.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_notifications_sent_total",
+    "help": "Total number of alerts sent.",
+    "type": "counter",
+    "labels": [
+      "alertmanager"
+    ]
+  },
+  {
+    "name": "prometheus_ready",
+    "help": "Whether Prometheus startup was fully completed and the server is ready for normal operation.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_remote_read_handler_queries",
+    "help": "The current number of remote read queries that are either in execution or queued on the handler.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_remote_storage_exemplars_in_total",
+    "help": "Exemplars in to remote storage, compare to exemplars out for queue managers.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_remote_storage_highest_timestamp_in_seconds",
+    "help": "Highest timestamp that has come into the remote storage via the Appender interface, in seconds since epoch. Initialized to 0 when no data has been received yet.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_remote_storage_histograms_in_total",
+    "help": "HistogramSamples in to remote storage, compare to histograms out for queue managers.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_remote_storage_samples_in_total",
+    "help": "Samples in to remote storage, compare to samples out for queue managers.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_remote_storage_string_interner_zero_reference_releases_total",
+    "help": "The number of times release has been called for strings that are not interned.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_rule_evaluation_duration_seconds",
+    "help": "The duration for a rule to execute.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "prometheus_rule_evaluation_failures_total",
+    "help": "The total number of rule evaluation failures.",
+    "type": "counter",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_rule_evaluations_total",
+    "help": "The total number of rule evaluations.",
+    "type": "counter",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_rule_group_duration_seconds",
+    "help": "The duration of rule group evaluations.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "prometheus_rule_group_interval_seconds",
+    "help": "The interval of a rule group.",
+    "type": "gauge",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_rule_group_iterations_missed_total",
+    "help": "The total number of rule group evaluations missed due to slow rule group evaluation.",
+    "type": "counter",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_rule_group_iterations_total",
+    "help": "The total number of scheduled rule group evaluations, whether executed or missed.",
+    "type": "counter",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_rule_group_last_duration_seconds",
+    "help": "The duration of the last rule group evaluation.",
+    "type": "gauge",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_rule_group_last_evaluation_samples",
+    "help": "The number of samples returned during the last rule group evaluation.",
+    "type": "gauge",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_rule_group_last_evaluation_timestamp_seconds",
+    "help": "The timestamp of the last rule group evaluation in seconds.",
+    "type": "gauge",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_rule_group_last_restore_duration_seconds",
+    "help": "The duration of the last alert rules alerts restoration using the `ALERTS_FOR_STATE` series.",
+    "type": "gauge",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_rule_group_last_rule_duration_sum_seconds",
+    "help": "The sum of time in seconds it took to evaluate each rule in the group regardless of concurrency. This should be higher than the group duration if rules are evaluated concurrently.",
+    "type": "gauge",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_rule_group_rules",
+    "help": "The number of rules.",
+    "type": "gauge",
+    "labels": [
+      "rule_group"
+    ]
+  },
+  {
+    "name": "prometheus_sd_azure_cache_hit_total",
+    "help": "Number of cache hit during refresh.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_azure_failures_total",
+    "help": "Number of Azure service discovery refresh failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_consul_rpc_duration_seconds",
+    "help": "The duration of a Consul RPC call in seconds.",
+    "type": "summary",
+    "labels": [
+      "call",
+      "endpoint"
+    ]
+  },
+  {
+    "name": "prometheus_sd_consul_rpc_failures_total",
+    "help": "The number of Consul RPC call failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_discovered_targets",
+    "help": "Current number of discovered targets.",
+    "type": "gauge",
+    "labels": [
+      "config",
+      "name"
+    ]
+  },
+  {
+    "name": "prometheus_sd_dns_lookup_failures_total",
+    "help": "The number of DNS-SD lookup failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_dns_lookups_total",
+    "help": "The number of DNS-SD lookups.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_failed_configs",
+    "help": "Current number of service discovery configurations that failed to load.",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "prometheus_sd_file_read_errors_total",
+    "help": "The number of File-SD read errors.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_file_scan_duration_seconds",
+    "help": "The duration of the File-SD scan in seconds.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_file_watcher_errors_total",
+    "help": "The number of File-SD errors caused by filesystem watch failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_http_failures_total",
+    "help": "Number of HTTP service discovery refresh failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_kubernetes_events_total",
+    "help": "The number of Kubernetes events handled.",
+    "type": "counter",
+    "labels": [
+      "event",
+      "role"
+    ]
+  },
+  {
+    "name": "prometheus_sd_kubernetes_failures_total",
+    "help": "The number of failed WATCH/LIST requests.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_kuma_fetch_duration_seconds",
+    "help": "The duration of a Kuma MADS fetch call.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_kuma_fetch_failures_total",
+    "help": "The number of Kuma MADS fetch call failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_kuma_fetch_skipped_updates_total",
+    "help": "The number of Kuma MADS fetch calls that result in no updates to the targets.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_linode_failures_total",
+    "help": "Number of Linode service discovery refresh failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_nomad_failures_total",
+    "help": "Number of nomad service discovery refresh failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_sd_received_updates_total",
+    "help": "Total number of update events received from the SD providers.",
+    "type": "counter",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "prometheus_sd_updates_delayed_total",
+    "help": "Total number of update events that couldn't be sent immediately.",
+    "type": "counter",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "prometheus_sd_updates_total",
+    "help": "Total number of update events sent to the SD consumers.",
+    "type": "counter",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "prometheus_target_interval_length_seconds",
+    "help": "Actual intervals between scrapes.",
+    "type": "summary",
+    "labels": [
+      "interval"
+    ]
+  },
+  {
+    "name": "prometheus_target_metadata_cache_bytes",
+    "help": "The number of bytes that are currently used for storing metric metadata in the cache",
+    "type": "gauge",
+    "labels": [
+      "scrape_job"
+    ]
+  },
+  {
+    "name": "prometheus_target_metadata_cache_entries",
+    "help": "Total number of metric metadata entries in the cache",
+    "type": "gauge",
+    "labels": [
+      "scrape_job"
+    ]
+  },
+  {
+    "name": "prometheus_target_scrape_pool_exceeded_label_limits_total",
+    "help": "Total number of times scrape pools hit the label limits, during sync or config reload.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrape_pool_exceeded_target_limit_total",
+    "help": "Total number of times scrape pools hit the target limit, during sync or config reload.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrape_pool_reloads_failed_total",
+    "help": "Total number of failed scrape pool reloads.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrape_pool_reloads_total",
+    "help": "Total number of scrape pool reloads.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrape_pool_symboltable_items",
+    "help": "Current number of symbols in table for this scrape pool.",
+    "type": "gauge",
+    "labels": [
+      "scrape_job"
+    ]
+  },
+  {
+    "name": "prometheus_target_scrape_pool_sync_total",
+    "help": "Total number of syncs that were executed on a scrape pool.",
+    "type": "counter",
+    "labels": [
+      "scrape_job"
+    ]
+  },
+  {
+    "name": "prometheus_target_scrape_pool_target_limit",
+    "help": "Maximum number of targets allowed in this scrape pool.",
+    "type": "gauge",
+    "labels": [
+      "scrape_job"
+    ]
+  },
+  {
+    "name": "prometheus_target_scrape_pool_targets",
+    "help": "Current number of targets in this scrape pool.",
+    "type": "gauge",
+    "labels": [
+      "scrape_job"
+    ]
+  },
+  {
+    "name": "prometheus_target_scrape_pools_failed_total",
+    "help": "Total number of scrape pool creations that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrape_pools_total",
+    "help": "Total number of scrape pool creation attempts.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrapes_cache_flush_forced_total",
+    "help": "How many times a scrape cache was flushed due to getting big while scrapes are failing.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrapes_exceeded_body_size_limit_total",
+    "help": "Total number of scrapes that hit the body size limit",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrapes_exceeded_native_histogram_bucket_limit_total",
+    "help": "Total number of scrapes that hit the native histogram bucket limit and were rejected.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrapes_exceeded_sample_limit_total",
+    "help": "Total number of scrapes that hit the sample limit and were rejected.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrapes_exemplar_out_of_order_total",
+    "help": "Total number of exemplar rejected due to not being out of the expected order.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrapes_sample_duplicate_timestamp_total",
+    "help": "Total number of samples rejected due to duplicate timestamps but different values.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrapes_sample_out_of_bounds_total",
+    "help": "Total number of samples rejected due to timestamp falling outside of the time bounds.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_scrapes_sample_out_of_order_total",
+    "help": "Total number of samples rejected due to not being out of the expected order.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_target_sync_failed_total",
+    "help": "Total number of target sync failures.",
+    "type": "counter",
+    "labels": [
+      "scrape_job"
+    ]
+  },
+  {
+    "name": "prometheus_target_sync_length_seconds",
+    "help": "Actual interval to sync the scrape pool.",
+    "type": "summary",
+    "labels": [
+      "scrape_job"
+    ]
+  },
+  {
+    "name": "prometheus_template_text_expansion_failures_total",
+    "help": "The total number of template text expansion failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_template_text_expansions_total",
+    "help": "The total number of template text expansions.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_treecache_watcher_goroutines",
+    "help": "The current number of watcher goroutines.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_treecache_zookeeper_failures_total",
+    "help": "The total number of ZooKeeper failures.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_blocks_loaded",
+    "help": "Number of currently loaded data blocks",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_checkpoint_creations_failed_total",
+    "help": "Total number of checkpoint creations that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_checkpoint_creations_total",
+    "help": "Total number of checkpoint creations attempted.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_checkpoint_deletions_failed_total",
+    "help": "Total number of checkpoint deletions that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_checkpoint_deletions_total",
+    "help": "Total number of checkpoint deletions attempted.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_clean_start",
+    "help": "-1: lockfile is disabled. 0: a lockfile from a previous execution was replaced. 1: lockfile creation was clean",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_compaction_chunk_range_seconds",
+    "help": "Final time range of chunks on their first compaction",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_compaction_chunk_samples",
+    "help": "Final number of samples on their first compaction",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_compaction_chunk_size_bytes",
+    "help": "Final size of chunks on their first compaction",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_compaction_duration_seconds",
+    "help": "Duration of compaction runs",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_compaction_populating_block",
+    "help": "Set to 1 when a block is currently being written to the disk.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_compactions_failed_total",
+    "help": "Total number of compactions that failed for the partition.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_compactions_skipped_total",
+    "help": "Total number of skipped compactions due to disabled auto compaction.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_compactions_total",
+    "help": "Total number of compactions that were executed for the partition.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_compactions_triggered_total",
+    "help": "Total number of triggered compactions for the partition.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_data_replay_duration_seconds",
+    "help": "Time taken to replay the data on disk.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_exemplar_exemplars_appended_total",
+    "help": "Total number of appended exemplars.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_exemplar_exemplars_in_storage",
+    "help": "Number of exemplars currently in circular storage.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_exemplar_last_exemplars_timestamp_seconds",
+    "help": "The timestamp of the oldest exemplar stored in circular storage. Useful to check for what timerange the current exemplar buffer limit allows. This usually means the last timestampfor all exemplars for a typical setup. This is not true though if one of the series timestamp is in future compared to rest series.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_exemplar_max_exemplars",
+    "help": "Total number of exemplars the exemplar storage can store, resizeable.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_exemplar_out_of_order_exemplars_total",
+    "help": "Total number of out of order exemplar ingestion failed attempts.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_exemplar_series_with_exemplars_in_storage",
+    "help": "Number of series with exemplars currently in circular storage.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_active_appenders",
+    "help": "Number of currently active appender transactions",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_chunks",
+    "help": "Total number of chunks in the head block.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_chunks_created_total",
+    "help": "Total number of chunks created in the head",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_chunks_removed_total",
+    "help": "Total number of chunks removed in the head",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_chunks_storage_size_bytes",
+    "help": "Size of the chunks_head directory.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_gc_duration_seconds",
+    "help": "Runtime of garbage collection in the head block.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_max_time",
+    "help": "Maximum timestamp of the head block. The unit is decided by the library consumer.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_max_time_seconds",
+    "help": "Maximum timestamp of the head block.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_min_time",
+    "help": "Minimum time bound of the head block. The unit is decided by the library consumer.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_min_time_seconds",
+    "help": "Minimum time bound of the head block.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_out_of_order_samples_appended_total",
+    "help": "Total number of appended out of order samples.",
+    "type": "counter",
+    "labels": [
+      "type"
+    ]
+  },
+  {
+    "name": "prometheus_tsdb_head_samples_appended_total",
+    "help": "Total number of appended samples.",
+    "type": "counter",
+    "labels": [
+      "type"
+    ]
+  },
+  {
+    "name": "prometheus_tsdb_head_series",
+    "help": "Total number of series in the head block.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_series_created_total",
+    "help": "Total number of series created in the head",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_series_not_found_total",
+    "help": "Total number of requests for series that were not found.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_series_removed_total",
+    "help": "Total number of series removed in the head",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_truncations_failed_total",
+    "help": "Total number of head truncations that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_head_truncations_total",
+    "help": "Total number of head truncations attempted.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_isolation_high_watermark",
+    "help": "The highest TSDB append ID that has been given out.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_isolation_low_watermark",
+    "help": "The lowest TSDB append ID that is still referenced.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_lowest_timestamp",
+    "help": "Lowest timestamp value stored in the database. The unit is decided by the library consumer.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_lowest_timestamp_seconds",
+    "help": "Lowest timestamp value stored in the database.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_mmap_chunk_corruptions_total",
+    "help": "Total number of memory-mapped chunk corruptions.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_mmap_chunks_total",
+    "help": "Total number of chunks that were memory-mapped.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_out_of_bound_samples_total",
+    "help": "Total number of out of bound samples ingestion failed attempts with out of order support disabled.",
+    "type": "counter",
+    "labels": [
+      "type"
+    ]
+  },
+  {
+    "name": "prometheus_tsdb_out_of_order_samples_total",
+    "help": "Total number of out of order samples ingestion failed attempts due to out of order being disabled.",
+    "type": "counter",
+    "labels": [
+      "type"
+    ]
+  },
+  {
+    "name": "prometheus_tsdb_reloads_failures_total",
+    "help": "Number of times the database failed to reloadBlocks block data from disk.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_reloads_total",
+    "help": "Number of times the database reloaded block data from disk.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_retention_limit_bytes",
+    "help": "Max number of bytes to be retained in the tsdb blocks, configured 0 means disabled",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_retention_limit_seconds",
+    "help": "How long to retain samples in storage.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_size_retentions_total",
+    "help": "The number of times that blocks were deleted because the maximum number of bytes was exceeded.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_snapshot_replay_error_total",
+    "help": "Total number snapshot replays that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_storage_blocks_bytes",
+    "help": "The number of bytes that are currently used for local storage by all blocks.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_symbol_table_size_bytes",
+    "help": "Size of symbol table in memory for loaded blocks",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_time_retentions_total",
+    "help": "The number of times that blocks were deleted because the maximum time limit was exceeded.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_tombstone_cleanup_seconds",
+    "help": "The time taken to recompact blocks to remove tombstones.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_too_old_samples_total",
+    "help": "Total number of out of order samples ingestion failed attempts with out of support enabled, but sample outside of time window.",
+    "type": "counter",
+    "labels": [
+      "type"
+    ]
+  },
+  {
+    "name": "prometheus_tsdb_vertical_compactions_total",
+    "help": "Total number of compactions done on overlapping blocks.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_wal_completed_pages_total",
+    "help": "Total number of completed pages.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_wal_corruptions_total",
+    "help": "Total number of WAL corruptions.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_wal_fsync_duration_seconds",
+    "help": "Duration of write log fsync.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_wal_page_flushes_total",
+    "help": "Total number of page flushes.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_wal_segment_current",
+    "help": "Write log segment index that TSDB is currently writing to.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_wal_storage_size_bytes",
+    "help": "Size of the write log directory.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_wal_truncate_duration_seconds",
+    "help": "Duration of WAL truncation.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_wal_truncations_failed_total",
+    "help": "Total number of write log truncations that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_wal_truncations_total",
+    "help": "Total number of write log truncations attempted.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_tsdb_wal_writes_failed_total",
+    "help": "Total number of write log writes that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_web_federation_errors_total",
+    "help": "Total number of errors that occurred while sending federation responses.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "prometheus_web_federation_warnings_total",
+    "help": "Total number of warnings that occurred while sending federation responses.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "promhttp_metric_handler_requests_in_flight",
+    "help": "Current number of scrapes being served.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "promhttp_metric_handler_requests_total",
+    "help": "Total number of scrapes by HTTP status code.",
+    "type": "counter",
+    "labels": [
+      "code"
+    ]
+  }
+]
