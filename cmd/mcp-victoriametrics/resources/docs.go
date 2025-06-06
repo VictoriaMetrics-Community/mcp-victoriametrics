@@ -14,6 +14,7 @@ import (
 	"github.com/mark3labs/mcp-go/server"
 
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
+	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/utils"
 )
 
 //go:embed vm/docs
@@ -119,7 +120,7 @@ type DocFileInfo struct {
 }
 
 func ListDocFiles() ([]DocFileInfo, error) {
-	docFiles, err := glob(DocsDir, "vm", func(s string) bool {
+	docFiles, err := utils.Glob(DocsDir, "vm", func(s string) bool {
 		return strings.ToLower(filepath.Ext(s)) == ".md"
 	})
 	if err != nil {

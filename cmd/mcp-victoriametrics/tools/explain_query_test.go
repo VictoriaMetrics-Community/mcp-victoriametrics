@@ -226,7 +226,8 @@ func TestGetSyntaxTree(t *testing.T) {
 	// Call getSyntaxTree
 	types := make(map[string]struct{})
 	functions := make(map[string]struct{})
-	tree := getSyntaxTree(expr, types, functions)
+	metrics := make(map[string]struct{})
+	tree := getSyntaxTree(expr, types, functions, metrics)
 
 	// Check the result
 	if tree["type"] != "MetricExpr" {

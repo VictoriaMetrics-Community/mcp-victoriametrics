@@ -1,0 +1,2894 @@
+[
+  {
+    "name": "aggregator_discovery_aggregation_count_total",
+    "help": "Counter of number of times discovery was aggregated",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "aggregator_openapi_v2_regeneration_count",
+    "help": "Counter of OpenAPI v2 spec regeneration count broken down by causing APIService name and reason.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "aggregator_openapi_v2_regeneration_duration",
+    "help": "Gauge of OpenAPI v2 spec regeneration duration in seconds.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "aggregator_unavailable_apiservice",
+    "help": "Gauge of APIServices which are marked as unavailable broken down by APIService name.",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "aggregator_unavailable_apiservice_total",
+    "help": "Counter of APIServices which are marked as unavailable broken down by APIService name and reason.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiextensions_apiserver_validation_ratcheting_seconds",
+    "help": "Time for comparison of old to new for the purposes of CRDValidationRatcheting during an UPDATE in seconds.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiextensions_openapi_v2_regeneration_count",
+    "help": "Counter of OpenAPI v2 spec regeneration count broken down by causing CRD name and reason.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiextensions_openapi_v3_regeneration_count",
+    "help": "Counter of OpenAPI v3 spec regeneration count broken down by group, version, causing CRD and reason.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_admission_controller_admission_duration_seconds",
+    "help": "Admission controller latency histogram in seconds, identified by name and broken out for each operation and API resource and type (validate or admit).",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_admission_match_condition_evaluation_errors_total",
+    "help": "Admission match condition evaluation errors count, identified by name of resource containing the match condition and broken out for each kind containing matchConditions (webhook or policy), operation and admission type (validate or admit).",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_admission_match_condition_evaluation_seconds",
+    "help": "Admission match condition evaluation time in seconds, identified by name and broken out for each kind containing matchConditions (webhook or policy), operation and type (validate or admit).",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_admission_match_condition_exclusions_total",
+    "help": "Admission match condition evaluation exclusions count, identified by name of resource containing the match condition and broken out for each kind containing matchConditions (webhook or policy), operation and admission type (validate or admit).",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_admission_step_admission_duration_seconds",
+    "help": "Admission sub-step latency histogram in seconds, broken out for each operation and API resource and step type (validate or admit).",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_admission_step_admission_duration_seconds_summary",
+    "help": "Admission sub-step latency summary in seconds, broken out for each operation and API resource and step type (validate or admit).",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "apiserver_admission_webhook_admission_duration_seconds",
+    "help": "Admission webhook latency histogram in seconds, identified by name and broken out for each operation and API resource and type (validate or admit).",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_admission_webhook_fail_open_count",
+    "help": "Admission webhook fail open count, identified by name and broken out for each admission type (validating or admit).",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_admission_webhook_rejection_count",
+    "help": "Admission webhook rejection count, identified by name and broken out for each admission type (validating or admit) and operation. Additional labels specify an error type (calling_webhook_error or apiserver_internal_error if an error occurred; no_error otherwise) and optionally a non-zero rejection code if the webhook rejects the request with an HTTP status code (honored by the apiserver when the code is greater or equal to 400). Codes greater than 600 are truncated to 600, to keep the metrics cardinality bounded.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_admission_webhook_request_total",
+    "help": "Admission webhook request total, identified by name and broken out for each admission type (validating or admit) and operation. Additional labels specify whether the request was rejected or not and an HTTP status code. Codes greater than 600 are truncated to 600, to keep the metrics cardinality bounded.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_audit_error_total",
+    "help": "Counter of audit events that failed to be audited properly. Plugin identifies the plugin affected by the error.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_audit_event_total",
+    "help": "Counter of audit events generated and sent to the audit backend.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_audit_level_total",
+    "help": "Counter of policy levels for audit events (1 per request).",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_audit_requests_rejected_total",
+    "help": "Counter of apiserver requests rejected due to an error in audit logging backend.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authentication_config_controller_automatic_reload_last_timestamp_seconds",
+    "help": "Timestamp of the last automatic reload of authentication configuration split by status and apiserver identity.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authentication_config_controller_automatic_reloads_total",
+    "help": "Total number of automatic reloads of authentication configuration split by status and apiserver identity.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authentication_jwt_authenticator_latency_seconds",
+    "help": "Latency of jwt authentication operations in seconds. This is the time spent authenticating a token for cache miss only (i.e. when the token is not found in the cache).",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authorization_config_controller_automatic_reload_last_timestamp_seconds",
+    "help": "Timestamp of the last automatic reload of authorization configuration split by status and apiserver identity.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authorization_config_controller_automatic_reloads_total",
+    "help": "Total number of automatic reloads of authorization configuration split by status and apiserver identity.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authorization_decisions_total",
+    "help": "Total number of terminal decisions made by an authorizer split by authorizer type, name, and decision.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authorization_match_condition_evaluation_errors_total",
+    "help": "Total number of errors when an authorization webhook encounters a match condition error split by authorizer type and name.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authorization_match_condition_evaluation_seconds",
+    "help": "Authorization match condition evaluation time in seconds, split by authorizer type and name.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authorization_match_condition_exclusions_total",
+    "help": "Total number of exclusions when an authorization webhook is skipped because match conditions exclude it.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authorization_webhook_duration_seconds",
+    "help": "Request latency in seconds.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authorization_webhook_evaluations_fail_open_total",
+    "help": "NoOpinion results due to webhook timeout or error.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_authorization_webhook_evaluations_total",
+    "help": "Round-trips to authorization webhooks.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_cache_list_fetched_objects_total",
+    "help": "Number of objects read from watch cache in the course of serving a LIST request",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_cache_list_returned_objects_total",
+    "help": "Number of objects returned for a LIST request from watch cache",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_cache_list_total",
+    "help": "Number of LIST requests served from watch cache",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_cel_compilation_duration_seconds",
+    "help": "CEL compilation time in seconds.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_cel_evaluation_duration_seconds",
+    "help": "CEL evaluation time in seconds.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_certificates_registry_csr_honored_duration_total",
+    "help": "Total number of issued CSRs with a requested duration that was honored, sliced by signer (only kubernetes.io signer names are specifically identified)",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_certificates_registry_csr_requested_duration_total",
+    "help": "Total number of issued CSRs with a requested duration, sliced by signer (only kubernetes.io signer names are specifically identified)",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_client_certificate_expiration_seconds",
+    "help": "Distribution of the remaining lifetime on the certificate used to authenticate a request.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_clusterip_repair_ip_errors_total",
+    "help": "Number of errors detected on clusterips by the repair loop broken down by type of error: leak, repair, full, outOfRange, duplicate, unknown, invalid",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_clusterip_repair_reconcile_errors_total",
+    "help": "Number of reconciliation failures on the clusterip repair reconcile loop",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_conversion_webhook_duration_seconds",
+    "help": "Conversion webhook request latency",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_conversion_webhook_request_total",
+    "help": "Counter for conversion webhook requests with success/failure and failure error type",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_crd_conversion_webhook_duration_seconds",
+    "help": "CRD webhook conversion duration in seconds",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_current_inflight_requests",
+    "help": "Maximal number of currently used inflight request limit of this apiserver per request kind in last second.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_current_inqueue_requests",
+    "help": "Maximal number of queued requests in this apiserver per request kind in last second.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_delegated_authn_request_duration_seconds",
+    "help": "Request latency in seconds. Broken down by status code.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_delegated_authn_request_total",
+    "help": "Number of HTTP requests partitioned by status code.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_delegated_authz_request_duration_seconds",
+    "help": "Request latency in seconds. Broken down by status code.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_delegated_authz_request_total",
+    "help": "Number of HTTP requests partitioned by status code.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_egress_dialer_dial_duration_seconds",
+    "help": "Dial latency histogram in seconds, labeled by the protocol (http-connect or grpc), transport (tcp or uds)",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_egress_dialer_dial_failure_count",
+    "help": "Dial failure count, labeled by the protocol (http-connect or grpc), transport (tcp or uds), and stage (connect or proxy). The stage indicates at which stage the dial failed",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_egress_dialer_dial_start_total",
+    "help": "Dial starts, labeled by the protocol (http-connect or grpc) and transport (tcp or uds).",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_encryption_config_controller_automatic_reload_failures_total",
+    "help": "Total number of failed automatic reloads of encryption configuration split by apiserver identity.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_encryption_config_controller_automatic_reload_last_timestamp_seconds",
+    "help": "Timestamp of the last successful or failed automatic reload of encryption configuration split by apiserver identity.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_encryption_config_controller_automatic_reload_success_total",
+    "help": "Total number of successful automatic reloads of encryption configuration split by apiserver identity.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_encryption_config_controller_automatic_reloads_total",
+    "help": "Total number of reload successes and failures of encryption configuration split by apiserver identity.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_envelope_encryption_dek_cache_fill_percent",
+    "help": "Percent of the cache slots currently occupied by cached DEKs.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_envelope_encryption_dek_cache_inter_arrival_time_seconds",
+    "help": "Time (in seconds) of inter arrival of transformation requests.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_envelope_encryption_dek_source_cache_size",
+    "help": "Number of records in data encryption key (DEK) source cache. On a restart, this value is an approximation of the number of decrypt RPC calls the server will make to the KMS plugin.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_envelope_encryption_invalid_key_id_from_status_total",
+    "help": "Number of times an invalid keyID is returned by the Status RPC call split by error.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_envelope_encryption_key_id_hash_last_timestamp_seconds",
+    "help": "The last time in seconds when a keyID was used.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_envelope_encryption_key_id_hash_status_last_timestamp_seconds",
+    "help": "The last time in seconds when a keyID was returned by the Status RPC call.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_envelope_encryption_key_id_hash_total",
+    "help": "Number of times a keyID is used split by transformation type, provider, and apiserver identity.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_envelope_encryption_kms_operations_latency_seconds",
+    "help": "KMS operation duration with gRPC error code status total.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_externaljwt_fetch_keys_data_timestamp",
+    "help": "Unix Timestamp in seconds of the last successful FetchKeys data_timestamp value returned by the external signer",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_externaljwt_fetch_keys_request_total",
+    "help": "Total attempts at syncing supported JWKs",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_externaljwt_fetch_keys_success_timestamp",
+    "help": "Unix Timestamp in seconds of the last successful FetchKeys request",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_externaljwt_request_duration_seconds",
+    "help": "Request duration and time for calls to external-jwt-signer",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_externaljwt_sign_request_total",
+    "help": "Total attempts at signing JWT",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_current_executing_requests",
+    "help": "Number of requests in initial (for a WATCH) or any (for a non-WATCH) execution stage in the API Priority and Fairness subsystem",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_current_executing_seats",
+    "help": "Concurrency (number of seats) occupied by the currently executing (initial stage for a WATCH, any stage otherwise) requests in the API Priority and Fairness subsystem",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_current_inqueue_requests",
+    "help": "Number of requests currently pending in queues of the API Priority and Fairness subsystem",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_current_inqueue_seats",
+    "help": "Number of seats currently pending in queues of the API Priority and Fairness subsystem",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_current_limit_seats",
+    "help": "current derived number of execution seats available to each priority level",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_current_r",
+    "help": "R(time of last change)",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_demand_seats",
+    "help": "Observations, at the end of every nanosecond, of (the number of seats each priority level could use) / (nominal number of seats for that level)",
+    "type": "timingratiohistogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_demand_seats_average",
+    "help": "Time-weighted average, over last adjustment period, of demand_seats",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_demand_seats_high_watermark",
+    "help": "High watermark, over last adjustment period, of demand_seats",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_demand_seats_smoothed",
+    "help": "Smoothed seat demands",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_demand_seats_stdev",
+    "help": "Time-weighted standard deviation, over last adjustment period, of demand_seats",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_dispatch_r",
+    "help": "R(time of last dispatch)",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_dispatched_requests_total",
+    "help": "Number of requests executed by API Priority and Fairness subsystem",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_epoch_advance_total",
+    "help": "Number of times the queueset's progress meter jumped backward",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_latest_s",
+    "help": "S(most recently dispatched request)",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_lower_limit_seats",
+    "help": "Configured lower bound on number of execution seats available to each priority level",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_next_discounted_s_bounds",
+    "help": "min and max, over queues, of S(oldest waiting request in queue) - estimated work in progress",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_next_s_bounds",
+    "help": "min and max, over queues, of S(oldest waiting request in queue)",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_nominal_limit_seats",
+    "help": "Nominal number of execution seats configured for each priority level",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_priority_level_request_utilization",
+    "help": "Observations, at the end of every nanosecond, of number of requests (as a fraction of the relevant limit) waiting or in any stage of execution (but only initial stage for WATCHes)",
+    "type": "timingratiohistogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_priority_level_seat_utilization",
+    "help": "Observations, at the end of every nanosecond, of utilization of seats for any stage of execution (but only initial stage for WATCHes)",
+    "type": "timingratiohistogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_read_vs_write_current_requests",
+    "help": "Observations, at the end of every nanosecond, of the number of requests (as a fraction of the relevant limit) waiting or in regular stage of execution",
+    "type": "timingratiohistogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_rejected_requests_total",
+    "help": "Number of requests rejected by API Priority and Fairness subsystem",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_request_concurrency_in_use",
+    "help": "Concurrency (number of seats) occupied by the currently executing (initial stage for a WATCH, any stage otherwise) requests in the API Priority and Fairness subsystem",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_request_concurrency_limit",
+    "help": "Nominal number of execution seats configured for each priority level",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_request_dispatch_no_accommodation_total",
+    "help": "Number of times a dispatch attempt resulted in a non accommodation due to lack of available seats",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_request_execution_seconds",
+    "help": "Duration of initial stage (for a WATCH) or any (for a non-WATCH) stage of request execution in the API Priority and Fairness subsystem",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_request_queue_length_after_enqueue",
+    "help": "Length of queue in the API Priority and Fairness subsystem, as seen by each request after it is enqueued",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_request_wait_duration_seconds",
+    "help": "Length of time a request spent waiting in its queue",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_seat_fair_frac",
+    "help": "Fair fraction of server's concurrency to allocate to each priority level that can use it",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_target_seats",
+    "help": "Seat allocation targets",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_upper_limit_seats",
+    "help": "Configured upper bound on number of execution seats available to each priority level",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_watch_count_samples",
+    "help": "count of watchers for mutating requests in API Priority and Fairness",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_flowcontrol_work_estimated_seats",
+    "help": "Number of estimated seats (maximum of initial and final seats) associated with requests in API Priority and Fairness",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_init_events_total",
+    "help": "Counter of init events processed in watch cache broken by resource type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_kube_aggregator_x509_insecure_sha1_total",
+    "help": "Counts the number of requests to servers with insecure SHA1 signatures in their serving certificate OR the number of connection failures due to the insecure SHA1 signatures (either/or, based on the runtime environment)",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_kube_aggregator_x509_missing_san_total",
+    "help": "Counts the number of requests to servers missing SAN extension in their serving certificate OR the number of connection failures due to the lack of x509 certificate SAN extension missing (either/or, based on the runtime environment)",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_longrunning_requests",
+    "help": "Gauge of all active long-running apiserver requests broken out by verb, group, version, resource, scope and component. Not all requests are tracked this way.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_nodeport_repair_port_errors_total",
+    "help": "Number of errors detected on ports by the repair loop broken down by type of error: leak, repair, full, outOfRange, duplicate, unknown",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_nodeport_repair_reconcile_errors_total",
+    "help": "Number of reconciliation failures on the nodeport repair reconcile loop",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request_aborts_total",
+    "help": "Number of requests which apiserver aborted possibly due to a timeout, for each group, version, verb, resource, subresource and scope",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request_body_size_bytes",
+    "help": "Apiserver request body size in bytes broken out by resource and verb.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request_duration_seconds",
+    "help": "Response latency distribution in seconds for each verb, dry run value, group, version, resource, subresource, scope and component.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request_filter_duration_seconds",
+    "help": "Request filter latency distribution in seconds, for each filter type",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request_post_timeout_total",
+    "help": "Tracks the activity of the request handlers after the associated requests have been timed out by the apiserver",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request_sli_duration_seconds",
+    "help": "Response latency distribution (not counting webhook duration and priority & fairness queue wait times) in seconds for each verb, group, version, resource, subresource, scope and component.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request_slo_duration_seconds",
+    "help": "Response latency distribution (not counting webhook duration and priority & fairness queue wait times) in seconds for each verb, group, version, resource, subresource, scope and component.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request_terminations_total",
+    "help": "Number of requests which apiserver terminated in self-defense.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request_timestamp_comparison_time",
+    "help": "Time taken for comparison of old vs new objects in UPDATE or PATCH requests",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_request_total",
+    "help": "Counter of apiserver requests broken out for each verb, dry run value, group, version, resource, scope, component, and HTTP response code.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_requested_deprecated_apis",
+    "help": "Gauge of deprecated APIs that have been requested, broken out by API group, version, resource, subresource, and removed_release.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_rerouted_request_total",
+    "help": "Total number of requests that were proxied to a peer kube apiserver because the local apiserver was not capable of serving it",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_response_sizes",
+    "help": "Response size distribution in bytes for each group, version, verb, resource, subresource, scope and component.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_selfrequest_total",
+    "help": "Counter of apiserver self-requests broken out for each verb, API resource and subresource.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_data_key_generation_duration_seconds",
+    "help": "Latencies in seconds of data encryption key(DEK) generation operations.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_data_key_generation_failures_total",
+    "help": "Total number of failed data encryption key(DEK) generation operations.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_db_total_size_in_bytes",
+    "help": "Total size of the storage database file physically allocated in bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_decode_errors_total",
+    "help": "Number of stored object decode errors split by object type",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_envelope_transformation_cache_misses_total",
+    "help": "Total number of cache misses while accessing key decryption key(KEK).",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_events_received_total",
+    "help": "Number of etcd events received split by kind.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_list_evaluated_objects_total",
+    "help": "Number of objects tested in the course of serving a LIST request from storage",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_list_fetched_objects_total",
+    "help": "Number of objects read from storage in the course of serving a LIST request",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_list_returned_objects_total",
+    "help": "Number of objects returned for a LIST request from storage",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_list_total",
+    "help": "Number of LIST requests served from storage",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_objects",
+    "help": "Number of stored objects at the time of last check split by kind. In case of a fetching error, the value will be -1.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_size_bytes",
+    "help": "Size of the storage database file physically allocated in bytes.",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_transformation_duration_seconds",
+    "help": "Latencies in seconds of value transformation operations.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_storage_transformation_operations_total",
+    "help": "Total number of transformations. Successful transformation will have a status 'OK' and a varied status string when the transformation fails. The status, resource, and transformation_type fields can be used for alerting purposes. For example, you can monitor for encryption/decryption failures using the transformation_type (e.g., from_storage for decryption and to_storage for encryption). Additionally, these fields can be used to ensure that the correct transformers are applied to each resource.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_stream_translator_requests_total",
+    "help": "Total number of requests that were handled by the StreamTranslatorProxy, which processes streaming RemoteCommand/V5",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_stream_tunnel_requests_total",
+    "help": "Total number of requests that were handled by the StreamTunnelProxy, which processes streaming PortForward/V2",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_terminated_watchers_total",
+    "help": "Counter of watchers closed due to unresponsiveness broken by resource type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_tls_handshake_errors_total",
+    "help": "Number of requests dropped with 'TLS handshake error from' error",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_validating_admission_policy_check_duration_seconds",
+    "help": "Validation admission latency for individual validation expressions in seconds, labeled by policy and further including binding and enforcement action taken.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_validating_admission_policy_check_total",
+    "help": "Validation admission policy check total, labeled by policy and further identified by binding and enforcement action taken.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_validation_declarative_validation_mismatch_total",
+    "help": "Number of times declarative validation results differed from handwritten validation results for core types.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_validation_declarative_validation_panic_total",
+    "help": "Number of times declarative validation has panicked during validation.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_watch_cache_consistent_read_total",
+    "help": "Counter for consistent reads from cache.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_watch_cache_events_dispatched_total",
+    "help": "Counter of events dispatched in watch cache broken by resource type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_watch_cache_events_received_total",
+    "help": "Counter of events received in watch cache broken by resource type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_watch_cache_initializations_total",
+    "help": "Counter of watch cache initializations broken by resource type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_watch_cache_read_wait_seconds",
+    "help": "Histogram of time spent waiting for a watch cache to become fresh.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_watch_cache_resource_version",
+    "help": "Current resource version of watch cache broken by resource type.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "apiserver_watch_events_sizes",
+    "help": "Watch event size distribution in bytes",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_watch_events_total",
+    "help": "Number of events sent in watch clients",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_watch_list_duration_seconds",
+    "help": "Response latency distribution in seconds for watch list requests broken by group, version, resource and scope.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "apiserver_webhooks_x509_insecure_sha1_total",
+    "help": "Counts the number of requests to servers with insecure SHA1 signatures in their serving certificate OR the number of connection failures due to the insecure SHA1 signatures (either/or, based on the runtime environment)",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "apiserver_webhooks_x509_missing_san_total",
+    "help": "Counts the number of requests to servers missing SAN extension in their serving certificate OR the number of connection failures due to the lack of x509 certificate SAN extension missing (either/or, based on the runtime environment)",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "attach_detach_controller_attachdetach_controller_forced_detaches",
+    "help": "Number of times the A/D Controller performed a forced detach",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "attachdetach_controller_total_volumes",
+    "help": "Number of volumes in A/D Controller",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "authenticated_user_requests",
+    "help": "Counter of authenticated requests broken out by username.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "authentication_attempts",
+    "help": "Counter of authenticated attempts.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "authentication_duration_seconds",
+    "help": "Authentication duration in seconds broken out by result.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "authorization_attempts_total",
+    "help": "Counter of authorization attempts broken down by result. It can be either 'allowed', 'denied', 'no-opinion' or 'error'.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "authorization_duration_seconds",
+    "help": "Authorization duration in seconds broken out by result.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "cloud_provider_webhook_request_duration_seconds",
+    "help": "Request latency in seconds. Broken down by status code.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "cloud_provider_webhook_request_total",
+    "help": "Number of HTTP requests partitioned by status code.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "clustertrustbundle_publisher_sync_duration_seconds",
+    "help": "The time it took to sync a cluster trust bundle.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "clustertrustbundle_publisher_sync_total",
+    "help": "Number of syncs that occurred in cluster trust bundle publisher.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_swap_usage_bytes",
+    "help": "Current amount of the container swap usage in bytes. Reported only on non-windows systems",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "cronjob_controller_job_creation_skew_duration_seconds",
+    "help": "Time between when a cronjob is scheduled to be run, and when the corresponding job is created",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "csi_operations_seconds",
+    "help": "Container Storage Interface operation duration with gRPC error code status total",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "device_taint_eviction_controller_pod_deletion_duration_seconds",
+    "help": "Latency, in seconds, between the time when a device taint effect has been activated and a Pod's deletion via DeviceTaintEvictionController.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "device_taint_eviction_controller_pod_deletions_total",
+    "help": "Total number of Pods deleted by DeviceTaintEvictionController since its start.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "disabled_metrics_total",
+    "help": "The count of disabled metrics.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "dra_grpc_operations_duration_seconds",
+    "help": "Duration in seconds of the DRA gRPC operations",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "dra_operations_duration_seconds",
+    "help": "Latency histogram in seconds for the duration of handling all ResourceClaims referenced by a pod when the pod starts or stops. Identified by the name of the operation (PrepareResources or UnprepareResources) and separated by the success of the operation. The number of failed operations is provided through the histogram's overall count.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_controller_changes",
+    "help": "Number of EndpointSlice changes",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_controller_desired_endpoint_slices",
+    "help": "Number of EndpointSlices that would exist with perfect endpoint allocation",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_controller_endpoints_added_per_sync",
+    "help": "Number of endpoints added on each Service sync",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_controller_endpoints_desired",
+    "help": "Number of endpoints desired",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_controller_endpoints_removed_per_sync",
+    "help": "Number of endpoints removed on each Service sync",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_controller_endpointslices_changed_per_sync",
+    "help": "Number of EndpointSlices changed on each Service sync",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_controller_num_endpoint_slices",
+    "help": "Number of EndpointSlices",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_controller_services_count_by_traffic_distribution",
+    "help": "Number of Services using some specific trafficDistribution",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_controller_syncs",
+    "help": "Number of EndpointSlice syncs",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_mirroring_controller_addresses_skipped_per_sync",
+    "help": "Number of addresses skipped on each Endpoints sync due to being invalid or exceeding MaxEndpointsPerSubset",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_mirroring_controller_changes",
+    "help": "Number of EndpointSlice changes",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_mirroring_controller_desired_endpoint_slices",
+    "help": "Number of EndpointSlices that would exist with perfect endpoint allocation",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_mirroring_controller_endpoints_added_per_sync",
+    "help": "Number of endpoints added on each Endpoints sync",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_mirroring_controller_endpoints_desired",
+    "help": "Number of endpoints desired",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_mirroring_controller_endpoints_removed_per_sync",
+    "help": "Number of endpoints removed on each Endpoints sync",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_mirroring_controller_endpoints_sync_duration",
+    "help": "Duration of syncEndpoints() in seconds",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_mirroring_controller_endpoints_updated_per_sync",
+    "help": "Number of endpoints updated on each Endpoints sync",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "endpoint_slice_mirroring_controller_num_endpoint_slices",
+    "help": "Number of EndpointSlices",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "ephemeral_volume_controller_create_failures_total",
+    "help": "Number of PersistentVolumeClaim creation requests",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "ephemeral_volume_controller_create_total",
+    "help": "Number of PersistentVolumeClaim creation requests",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "etcd_bookmark_counts",
+    "help": "Number of etcd bookmarks (progress notify events) split by kind.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "etcd_lease_object_counts",
+    "help": "Number of objects attached to a single etcd lease.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "etcd_request_duration_seconds",
+    "help": "Etcd request latency in seconds for each operation and object type.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "etcd_request_errors_total",
+    "help": "Etcd failed request counts for each operation and object type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "etcd_requests_total",
+    "help": "Etcd request counts for each operation and object type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "etcd_version_info",
+    "help": "Etcd server's binary version",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "field_validation_request_duration_seconds",
+    "help": "Response latency distribution in seconds for each field validation value",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "force_cleaned_failed_volume_operation_errors_total",
+    "help": "The number of volumes that failed force cleanup after their reconstruction failed during kubelet startup.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "force_cleaned_failed_volume_operations_total",
+    "help": "The number of volumes that were force cleaned after their reconstruction failed during kubelet startup. This includes both successful and failed cleanups.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "garbagecollector_controller_resources_sync_error_total",
+    "help": "Number of garbage collector resources sync errors",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "hidden_metrics_total",
+    "help": "The count of hidden metrics.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "horizontal_pod_autoscaler_controller_metric_computation_duration_seconds",
+    "help": "The time(seconds) that the HPA controller takes to calculate one metric. The label 'action' should be either 'scale_down', 'scale_up', or 'none'. The label 'error' should be either 'spec', 'internal', or 'none'. The label 'metric_type' corresponds to HPA.spec.metrics[*].type",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "horizontal_pod_autoscaler_controller_metric_computation_total",
+    "help": "Number of metric computations. The label 'action' should be either 'scale_down', 'scale_up', or 'none'. Also, the label 'error' should be either 'spec', 'internal', or 'none'. The label 'metric_type' corresponds to HPA.spec.metrics[*].type",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "horizontal_pod_autoscaler_controller_reconciliation_duration_seconds",
+    "help": "The time(seconds) that the HPA controller takes to reconcile once. The label 'action' should be either 'scale_down', 'scale_up', or 'none'. Also, the label 'error' should be either 'spec', 'internal', or 'none'. Note that if both spec and internal errors happen during a reconciliation, the first one to occur is reported in `error` label.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "horizontal_pod_autoscaler_controller_reconciliations_total",
+    "help": "Number of reconciliations of HPA controller. The label 'action' should be either 'scale_down', 'scale_up', or 'none'. Also, the label 'error' should be either 'spec', 'internal', or 'none'. Note that if both spec and internal errors happen during a reconciliation, the first one to occur is reported in `error` label.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "job_controller_job_finished_indexes_total",
+    "help": "`The number of finished indexes. Possible values for the, \t\t\tstatus label are: \"succeeded\", \"failed\". Possible values for the, \t\t\tbackoffLimit label are: \"perIndex\" and \"global\"`",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "job_controller_job_pods_creation_total",
+    "help": "`The number of Pods created by the Job controller labelled with a reason for the Pod creation., This metric also distinguishes between Pods created using different PodReplacementPolicy settings., Possible values of the \"reason\" label are:, \"new\", \"recreate_terminating_or_failed\", \"recreate_failed\"., Possible values of the \"status\" label are:, \"succeeded\", \"failed\".`",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "job_controller_job_pods_finished_total",
+    "help": "The number of finished Pods that are fully tracked",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "job_controller_job_sync_duration_seconds",
+    "help": "The time it took to sync a job",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "job_controller_job_syncs_total",
+    "help": "The number of job syncs",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "job_controller_jobs_by_external_controller_total",
+    "help": "The number of Jobs managed by an external controller",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "job_controller_jobs_finished_total",
+    "help": "The number of finished jobs",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "job_controller_pod_failures_handled_by_failure_policy_total",
+    "help": "`The number of failed Pods handled by failure policy with, \t\t\trespect to the failure policy action applied based on the matched, \t\t\trule. Possible values of the action label correspond to the, \t\t\tpossible values for the failure policy rule action, which are:, \t\t\t\"FailJob\", \"Ignore\" and \"Count\".`",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "job_controller_terminated_pods_tracking_finalizer_total",
+    "help": "`The number of terminated pods (phase=Failed|Succeeded), that have the finalizer batch.kubernetes.io/job-tracking, The event label can be \"add\" or \"delete\".`",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_clusterip_allocator_allocated_ips",
+    "help": "Gauge measuring the number of allocated IPs for Services",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_clusterip_allocator_allocation_duration_seconds",
+    "help": "Duration in seconds to allocate a Cluster IP by ServiceCIDR",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_clusterip_allocator_allocation_errors_total",
+    "help": "Number of errors trying to allocate Cluster IPs",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_clusterip_allocator_allocation_total",
+    "help": "Number of Cluster IPs allocations",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_clusterip_allocator_available_ips",
+    "help": "Gauge measuring the number of available IPs for Services",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_nodeport_allocator_allocated_ports",
+    "help": "Gauge measuring the number of allocated NodePorts for Services",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_nodeport_allocator_allocation_errors_total",
+    "help": "Number of errors trying to allocate NodePort",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_nodeport_allocator_allocation_total",
+    "help": "Number of NodePort allocations",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_nodeport_allocator_available_ports",
+    "help": "Gauge measuring the number of available NodePorts for Services",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_pod_logs_backend_tls_failure_total",
+    "help": "Total number of requests for pods/logs that failed due to kubelet server TLS verification",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_pod_logs_insecure_backend_total",
+    "help": "Total number of requests for pods/logs sliced by usage type: enforce_tls, skip_tls_allowed, skip_tls_denied",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_pod_logs_pods_logs_backend_tls_failure_total",
+    "help": "Total number of requests for pods/logs that failed due to kubelet server TLS verification",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kube_apiserver_pod_logs_pods_logs_insecure_backend_total",
+    "help": "Total number of requests for pods/logs sliced by usage type: enforce_tls, skip_tls_allowed, skip_tls_denied",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kube_pod_resource_limit",
+    "help": "Resources limit for workloads on the cluster, broken down by pod. This shows the resource usage the scheduler and kubelet expect per pod for resources along with the unit for the resource if any.",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kube_pod_resource_request",
+    "help": "Resources requested by workloads on the cluster, broken down by pod. This shows the resource usage the scheduler and kubelet expect per pod for resources along with the unit for the resource if any.",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubelet_active_pods",
+    "help": "The number of pods the kubelet considers active and which are being considered when admitting new pods. static is true if the pod is not from the apiserver.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_admission_rejections_total",
+    "help": "Cumulative number pod admission rejections by the Kubelet.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_certificate_manager_client_expiration_renew_errors",
+    "help": "Counter of certificate renewal errors.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_certificate_manager_client_ttl_seconds",
+    "help": "Gauge of the TTL (time-to-live) of the Kubelet's client certificate. The value is in seconds until certificate expiry (negative if already expired). If client certificate is invalid or unused, the value will be +INF.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_certificate_manager_server_rotation_seconds",
+    "help": "Histogram of the number of seconds the previous certificate lived before being rotated.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_certificate_manager_server_ttl_seconds",
+    "help": "Gauge of the shortest TTL (time-to-live) of the Kubelet's serving certificate. The value is in seconds until certificate expiry (negative if already expired). If serving certificate is invalid or unused, the value will be +INF.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_cgroup_manager_duration_seconds",
+    "help": "Duration in seconds for cgroup manager operations. Broken down by method.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_cgroup_version",
+    "help": "cgroup version on the hosts.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_container_aligned_compute_resources_count",
+    "help": "Cumulative number of aligned compute resources allocated to containers by alignment type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_container_aligned_compute_resources_failure_count",
+    "help": "Cumulative number of failures to allocate aligned compute resources to containers by alignment type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_container_log_filesystem_used_bytes",
+    "help": "Bytes used by the container's logs on the filesystem.",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubelet_containers_per_pod_count",
+    "help": "The number of containers per pod.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_cpu_manager_allocation_per_numa",
+    "help": "Number of CPUs allocated per NUMA node",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_cpu_manager_exclusive_cpu_allocation_count",
+    "help": "The total number of CPUs exclusively allocated to containers running on this node",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_cpu_manager_pinning_errors_total",
+    "help": "The number of cpu core allocations which required pinning failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_cpu_manager_pinning_requests_total",
+    "help": "The number of cpu core allocations which required pinning.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_cpu_manager_shared_pool_size_millicores",
+    "help": "The size of the shared CPU pool for non-guaranteed QoS pods, in millicores.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_credential_provider_plugin_duration",
+    "help": "Duration of execution in seconds for credential provider plugin",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_credential_provider_plugin_errors",
+    "help": "Number of errors from credential provider plugin",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_desired_pods",
+    "help": "The number of pods the kubelet is being instructed to run. static is true if the pod is not from the apiserver.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_device_plugin_alloc_duration_seconds",
+    "help": "Duration in seconds to serve a device plugin Allocation request. Broken down by resource name.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_device_plugin_registration_total",
+    "help": "Cumulative number of device plugin registrations. Broken down by resource name.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_evented_pleg_connection_error_count",
+    "help": "The number of errors encountered during the establishment of streaming connection with the CRI runtime.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_evented_pleg_connection_latency_seconds",
+    "help": "The latency of streaming connection with the CRI runtime, measured in seconds.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_evented_pleg_connection_success_count",
+    "help": "The number of times a streaming client was obtained to receive CRI Events.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_eviction_stats_age_seconds",
+    "help": "Time between when stats are collected, and when pod is evicted based on those stats by eviction signal",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_evictions",
+    "help": "Cumulative number of pod evictions by eviction signal",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_graceful_shutdown_end_time_seconds",
+    "help": "Last graceful shutdown end time since unix epoch in seconds",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_graceful_shutdown_start_time_seconds",
+    "help": "Last graceful shutdown start time since unix epoch in seconds",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_http_inflight_requests",
+    "help": "Number of the inflight http requests",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_http_requests_duration_seconds",
+    "help": "Duration in seconds to serve http requests",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_http_requests_total",
+    "help": "Number of the http requests received since the server started",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_image_garbage_collected_total",
+    "help": "Total number of images garbage collected by the kubelet, whether through disk usage or image age.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_image_pull_duration_seconds",
+    "help": "Duration in seconds to pull an image.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_image_volume_mounted_errors_total",
+    "help": "Number of failed image volume mounts.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_image_volume_mounted_succeed_total",
+    "help": "Number of successful image volume mounts.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_image_volume_requested_total",
+    "help": "Number of requested image volumes.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_lifecycle_handler_http_fallbacks_total",
+    "help": "The number of times lifecycle handlers successfully fell back to http from https.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_managed_ephemeral_containers",
+    "help": "Current number of ephemeral containers in pods managed by this kubelet.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_memory_manager_pinning_errors_total",
+    "help": "The number of memory pages allocations which required pinning that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_memory_manager_pinning_requests_total",
+    "help": "The number of memory pages allocations which required pinning.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_mirror_pods",
+    "help": "The number of mirror pods the kubelet will try to create (one per admitted static pod)",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_node_name",
+    "help": "The node's name. The count is always 1.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_node_startup_duration_seconds",
+    "help": "Duration in seconds of node startup in total.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_node_startup_post_registration_duration_seconds",
+    "help": "Duration in seconds of node startup after registration.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_node_startup_pre_kubelet_duration_seconds",
+    "help": "Duration in seconds of node startup before kubelet starts.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_node_startup_pre_registration_duration_seconds",
+    "help": "Duration in seconds of node startup before registration.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_node_startup_registration_duration_seconds",
+    "help": "Duration in seconds of node startup during registration.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_orphan_pod_cleaned_volumes",
+    "help": "The total number of orphaned Pods whose volumes were cleaned in the last periodic sweep.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_orphan_pod_cleaned_volumes_errors",
+    "help": "The number of orphaned Pods whose volumes failed to be cleaned in the last periodic sweep.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_orphaned_runtime_pods_total",
+    "help": "Number of pods that have been detected in the container runtime without being already known to the pod worker. This typically indicates the kubelet was restarted while a pod was force deleted in the API or in the local configuration, which is unusual.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pleg_discard_events",
+    "help": "The number of discard events in PLEG.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pleg_last_seen_seconds",
+    "help": "Timestamp in seconds when PLEG was last seen active.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pleg_relist_duration_seconds",
+    "help": "Duration in seconds for relisting pods in PLEG.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pleg_relist_interval_seconds",
+    "help": "Interval in seconds between relisting in PLEG.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_resources_endpoint_errors_get",
+    "help": "Number of requests to the PodResource Get endpoint which returned error. Broken down by server api version.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_resources_endpoint_errors_get_allocatable",
+    "help": "Number of requests to the PodResource GetAllocatableResources endpoint which returned error. Broken down by server api version.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_resources_endpoint_errors_list",
+    "help": "Number of requests to the PodResource List endpoint which returned error. Broken down by server api version.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_resources_endpoint_requests_get",
+    "help": "Number of requests to the PodResource Get endpoint. Broken down by server api version.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_resources_endpoint_requests_get_allocatable",
+    "help": "Number of requests to the PodResource GetAllocatableResources endpoint. Broken down by server api version.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_resources_endpoint_requests_list",
+    "help": "Number of requests to the PodResource List endpoint. Broken down by server api version.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_resources_endpoint_requests_total",
+    "help": "Cumulative number of requests to the PodResource endpoint. Broken down by server api version.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_start_duration_seconds",
+    "help": "Duration in seconds from kubelet seeing a pod for the first time to the pod starting to run",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_start_sli_duration_seconds",
+    "help": "Duration in seconds to start a pod, excluding time to pull images and run init containers, measured from pod creation timestamp to when all its containers are reported as started and observed via watch",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_start_total_duration_seconds",
+    "help": "Duration in seconds to start a pod since creation, including time to pull images and run init containers, measured from pod creation timestamp to when all its containers are reported as started and observed via watch",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_status_sync_duration_seconds",
+    "help": "Duration in seconds to sync a pod status update. Measures time from detection of a change to pod status until the API is successfully updated for that pod, even if multiple intevening changes to pod status occur.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_worker_duration_seconds",
+    "help": "Duration in seconds to sync a single pod. Broken down by operation type: create, update, or sync",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_pod_worker_start_duration_seconds",
+    "help": "Duration in seconds from kubelet seeing a pod to starting a worker.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_preemptions",
+    "help": "Cumulative number of pod preemptions by preemption resource",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_restarted_pods_total",
+    "help": "Number of pods that have been restarted because they were deleted and recreated with the same UID while the kubelet was watching them (common for static pods, extremely uncommon for API pods)",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_run_podsandbox_duration_seconds",
+    "help": "Duration in seconds of the run_podsandbox operations. Broken down by RuntimeClass.Handler.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_run_podsandbox_errors_total",
+    "help": "Cumulative number of the run_podsandbox operation errors by RuntimeClass.Handler.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_running_containers",
+    "help": "Number of containers currently running",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_running_pods",
+    "help": "Number of pods that have a running pod sandbox",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubelet_runtime_operations_duration_seconds",
+    "help": "Duration in seconds of runtime operations. Broken down by operation type.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_runtime_operations_errors_total",
+    "help": "Cumulative number of runtime operation errors by operation type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_runtime_operations_total",
+    "help": "Cumulative number of runtime operations by operation type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_server_expiration_renew_errors",
+    "help": "Counter of certificate renewal errors.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_sleep_action_terminated_early_total",
+    "help": "The number of times lifecycle sleep handler got terminated before it finishes",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_started_containers_errors_total",
+    "help": "Cumulative number of errors when starting containers",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_started_containers_total",
+    "help": "Cumulative number of containers started",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_started_host_process_containers_errors_total",
+    "help": "Cumulative number of errors when starting hostprocess containers. This metric will only be collected on Windows.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_started_host_process_containers_total",
+    "help": "Cumulative number of hostprocess containers started. This metric will only be collected on Windows.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_started_pods_errors_total",
+    "help": "Cumulative number of errors when starting pods",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_started_pods_total",
+    "help": "Cumulative number of pods started",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_topology_manager_admission_duration_ms",
+    "help": "Duration in milliseconds to serve a pod admission request.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_topology_manager_admission_errors_total",
+    "help": "The number of admission request failures where resources could not be aligned.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_topology_manager_admission_requests_total",
+    "help": "The number of admission requests where resources have to be aligned.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubelet_volume_metric_collection_duration_seconds",
+    "help": "Duration in seconds to calculate volume stats",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubelet_volume_stats_available_bytes",
+    "help": "Number of available bytes in the volume",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubelet_volume_stats_capacity_bytes",
+    "help": "Capacity in bytes of the volume",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubelet_volume_stats_health_status_abnormal",
+    "help": "Abnormal volume health status. The count is either 1 or 0. 1 indicates the volume is unhealthy, 0 indicates volume is healthy",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubelet_volume_stats_inodes",
+    "help": "Maximum number of inodes in the volume",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubelet_volume_stats_inodes_free",
+    "help": "Number of free inodes in the volume",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubelet_volume_stats_inodes_used",
+    "help": "Number of used inodes in the volume",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubelet_volume_stats_used_bytes",
+    "help": "Number of used bytes in the volume",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubelet_working_pods",
+    "help": "Number of pods the kubelet is actually running, broken down by lifecycle phase, whether the pod is desired, orphaned, or runtime only (also orphaned), and whether the pod is static. An orphaned pod has been removed from local configuration or force deleted in the API and consumes resources that are not otherwise visible.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_conntrack_reconciler_deleted_entries_total",
+    "help": "Cumulative conntrack flows deleted by conntrack reconciler",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_conntrack_reconciler_sync_duration_seconds",
+    "help": "ReconcileConntrackFlowsLatency latency in seconds",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_iptables_ct_state_invalid_dropped_packets_total",
+    "help": "packets dropped by iptables to work around conntrack problems",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_iptables_localhost_nodeports_accepted_packets_total",
+    "help": "Number of packets accepted on nodeports of loopback interface",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_network_programming_duration_seconds",
+    "help": "In Cluster Network Programming Latency in seconds",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_proxy_healthz_total",
+    "help": "Cumulative proxy healthz HTTP status",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_proxy_livez_total",
+    "help": "Cumulative proxy livez HTTP status",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_full_proxy_rules_duration_seconds",
+    "help": "SyncProxyRules latency in seconds for full resyncs",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_partial_proxy_rules_duration_seconds",
+    "help": "SyncProxyRules latency in seconds for partial resyncs",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_duration_seconds",
+    "help": "SyncProxyRules latency in seconds",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_endpoint_changes_pending",
+    "help": "Pending proxy rules Endpoint changes",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_endpoint_changes_total",
+    "help": "Cumulative proxy rules Endpoint changes",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_iptables_last",
+    "help": "Number of iptables rules written by kube-proxy in last sync",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_iptables_partial_restore_failures_total",
+    "help": "Cumulative proxy iptables partial restore failures",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_iptables_restore_failures_total",
+    "help": "Cumulative proxy iptables restore failures",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_iptables_total",
+    "help": "Total number of iptables rules owned by kube-proxy",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_last_queued_timestamp_seconds",
+    "help": "The last time a sync of proxy rules was queued",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_last_timestamp_seconds",
+    "help": "The last time proxy rules were successfully synced",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_nftables_cleanup_failures_total",
+    "help": "Cumulative proxy nftables cleanup failures",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_nftables_sync_failures_total",
+    "help": "Cumulative proxy nftables sync failures",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_no_local_endpoints_total",
+    "help": "Number of services with a Local traffic policy and no endpoints",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_service_changes_pending",
+    "help": "Pending proxy rules Service changes",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubeproxy_sync_proxy_rules_service_changes_total",
+    "help": "Cumulative proxy rules Service changes",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "kubernetes_build_info",
+    "help": "A metric with a constant '1' value labeled by major, minor, git version, git commit, git tree state, build date, Go version, and compiler from which Kubernetes was built, and platform on which it is running.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubernetes_feature_enabled",
+    "help": "This metric records the data about the stage and enablement of a k8s feature.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubernetes_healthcheck",
+    "help": "This metric records the result of a single healthcheck.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kubernetes_healthchecks_total",
+    "help": "This metric records the results of all healthcheck.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "leader_election_master_status",
+    "help": "Gauge of if the reporting system is master of the relevant lease, 0 indicates backup, 1 indicates master. 'name' is the string used to identify the lease. Please make sure to group by name.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "leader_election_slowpath_total",
+    "help": "Total number of slow path exercised in renewing leader leases. 'name' is the string used to identify the lease. Please make sure to group by name.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_authorizer_graph_actions_duration_seconds",
+    "help": "Histogram of duration of graph actions in node authorizer.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "node_collector_evictions_total",
+    "help": "Number of Node evictions that happened since current instance of NodeController started.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_collector_unhealthy_nodes_in_zone",
+    "help": "Gauge measuring number of not Ready Nodes per zones.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_collector_update_all_nodes_health_duration_seconds",
+    "help": "Duration in seconds for NodeController to update the health of all nodes.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "node_collector_update_node_health_duration_seconds",
+    "help": "Duration in seconds for NodeController to update the health of a single node.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "node_collector_zone_health",
+    "help": "Gauge measuring percentage of healthy nodes per zone.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_collector_zone_size",
+    "help": "Gauge measuring number of registered Nodes per zones.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_controller_cloud_provider_taint_removal_delay_seconds",
+    "help": "Number of seconds after node creation when NodeController removed the cloud-provider taint of a single node.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "node_controller_initial_node_sync_delay_seconds",
+    "help": "Number of seconds after node creation when NodeController finished the initial synchronization of a single node.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "node_cpu_usage_seconds_total",
+    "help": "Cumulative cpu time consumed by the node in core-seconds",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "node_ipam_controller_cidrset_allocation_tries_per_request",
+    "help": "Number of endpoints added on each Service sync",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "node_ipam_controller_cidrset_cidrs_allocations_total",
+    "help": "Counter measuring total number of CIDR allocations.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_ipam_controller_cidrset_cidrs_releases_total",
+    "help": "Counter measuring total number of CIDR releases.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_ipam_controller_cidrset_usage_cidrs",
+    "help": "Gauge measuring percentage of allocated CIDRs.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_ipam_controller_cirdset_max_cidrs",
+    "help": "Maximum number of CIDRs that can be allocated.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_working_set_bytes",
+    "help": "Current working set of the node in bytes",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "node_swap_usage_bytes",
+    "help": "Current swap usage of the node in bytes. Reported only on non-windows systems",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "plugin_manager_total_plugins",
+    "help": "Number of plugins in Plugin Manager",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "pod_cpu_usage_seconds_total",
+    "help": "Cumulative cpu time consumed by the pod in core-seconds",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "pod_gc_collector_force_delete_pod_errors_total",
+    "help": "Number of errors encountered when forcefully deleting the pods since the Pod GC Controller started.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "pod_gc_collector_force_delete_pods_total",
+    "help": "Number of pods that are being forcefully deleted since the Pod GC Controller started.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "pod_memory_working_set_bytes",
+    "help": "Current working set of the pod in bytes",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "pod_security_errors_total",
+    "help": "Number of errors preventing normal evaluation. Non-fatal errors may result in the latest restricted profile being used for evaluation.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "pod_security_evaluations_total",
+    "help": "Number of policy evaluations that occurred, not counting ignored or exempt requests.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "pod_security_exemptions_total",
+    "help": "Number of exempt requests, not counting ignored or out of scope requests.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "pod_swap_usage_bytes",
+    "help": "Current amount of the pod swap usage in bytes. Reported only on non-windows systems",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "prober_probe_duration_seconds",
+    "help": "Duration in seconds for a probe response.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "prober_probe_total",
+    "help": "Cumulative number of a liveness, readiness or startup probe for a container by result.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "pv_collector_bound_pv_count",
+    "help": "Gauge measuring number of persistent volume currently bound",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "pv_collector_bound_pvc_count",
+    "help": "Gauge measuring number of persistent volume claim currently bound",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "pv_collector_total_pv_count",
+    "help": "Gauge measuring total number of persistent volumes",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "pv_collector_unbound_pv_count",
+    "help": "Gauge measuring number of persistent volume currently unbound",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "pv_collector_unbound_pvc_count",
+    "help": "Gauge measuring number of persistent volume claim currently unbound",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "reconstruct_volume_operations_errors_total",
+    "help": "The number of volumes that failed reconstruction from the operating system during kubelet startup.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "reconstruct_volume_operations_total",
+    "help": "The number of volumes that were attempted to be reconstructed from the operating system during kubelet startup. This includes both successful and failed reconstruction.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "registered_metrics_total",
+    "help": "The count of registered metrics broken by stability level and deprecation version.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "resource_scrape_error",
+    "help": "1 if there was an error while getting container metrics, 0 otherwise",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "resourceclaim_controller_allocated_resource_claims",
+    "help": "Number of allocated ResourceClaims",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "resourceclaim_controller_create_attempts_total",
+    "help": "Number of ResourceClaims creation requests",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "resourceclaim_controller_create_failures_total",
+    "help": "Number of ResourceClaims creation request failures",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "resourceclaim_controller_resource_claims",
+    "help": "Number of ResourceClaims",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "rest_client_dns_resolution_duration_seconds",
+    "help": "DNS resolver latency in seconds. Broken down by host.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "rest_client_exec_plugin_call_total",
+    "help": "Number of calls to an exec plugin, partitioned by the type of event encountered (no_error, plugin_execution_error, plugin_not_found_error, client_internal_error) and an optional exit code. The exit code will be set to 0 if and only if the plugin call was successful.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "rest_client_exec_plugin_certificate_rotation_age",
+    "help": "Histogram of the number of seconds the last auth exec plugin client certificate lived before being rotated. If auth exec plugin client certificates are unused, histogram will contain no data.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "rest_client_exec_plugin_ttl_seconds",
+    "help": "Gauge of the shortest TTL (time-to-live) of the client certificate(s) managed by the auth exec plugin. The value is in seconds until certificate expiry (negative if already expired). If auth exec plugins are unused or manage no TLS certificates, the value will be +INF.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "rest_client_rate_limiter_duration_seconds",
+    "help": "Client side rate limiter latency in seconds. Broken down by verb, and host.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "rest_client_request_duration_seconds",
+    "help": "Request latency in seconds. Broken down by verb, and host.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "rest_client_request_retries_total",
+    "help": "Number of request retries, partitioned by status code, verb, and host.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "rest_client_request_size_bytes",
+    "help": "Request size in bytes. Broken down by verb and host.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "rest_client_requests_total",
+    "help": "Number of HTTP requests, partitioned by status code, method, and host.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "rest_client_response_size_bytes",
+    "help": "Response size in bytes. Broken down by verb and host.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "rest_client_transport_cache_entries",
+    "help": "Number of transport entries in the internal cache.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "rest_client_transport_create_calls_total",
+    "help": "Number of calls to get a new transport, partitioned by the result of the operation hit: obtained from the cache, miss: created and added to the cache, uncacheable: created and not cached",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "retroactive_storageclass_errors_total",
+    "help": "Total number of failed retroactive StorageClass assignments to persistent volume claim",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "retroactive_storageclass_total",
+    "help": "Total number of retroactive StorageClass assignments to persistent volume claim",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "root_ca_cert_publisher_sync_duration_seconds",
+    "help": "Number of namespace syncs happened in root ca cert publisher.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "root_ca_cert_publisher_sync_total",
+    "help": "Number of namespace syncs happened in root ca cert publisher.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "running_managed_controllers",
+    "help": "Indicates where instances of a controller are currently running",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "scheduler_cache_size",
+    "help": "Number of nodes, pods, and assumed (bound) pods in the scheduler cache.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "scheduler_event_handling_duration_seconds",
+    "help": "Event handling latency in seconds.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_framework_extension_point_duration_seconds",
+    "help": "Latency for running all plugins of a specific extension point.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_goroutines",
+    "help": "Number of running goroutines split by the work they do such as binding.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "scheduler_inflight_events",
+    "help": "Number of events currently tracked in the scheduling queue.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "scheduler_pending_pods",
+    "help": "Number of pending pods, by the queue type. 'active' means number of pods in activeQ; 'backoff' means number of pods in backoffQ; 'unschedulable' means number of pods in unschedulablePods that the scheduler attempted to schedule and failed; 'gated' is the number of unschedulable pods that the scheduler never attempted to schedule because they are gated.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "scheduler_permit_wait_duration_seconds",
+    "help": "Duration of waiting on permit.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_plugin_evaluation_total",
+    "help": "Number of attempts to schedule pods by each plugin and the extension point (available only in PreFilter, Filter, PreScore, and Score).",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "scheduler_plugin_execution_duration_seconds",
+    "help": "Duration for running a plugin at a specific extension point.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_pod_scheduling_attempts",
+    "help": "Number of attempts to successfully schedule a pod.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_pod_scheduling_sli_duration_seconds",
+    "help": "E2e latency for a pod being scheduled, from the time the pod enters the scheduling queue and might involve multiple scheduling attempts.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_preemption_attempts_total",
+    "help": "Total preemption attempts in the cluster till now",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "scheduler_preemption_goroutines_duration_seconds",
+    "help": "Duration in seconds for running goroutines for the preemption.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_preemption_goroutines_execution_total",
+    "help": "Number of preemption goroutines executed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "scheduler_preemption_victims",
+    "help": "Number of selected preemption victims",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_queue_incoming_pods_total",
+    "help": "Number of pods added to scheduling queues by event and queue type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "scheduler_queueing_hint_execution_duration_seconds",
+    "help": "Duration for running a queueing hint function of a plugin.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_schedule_attempts_total",
+    "help": "Number of attempts to schedule pods, by the result. 'unschedulable' means a pod could not be scheduled, while 'error' means an internal scheduler problem.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "scheduler_scheduling_algorithm_duration_seconds",
+    "help": "Scheduling algorithm latency in seconds",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_scheduling_attempt_duration_seconds",
+    "help": "Scheduling attempt latency in seconds (scheduling algorithm + binding)",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "scheduler_unschedulable_pods",
+    "help": "The number of unschedulable pods broken down by plugin name. A pod will increment the gauge for all plugins that caused it to not schedule and so this metric have meaning only when broken down by plugin.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "scheduler_volume_binder_cache_requests_total",
+    "help": "Total number for request volume binding cache",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "scheduler_volume_scheduling_stage_error_total",
+    "help": "Volume scheduling stage error count",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "scrape_error",
+    "help": "1 if there was an error while getting container metrics, 0 otherwise",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "selinux_warning_controller_selinux_volume_conflict",
+    "help": "Conflict between two Pods using the same volume",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "service_controller_loadbalancer_sync_total",
+    "help": "A metric counting the amount of times any load balancer has been configured, as an effect of service/node changes on the cluster",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "service_controller_nodesync_error_total",
+    "help": "A metric counting the amount of times any load balancer has been configured and errored, as an effect of node changes on the cluster",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "service_controller_nodesync_latency_seconds",
+    "help": "A metric measuring the latency for nodesync which updates loadbalancer hosts on cluster node updates.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "service_controller_update_loadbalancer_host_latency_seconds",
+    "help": "A metric measuring the latency for updating each load balancer hosts.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "serviceaccount_invalid_legacy_auto_token_uses_total",
+    "help": "Cumulative invalid auto-generated legacy tokens used",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "serviceaccount_legacy_auto_token_uses_total",
+    "help": "Cumulative auto-generated legacy tokens used",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "serviceaccount_legacy_manual_token_uses_total",
+    "help": "Cumulative manually created legacy tokens used",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "serviceaccount_legacy_tokens_total",
+    "help": "Cumulative legacy service account tokens used",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "serviceaccount_stale_tokens_total",
+    "help": "Cumulative stale projected service account tokens used",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "serviceaccount_valid_tokens_total",
+    "help": "Cumulative valid projected service account tokens used",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "storage_count_attachable_volumes_in_use",
+    "help": "Measure number of volumes in use",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "storage_operation_duration_seconds",
+    "help": "Storage operation duration",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "taint_eviction_controller_pod_deletion_duration_seconds",
+    "help": "Latency, in seconds, between the time when a taint effect has been activated for the Pod and its deletion via TaintEvictionController.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "taint_eviction_controller_pod_deletions_total",
+    "help": "Total number of Pods deleted by TaintEvictionController since its start.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "ttl_after_finished_controller_job_deletion_duration_seconds",
+    "help": "The time it took to delete the job since it became eligible for deletion",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "volume_manager_selinux_container_errors_total",
+    "help": "Number of errors when kubelet cannot compute SELinux context for a container. Kubelet can't start such a Pod then and it will retry, therefore value of this metric may not represent the actual nr. of containers.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "volume_manager_selinux_container_warnings_total",
+    "help": "Number of errors when kubelet cannot compute SELinux context for a container that are ignored. They will become real errors when SELinuxMountReadWriteOncePod feature is expanded to all volume access modes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "volume_manager_selinux_pod_context_mismatch_errors_total",
+    "help": "Number of errors when a Pod defines different SELinux contexts for its containers that use the same volume. Kubelet can't start such a Pod then and it will retry, therefore value of this metric may not represent the actual nr. of Pods.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "volume_manager_selinux_pod_context_mismatch_warnings_total",
+    "help": "Number of errors when a Pod defines different SELinux contexts for its containers that use the same volume. They are not errors yet, but they will become real errors when SELinuxMountReadWriteOncePod feature is expanded to all volume access modes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "volume_manager_selinux_volume_context_mismatch_errors_total",
+    "help": "Number of errors when a Pod uses a volume that is already mounted with a different SELinux context than the Pod needs. Kubelet can't start such a Pod then and it will retry, therefore value of this metric may not represent the actual nr. of Pods.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "volume_manager_selinux_volume_context_mismatch_warnings_total",
+    "help": "Number of errors when a Pod uses a volume that is already mounted with a different SELinux context than the Pod needs. They are not errors yet, but they will become real errors when SELinuxMountReadWriteOncePod feature is expanded to all volume access modes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "volume_manager_selinux_volumes_admitted_total",
+    "help": "Number of volumes whose SELinux context was fine and will be mounted with mount -o context option.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "volume_manager_total_volumes",
+    "help": "Number of volumes in Volume Manager",
+    "type": "custom",
+    "labels": []
+  },
+  {
+    "name": "volume_operation_total_errors",
+    "help": "Total volume operation errors",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "volume_operation_total_seconds",
+    "help": "Storage operation end to end duration in seconds",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "watch_cache_capacity",
+    "help": "Total capacity of watch cache broken by resource type.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "watch_cache_capacity_decrease_total",
+    "help": "Total number of watch cache capacity decrease events broken by resource type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "watch_cache_capacity_increase_total",
+    "help": "Total number of watch cache capacity increase events broken by resource type.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "workqueue_adds_total",
+    "help": "Total number of adds handled by workqueue",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "workqueue_depth",
+    "help": "Current depth of workqueue",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "workqueue_longest_running_processor_seconds",
+    "help": "How many seconds has the longest running processor for workqueue been running.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "workqueue_queue_duration_seconds",
+    "help": "How long in seconds an item stays in workqueue before being requested.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "workqueue_retries_total",
+    "help": "Total number of retries handled by workqueue",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "workqueue_unfinished_work_seconds",
+    "help": "How many seconds of work has done that is in progress and hasn't been observed by work_duration. Large values indicate stuck threads. One can deduce the number of stuck threads by observing the rate at which this increases.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "workqueue_work_duration_seconds",
+    "help": "How long in seconds processing an item from workqueue takes.",
+    "type": "histogram",
+    "labels": []
+  }
+]
