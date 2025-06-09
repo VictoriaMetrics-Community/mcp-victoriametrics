@@ -13,4 +13,4 @@ coverage.txt
 *~
 dist/
 bin/
-./mcp-victoriametrics
+/mcp-victoriametrics
