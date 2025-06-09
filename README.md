@@ -69,7 +69,7 @@ docker run -d --name mcp-victoriametrics \
   -e MCP_SERVER_MODE=sse \
   -e VM_INSTANCE_ENTRYPOINT=https://play.victoriametrics.com \
   -e VM_INSTANCE_TYPE=cluster \
-  ghcr.io/VictoriaMetrics-Community/mcp-victoriametrics
+  ghcr.io/victoriaMetrics-community/mcp-victoriametrics
 ```
 
 You should replace environment variables with your own parameters.
@@ -331,7 +331,7 @@ You should replace run command in configuration examples above in the following 
           "-e", "VM_INSTANCE_ENTRYPOINT",
           "-e", "VM_INSTANCE_TYPE",
           "-e", "VM_INSTANCE_BEARER_TOKEN",
-          "ghcr.io/VictoriaMetrics-Community/mcp-victoriametrics",
+          "ghcr.io/victoriaMetrics-community/mcp-victoriametrics",
         ],
       "env": {
         "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
