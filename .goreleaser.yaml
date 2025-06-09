@@ -45,7 +45,7 @@ dockers:
   - image_templates:
       - "ghcr.io/VictoriaMetrics-Community/mcp-victoriametrics:latest"
       - "ghcr.io/VictoriaMetrics-Community/mcp-victoriametrics:{{ .Tag }}"
-    dockerfile: docker/Dockerfile.goreleaser
+    dockerfile: Dockerfile.goreleaser
     build_flag_templates:
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
