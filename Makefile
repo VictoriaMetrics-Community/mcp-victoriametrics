@@ -14,3 +14,5 @@ lint:
 
 build:
 	bash ./scripts/build-binaries.sh
+
+all: test check lint build

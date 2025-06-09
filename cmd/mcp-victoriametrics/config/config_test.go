@@ -56,8 +56,8 @@ func TestInitConfig(t *testing.T) {
 		if cfg.IsSSE() {
 			t.Error("Expected IsSSE() to be false")
 		}
-		if cfg.SSEAddr() != "localhost:8080" {
-			t.Errorf("Expected SSE address 'localhost:8080', got: %s", cfg.SSEAddr())
+		if cfg.ListenAddr() != "localhost:8080" {
+			t.Errorf("Expected SSE address 'localhost:8080', got: %s", cfg.ListenAddr())
 		}
 		expectedURL, _ := url.Parse("http://example.com")
 		if cfg.EntryPointURL().String() != expectedURL.String() {
@@ -152,8 +152,8 @@ func TestInitConfig(t *testing.T) {
 		if !cfg.IsStdio() {
 			t.Error("Expected default server mode to be stdio")
 		}
-		if cfg.SSEAddr() != "localhost:8080" {
-			t.Errorf("Expected default SSE address 'localhost:8080', got: %s", cfg.SSEAddr())
+		if cfg.ListenAddr() != "localhost:8080" {
+			t.Errorf("Expected default SSE address 'localhost:8080', got: %s", cfg.ListenAddr())
 		}
 		if !cfg.IsSingle() {
 			t.Error("Expected IsSingle() to be true")

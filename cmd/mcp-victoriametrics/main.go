@@ -12,6 +12,11 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/tools"
 )
 
+var (
+	version = "dev"
+	date    = "unknown"
+)
+
 func main() {
 	c, err := config.InitConfig()
 	if err != nil {
@@ -20,8 +25,8 @@ func main() {
 	}
 
 	s := server.NewMCPServer(
-		"victoriametrics",
-		"0.0.9",
+		"VictoriaMetrics",
+		fmt.Sprintf("v%s (date: %s)", version, date),
 		server.WithRecovery(),
 		server.WithLogging(),
 		server.WithToolCapabilities(true),
@@ -81,14 +86,22 @@ Try not to second guess information - if you don't know something or lack inform
 	prompts.RegisterPromptDocumentation(s, c)
 	prompts.RegisterPromptRarelyUsedCardinalMetrics(s, c)
 
-	if c.IsStdio() {
+	switch c.ServerMode() {
+	case "stdio":
 		if err := server.ServeStdio(s); err != nil {
-			fmt.Printf("Server error: %v\n", err)
+			log.Fatalf("failed to start server in stdio mode on %s: %v", c.ListenAddr(), err)
 		}
-	} else {
+	case "sse":
 		srv := server.NewSSEServer(s)
-		if err = srv.Start(c.SSEAddr()); err != nil {
-			log.Fatalf("Failed to start SSE server: %v", err)
+		if err = srv.Start(c.ListenAddr()); err != nil {
+			log.Fatalf("failed to start server in sse mode on %s: %v", c.ListenAddr(), err)
 		}
+	case "http":
+		srv := server.NewStreamableHTTPServer(s)
+		if err := srv.Start(c.ListenAddr()); err != nil {
+			log.Fatalf("failed to start server in http mode on %s: %v", c.ListenAddr(), err)
+		}
+	default:
+		log.Fatalf("unknown server mode: %s", c.ServerMode())
 	}
 }

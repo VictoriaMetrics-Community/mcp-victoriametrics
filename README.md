@@ -48,23 +48,63 @@ You can also combine the MCP server with other observability or doc search relat
 go install github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics@latest
 ```
 
-### Source Code
-
-```bash
-git clone https://github.com/VictoriaMetrics-Community/mcp-victoriametrics.git
-cd mcp-victoriametrics
-go build -o bin/mcp-victoriametrics ./cmd/mcp-victoriametrics/main.go
-
-# after that add bin/mcp-victoriametrics file to your PATH
-```
-
 ### Binaries
 
 Just download the latest release from [Releases](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases) page and put it to your PATH.
 
+Example for Linux x86_64 (note that other architectures and platforms are also available):
+
+```bash
+latest=$(curl -s https://api.github.com/repos/VictoriaMetrics-Community/mcp-victoriametrics/releases/latest | grep 'tag_name' | cut -d\" -f4)
+wget https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/download/$latest/mcp-victoriametrics_Linux_x86_64.tar.gz
+tar axvf mcp-victoriametrics_Linux_x86_64.tar.gz
+```
+
 ### Docker
 
-Coming soon...
+You can run the MCP Helm server using Docker. This is the easiest way to get started without needing to install Go or build from source.
+
+```bash
+docker run -d --name mcp-victoriametrics \
+  -e MCP_SERVER_MODE=sse \
+  -e VM_INSTANCE_ENTRYPOINT=https://play.victoriametrics.com \
+  -e VM_INSTANCE_TYPE=cluster \
+  ghcr.io/VictoriaMetrics-Community/mcp-victoriametrics
+```
+
+You should replace environment variables with your own parameters.
+
+Note that the `MCP_SERVER_MODE=sse` flag is used to enable Server-Sent Events mode, which used by MCP clients to connect.
+Alternatively, you can use `MCP_SERVER_MODE=http` to enable Streamable HTTP mode. More details about server modes can be found in the [Configuration](#configuration) section.
+
+Also see [Using Docker instead of binary](#using-docker-instead-of-binary) section for more details about using Docker with MCP server with clients in stdio mode.
+
+### Source Code
+
+For building binary from source code you can use the following approach:
+
+- Clone repo:
+  
+  ```bash
+  git clone https://github.com/VictoriaMetrics-Community/mcp-victoriametrics.git
+  cd mcp-victoriametrics
+  make build
+  
+  # after that add bin/mcp-victoriametrics file to your PATH
+  ```
+- Build binary from cloned source code: 
+  
+  ```bash
+  make build
+  # after that you can find binary at bin/mcp-victoriametrics and copy this file to your PATH or run inplace
+  ```
+- Build image from cloned source code:
+  
+  ```bash
+  docker build -t mcp-victoriametrics .
+  
+  # after that you can use docker image mcp-victoriametrics for running or pushing
+  ```
 
 ### Smithery
 
@@ -95,15 +135,15 @@ npx -y @smithery/cli install @VictoriaMetrics-Community/mcp-victoriametrics --cl
 
 MCP Server for VictoriaMetrics is configured via environment variables:
 
-| Variable                                 | Description                                    | Required                               | Default | Allowed values |
-|------------------------------------------|------------------------------------------------|----------------------------------------|---------|---------|
-| `VM_INSTANCE_ENTRYPOINT` / `VMC_API_KEY` | URL to VictoriaMetrics instance                | Yes (if you don't use `VMC_API_KEY`)   | - | - |
-| `VM_INSTANCE_TYPE`                       | Type of VictoriaMetrics instance               | Yes (if you don't use ``VMC_API_KEY``) | - | `single`, `cluster` |
-| `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API   | No                                     | - | - |
-| `VMC_API_KEY` | [API key from VictoriaMetrics Cloud Console](https://docs.victoriametrics.com/victoriametrics-cloud/api/) | No                                     | - | - |
-| `MCP_SERVER_MODE`                        | Server operation mode                          | No                                     | `stdio` | `stdio`, `sse` |
-| `MCP_SSE_ADDR`                           | Address for SSE server to listen on            | No                                     | `localhost:8080` | - |
-| `MCP_DISABLED_TOOLS`                     | Comma-separated list of tools to disable       | No                                     | - | - |
+| Variable                                 | Description                                    | Required                               | Default | Allowed values         |
+|------------------------------------------|------------------------------------------------|----------------------------------------|---------|------------------------|
+| `VM_INSTANCE_ENTRYPOINT` / `VMC_API_KEY` | URL to VictoriaMetrics instance                | Yes (if you don't use `VMC_API_KEY`)   | - | -                      |
+| `VM_INSTANCE_TYPE`                       | Type of VictoriaMetrics instance               | Yes (if you don't use ``VMC_API_KEY``) | - | `single`, `cluster`    |
+| `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API   | No                                     | - | -                      |
+| `VMC_API_KEY`                            | [API key from VictoriaMetrics Cloud Console](https://docs.victoriametrics.com/victoriametrics-cloud/api/) | No                                     | - | -                      |
+| `MCP_SERVER_MODE`                        | Server operation mode                          | No                                     | `stdio` | `stdio`, `sse`, `http` |
+| `MCP_LISTEN_ADDR`                        | Address for SSE server to listen on            | No                                     | `localhost:8080` | -                      |
+| `MCP_DISABLED_TOOLS`                     | Comma-separated list of tools to disable       | No                                     | - | -                      |
 
 You can use two options to connect to your VictoriaMetrics instance:
 
@@ -128,7 +168,7 @@ export VMC_API_KEY="<you-api-key>"
 
 # Server mode
 export MCP_SERVER_MODE="sse"
-export MCP_SSE_ADDR="0.0.0.0:8080"
+export MCP_LISTEN_ADDR="0.0.0.0:8080"
 ```
 
 ## Setup in clients
@@ -278,7 +318,34 @@ See [Windsurf MCP docs](https://docs.windsurf.com/windsurf/mcp) for more info.
 
 ### Using Docker instead of binary
 
-Coming soon...
+### Run with docker
+
+You can run the MCP Helm server using Docker instead of local binary.
+
+You should replace run command in configuration examples above in the following way:
+
+```
+{
+  "mcpServers": {
+    "victoriametrics": {
+      "command": "docker",
+        "args": [
+          "run",
+          "-i", "--rm",
+          "-e", "VM_INSTANCE_ENTRYPOINT",
+          "-e", "VM_INSTANCE_TYPE",
+          "-e", "VM_INSTANCE_BEARER_TOKEN",
+          "ghcr.io/VictoriaMetrics-Community/mcp-victoriametrics",
+        ],
+      "env": {
+        "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+        "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>"
+      }
+    }
+  }
+}
+```
 
 ## Usage
 
@@ -488,9 +555,9 @@ But you can use any other tools and combine them in your own way.
 
 - [x] Support "Prettify query" tool (done in [`v0.0.5`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.5))
 - [x] Support "Explain query" tool (done in [`v0.0.6`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.6))
-- [ ] Support CI pipeline for building and pushing multiarch docker images
+- [x] Support CI pipeline for building and pushing multiarch docker images
 - [ ] Support tool for analysis of [Query execution statistics](https://docs.victoriametrics.com/victoriametrics/query-stats/)
-- [x] Suppport tool for [unit-testing of alerting and recording rules](https://docs.victoriametrics.com/victoriametrics/vmalert-tool/) (done in [`v0.0.7`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.7))
+- [x] Support tool for [unit-testing of alerting and recording rules](https://docs.victoriametrics.com/victoriametrics/vmalert-tool/) (done in [`v0.0.7`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.7))
 - [x] Support optional integration with [VictoriaMetrics Cloud](https://victoriametrics.com/products/cloud/) (via [API keys](https://docs.victoriametrics.com/victoriametrics-cloud/api/)) (done in [`v0.0.9`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.9))
 - [ ] Add some extra knowledge to server in addition to current documentation tool:
   - [ ] [VictoriaMetrics blog](https://victoriametrics.com/blog/) posts
@@ -510,8 +577,11 @@ But you can use any other tools and combine them in your own way.
 
 AI services and agents along with MCP servers like this cannot guarantee the accuracy, completeness and reliability of results.
 You should double check the results obtained with AI.
+
 The quality of the MCP Server and its responses depends very much on the capabilities of your client and the quality of the model you are using.
 
 ## Contributing
 
-Contributions to the MCP VictoriaMetrics project are welcome! Please feel free to submit issues, feature requests, or pull requests.
+Contributions to the MCP VictoriaMetrics project are welcome! 
+
+Please feel free to submit issues, feature requests, or pull requests.

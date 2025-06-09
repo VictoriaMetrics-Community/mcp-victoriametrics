@@ -17,7 +17,7 @@ RUN go mod download
 RUN go build -o mcp-victoriametrics cmd/mcp-victoriametrics/main.go
 
 # Runtime stage
-FROM alpine:latest
+FROM alpine:3.22
 WORKDIR /app
 
 # Install ca-certificates for HTTPS
