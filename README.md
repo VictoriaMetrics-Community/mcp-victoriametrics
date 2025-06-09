@@ -69,7 +69,7 @@ docker run -d --name mcp-victoriametrics \
   -e MCP_SERVER_MODE=sse \
   -e VM_INSTANCE_ENTRYPOINT=https://play.victoriametrics.com \
   -e VM_INSTANCE_TYPE=cluster \
-  ghcr.io/victoriaMetrics-community/mcp-victoriametrics
+  ghcr.io/victoriametrics-community/mcp-victoriametrics
 ```
 
 You should replace environment variables with your own parameters.
@@ -131,15 +131,15 @@ npx -y @smithery/cli install @VictoriaMetrics-Community/mcp-victoriametrics --cl
 
 MCP Server for VictoriaMetrics is configured via environment variables:
 
-| Variable                                 | Description                                    | Required                               | Default | Allowed values         |
-|------------------------------------------|------------------------------------------------|----------------------------------------|---------|------------------------|
-| `VM_INSTANCE_ENTRYPOINT` / `VMC_API_KEY` | URL to VictoriaMetrics instance                | Yes (if you don't use `VMC_API_KEY`)   | - | -                      |
-| `VM_INSTANCE_TYPE`                       | Type of VictoriaMetrics instance               | Yes (if you don't use ``VMC_API_KEY``) | - | `single`, `cluster`    |
-| `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API   | No                                     | - | -                      |
+| Variable                                 | Description                                                                                               | Required                               | Default | Allowed values         |
+|------------------------------------------|-----------------------------------------------------------------------------------------------------------|----------------------------------------|---------|------------------------|
+| `VM_INSTANCE_ENTRYPOINT` / `VMC_API_KEY` | URL to VictoriaMetrics instance                                                                           | Yes (if you don't use `VMC_API_KEY`)   | - | -                      |
+| `VM_INSTANCE_TYPE`                       | Type of VictoriaMetrics instance                                                                          | Yes (if you don't use ``VMC_API_KEY``) | - | `single`, `cluster`    |
+| `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API                                                              | No                                     | - | -                      |
 | `VMC_API_KEY`                            | [API key from VictoriaMetrics Cloud Console](https://docs.victoriametrics.com/victoriametrics-cloud/api/) | No                                     | - | -                      |
-| `MCP_SERVER_MODE`                        | Server operation mode                          | No                                     | `stdio` | `stdio`, `sse`, `http` |
-| `MCP_LISTEN_ADDR`                        | Address for SSE server to listen on            | No                                     | `localhost:8080` | -                      |
-| `MCP_DISABLED_TOOLS`                     | Comma-separated list of tools to disable       | No                                     | - | -                      |
+| `MCP_SERVER_MODE`                        | Server operation mode                                                                                     | No                                     | `stdio` | `stdio`, `sse`, `http` |
+| `MCP_LISTEN_ADDR`                        | Address for SSE or HTTP server to listen on                                                               | No                                     | `localhost:8080` | -                      |
+| `MCP_DISABLED_TOOLS`                     | Comma-separated list of tools to disable                                                                  | No                                     | - | -                      |
 
 You can use two options to connect to your VictoriaMetrics instance:
 
@@ -331,7 +331,7 @@ You should replace run command in configuration examples above in the following 
           "-e", "VM_INSTANCE_ENTRYPOINT",
           "-e", "VM_INSTANCE_TYPE",
           "-e", "VM_INSTANCE_BEARER_TOKEN",
-          "ghcr.io/victoriaMetrics-community/mcp-victoriametrics",
+          "ghcr.io/victoriametrics-community/mcp-victoriametrics",
         ],
       "env": {
         "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",

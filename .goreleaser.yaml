@@ -43,14 +43,14 @@ changelog:
 
 dockers:
   - image_templates:
-      - "ghcr.io/victoriaMetrics-community/mcp-victoriametrics:latest"
-      - "ghcr.io/victoriaMetrics-community/mcp-victoriametrics:{{ .Tag }}"
+      - "ghcr.io/victoriametrics-community/mcp-victoriametrics:latest"
+      - "ghcr.io/victoriametrics-community/mcp-victoriametrics:{{ .Tag }}"
     dockerfile: Dockerfile.goreleaser
     build_flag_templates:
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
-      - --label=org.opencontainers.image.url=https://github.com/victoriaMetrics-community/mcp-victoriametrics
-      - --label=org.opencontainers.image.source=https://github.com/victoriaMetrics-community/mcp-victoriametrics
+      - --label=org.opencontainers.image.url=https://github.com/victoriametrics-community/mcp-victoriametrics
+      - --label=org.opencontainers.image.source=https://github.com/victoriametrics-community/mcp-victoriametrics
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
