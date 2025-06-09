@@ -92,16 +92,18 @@ Try not to second guess information - if you don't know something or lack inform
 			log.Fatalf("failed to start server in stdio mode on %s: %v", c.ListenAddr(), err)
 		}
 	case "sse":
+		log.Printf("Starting server in SSE mode on %s", c.ListenAddr())
 		srv := server.NewSSEServer(s)
 		if err = srv.Start(c.ListenAddr()); err != nil {
-			log.Fatalf("failed to start server in sse mode on %s: %v", c.ListenAddr(), err)
+			log.Fatalf("Failed to start server in sse mode on %s: %v", c.ListenAddr(), err)
 		}
 	case "http":
+		log.Printf("Starting server in HTTP mode on %s", c.ListenAddr())
 		srv := server.NewStreamableHTTPServer(s)
 		if err := srv.Start(c.ListenAddr()); err != nil {
-			log.Fatalf("failed to start server in http mode on %s: %v", c.ListenAddr(), err)
+			log.Fatalf("Failed to start server in http mode on %s: %v", c.ListenAddr(), err)
 		}
 	default:
-		log.Fatalf("unknown server mode: %s", c.ServerMode())
+		log.Fatalf("Unknown server mode: %s", c.ServerMode())
 	}
 }
