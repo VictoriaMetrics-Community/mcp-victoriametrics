@@ -62,7 +62,9 @@ tar axvf mcp-victoriametrics_Linux_x86_64.tar.gz
 
 ### Docker
 
-You can run the MCP Helm server using Docker. This is the easiest way to get started without needing to install Go or build from source.
+You can run the MCP Helm server using Docker. 
+
+This is the easiest way to get started without needing to install Go or build from source.
 
 ```bash
 docker run -d --name mcp-victoriametrics \
@@ -76,6 +78,8 @@ You should replace environment variables with your own parameters.
 
 Note that the `MCP_SERVER_MODE=sse` flag is used to enable Server-Sent Events mode, which used by MCP clients to connect.
 Alternatively, you can use `MCP_SERVER_MODE=http` to enable Streamable HTTP mode. More details about server modes can be found in the [Configuration](#configuration) section.
+
+See available docker images in [github registry](https://github.com/orgs/VictoriaMetrics-Community/packages/container/package/mcp-victoriametrics).
 
 Also see [Using Docker instead of binary](#using-docker-instead-of-binary) section for more details about using Docker with MCP server with clients in stdio mode.
 
