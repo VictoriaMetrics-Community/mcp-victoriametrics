@@ -93,7 +93,7 @@ For building binary from source code you can use the following approach:
   
   ```bash
   make build
-  # after that you can find binary at bin/mcp-victoriametrics and copy this file to your PATH or run inplace
+  # after that you can find binary mcp-victoriametrics and copy this file to your PATH or run inplace
   ```
 - Build image from cloned source code:
   
