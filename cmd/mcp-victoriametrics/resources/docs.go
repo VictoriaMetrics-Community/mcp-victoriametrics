@@ -16,7 +16,7 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-//go:embed vm/docs
+//go:embed vm/docs vmsite/content/blog
 var DocsDir embed.FS
 
 const (
@@ -119,50 +119,52 @@ type DocFileInfo struct {
 }
 
 func ListDocFiles() ([]DocFileInfo, error) {
-	docFiles, err := glob(DocsDir, "vm", func(s string) bool {
-		return strings.ToLower(filepath.Ext(s)) == ".md"
-	})
-	if err != nil {
-		return nil, fmt.Errorf("error reading docs directory: %w", err)
-	}
 	docs := make([]DocFileInfo, 0)
-	for _, path := range docFiles {
-		if !strings.HasSuffix(strings.ToLower(path), ".md") {
-			continue
-		}
-		content, err := GetDocFileContent(path)
+	for _, rootDir := range []string{"vm", "vmsite"} {
+		docFiles, err := glob(DocsDir, rootDir, func(s string) bool {
+			return strings.ToLower(filepath.Ext(s)) == ".md"
+		})
 		if err != nil {
-			return nil, fmt.Errorf("error reading file %s: %w", path, err)
+			return nil, fmt.Errorf("error reading docs directory: %w", err)
 		}
-
-		chunks, err := splitMarkdown(content)
-		if err != nil {
-			return nil, fmt.Errorf("error splitting file %s: %w", path, err)
-		}
-
-		for chunkNum, chunkContent := range chunks {
-			name := ""
-			for line := range strings.Lines(chunkContent) {
-				if strings.TrimSpace(line) == "" {
-					continue
-				}
-				if !strings.HasPrefix(line, "#") {
-					break
-				}
-				title := strings.TrimSpace(strings.Trim(line, "# "))
-				name = fmt.Sprintf("%s / %s", name, title)
+		for _, path := range docFiles {
+			if !strings.HasSuffix(strings.ToLower(path), ".md") {
+				continue
 			}
-			name = strings.Trim(name, "/ ")
-			if name == "" {
-				name = path
+			content, err := GetDocFileContent(path)
+			if err != nil {
+				return nil, fmt.Errorf("error reading file %s: %w", path, err)
 			}
 
-			docs = append(docs, DocFileInfo{
-				Path:     path,
-				ChunkNum: chunkNum,
-				Content:  chunkContent,
-				Name:     name,
-			})
+			chunks, err := splitMarkdown(content)
+			if err != nil {
+				return nil, fmt.Errorf("error splitting file %s: %w", path, err)
+			}
+
+			for chunkNum, chunkContent := range chunks {
+				name := ""
+				for line := range strings.Lines(chunkContent) {
+					if strings.TrimSpace(line) == "" {
+						continue
+					}
+					if !strings.HasPrefix(line, "#") {
+						break
+					}
+					title := strings.TrimSpace(strings.Trim(line, "# "))
+					name = fmt.Sprintf("%s / %s", name, title)
+				}
+				name = strings.Trim(name, "/ ")
+				if name == "" {
+					name = path
+				}
+
+				docs = append(docs, DocFileInfo{
+					Path:     path,
+					ChunkNum: chunkNum,
+					Content:  chunkContent,
+					Name:     name,
+				})
+			}
 		}
 	}
 	return docs, nil

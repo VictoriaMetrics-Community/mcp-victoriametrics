@@ -555,12 +555,12 @@ But you can use any other tools and combine them in your own way.
 
 - [x] Support "Prettify query" tool (done in [`v0.0.5`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.5))
 - [x] Support "Explain query" tool (done in [`v0.0.6`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.6))
-- [x] Support CI pipeline for building and pushing multiarch docker images
+- [x] Support CI pipeline for building and pushing multiarch docker images (done in [`v1.0.0`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v1.0.0))
 - [ ] Support tool for analysis of [Query execution statistics](https://docs.victoriametrics.com/victoriametrics/query-stats/)
 - [x] Support tool for [unit-testing of alerting and recording rules](https://docs.victoriametrics.com/victoriametrics/vmalert-tool/) (done in [`v0.0.7`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.7))
 - [x] Support optional integration with [VictoriaMetrics Cloud](https://victoriametrics.com/products/cloud/) (via [API keys](https://docs.victoriametrics.com/victoriametrics-cloud/api/)) (done in [`v0.0.9`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.9))
 - [ ] Add some extra knowledge to server in addition to current documentation tool:
-  - [ ] [VictoriaMetrics blog](https://victoriametrics.com/blog/) posts
+  - [x] [VictoriaMetrics blog](https://victoriametrics.com/blog/) posts (done in [`v1.1.0`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v1.1.0))
   - [ ] Github issues
   - [ ] Public slack chat history
   - [ ] CRD schemas
@@ -570,7 +570,7 @@ But you can use any other tools and combine them in your own way.
 - [ ] Support tools for vmagent API
 - [ ] Support [new vmalert API](https://github.com/VictoriaMetrics/VictoriaMetrics/pull/9046/files)
 - [x] Enabling/disabling tools via configuration (done in [`v0.0.8`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.8))
-- [ ] Tools for Alertmanager APIs (#6)
+- [ ] Tools for Alertmanager APIs [#6](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/issues/6)
 - [ ] Support for [metrics metadata](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/2974) in case of implementation in VictoriaMetrics
 
 ## Disclaimer
