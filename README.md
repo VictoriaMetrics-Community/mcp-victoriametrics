@@ -88,9 +88,6 @@ For building binary from source code you can use the following approach:
   ```bash
   git clone https://github.com/VictoriaMetrics-Community/mcp-victoriametrics.git
   cd mcp-victoriametrics
-  make build
-  
-  # after that add bin/mcp-victoriametrics file to your PATH
   ```
 - Build binary from cloned source code: 
   
@@ -102,7 +99,6 @@ For building binary from source code you can use the following approach:
   
   ```bash
   docker build -t mcp-victoriametrics .
-  
   # after that you can use docker image mcp-victoriametrics for running or pushing
   ```
 
