@@ -123,18 +123,17 @@ Try not to second guess information - if you don't know something or lack inform
 	defer stop()
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/metrics", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/metrics", func(w http.ResponseWriter, _ *http.Request) {
 		ms.WritePrometheus(w)
 		metrics.WriteProcessMetrics(w)
 	})
-	mux.HandleFunc("/health/liveness", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/health/liveness", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		_, _ = w.Write([]byte("OK\n"))
-		return
 	})
-	mux.HandleFunc("/health/readiness", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/health/readiness", func(w http.ResponseWriter, _ *http.Request) {
 		if !isReady.Load() {
 			http.Error(w, "Not ready", http.StatusServiceUnavailable)
 		}
@@ -142,7 +141,6 @@ Try not to second guess information - if you don't know something or lack inform
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		_, _ = w.Write([]byte("Ready\n"))
-		return
 	})
 
 	switch c.ServerMode() {
