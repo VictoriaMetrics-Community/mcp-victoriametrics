@@ -11,7 +11,7 @@ import (
 
 type Config struct {
 	serverMode    string
-	sseAddr       string
+	listenAddr    string
 	entrypoint    string
 	instanceType  string
 	bearerToken   string
@@ -34,13 +34,17 @@ func InitConfig() (*Config, error) {
 		}
 	}
 	result := &Config{
-		serverMode:    os.Getenv("MCP_SERVER_MODE"),
-		sseAddr:       os.Getenv("MCP_SSE_ADDR"),
+		serverMode:    strings.ToLower(os.Getenv("MCP_SERVER_MODE")),
+		listenAddr:    os.Getenv("MCP_LISTEN_ADDR"),
 		entrypoint:    os.Getenv("VM_INSTANCE_ENTRYPOINT"),
 		instanceType:  os.Getenv("VM_INSTANCE_TYPE"),
 		bearerToken:   os.Getenv("VM_INSTANCE_BEARER_TOKEN"),
 		disabledTools: disabledToolsMap,
 		apiKey:        os.Getenv("VMC_API_KEY"),
+	}
+	// Left for backward compatibility
+	if result.listenAddr == "" {
+		result.listenAddr = os.Getenv("MCP_SSE_ADDR")
 	}
 	if result.entrypoint == "" && result.apiKey == "" {
 		return nil, fmt.Errorf("VM_INSTANCE_ENTRYPOINT or VMC_API_KEY is not set")
@@ -54,14 +58,14 @@ func InitConfig() (*Config, error) {
 	if result.entrypoint != "" && result.instanceType != "cluster" && result.instanceType != "single" {
 		return nil, fmt.Errorf("VM_INSTANCE_TYPE must be 'single' or 'cluster'")
 	}
-	if result.serverMode != "" && result.serverMode != "stdio" && result.serverMode != "sse" {
-		return nil, fmt.Errorf("MCP_SERVER_MODE must be 'stdio' or 'sse'")
+	if result.serverMode != "" && result.serverMode != "stdio" && result.serverMode != "sse" && result.serverMode != "http" {
+		return nil, fmt.Errorf("MCP_SERVER_MODE must be 'stdio', 'sse' or 'http'")
 	}
 	if result.serverMode == "" {
 		result.serverMode = "stdio"
 	}
-	if result.sseAddr == "" {
-		result.sseAddr = "localhost:8080"
+	if result.listenAddr == "" {
+		result.listenAddr = "localhost:8080"
 	}
 
 	var err error
@@ -97,6 +101,10 @@ func (c *Config) IsSSE() bool {
 	return c.serverMode == "sse"
 }
 
+func (c *Config) ServerMode() string {
+	return c.serverMode
+}
+
 func (c *Config) IsCloud() bool {
 	return c.vmc != nil
 }
@@ -105,8 +113,8 @@ func (c *Config) VMC() *vmcloud.VMCloudAPIClient {
 	return c.vmc
 }
 
-func (c *Config) SSEAddr() string {
-	return c.sseAddr
+func (c *Config) ListenAddr() string {
+	return c.listenAddr
 }
 
 func (c *Config) BearerToken() string {

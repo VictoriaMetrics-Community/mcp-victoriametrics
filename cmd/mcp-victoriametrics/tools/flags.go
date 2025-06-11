@@ -52,9 +52,10 @@ func toolFlagsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolR
 			return mcp.NewToolResultError(fmt.Sprintf("failed to get deployment details: %v", err)), nil
 		}
 		result := map[string]any{}
-		if dd.Type == vmcloud.DeploymentTypeSingleNode {
+		switch dd.Type {
+		case vmcloud.DeploymentTypeSingleNode:
 			result["vmsingle"] = dd.VMSingleSettings
-		} else if dd.Type == vmcloud.DeploymentTypeCluster {
+		case vmcloud.DeploymentTypeCluster:
 			result["vmselect"] = dd.VMSelectSettings
 			result["vmstorage"] = dd.VMStorageSettings
 			result["vminsert"] = dd.VMInsertSettings
