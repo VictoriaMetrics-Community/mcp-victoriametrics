@@ -1,0 +1,466 @@
+[
+  {
+    "name": "alertmanager_alerts",
+    "help": "How many alerts by state.",
+    "type": "gauge",
+    "labels": [
+      "state"
+    ]
+  },
+  {
+    "name": "alertmanager_alerts_invalid_total",
+    "help": "The total number of received alerts that were invalid.",
+    "type": "counter",
+    "labels": [
+      "version"
+    ]
+  },
+  {
+    "name": "alertmanager_alerts_received_total",
+    "help": "The total number of received alerts.",
+    "type": "counter",
+    "labels": [
+      "status",
+      "version"
+    ]
+  },
+  {
+    "name": "alertmanager_build_info",
+    "help": "A metric with a constant '1' value labeled by version, revision, branch, goversion from which alertmanager was built, and the goos and goarch for the build.",
+    "type": "gauge",
+    "labels": [
+      "branch",
+      "goarch",
+      "goos",
+      "goversion",
+      "revision",
+      "tags",
+      "version"
+    ]
+  },
+  {
+    "name": "alertmanager_cluster_alive_messages_total",
+    "help": "Total number of received alive messages.",
+    "type": "counter",
+    "labels": [
+      "peer"
+    ]
+  },
+  {
+    "name": "alertmanager_cluster_enabled",
+    "help": "Indicates whether the clustering is enabled or not.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_failed_peers",
+    "help": "Number indicating the current number of failed peers in the cluster.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_health_score",
+    "help": "Health score of the cluster. Lower values are better and zero means 'totally healthy'.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_members",
+    "help": "Number indicating current number of members in cluster.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_messages_pruned_total",
+    "help": "Total number of cluster messages pruned.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_messages_queued",
+    "help": "Number of cluster messages which are queued.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_messages_received_size_total",
+    "help": "Total size of cluster messages received.",
+    "type": "counter",
+    "labels": [
+      "msg_type"
+    ]
+  },
+  {
+    "name": "alertmanager_cluster_messages_received_total",
+    "help": "Total number of cluster messages received.",
+    "type": "counter",
+    "labels": [
+      "msg_type"
+    ]
+  },
+  {
+    "name": "alertmanager_cluster_messages_sent_size_total",
+    "help": "Total size of cluster messages sent.",
+    "type": "counter",
+    "labels": [
+      "msg_type"
+    ]
+  },
+  {
+    "name": "alertmanager_cluster_messages_sent_total",
+    "help": "Total number of cluster messages sent.",
+    "type": "counter",
+    "labels": [
+      "msg_type"
+    ]
+  },
+  {
+    "name": "alertmanager_cluster_peer_info",
+    "help": "A metric with a constant '1' value labeled by peer name.",
+    "type": "gauge",
+    "labels": [
+      "peer"
+    ]
+  },
+  {
+    "name": "alertmanager_cluster_peers_joined_total",
+    "help": "A counter of the number of peers that have joined.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_peers_left_total",
+    "help": "A counter of the number of peers that have left.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_peers_update_total",
+    "help": "A counter of the number of peers that have updated metadata.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_pings_seconds",
+    "help": "Histogram of latencies for ping messages.",
+    "type": "histogram",
+    "labels": [
+      "peer"
+    ]
+  },
+  {
+    "name": "alertmanager_cluster_reconnections_failed_total",
+    "help": "A counter of the number of failed cluster peer reconnection attempts.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_reconnections_total",
+    "help": "A counter of the number of cluster peer reconnections.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_refresh_join_failed_total",
+    "help": "A counter of the number of failed cluster peer join attempts via refresh.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_cluster_refresh_join_total",
+    "help": "A counter of the number of cluster peer joined via refresh.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_config_hash",
+    "help": "Hash of the currently loaded alertmanager configuration. Note that this is not a cryptographically strong hash.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_config_last_reload_success_timestamp_seconds",
+    "help": "Timestamp of the last successful configuration reload.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_config_last_reload_successful",
+    "help": "Whether the last configuration reload attempt was successful.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_dispatcher_aggregation_groups",
+    "help": "Number of active aggregation groups.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_dispatcher_alert_processing_duration_seconds",
+    "help": "Summary of latencies for the processing of alerts.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_http_concurrency_limit_exceeded_total",
+    "help": "Total number of times an HTTP request failed because the concurrency limit was reached.",
+    "type": "counter",
+    "labels": [
+      "method"
+    ]
+  },
+  {
+    "name": "alertmanager_http_request_duration_seconds",
+    "help": "Histogram of latencies for HTTP requests.",
+    "type": "histogram",
+    "labels": [
+      "handler",
+      "method"
+    ]
+  },
+  {
+    "name": "alertmanager_http_requests_in_flight",
+    "help": "Current number of HTTP requests being processed.",
+    "type": "gauge",
+    "labels": [
+      "method"
+    ]
+  },
+  {
+    "name": "alertmanager_http_response_size_bytes",
+    "help": "Histogram of response size for HTTP requests.",
+    "type": "histogram",
+    "labels": [
+      "handler",
+      "method"
+    ]
+  },
+  {
+    "name": "alertmanager_integrations",
+    "help": "Number of configured integrations.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_marked_alerts",
+    "help": "How many alerts by state are currently marked in the Alertmanager regardless of their expiry.",
+    "type": "gauge",
+    "labels": [
+      "state"
+    ]
+  },
+  {
+    "name": "alertmanager_nflog_gc_duration_seconds",
+    "help": "Duration of the last notification log garbage collection cycle.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_nflog_gossip_messages_propagated_total",
+    "help": "Number of received gossip messages that have been further gossiped.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_nflog_maintenance_errors_total",
+    "help": "How many maintenances were executed for the notification log that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_nflog_maintenance_total",
+    "help": "How many maintenances were executed for the notification log.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_nflog_queries_total",
+    "help": "Number of notification log queries were received.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_nflog_query_duration_seconds",
+    "help": "Duration of notification log query evaluation.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_nflog_query_errors_total",
+    "help": "Number of notification log received queries that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_nflog_snapshot_duration_seconds",
+    "help": "Duration of the last notification log snapshot.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_nflog_snapshot_size_bytes",
+    "help": "Size of the last notification log snapshot in bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_notification_latency_seconds",
+    "help": "The latency of notifications in seconds.",
+    "type": "histogram",
+    "labels": [
+      "integration"
+    ]
+  },
+  {
+    "name": "alertmanager_notification_requests_failed_total",
+    "help": "The total number of failed notification requests.",
+    "type": "counter",
+    "labels": [
+      "integration"
+    ]
+  },
+  {
+    "name": "alertmanager_notification_requests_total",
+    "help": "The total number of attempted notification requests.",
+    "type": "counter",
+    "labels": [
+      "integration"
+    ]
+  },
+  {
+    "name": "alertmanager_notifications_failed_total",
+    "help": "The total number of failed notifications.",
+    "type": "counter",
+    "labels": [
+      "integration",
+      "reason"
+    ]
+  },
+  {
+    "name": "alertmanager_notifications_total",
+    "help": "The total number of attempted notifications.",
+    "type": "counter",
+    "labels": [
+      "integration"
+    ]
+  },
+  {
+    "name": "alertmanager_oversize_gossip_message_duration_seconds",
+    "help": "Duration of oversized gossip message requests.",
+    "type": "histogram",
+    "labels": [
+      "key"
+    ]
+  },
+  {
+    "name": "alertmanager_oversized_gossip_message_dropped_total",
+    "help": "Number of oversized gossip messages that were dropped due to a full message queue.",
+    "type": "counter",
+    "labels": [
+      "key"
+    ]
+  },
+  {
+    "name": "alertmanager_oversized_gossip_message_failure_total",
+    "help": "Number of oversized gossip message sends that failed.",
+    "type": "counter",
+    "labels": [
+      "key"
+    ]
+  },
+  {
+    "name": "alertmanager_oversized_gossip_message_sent_total",
+    "help": "Number of oversized gossip message sent.",
+    "type": "counter",
+    "labels": [
+      "key"
+    ]
+  },
+  {
+    "name": "alertmanager_peer_position",
+    "help": "Position the Alertmanager instance believes it's in. The position determines a peer's behavior in the cluster.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_receivers",
+    "help": "Number of configured receivers.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_silences",
+    "help": "How many silences by state.",
+    "type": "gauge",
+    "labels": [
+      "state"
+    ]
+  },
+  {
+    "name": "alertmanager_silences_gc_duration_seconds",
+    "help": "Duration of the last silence garbage collection cycle.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_silences_gossip_messages_propagated_total",
+    "help": "Number of received gossip messages that have been further gossiped.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_silences_maintenance_errors_total",
+    "help": "How many maintenances were executed for silences that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_silences_maintenance_total",
+    "help": "How many maintenances were executed for silences.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_silences_queries_total",
+    "help": "How many silence queries were received.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_silences_query_duration_seconds",
+    "help": "Duration of silence query evaluation.",
+    "type": "histogram",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_silences_query_errors_total",
+    "help": "How many silence received queries did not succeed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_silences_snapshot_duration_seconds",
+    "help": "Duration of the last silence snapshot.",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_silences_snapshot_size_bytes",
+    "help": "Size of the last silence snapshot in bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_state_replication_failed_total",
+    "help": "Total number of cluster state replication attempts that failed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "alertmanager_state_replication_total",
+    "help": "Total number of cluster state replication attempts.",
+    "type": "counter",
+    "labels": []
+  }
+]

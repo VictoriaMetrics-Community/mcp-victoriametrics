@@ -2,8 +2,11 @@ package tools
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
 	"fmt"
+	"io/fs"
+	"path/filepath"
 	"strings"
 
 	"github.com/VictoriaMetrics/metricsql"
@@ -13,6 +16,7 @@ import (
 
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/resources"
+	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/utils"
 )
 
 const toolNameExplainQuery = "explain_query"
@@ -57,9 +61,11 @@ func RegisterToolExplainQuery(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameExplainQuery) {
 		return
 	}
-	err := initFunctionsInfo()
-	if err != nil {
+	if err := initFunctionsInfo(); err != nil {
 		panic(fmt.Sprintf("error initializing functions info: %s", err))
+	}
+	if err := initMetricsInfo(); err != nil {
+		panic(fmt.Sprintf("error initializing metrics info: %s", err))
 	}
 	s.AddTool(toolExplainQuery, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		return toolExplainQueryHandler(ctx, c, request)
@@ -73,30 +79,32 @@ func getQueryInfo(query string) (map[string]any, error) {
 	}
 	types := make(map[string]struct{})
 	functions := make(map[string]struct{})
-	st := getSyntaxTree(expr, types, functions)
+	metrics := make(map[string]struct{})
+	st := getSyntaxTree(expr, types, functions, metrics)
 	result := map[string]any{
 		"syntax_tree":    st,
 		"types_info":     getTypesDescriptions(types),
 		"functions_info": getFunctionsInfo(functions),
+		"metrics_info":   getMetricsInfo(metrics),
 	}
 	return result, nil
 }
 
-type FunctionInfo struct {
+type functionInfo struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Category    string `json:"category"`
 }
 
-var functionsInfo map[string]FunctionInfo
+var functionsInfo map[string]functionInfo
 
-func getFunctionsInfo(functions map[string]struct{}) map[string]FunctionInfo {
-	result := make(map[string]FunctionInfo)
+func getFunctionsInfo(functions map[string]struct{}) map[string]functionInfo {
+	result := make(map[string]functionInfo)
 	for fn := range functions {
 		if info, ok := functionsInfo[fn]; ok {
 			result[fn] = info
 		} else {
-			result[fn] = FunctionInfo{
+			result[fn] = functionInfo{
 				Name:        fn,
 				Description: fmt.Sprintf("Unknown function %s", fn),
 				Category:    "unknown",
@@ -104,6 +112,60 @@ func getFunctionsInfo(functions map[string]struct{}) map[string]FunctionInfo {
 		}
 	}
 	return result
+}
+
+type metricInfo struct {
+	Group       string   `json:"group"`
+	Name        string   `json:"name"`
+	Description string   `json:"help"`
+	Type        string   `json:"type"`
+	Labels      []string `json:"labels,omitempty"`
+}
+
+//go:embed metrics_metadata_db
+var metricsMetadataDBDir embed.FS
+
+var metricsInfo map[string]any
+
+func getMetricsInfo(metrics map[string]struct{}) map[string]metricInfo {
+	result := make(map[string]metricInfo)
+	for metric := range metrics {
+		if info, ok := metricsInfo[metric]; ok {
+			if mi, ok := info.(metricInfo); ok {
+				result[metric] = mi
+			}
+		}
+	}
+	return result
+}
+
+func initMetricsInfo() error {
+	metricsGroups, err := utils.Glob(metricsMetadataDBDir, "metrics_metadata_db", func(path string) bool {
+		return strings.HasSuffix(path, ".json") && !strings.HasPrefix(path, "metrics_metadata_db/README.md")
+	})
+	if err != nil {
+		return fmt.Errorf("error reading metrics metadata: %w", err)
+	}
+	metricsInfo = make(map[string]any)
+	for _, groupFile := range metricsGroups {
+		group := strings.TrimSuffix(filepath.Base(groupFile), filepath.Ext(groupFile))
+		data, err := fs.ReadFile(metricsMetadataDBDir, groupFile)
+		if err != nil {
+			return fmt.Errorf("error reading metrics metadata file %s: %w", groupFile, err)
+		}
+		var metrics []metricInfo
+		if err := json.Unmarshal(data, &metrics); err != nil {
+			return fmt.Errorf("error unmarshalling metrics metadata file %s: %w", groupFile, err)
+		}
+		for _, metric := range metrics {
+			if _, exists := metricsInfo[metric.Name]; exists {
+				return fmt.Errorf("duplicate metric name %s in group %s", metric.Name, group)
+			}
+			metric.Group = group
+			metricsInfo[metric.Name] = metric
+		}
+	}
+	return nil
 }
 
 func initFunctionsInfo() error {
@@ -127,7 +189,7 @@ func initFunctionsInfo() error {
 		return fmt.Errorf("error splitting MetricsQL documentation: %w", err)
 	}
 
-	functionsInfo = make(map[string]FunctionInfo)
+	functionsInfo = make(map[string]functionInfo)
 	category := ""
 	for _, chunk := range chunks {
 		lines := strings.SplitN(chunk, "\n", 2)
@@ -144,7 +206,7 @@ func initFunctionsInfo() error {
 			if len(lines) > 0 {
 				content = lines[1]
 			}
-			functionsInfo[name] = FunctionInfo{
+			functionsInfo[name] = functionInfo{
 				Name:        name,
 				Description: content,
 				Category:    category,
@@ -384,6 +446,7 @@ func getSyntaxTree(
 	e metricsql.Expr,
 	types map[string]struct{},
 	functions map[string]struct{},
+	metrics map[string]struct{},
 ) map[string]any {
 	if e == nil {
 		return nil
@@ -398,21 +461,21 @@ func getSyntaxTree(
 		result["limit"] = n.Limit
 		args := make([]any, 0)
 		for _, arg := range n.Args {
-			argInfo := getSyntaxTree(arg, types, functions)
+			argInfo := getSyntaxTree(arg, types, functions, metrics)
 			args = append(args, argInfo)
 		}
 		result["args"] = args
-		result["modifier"] = getSyntaxTree(&n.Modifier, types, functions)
+		result["modifier"] = getSyntaxTree(&n.Modifier, types, functions, metrics)
 	case *metricsql.BinaryOpExpr:
 		types["BinaryOpExpr"] = struct{}{}
 		result["type"] = "BinaryOpExpr"
 		result["op"] = n.Op
 		result["bool"] = n.Bool
-		result["group_modifier"] = getSyntaxTree(&n.GroupModifier, types, functions)
-		result["join_modifier"] = getSyntaxTree(&n.JoinModifier, types, functions)
+		result["group_modifier"] = getSyntaxTree(&n.GroupModifier, types, functions, metrics)
+		result["join_modifier"] = getSyntaxTree(&n.JoinModifier, types, functions, metrics)
 		result["join_modifier_prefix"] = n.JoinModifierPrefix
-		result["left"] = getSyntaxTree(n.Left, types, functions)
-		result["right"] = getSyntaxTree(n.Right, types, functions)
+		result["left"] = getSyntaxTree(n.Left, types, functions, metrics)
+		result["right"] = getSyntaxTree(n.Right, types, functions, metrics)
 		result["keep_metric_name"] = n.KeepMetricNames
 	case *metricsql.DurationExpr:
 		types["DurationExpr"] = struct{}{}
@@ -425,7 +488,7 @@ func getSyntaxTree(
 		result["name"] = n.Name
 		args := make([]any, 0)
 		for _, arg := range n.Args {
-			argInfo := getSyntaxTree(arg, types, functions)
+			argInfo := getSyntaxTree(arg, types, functions, metrics)
 			args = append(args, argInfo)
 		}
 		result["args"] = args
@@ -437,17 +500,20 @@ func getSyntaxTree(
 		result["value"] = n.Value
 		result["is_regexp"] = n.IsRegexp
 		result["is_negative"] = n.IsNegative
+		if n.Label == "__name__" {
+			metrics[n.Value] = struct{}{}
+		}
 	case *metricsql.MetricExpr:
 		types["MetricExpr"] = struct{}{}
 		result["type"] = "MetricExpr"
 		labelFilterss := make([]any, 0)
 		for _, labelFilters := range n.LabelFilterss {
-			fs := make([]any, 0)
+			fss := make([]any, 0)
 			for _, filter := range labelFilters {
-				fsInfo := getSyntaxTree(&filter, types, functions)
-				fs = append(fs, fsInfo)
+				fsInfo := getSyntaxTree(&filter, types, functions, metrics)
+				fss = append(fss, fsInfo)
 			}
-			labelFilterss = append(labelFilterss, fs)
+			labelFilterss = append(labelFilterss, fss)
 		}
 		result["label_filters"] = labelFilterss
 	case *metricsql.ModifierExpr:
@@ -462,18 +528,18 @@ func getSyntaxTree(
 	case *metricsql.RollupExpr:
 		types["RollupExpr"] = struct{}{}
 		result["type"] = "RollupExpr"
-		result["expr"] = getSyntaxTree(n.Expr, types, functions)
+		result["expr"] = getSyntaxTree(n.Expr, types, functions, metrics)
 		if n.Window != nil {
-			result["window"] = getSyntaxTree(n.Window, types, functions)
+			result["window"] = getSyntaxTree(n.Window, types, functions, metrics)
 		}
 		if n.Step != nil {
-			result["step"] = getSyntaxTree(n.Step, types, functions)
+			result["step"] = getSyntaxTree(n.Step, types, functions, metrics)
 		}
 		if n.Offset != nil {
-			result["offset"] = getSyntaxTree(n.Offset, types, functions)
+			result["offset"] = getSyntaxTree(n.Offset, types, functions, metrics)
 		}
 		if n.At != nil {
-			result["at"] = getSyntaxTree(n.At, types, functions)
+			result["at"] = getSyntaxTree(n.At, types, functions, metrics)
 		}
 		result["inherit_step"] = n.InheritStep
 	case *metricsql.StringExpr:

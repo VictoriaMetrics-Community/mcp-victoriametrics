@@ -1,0 +1,1886 @@
+[
+  {
+    "name": "node_arp_entries",
+    "help": "ARP entries by device",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_boot_time_seconds",
+    "help": "Node boot time, in unixtime.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_btrfs_allocation_ratio",
+    "help": "Data allocation ratio for a layout/data type",
+    "type": "gauge",
+    "labels": [
+      "block_group_type",
+      "mode",
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_btrfs_commit_seconds_total",
+    "help": "Sum of the duration of all commits, in seconds.",
+    "type": "counter",
+    "labels": [
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_btrfs_commits_total",
+    "help": "The total number of commits that have occurred.",
+    "type": "counter",
+    "labels": [
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_btrfs_device_size_bytes",
+    "help": "Size of a device that is part of the filesystem.",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_btrfs_global_rsv_size_bytes",
+    "help": "Size of global reserve.",
+    "type": "gauge",
+    "labels": [
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_btrfs_info",
+    "help": "Filesystem information",
+    "type": "gauge",
+    "labels": [
+      "label",
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_btrfs_last_commit_seconds",
+    "help": "Duration of the most recent commit, in seconds.",
+    "type": "gauge",
+    "labels": [
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_btrfs_max_commit_seconds",
+    "help": "Duration of the slowest commit, in seconds.",
+    "type": "gauge",
+    "labels": [
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_btrfs_reserved_bytes",
+    "help": "Amount of space reserved for a data type",
+    "type": "gauge",
+    "labels": [
+      "block_group_type",
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_btrfs_size_bytes",
+    "help": "Amount of space allocated for a layout/data type",
+    "type": "gauge",
+    "labels": [
+      "block_group_type",
+      "mode",
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_btrfs_used_bytes",
+    "help": "Amount of used space by a layout/data type",
+    "type": "gauge",
+    "labels": [
+      "block_group_type",
+      "mode",
+      "uuid"
+    ]
+  },
+  {
+    "name": "node_context_switches_total",
+    "help": "Total number of context switches.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_cpu_frequency_max_hertz",
+    "help": "Maximum CPU thread frequency in hertz.",
+    "type": "gauge",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_cpu_frequency_min_hertz",
+    "help": "Minimum CPU thread frequency in hertz.",
+    "type": "gauge",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_cpu_guest_seconds_total",
+    "help": "Seconds the CPUs spent in guests (VMs) for each mode.",
+    "type": "counter",
+    "labels": [
+      "cpu",
+      "mode"
+    ]
+  },
+  {
+    "name": "node_cpu_scaling_frequency_hertz",
+    "help": "Current scaled CPU thread frequency in hertz.",
+    "type": "gauge",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_cpu_scaling_frequency_max_hertz",
+    "help": "Maximum scaled CPU thread frequency in hertz.",
+    "type": "gauge",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_cpu_scaling_frequency_min_hertz",
+    "help": "Minimum scaled CPU thread frequency in hertz.",
+    "type": "gauge",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_cpu_scaling_governor",
+    "help": "Current enabled CPU frequency governor.",
+    "type": "gauge",
+    "labels": [
+      "cpu",
+      "governor"
+    ]
+  },
+  {
+    "name": "node_cpu_seconds_total",
+    "help": "Seconds the CPUs spent in each mode.",
+    "type": "counter",
+    "labels": [
+      "cpu",
+      "mode"
+    ]
+  },
+  {
+    "name": "node_disk_discard_time_seconds_total",
+    "help": "This is the total number of seconds spent by all discards.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_discarded_sectors_total",
+    "help": "The total number of sectors discarded successfully.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_discards_completed_total",
+    "help": "The total number of discards completed successfully.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_discards_merged_total",
+    "help": "The total number of discards merged.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_flush_requests_time_seconds_total",
+    "help": "This is the total number of seconds spent by all flush requests.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_flush_requests_total",
+    "help": "The total number of flush requests completed successfully",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_info",
+    "help": "Info of /sys/block/<block_device>.",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "major",
+      "minor",
+      "model",
+      "path",
+      "revision",
+      "rotational",
+      "serial",
+      "wwn"
+    ]
+  },
+  {
+    "name": "node_disk_io_now",
+    "help": "The number of I/Os currently in progress.",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_io_time_seconds_total",
+    "help": "Total seconds spent doing I/Os.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_io_time_weighted_seconds_total",
+    "help": "The weighted # of seconds spent doing I/Os.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_read_bytes_total",
+    "help": "The total number of bytes read successfully.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_read_time_seconds_total",
+    "help": "The total number of seconds spent by all reads.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_reads_completed_total",
+    "help": "The total number of reads completed successfully.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_reads_merged_total",
+    "help": "The total number of reads merged.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_write_time_seconds_total",
+    "help": "This is the total number of seconds spent by all writes.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_writes_completed_total",
+    "help": "The total number of writes completed successfully.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_writes_merged_total",
+    "help": "The number of writes merged.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_disk_written_bytes_total",
+    "help": "The total number of bytes written successfully.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_entropy_available_bits",
+    "help": "Bits of available entropy.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_entropy_pool_size_bits",
+    "help": "Bits of entropy pool.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_exporter_build_info",
+    "help": "A metric with a constant '1' value labeled by version, revision, branch, goversion from which node_exporter was built, and the goos and goarch for the build.",
+    "type": "gauge",
+    "labels": [
+      "branch",
+      "goarch",
+      "goos",
+      "goversion",
+      "revision",
+      "tags",
+      "version"
+    ]
+  },
+  {
+    "name": "node_filefd_allocated",
+    "help": "File descriptor statistics: allocated.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_filefd_maximum",
+    "help": "File descriptor statistics: maximum.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_filesystem_avail_bytes",
+    "help": "Filesystem space available to non-root users in bytes.",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "device_error",
+      "fstype",
+      "mountpoint"
+    ]
+  },
+  {
+    "name": "node_filesystem_device_error",
+    "help": "Whether an error occurred while getting statistics for the given device.",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "device_error",
+      "fstype",
+      "mountpoint"
+    ]
+  },
+  {
+    "name": "node_filesystem_files",
+    "help": "Filesystem total file nodes.",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "device_error",
+      "fstype",
+      "mountpoint"
+    ]
+  },
+  {
+    "name": "node_filesystem_files_free",
+    "help": "Filesystem total free file nodes.",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "device_error",
+      "fstype",
+      "mountpoint"
+    ]
+  },
+  {
+    "name": "node_filesystem_free_bytes",
+    "help": "Filesystem free space in bytes.",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "device_error",
+      "fstype",
+      "mountpoint"
+    ]
+  },
+  {
+    "name": "node_filesystem_mount_info",
+    "help": "Filesystem mount information.",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "major",
+      "minor",
+      "mountpoint"
+    ]
+  },
+  {
+    "name": "node_filesystem_purgeable_bytes",
+    "help": "Filesystem space available including purgeable space (MacOS specific).",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "device_error",
+      "fstype",
+      "mountpoint"
+    ]
+  },
+  {
+    "name": "node_filesystem_readonly",
+    "help": "Filesystem read-only status.",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "device_error",
+      "fstype",
+      "mountpoint"
+    ]
+  },
+  {
+    "name": "node_filesystem_size_bytes",
+    "help": "Filesystem size in bytes.",
+    "type": "gauge",
+    "labels": [
+      "device",
+      "device_error",
+      "fstype",
+      "mountpoint"
+    ]
+  },
+  {
+    "name": "node_forks_total",
+    "help": "Total number of forks.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_intr_total",
+    "help": "Total number of interrupts serviced.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_ipvs_connections_total",
+    "help": "The total number of connections made.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_ipvs_incoming_bytes_total",
+    "help": "The total amount of incoming data.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_ipvs_incoming_packets_total",
+    "help": "The total number of incoming packets.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_ipvs_outgoing_bytes_total",
+    "help": "The total amount of outgoing data.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_ipvs_outgoing_packets_total",
+    "help": "The total number of outgoing packets.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_load1",
+    "help": "1m load average.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_load15",
+    "help": "15m load average.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_load5",
+    "help": "5m load average.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Active_anon_bytes",
+    "help": "Memory information field Active_anon_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Active_bytes",
+    "help": "Memory information field Active_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Active_file_bytes",
+    "help": "Memory information field Active_file_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_AnonHugePages_bytes",
+    "help": "Memory information field AnonHugePages_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_AnonPages_bytes",
+    "help": "Memory information field AnonPages_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Bounce_bytes",
+    "help": "Memory information field Bounce_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Buffers_bytes",
+    "help": "Memory information field Buffers_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Cached_bytes",
+    "help": "Memory information field Cached_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_CommitLimit_bytes",
+    "help": "Memory information field CommitLimit_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Committed_AS_bytes",
+    "help": "Memory information field Committed_AS_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Dirty_bytes",
+    "help": "Memory information field Dirty_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Inactive_anon_bytes",
+    "help": "Memory information field Inactive_anon_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Inactive_bytes",
+    "help": "Memory information field Inactive_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Inactive_file_bytes",
+    "help": "Memory information field Inactive_file_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_KernelStack_bytes",
+    "help": "Memory information field KernelStack_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Mapped_bytes",
+    "help": "Memory information field Mapped_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_MemAvailable_bytes",
+    "help": "Memory information field MemAvailable_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_MemFree_bytes",
+    "help": "Memory information field MemFree_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_MemTotal_bytes",
+    "help": "Memory information field MemTotal_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Mlocked_bytes",
+    "help": "Memory information field Mlocked_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_NFS_Unstable_bytes",
+    "help": "Memory information field NFS_Unstable_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_PageTables_bytes",
+    "help": "Memory information field PageTables_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Percpu_bytes",
+    "help": "Memory information field Percpu_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_SReclaimable_bytes",
+    "help": "Memory information field SReclaimable_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_SUnreclaim_bytes",
+    "help": "Memory information field SUnreclaim_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_ShmemHugePages_bytes",
+    "help": "Memory information field ShmemHugePages_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_ShmemPmdMapped_bytes",
+    "help": "Memory information field ShmemPmdMapped_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Shmem_bytes",
+    "help": "Memory information field Shmem_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Slab_bytes",
+    "help": "Memory information field Slab_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_SwapCached_bytes",
+    "help": "Memory information field SwapCached_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_SwapFree_bytes",
+    "help": "Memory information field SwapFree_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_SwapTotal_bytes",
+    "help": "Memory information field SwapTotal_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Unevictable_bytes",
+    "help": "Memory information field Unevictable_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_VmallocChunk_bytes",
+    "help": "Memory information field VmallocChunk_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_VmallocTotal_bytes",
+    "help": "Memory information field VmallocTotal_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_VmallocUsed_bytes",
+    "help": "Memory information field VmallocUsed_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_WritebackTmp_bytes",
+    "help": "Memory information field WritebackTmp_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_memory_Writeback_bytes",
+    "help": "Memory information field Writeback_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Icmp6_InErrors",
+    "help": "Statistic Icmp6InErrors.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Icmp6_InMsgs",
+    "help": "Statistic Icmp6InMsgs.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Icmp6_OutMsgs",
+    "help": "Statistic Icmp6OutMsgs.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Icmp_InErrors",
+    "help": "Statistic IcmpInErrors.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Icmp_InMsgs",
+    "help": "Statistic IcmpInMsgs.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Icmp_OutMsgs",
+    "help": "Statistic IcmpOutMsgs.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Ip6_InOctets",
+    "help": "Statistic Ip6InOctets.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Ip6_OutOctets",
+    "help": "Statistic Ip6OutOctets.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_IpExt_InOctets",
+    "help": "Statistic IpExtInOctets.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_IpExt_OutOctets",
+    "help": "Statistic IpExtOutOctets.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Ip_Forwarding",
+    "help": "Statistic IpForwarding.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_TcpExt_ListenDrops",
+    "help": "Statistic TcpExtListenDrops.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_TcpExt_ListenOverflows",
+    "help": "Statistic TcpExtListenOverflows.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_TcpExt_SyncookiesFailed",
+    "help": "Statistic TcpExtSyncookiesFailed.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_TcpExt_SyncookiesRecv",
+    "help": "Statistic TcpExtSyncookiesRecv.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_TcpExt_SyncookiesSent",
+    "help": "Statistic TcpExtSyncookiesSent.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_TcpExt_TCPOFOQueue",
+    "help": "Statistic TcpExtTCPOFOQueue.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_TcpExt_TCPRcvQDrop",
+    "help": "Statistic TcpExtTCPRcvQDrop.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_TcpExt_TCPSynRetrans",
+    "help": "Statistic TcpExtTCPSynRetrans.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_TcpExt_TCPTimeouts",
+    "help": "Statistic TcpExtTCPTimeouts.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Tcp_ActiveOpens",
+    "help": "Statistic TcpActiveOpens.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Tcp_CurrEstab",
+    "help": "Statistic TcpCurrEstab.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Tcp_InErrs",
+    "help": "Statistic TcpInErrs.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Tcp_InSegs",
+    "help": "Statistic TcpInSegs.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Tcp_OutRsts",
+    "help": "Statistic TcpOutRsts.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Tcp_OutSegs",
+    "help": "Statistic TcpOutSegs.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Tcp_PassiveOpens",
+    "help": "Statistic TcpPassiveOpens.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Tcp_RetransSegs",
+    "help": "Statistic TcpRetransSegs.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp6_InDatagrams",
+    "help": "Statistic Udp6InDatagrams.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp6_InErrors",
+    "help": "Statistic Udp6InErrors.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp6_NoPorts",
+    "help": "Statistic Udp6NoPorts.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp6_OutDatagrams",
+    "help": "Statistic Udp6OutDatagrams.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp6_RcvbufErrors",
+    "help": "Statistic Udp6RcvbufErrors.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp6_SndbufErrors",
+    "help": "Statistic Udp6SndbufErrors.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_UdpLite6_InErrors",
+    "help": "Statistic UdpLite6InErrors.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_UdpLite_InErrors",
+    "help": "Statistic UdpLiteInErrors.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp_InDatagrams",
+    "help": "Statistic UdpInDatagrams.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp_InErrors",
+    "help": "Statistic UdpInErrors.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp_NoPorts",
+    "help": "Statistic UdpNoPorts.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp_OutDatagrams",
+    "help": "Statistic UdpOutDatagrams.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp_RcvbufErrors",
+    "help": "Statistic UdpRcvbufErrors.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_netstat_Udp_SndbufErrors",
+    "help": "Statistic UdpSndbufErrors.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_network_address_assign_type",
+    "help": "Network device property: address_assign_type",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_carrier",
+    "help": "Network device property: carrier",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_carrier_changes_total",
+    "help": "Network device property: carrier_changes_total",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_carrier_down_changes_total",
+    "help": "Network device property: carrier_down_changes_total",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_carrier_up_changes_total",
+    "help": "Network device property: carrier_up_changes_total",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_device_id",
+    "help": "Network device property: device_id",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_dormant",
+    "help": "Network device property: dormant",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_flags",
+    "help": "Network device property: flags",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_iface_id",
+    "help": "Network device property: iface_id",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_iface_link",
+    "help": "Network device property: iface_link",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_iface_link_mode",
+    "help": "Network device property: iface_link_mode",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_info",
+    "help": "Non-numeric data from /sys/class/net/<iface>, value is always 1.",
+    "type": "gauge",
+    "labels": [
+      "address",
+      "adminstate",
+      "broadcast",
+      "device",
+      "duplex",
+      "ifalias",
+      "operstate"
+    ]
+  },
+  {
+    "name": "node_network_mtu_bytes",
+    "help": "Network device property: mtu_bytes",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_name_assign_type",
+    "help": "Network device property: name_assign_type",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_net_dev_group",
+    "help": "Network device property: net_dev_group",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_protocol_type",
+    "help": "Network device property: protocol_type",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_receive_bytes_total",
+    "help": "Network device statistic receive_bytes.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_receive_compressed_total",
+    "help": "Network device statistic receive_compressed.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_receive_drop_total",
+    "help": "Network device statistic receive_drop.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_receive_errs_total",
+    "help": "Network device statistic receive_errs.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_receive_fifo_total",
+    "help": "Network device statistic receive_fifo.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_receive_frame_total",
+    "help": "Network device statistic receive_frame.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_receive_multicast_total",
+    "help": "Network device statistic receive_multicast.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_receive_nohandler_total",
+    "help": "Network device statistic receive_nohandler.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_receive_packets_total",
+    "help": "Network device statistic receive_packets.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_speed_bytes",
+    "help": "Network device property: speed_bytes",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_transmit_bytes_total",
+    "help": "Network device statistic transmit_bytes.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_transmit_carrier_total",
+    "help": "Network device statistic transmit_carrier.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_transmit_colls_total",
+    "help": "Network device statistic transmit_colls.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_transmit_compressed_total",
+    "help": "Network device statistic transmit_compressed.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_transmit_drop_total",
+    "help": "Network device statistic transmit_drop.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_transmit_errs_total",
+    "help": "Network device statistic transmit_errs.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_transmit_fifo_total",
+    "help": "Network device statistic transmit_fifo.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_transmit_packets_total",
+    "help": "Network device statistic transmit_packets.",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_transmit_queue_length",
+    "help": "Network device property: transmit_queue_length",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_network_up",
+    "help": "Value is 1 if operstate is 'up', 0 otherwise.",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "node_nf_conntrack_entries",
+    "help": "Number of currently allocated flow entries for connection tracking.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_nf_conntrack_entries_limit",
+    "help": "Maximum size of connection tracking table.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_nfs_connections_total",
+    "help": "Total number of NFSd TCP connections.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfs_packets_total",
+    "help": "Total NFSd network packets (sent+received) by protocol type.",
+    "type": "counter",
+    "labels": [
+      "protocol"
+    ]
+  },
+  {
+    "name": "node_nfs_requests_total",
+    "help": "Number of NFS procedures invoked.",
+    "type": "counter",
+    "labels": [
+      "method",
+      "proto"
+    ]
+  },
+  {
+    "name": "node_nfs_rpc_authentication_refreshes_total",
+    "help": "Number of RPC authentication refreshes performed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfs_rpc_retransmissions_total",
+    "help": "Number of RPC transmissions performed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfs_rpcs_total",
+    "help": "Total number of RPCs performed.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_connections_total",
+    "help": "Total number of NFSd TCP connections.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_disk_bytes_read_total",
+    "help": "Total NFSd bytes read.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_disk_bytes_written_total",
+    "help": "Total NFSd bytes written.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_file_handles_stale_total",
+    "help": "Total number of NFSd stale file handles",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_packets_total",
+    "help": "Total NFSd network packets (sent+received) by protocol type.",
+    "type": "counter",
+    "labels": [
+      "proto"
+    ]
+  },
+  {
+    "name": "node_nfsd_read_ahead_cache_not_found_total",
+    "help": "Total number of NFSd read ahead cache not found.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_read_ahead_cache_size_blocks",
+    "help": "How large the read ahead cache is in blocks.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_reply_cache_hits_total",
+    "help": "Total number of NFSd Reply Cache hits (client lost server response).",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_reply_cache_misses_total",
+    "help": "Total number of NFSd Reply Cache an operation that requires caching (idempotent).",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_reply_cache_nocache_total",
+    "help": "Total number of NFSd Reply Cache non-idempotent operations (rename/delete/…).",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_requests_total",
+    "help": "Total number NFSd Requests by method and protocol.",
+    "type": "counter",
+    "labels": [
+      "method",
+      "proto"
+    ]
+  },
+  {
+    "name": "node_nfsd_rpc_errors_total",
+    "help": "Total number of NFSd RPC errors by error type.",
+    "type": "counter",
+    "labels": [
+      "error"
+    ]
+  },
+  {
+    "name": "node_nfsd_server_rpcs_total",
+    "help": "Total number of NFSd RPCs.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_nfsd_server_threads",
+    "help": "Total number of NFSd kernel threads that are running.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_os_info",
+    "help": "A metric with a constant '1' value labeled by build_id, id, id_like, image_id, image_version, name, pretty_name, variant, variant_id, version, version_codename, version_id.",
+    "type": "gauge",
+    "labels": [
+      "build_id",
+      "id",
+      "id_like",
+      "image_id",
+      "image_version",
+      "name",
+      "pretty_name",
+      "variant",
+      "variant_id",
+      "version",
+      "version_codename",
+      "version_id"
+    ]
+  },
+  {
+    "name": "node_procs_blocked",
+    "help": "Number of processes blocked waiting for I/O to complete.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_procs_running",
+    "help": "Number of processes in runnable state.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_scrape_collector_duration_seconds",
+    "help": "node_exporter: Duration of a collector scrape.",
+    "type": "gauge",
+    "labels": [
+      "collector"
+    ]
+  },
+  {
+    "name": "node_scrape_collector_success",
+    "help": "node_exporter: Whether a collector succeeded.",
+    "type": "gauge",
+    "labels": [
+      "collector"
+    ]
+  },
+  {
+    "name": "node_selinux_enabled",
+    "help": "SELinux is enabled, 1 is true, 0 is false",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_FRAG6_inuse",
+    "help": "Number of FRAG6 sockets in state inuse.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_FRAG6_memory",
+    "help": "Number of FRAG6 sockets in state memory.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_FRAG_inuse",
+    "help": "Number of FRAG sockets in state inuse.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_FRAG_memory",
+    "help": "Number of FRAG sockets in state memory.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_RAW6_inuse",
+    "help": "Number of RAW6 sockets in state inuse.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_RAW_inuse",
+    "help": "Number of RAW sockets in state inuse.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_TCP6_inuse",
+    "help": "Number of TCP6 sockets in state inuse.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_TCP_alloc",
+    "help": "Number of TCP sockets in state alloc.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_TCP_inuse",
+    "help": "Number of TCP sockets in state inuse.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_TCP_mem",
+    "help": "Number of TCP sockets in state mem.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_TCP_mem_bytes",
+    "help": "Number of TCP sockets in state mem_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_TCP_orphan",
+    "help": "Number of TCP sockets in state orphan.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_TCP_tw",
+    "help": "Number of TCP sockets in state tw.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_UDP6_inuse",
+    "help": "Number of UDP6 sockets in state inuse.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_UDPLITE6_inuse",
+    "help": "Number of UDPLITE6 sockets in state inuse.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_UDPLITE_inuse",
+    "help": "Number of UDPLITE sockets in state inuse.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_UDP_inuse",
+    "help": "Number of UDP sockets in state inuse.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_UDP_mem",
+    "help": "Number of UDP sockets in state mem.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_UDP_mem_bytes",
+    "help": "Number of UDP sockets in state mem_bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_sockstat_sockets_used",
+    "help": "Number of IPv4 sockets in use.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_softnet_backlog_len",
+    "help": "Softnet backlog status",
+    "type": "gauge",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_softnet_cpu_collision_total",
+    "help": "Number of collision occur while obtaining device lock while transmitting",
+    "type": "counter",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_softnet_dropped_total",
+    "help": "Number of dropped packets",
+    "type": "counter",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_softnet_flow_limit_count_total",
+    "help": "Number of times flow limit has been reached",
+    "type": "counter",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_softnet_processed_total",
+    "help": "Number of processed packets",
+    "type": "counter",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_softnet_received_rps_total",
+    "help": "Number of times cpu woken up received_rps",
+    "type": "counter",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_softnet_times_squeezed_total",
+    "help": "Number of times processing packets ran out of quota",
+    "type": "counter",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "node_textfile_scrape_error",
+    "help": "1 if there was an error opening or reading a file, 0 otherwise",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_time_clocksource_available_info",
+    "help": "Available clocksources read from '/sys/devices/system/clocksource'.",
+    "type": "gauge",
+    "labels": [
+      "clocksource",
+      "device"
+    ]
+  },
+  {
+    "name": "node_time_clocksource_current_info",
+    "help": "Current clocksource read from '/sys/devices/system/clocksource'.",
+    "type": "gauge",
+    "labels": [
+      "clocksource",
+      "device"
+    ]
+  },
+  {
+    "name": "node_time_seconds",
+    "help": "System time in seconds since epoch (1970).",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_time_zone_offset_seconds",
+    "help": "System time zone offset in seconds.",
+    "type": "gauge",
+    "labels": [
+      "time_zone"
+    ]
+  },
+  {
+    "name": "node_timex_estimated_error_seconds",
+    "help": "Estimated error in seconds.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_frequency_adjustment_ratio",
+    "help": "Local clock frequency adjustment.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_loop_time_constant",
+    "help": "Phase-locked loop time constant.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_maxerror_seconds",
+    "help": "Maximum error in seconds.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_offset_seconds",
+    "help": "Time offset in between local system and reference clock.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_pps_calibration_total",
+    "help": "Pulse per second count of calibration intervals.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_timex_pps_error_total",
+    "help": "Pulse per second count of calibration errors.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_timex_pps_frequency_hertz",
+    "help": "Pulse per second frequency.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_pps_jitter_seconds",
+    "help": "Pulse per second jitter.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_pps_jitter_total",
+    "help": "Pulse per second count of jitter limit exceeded events.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_timex_pps_shift_seconds",
+    "help": "Pulse per second interval duration.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_pps_stability_exceeded_total",
+    "help": "Pulse per second count of stability limit exceeded events.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "node_timex_pps_stability_hertz",
+    "help": "Pulse per second stability, average of recent frequency changes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_status",
+    "help": "Value of the status array bits.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_sync_status",
+    "help": "Is clock synchronized to a reliable server (1 = yes, 0 = no).",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_tai_offset_seconds",
+    "help": "International Atomic Time (TAI) offset.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_timex_tick_seconds",
+    "help": "Seconds between clock ticks.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "node_udp_queues",
+    "help": "Number of allocated memory in the kernel for UDP datagrams in bytes.",
+    "type": "gauge",
+    "labels": [
+      "ip",
+      "queue"
+    ]
+  },
+  {
+    "name": "node_uname_info",
+    "help": "Labeled system information as provided by the uname system call.",
+    "type": "gauge",
+    "labels": [
+      "domainname",
+      "machine",
+      "nodename",
+      "release",
+      "sysname",
+      "version"
+    ]
+  },
+  {
+    "name": "node_vmstat_oom_kill",
+    "help": "/proc/vmstat information field oom_kill.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_vmstat_pgfault",
+    "help": "/proc/vmstat information field pgfault.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_vmstat_pgmajfault",
+    "help": "/proc/vmstat information field pgmajfault.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_vmstat_pgpgin",
+    "help": "/proc/vmstat information field pgpgin.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_vmstat_pgpgout",
+    "help": "/proc/vmstat information field pgpgout.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_vmstat_pswpin",
+    "help": "/proc/vmstat information field pswpin.",
+    "type": "untyped",
+    "labels": []
+  },
+  {
+    "name": "node_vmstat_pswpout",
+    "help": "/proc/vmstat information field pswpout.",
+    "type": "untyped",
+    "labels": []
+  }
+]

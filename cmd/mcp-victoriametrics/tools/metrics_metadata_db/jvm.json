@@ -1,0 +1,1557 @@
+[
+  {
+    "name": "agroal_acquire_count_total",
+    "help": "Number of times an acquire operation succeeded",
+    "type": "counter",
+    "labels": [
+      "datasource"
+    ]
+  },
+  {
+    "name": "agroal_active_count",
+    "help": "Number of active connections",
+    "type": "gauge",
+    "labels": [
+      "datasource"
+    ]
+  },
+  {
+    "name": "agroal_creation_count_total",
+    "help": "Number of created connections",
+    "type": "counter",
+    "labels": [
+      "datasource"
+    ]
+  },
+  {
+    "name": "application_ready_time_seconds",
+    "help": "Time taken for the application to be ready to service requests",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "application_started_time_seconds",
+    "help": "Time taken to start the application",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "base_classloader_loadedClasses_count",
+    "help": "Number of classes currently loaded",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "base_gc_ps_scavenge_count",
+    "help": "Garbage collection count for PS Scavenge collector",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "base_memory_committedHeap",
+    "help": "Committed heap memory",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "base_memory_usedHeap",
+    "help": "Used heap memory",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "base_thread_count",
+    "help": "Current thread count",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "cache_evictions_total",
+    "help": "The number of entries evicted from the cache",
+    "type": "counter",
+    "labels": [
+      "cache"
+    ]
+  },
+  {
+    "name": "cache_gets_total",
+    "help": "The number of times cache lookup methods have returned a cached (hit) or uncached (miss) value",
+    "type": "counter",
+    "labels": [
+      "cache",
+      "result"
+    ]
+  },
+  {
+    "name": "cache_puts_total",
+    "help": "The number of entries put into the cache",
+    "type": "counter",
+    "labels": [
+      "cache"
+    ]
+  },
+  {
+    "name": "cache_size",
+    "help": "The number of entries in the cache",
+    "type": "gauge",
+    "labels": [
+      "cache"
+    ]
+  },
+  {
+    "name": "cassandra_client_requests_seconds",
+    "help": "Duration of Cassandra client requests",
+    "type": "summary",
+    "labels": [
+      "keyspace",
+      "table",
+      "operation",
+      "status"
+    ]
+  },
+  {
+    "name": "disk_free_bytes",
+    "help": "Usable space for path",
+    "type": "gauge",
+    "labels": [
+      "path"
+    ]
+  },
+  {
+    "name": "disk_total_bytes",
+    "help": "Total space for path",
+    "type": "gauge",
+    "labels": [
+      "path"
+    ]
+  },
+  {
+    "name": "elasticsearch_rest_client_connections_active",
+    "help": "Number of active connections",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "elasticsearch_rest_client_requests_seconds",
+    "help": "Duration of Elasticsearch REST client requests",
+    "type": "summary",
+    "labels": [
+      "method",
+      "endpoint",
+      "status"
+    ]
+  },
+  {
+    "name": "executor_active_threads",
+    "help": "The current number of active threads",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "executor_completed_tasks_total",
+    "help": "The total number of tasks that have completed execution",
+    "type": "counter",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "executor_pool_core_threads",
+    "help": "The core number of threads in the pool",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "executor_pool_max_threads",
+    "help": "The maximum number of threads in the pool",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "executor_pool_size_threads",
+    "help": "The current number of threads in the pool",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "executor_queue_remaining_tasks",
+    "help": "The number of additional tasks that can be queued",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "executor_queued_tasks",
+    "help": "The current number of tasks queued for execution",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "flyway_migrations_total",
+    "help": "Total number of Flyway migrations",
+    "type": "counter",
+    "labels": [
+      "status"
+    ]
+  },
+  {
+    "name": "grpc_client_requests_seconds",
+    "help": "Duration of gRPC client request execution",
+    "type": "summary",
+    "labels": [
+      "method",
+      "service",
+      "status"
+    ]
+  },
+  {
+    "name": "grpc_server_requests_seconds",
+    "help": "Duration of gRPC server request processing",
+    "type": "summary",
+    "labels": [
+      "method",
+      "service",
+      "status"
+    ]
+  },
+  {
+    "name": "hazelcast_map_gets_total",
+    "help": "Total number of get operations",
+    "type": "counter",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "hazelcast_map_puts_total",
+    "help": "Total number of put operations",
+    "type": "counter",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "hazelcast_map_size",
+    "help": "Number of entries in the map",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "hazelcast_partition_count",
+    "help": "Number of partitions",
+    "type": "gauge",
+    "labels": [
+      "type"
+    ]
+  },
+  {
+    "name": "hikaricp_connections",
+    "help": "Current connection count",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_connections_acquire_seconds",
+    "help": "Connection acquire time",
+    "type": "summary",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_connections_active",
+    "help": "Active connection count",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_connections_creation_seconds",
+    "help": "Connection creation time",
+    "type": "summary",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_connections_idle",
+    "help": "Idle connection count",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_connections_lease_seconds",
+    "help": "Connection lease time",
+    "type": "summary",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_connections_max",
+    "help": "Max connection count",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_connections_min",
+    "help": "Min connection count",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_connections_pending",
+    "help": "Pending thread count",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_connections_timeout_total",
+    "help": "Total connection timeout count",
+    "type": "counter",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_connections_usage_seconds",
+    "help": "Connection usage time",
+    "type": "summary",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_max_connections",
+    "help": "Max connections",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "hikaricp_min_connections",
+    "help": "Min connections",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "http_client_requests_seconds",
+    "help": "Duration of HTTP client request execution",
+    "type": "summary",
+    "labels": [
+      "method",
+      "uri",
+      "status",
+      "clientName",
+      "outcome"
+    ]
+  },
+  {
+    "name": "http_server_requests_seconds",
+    "help": "Duration of HTTP server request handling",
+    "type": "summary",
+    "labels": [
+      "method",
+      "uri",
+      "status"
+    ]
+  },
+  {
+    "name": "hystrix_circuit_breaker_open",
+    "help": "Circuit breaker status",
+    "type": "gauge",
+    "labels": [
+      "group",
+      "key"
+    ]
+  },
+  {
+    "name": "hystrix_execution_seconds",
+    "help": "Duration of Hystrix command execution",
+    "type": "summary",
+    "labels": [
+      "group",
+      "key"
+    ]
+  },
+  {
+    "name": "hystrix_fallback_total",
+    "help": "Total number of times fallback was invoked",
+    "type": "counter",
+    "labels": [
+      "group",
+      "key"
+    ]
+  },
+  {
+    "name": "jdbc_connections_active",
+    "help": "Current number of active connections that have been allocated from the data source",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "jdbc_connections_max",
+    "help": "Maximum number of active connections that can be allocated from the data source",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "jdbc_connections_min",
+    "help": "Minimum number of idle connections in the pool",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "jersey_client_requests_seconds",
+    "help": "Duration of Jersey client request execution",
+    "type": "summary",
+    "labels": [
+      "method",
+      "uri",
+      "status",
+      "exception"
+    ]
+  },
+  {
+    "name": "jersey_server_requests_seconds",
+    "help": "Duration of Jersey server request processing",
+    "type": "summary",
+    "labels": [
+      "method",
+      "uri",
+      "status",
+      "exception"
+    ]
+  },
+  {
+    "name": "jetty_async_requests_active",
+    "help": "Number of active async requests",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jetty_async_requests_waiting",
+    "help": "Number of waiting async requests",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jetty_request_time_seconds",
+    "help": "Total time spent in all request handling",
+    "type": "summary",
+    "labels": []
+  },
+  {
+    "name": "jetty_requests_active",
+    "help": "Number of active Jetty requests",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jetty_threads_busy",
+    "help": "Number of busy threads",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jetty_threads_current",
+    "help": "Current number of threads",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jetty_threads_idle",
+    "help": "Number of idle threads",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jetty_threads_max",
+    "help": "Maximum number of threads",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_buffer_count",
+    "help": "An estimate of the number of buffers in the pool",
+    "type": "gauge",
+    "labels": [
+      "id"
+    ]
+  },
+  {
+    "name": "jvm_buffer_memory_used",
+    "help": "An estimate of the memory that the Java virtual machine is using for this buffer pool",
+    "type": "gauge",
+    "labels": [
+      "id"
+    ]
+  },
+  {
+    "name": "jvm_buffer_pool_capacity_bytes",
+    "help": "Bytes capacity of a given JVM buffer pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_buffer_pool_used_buffers",
+    "help": "Used buffers of a given JVM buffer pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_buffer_pool_used_bytes",
+    "help": "Used bytes of a given JVM buffer pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_classes_loaded",
+    "help": "The number of classes that are currently loaded in the JVM",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_classes_loaded_total",
+    "help": "The total number of classes that have been loaded since the JVM has started execution",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "jvm_classes_unloaded_total",
+    "help": "The total number of classes that have been unloaded since the JVM has started execution",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "jvm_compilation_time_ms_total",
+    "help": "The total time spent in JIT compilation",
+    "type": "counter",
+    "labels": [
+      "compiler"
+    ]
+  },
+  {
+    "name": "jvm_gc_collection_seconds",
+    "help": "Time spent in a given JVM garbage collector in seconds",
+    "type": "summary",
+    "labels": [
+      "gc"
+    ]
+  },
+  {
+    "name": "jvm_gc_collection_seconds_count",
+    "help": "Total number of collections that have occurred",
+    "type": "counter",
+    "labels": [
+      "gc"
+    ]
+  },
+  {
+    "name": "jvm_gc_collection_seconds_sum",
+    "help": "Total time spent in collection",
+    "type": "counter",
+    "labels": [
+      "gc"
+    ]
+  },
+  {
+    "name": "jvm_gc_live_data_size_bytes",
+    "help": "Size of old generation memory pool after a full GC",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_gc_max_data_size_bytes",
+    "help": "Maximum size of old generation memory pool",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_gc_memory_allocated_bytes_total",
+    "help": "Incremented for an increase in the size of the young generation memory pool after one GC to before the next",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "jvm_gc_memory_promoted_bytes_total",
+    "help": "Count of positive increases in the size of the old generation memory pool before GC to after GC",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "jvm_gc_pause_seconds",
+    "help": "Time spent in GC pause",
+    "type": "summary",
+    "labels": [
+      "action",
+      "cause",
+      "gc"
+    ]
+  },
+  {
+    "name": "jvm_info",
+    "help": "JVM version info",
+    "type": "gauge",
+    "labels": [
+      "version",
+      "vendor",
+      "runtime"
+    ]
+  },
+  {
+    "name": "jvm_memory_bytes_committed",
+    "help": "Committed (bytes) of a given JVM memory area",
+    "type": "gauge",
+    "labels": [
+      "area"
+    ]
+  },
+  {
+    "name": "jvm_memory_bytes_init",
+    "help": "Initial bytes of a given JVM memory area",
+    "type": "gauge",
+    "labels": [
+      "area"
+    ]
+  },
+  {
+    "name": "jvm_memory_bytes_max",
+    "help": "Max (bytes) of a given JVM memory area",
+    "type": "gauge",
+    "labels": [
+      "area"
+    ]
+  },
+  {
+    "name": "jvm_memory_bytes_used",
+    "help": "Used bytes of a given JVM memory area",
+    "type": "gauge",
+    "labels": [
+      "area"
+    ]
+  },
+  {
+    "name": "jvm_memory_committed_bytes",
+    "help": "The amount of memory in bytes that is committed for the Java virtual machine to use",
+    "type": "gauge",
+    "labels": [
+      "area",
+      "id"
+    ]
+  },
+  {
+    "name": "jvm_memory_init_bytes",
+    "help": "The initial amount of memory in bytes that the Java virtual machine requests",
+    "type": "gauge",
+    "labels": [
+      "area",
+      "id"
+    ]
+  },
+  {
+    "name": "jvm_memory_max_bytes",
+    "help": "The maximum amount of memory in bytes that can be used for memory management",
+    "type": "gauge",
+    "labels": [
+      "area",
+      "id"
+    ]
+  },
+  {
+    "name": "jvm_memory_pool_allocated_bytes_total",
+    "help": "Total bytes allocated in a given JVM memory pool",
+    "type": "counter",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_memory_pool_bytes_committed",
+    "help": "Committed bytes of a given JVM memory pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_memory_pool_bytes_init",
+    "help": "Initial bytes of a given JVM memory pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_memory_pool_bytes_max",
+    "help": "Max bytes of a given JVM memory pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_memory_pool_bytes_used",
+    "help": "Used bytes of a given JVM memory pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_memory_pool_collection_committed_bytes",
+    "help": "Committed after last collection bytes of a given JVM memory pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_memory_pool_collection_init_bytes",
+    "help": "Initial after last collection bytes of a given JVM memory pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_memory_pool_collection_max_bytes",
+    "help": "Max bytes after last collection of a given JVM memory pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_memory_pool_collection_used_bytes",
+    "help": "Used bytes after last collection of a given JVM memory pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_memory_pool_used_bytes",
+    "help": "Used bytes of a given JVM memory pool",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "jvm_memory_used_bytes",
+    "help": "The amount of used memory",
+    "type": "gauge",
+    "labels": [
+      "area",
+      "id"
+    ]
+  },
+  {
+    "name": "jvm_threads_current",
+    "help": "Current thread count of a JVM",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_threads_daemon",
+    "help": "Daemon thread count of a JVM",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_threads_daemon_threads",
+    "help": "The current number of live daemon threads",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_threads_deadlocked",
+    "help": "Cycles of JVM-threads that are in deadlock waiting to acquire object monitors or ownable synchronizers",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_threads_deadlocked_monitor",
+    "help": "Cycles of JVM-threads that are in deadlock waiting to acquire object monitors",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_threads_live_threads",
+    "help": "The current number of live threads including both daemon and non-daemon threads",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_threads_peak",
+    "help": "Peak thread count of a JVM",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_threads_peak_threads",
+    "help": "The peak live thread count since the Java virtual machine started or peak was reset",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "jvm_threads_started_total",
+    "help": "Started thread count of a JVM",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "jvm_threads_state",
+    "help": "Current count of threads by state",
+    "type": "gauge",
+    "labels": [
+      "state"
+    ]
+  },
+  {
+    "name": "jvm_threads_states_threads",
+    "help": "The current number of threads",
+    "type": "gauge",
+    "labels": [
+      "state"
+    ]
+  },
+  {
+    "name": "jvm_threads_virtual_live",
+    "help": "The current number of live virtual threads",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "kafka.consumer:type=consumer-fetch-manager-metrics:records-consumed-rate",
+    "help": "The average number of records consumed per second",
+    "type": "gauge",
+    "labels": [
+      "client_id"
+    ]
+  },
+  {
+    "name": "kafka.producer:type=producer-metrics:batch-size-avg",
+    "help": "The average number of bytes sent per partition per-request",
+    "type": "gauge",
+    "labels": [
+      "client_id"
+    ]
+  },
+  {
+    "name": "kafka.server:type=tenant-metrics:consumer-lag-offsets",
+    "help": "The lag of consumer offsets",
+    "type": "gauge",
+    "labels": [
+      "partition",
+      "group",
+      "topic"
+    ]
+  },
+  {
+    "name": "kafka_producer_record_send_rate",
+    "help": "The average number of records sent per second",
+    "type": "gauge",
+    "labels": [
+      "client_id"
+    ]
+  },
+  {
+    "name": "ktor.calls.active",
+    "help": "Number of unfinished active requests",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "ktor.calls.duration",
+    "help": "Duration of HTTP call processing",
+    "type": "timer",
+    "labels": []
+  },
+  {
+    "name": "ktor.calls.exceptions",
+    "help": "Number of exceptions during HTTP call processing",
+    "type": "meter",
+    "labels": []
+  },
+  {
+    "name": "ktor.http.server.requests",
+    "help": "Duration of HTTP server request handling",
+    "type": "timer",
+    "labels": [
+      "address",
+      "method",
+      "route",
+      "status",
+      "exception"
+    ]
+  },
+  {
+    "name": "ktor.http.server.requests.active",
+    "help": "Number of concurrent HTTP requests",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "lettuce.command.completion",
+    "help": "Time to complete Redis command execution",
+    "type": "timer",
+    "labels": [
+      "local",
+      "remote",
+      "command"
+    ]
+  },
+  {
+    "name": "lettuce.command.firstresponse",
+    "help": "Time between command send and first response",
+    "type": "timer",
+    "labels": [
+      "local",
+      "remote",
+      "command"
+    ]
+  },
+  {
+    "name": "liquibase_changesets_total",
+    "help": "Total number of Liquibase changesets",
+    "type": "counter",
+    "labels": [
+      "status"
+    ]
+  },
+  {
+    "name": "logback_events_total",
+    "help": "Number of log events that were enabled by the logging level",
+    "type": "counter",
+    "labels": [
+      "level"
+    ]
+  },
+  {
+    "name": "mongodb.driver.commands",
+    "help": "Timer of MongoDB commands",
+    "type": "timer",
+    "labels": [
+      "cluster.id",
+      "command",
+      "database",
+      "collection",
+      "status"
+    ]
+  },
+  {
+    "name": "mongodb.driver.pool.size",
+    "help": "The current size of the connection pool",
+    "type": "gauge",
+    "labels": [
+      "cluster.id",
+      "server.address"
+    ]
+  },
+  {
+    "name": "mongodb.driver.pool.wait_queue.size",
+    "help": "The current size of the wait queue for a connection",
+    "type": "gauge",
+    "labels": [
+      "cluster.id",
+      "server.address"
+    ]
+  },
+  {
+    "name": "neo4j_driver_connections_active",
+    "help": "The number of active connections",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "neo4j_driver_connections_idle",
+    "help": "The number of idle connections",
+    "type": "gauge",
+    "labels": [
+      "pool"
+    ]
+  },
+  {
+    "name": "okhttp.requests",
+    "help": "Timer of OkHttp requests",
+    "type": "timer",
+    "labels": [
+      "status",
+      "outcome",
+      "uri",
+      "target.host"
+    ]
+  },
+  {
+    "name": "process_cpu_usage",
+    "help": "The recent cpu usage for the Java Virtual Machine process",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "process_files_max",
+    "help": "The maximum file descriptor count",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "process_files_max_files",
+    "help": "The maximum file descriptor count",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "process_files_open",
+    "help": "The number of open file descriptors",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "process_files_open_files",
+    "help": "The open file descriptor count",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "process_start_time_seconds",
+    "help": "Start time of the process since unix epoch in seconds",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "process_uptime_seconds",
+    "help": "The uptime of the Java virtual machine",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "quartz_job_execution_seconds",
+    "help": "Duration of Quartz job execution",
+    "type": "summary",
+    "labels": [
+      "name",
+      "group"
+    ]
+  },
+  {
+    "name": "quartz_trigger_fired_total",
+    "help": "Total number of fired triggers",
+    "type": "counter",
+    "labels": [
+      "name",
+      "group"
+    ]
+  },
+  {
+    "name": "r2dbc_pool_acquired_connections",
+    "help": "The number of acquired connections",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "r2dbc_pool_allocated_connections",
+    "help": "The number of allocated connections",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "r2dbc_pool_idle_connections",
+    "help": "The number of idle connections",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "r2dbc_pool_max_allocated_connections",
+    "help": "The maximum number of allocated connections",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "r2dbc_pool_pending_connections",
+    "help": "The number of pending connections",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "rabbitmq.acknowledged_messages_total",
+    "help": "The total number of acknowledged messages",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "rabbitmq.connections",
+    "help": "The current number of connections",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "rabbitmq.consumed_messages_total",
+    "help": "The total number of consumed messages",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "rabbitmq.published_messages_total",
+    "help": "The total number of published messages",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "reactor_netty_connection_provider_idle_connections",
+    "help": "The number of idle connections in the connection pool",
+    "type": "gauge",
+    "labels": [
+      "id",
+      "remote_address"
+    ]
+  },
+  {
+    "name": "reactor_netty_connection_provider_total_connections",
+    "help": "The total number of connections in the connection pool",
+    "type": "gauge",
+    "labels": [
+      "id",
+      "remote_address"
+    ]
+  },
+  {
+    "name": "reactor_netty_http_server_connections_active",
+    "help": "The number of active HTTP server connections",
+    "type": "gauge",
+    "labels": [
+      "local_address"
+    ]
+  },
+  {
+    "name": "resilience4j.bulkhead.available.concurrent.calls",
+    "help": "The number of available concurrent calls",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "resilience4j.circuitbreaker.buffered.calls",
+    "help": "The number of buffered calls",
+    "type": "gauge",
+    "labels": [
+      "name",
+      "kind"
+    ]
+  },
+  {
+    "name": "resilience4j.circuitbreaker.calls.total",
+    "help": "Total number of calls",
+    "type": "counter",
+    "labels": [
+      "name",
+      "kind"
+    ]
+  },
+  {
+    "name": "resilience4j.circuitbreaker.state",
+    "help": "The current state of the circuit breaker",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "resilience4j.ratelimiter.available.permissions",
+    "help": "The number of available permissions",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "resilience4j.retry.calls",
+    "help": "The number of retry calls",
+    "type": "gauge",
+    "labels": [
+      "name",
+      "kind"
+    ]
+  },
+  {
+    "name": "solr_client_requests_seconds",
+    "help": "Duration of Solr client requests",
+    "type": "summary",
+    "labels": [
+      "collection",
+      "shard",
+      "replica",
+      "type"
+    ]
+  },
+  {
+    "name": "spring_batch_chunk_write_seconds",
+    "help": "Duration of Spring Batch chunk writing",
+    "type": "timer",
+    "labels": [
+      "job.name",
+      "step.name",
+      "status"
+    ]
+  },
+  {
+    "name": "spring_batch_item_process_seconds",
+    "help": "Duration of Spring Batch item processing",
+    "type": "timer",
+    "labels": [
+      "job.name",
+      "step.name",
+      "status"
+    ]
+  },
+  {
+    "name": "spring_batch_item_read_seconds",
+    "help": "Duration of Spring Batch item reading",
+    "type": "timer",
+    "labels": [
+      "job.name",
+      "step.name",
+      "status"
+    ]
+  },
+  {
+    "name": "spring_batch_item_write_seconds",
+    "help": "Duration of Spring Batch item writing",
+    "type": "timer",
+    "labels": [
+      "job.name",
+      "step.name",
+      "status"
+    ]
+  },
+  {
+    "name": "spring_batch_job_seconds",
+    "help": "Duration of Spring Batch job execution",
+    "type": "timer",
+    "labels": [
+      "name",
+      "status"
+    ]
+  },
+  {
+    "name": "spring_batch_step_seconds",
+    "help": "Duration of Spring Batch step execution",
+    "type": "timer",
+    "labels": [
+      "job.name",
+      "name",
+      "status"
+    ]
+  },
+  {
+    "name": "spring_data_repository_invocations_seconds",
+    "help": "Duration of Spring Data repository invocations",
+    "type": "summary",
+    "labels": [
+      "repository",
+      "method",
+      "state",
+      "exception"
+    ]
+  },
+  {
+    "name": "spring_integration_channels",
+    "help": "The current number of messages in the channel",
+    "type": "gauge",
+    "labels": [
+      "channel"
+    ]
+  },
+  {
+    "name": "spring_integration_handlers",
+    "help": "The number of active handlers",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "spring_integration_receive_seconds",
+    "help": "Receive processing time",
+    "type": "timer",
+    "labels": [
+      "channel",
+      "name",
+      "result"
+    ]
+  },
+  {
+    "name": "spring_integration_send_seconds",
+    "help": "Send processing time",
+    "type": "timer",
+    "labels": [
+      "channel",
+      "name",
+      "result"
+    ]
+  },
+  {
+    "name": "spring_kafka_listener_seconds",
+    "help": "Time taken to process Kafka listener",
+    "type": "timer",
+    "labels": [
+      "name",
+      "result",
+      "exception"
+    ]
+  },
+  {
+    "name": "spring_security_authentications_total",
+    "help": "Authentication attempts",
+    "type": "counter",
+    "labels": [
+      "result",
+      "exception"
+    ]
+  },
+  {
+    "name": "spring_security_authorizations_total",
+    "help": "Authorization attempts",
+    "type": "counter",
+    "labels": [
+      "result",
+      "exception"
+    ]
+  },
+  {
+    "name": "spring_security_filterchain_seconds",
+    "help": "Time taken for security filter chain processing",
+    "type": "timer",
+    "labels": [
+      "filter",
+      "status"
+    ]
+  },
+  {
+    "name": "system_cpu_count",
+    "help": "The number of processors available to the Java virtual machine",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "system_cpu_usage",
+    "help": "The recent cpu usage for the whole system",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "system_load_average_1m",
+    "help": "The sum of the number of runnable entities queued to available processors and the number of runnable entities running on the available processors averaged over a period of time",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "tomcat_global_received_bytes_total",
+    "help": "Total bytes received",
+    "type": "counter",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "tomcat_global_request_seconds",
+    "help": "Total time to process the requests",
+    "type": "summary",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "tomcat_global_sent_bytes_total",
+    "help": "Total bytes sent",
+    "type": "counter",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "tomcat_sessions_active_current",
+    "help": "Number of active sessions",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "tomcat_sessions_active_current_sessions",
+    "help": "Current active sessions",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "tomcat_sessions_active_max",
+    "help": "Maximum number of active sessions",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "tomcat_sessions_created_total",
+    "help": "Total sessions created",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "tomcat_sessions_expired_total",
+    "help": "Total sessions expired",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "tomcat_sessions_rejected_total",
+    "help": "Total sessions rejected",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "tomcat_threads_busy_threads",
+    "help": "Number of busy threads",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "tomcat_threads_config_max_threads",
+    "help": "Maximum number of threads in the pool",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "tomcat_threads_current_threads",
+    "help": "Number of current threads in the pool",
+    "type": "gauge",
+    "labels": [
+      "name"
+    ]
+  },
+  {
+    "name": "undertow_request_time_seconds",
+    "help": "Total time spent in request handling",
+    "type": "summary",
+    "labels": [
+      "code",
+      "method",
+      "uri"
+    ]
+  },
+  {
+    "name": "undertow_requests_active",
+    "help": "Number of active Undertow requests",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "vertx_http_server_active_connections",
+    "help": "Number of active connections",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "vertx_http_server_bytes_read_total",
+    "help": "Total bytes read",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "vertx_http_server_bytes_written_total",
+    "help": "Total bytes written",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "vertx_http_server_requests_total",
+    "help": "Number of processed requests",
+    "type": "counter",
+    "labels": [
+      "code",
+      "method",
+      "route"
+    ]
+  },
+  {
+    "name": "vertx_http_server_response_time_seconds",
+    "help": "Response time",
+    "type": "summary",
+    "labels": [
+      "code",
+      "method",
+      "route"
+    ]
+  },
+  {
+    "name": "vertx_pool_queue_time_seconds",
+    "help": "Time spent in the waiting queue",
+    "type": "summary",
+    "labels": [
+      "pool_type",
+      "pool_name"
+    ]
+  },
+  {
+    "name": "vertx_pool_usage_seconds",
+    "help": "Time using a resource from the pool",
+    "type": "summary",
+    "labels": [
+      "pool_type",
+      "pool_name"
+    ]
+  }
+]

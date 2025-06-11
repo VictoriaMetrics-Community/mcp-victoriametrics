@@ -1,0 +1,3260 @@
+[
+  {
+    "name": "kube_certificatesigningrequest_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "certificatesigningrequest",
+      "signer_name"
+    ]
+  },
+  {
+    "name": "kube_certificatesigningrequest_cert_length",
+    "help": "Length of the issued certificate",
+    "type": "gauge",
+    "labels": [
+      "certificatesigningrequest",
+      "signer_name"
+    ]
+  },
+  {
+    "name": "kube_certificatesigningrequest_condition",
+    "help": "The number of each certificatesigningrequest condition",
+    "type": "gauge",
+    "labels": [
+      "certificatesigningrequest",
+      "condition",
+      "signer_name"
+    ]
+  },
+  {
+    "name": "kube_certificatesigningrequest_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "certificatesigningrequest",
+      "signer_name"
+    ]
+  },
+  {
+    "name": "kube_certificatesigningrequest_info",
+    "help": "Information about certificate signing request",
+    "type": "gauge",
+    "labels": [
+      "certificatesigningrequest",
+      "signer_name"
+    ]
+  },
+  {
+    "name": "kube_certificatesigningrequest_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "certificatesigningrequest",
+      "signer_name"
+    ]
+  },
+  {
+    "name": "kube_clusterrole_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "clusterrole"
+    ]
+  },
+  {
+    "name": "kube_clusterrole_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "clusterrole"
+    ]
+  },
+  {
+    "name": "kube_clusterrole_info",
+    "help": "Information about cluster role",
+    "type": "gauge",
+    "labels": [
+      "clusterrole"
+    ]
+  },
+  {
+    "name": "kube_clusterrole_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "clusterrole"
+    ]
+  },
+  {
+    "name": "kube_clusterrole_metadata_resource_version",
+    "help": "Resource version representing a specific version of the cluster role",
+    "type": "gauge",
+    "labels": [
+      "clusterrole"
+    ]
+  },
+  {
+    "name": "kube_clusterrolebinding_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "clusterrolebinding"
+    ]
+  },
+  {
+    "name": "kube_clusterrolebinding_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "clusterrolebinding"
+    ]
+  },
+  {
+    "name": "kube_clusterrolebinding_info",
+    "help": "Information about clusterrolebinding",
+    "type": "gauge",
+    "labels": [
+      "clusterrolebinding",
+      "roleref_kind",
+      "roleref_name"
+    ]
+  },
+  {
+    "name": "kube_clusterrolebinding_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "clusterrolebinding"
+    ]
+  },
+  {
+    "name": "kube_clusterrolebinding_metadata_resource_version",
+    "help": "Resource version representing a specific version of the clusterrolebinding",
+    "type": "gauge",
+    "labels": [
+      "clusterrolebinding"
+    ]
+  },
+  {
+    "name": "kube_configmap_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_CONFIGMAP_ANNOTATION",
+      "configmap",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_configmap_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "configmap",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_configmap_info",
+    "help": "Information about configmap",
+    "type": "gauge",
+    "labels": [
+      "configmap",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_configmap_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "configmap",
+      "label_CONFIGMAP_LABEL",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_configmap_metadata_resource_version",
+    "help": "Resource version representing a specific version of the configmap",
+    "type": "gauge",
+    "labels": [
+      "configmap",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_CRONJOB_ANNOTATION",
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_info",
+    "help": "Info about cronjob",
+    "type": "gauge",
+    "labels": [
+      "concurrency_policy",
+      "cronjob",
+      "namespace",
+      "schedule",
+      "timezone"
+    ]
+  },
+  {
+    "name": "kube_cronjob_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "label_CRONJOB_LABEL",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_metadata_resource_version",
+    "help": "Resource version representing a specific version of the cronjob",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_next_schedule_time",
+    "help": "Next time the cronjob should be scheduled. The time after lastScheduleTime, or after the cron job's creation time if it's never been scheduled. Use this to determine if the job is delayed",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_spec_failed_job_history_limit",
+    "help": "Failed job history limit tells the controller how many failed jobs should be preserved",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_spec_starting_deadline_seconds",
+    "help": "Deadline in seconds for starting the job if it misses scheduled time for any reason",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_spec_successful_job_history_limit",
+    "help": "Successful job history limit tells the controller how many completed jobs should be preserved",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_spec_suspend",
+    "help": "Suspend flag tells the controller to suspend subsequent executions",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_status_active",
+    "help": "Active holds pointers to currently running jobs",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_status_last_schedule_time",
+    "help": "LastScheduleTime keeps information of when was the last time the job was successfully scheduled",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_cronjob_status_last_successful_time",
+    "help": "LastSuccessfulTime keeps information of when was the last time the job was successfully completed",
+    "type": "gauge",
+    "labels": [
+      "cronjob",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_DAEMONSET_ANNOTATION",
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "label_DAEMONSET_LABEL",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_metadata_generation",
+    "help": "Sequence number representing a specific generation of the desired state",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_status_current_number_scheduled",
+    "help": "The number of nodes running at least one daemon pod and are supposed to",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_status_desired_number_scheduled",
+    "help": "The number of nodes that should be running the daemon pod",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_status_number_available",
+    "help": "The number of nodes that should be running the daemon pod and have one or more of the daemon pod running and available",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_status_number_misscheduled",
+    "help": "The number of nodes running a daemon pod but are not supposed to",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_status_number_ready",
+    "help": "The number of nodes that should be running the daemon pod and have one or more of the daemon pod running and ready",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_status_number_unavailable",
+    "help": "The number of nodes that should be running the daemon pod and have none of the daemon pod running and available",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_status_observed_generation",
+    "help": "The most recent generation observed by the daemon set controller",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_status_updated_number_scheduled",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_daemonset_updated_number_scheduled",
+    "help": "The total number of nodes that are running updated daemon pod",
+    "type": "gauge",
+    "labels": [
+      "daemonset",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_DEPLOYMENT_ANNOTATION",
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "label_DEPLOYMENT_LABEL",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_metadata_generation",
+    "help": "Sequence number representing a specific generation of the desired state",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_spec_paused",
+    "help": "Whether the deployment is paused and will not be processed by the deployment controller",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_spec_replicas",
+    "help": "Number of desired pods for a deployment",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_spec_strategy_rollingupdate_max_surge",
+    "help": "Maximum number of replicas that can be scheduled above the desired number of replicas during a rolling update of a deployment",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_spec_strategy_rollingupdate_max_unavailable",
+    "help": "Maximum number of unavailable replicas during a rolling update of a deployment",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_status_condition",
+    "help": "The current status conditions of a deployment",
+    "type": "gauge",
+    "labels": [
+      "condition",
+      "deployment",
+      "namespace",
+      "status"
+    ]
+  },
+  {
+    "name": "kube_deployment_status_observed_generation",
+    "help": "The generation observed by the deployment controller",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_status_replicas",
+    "help": "The number of replicas per deployment",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_status_replicas_available",
+    "help": "The number of available replicas per deployment",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_status_replicas_ready",
+    "help": "The number of ready replicas per deployment",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_status_replicas_unavailable",
+    "help": "The number of unavailable replicas per deployment",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_deployment_status_replicas_updated",
+    "help": "The number of updated replicas per deployment",
+    "type": "gauge",
+    "labels": [
+      "deployment",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_endpoint_address",
+    "help": "Information about Endpoint available and non available addresses",
+    "type": "gauge",
+    "labels": [
+      "endpoint",
+      "ip",
+      "namespace",
+      "port_name",
+      "port_number",
+      "port_protocol",
+      "ready"
+    ]
+  },
+  {
+    "name": "kube_endpoint_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_ENDPOINT_ANNOTATION",
+      "endpoint",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_endpoint_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "endpoint",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_endpoint_info",
+    "help": "Information about endpoint",
+    "type": "gauge",
+    "labels": [
+      "endpoint",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_endpoint_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "endpoint",
+      "label_ENDPOINT_LABEL",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_endpoint_ports",
+    "help": "(Deprecated since v2.14.0) Information about the Endpoint ports",
+    "type": "gauge",
+    "labels": [
+      "endpoint",
+      "namespace",
+      "port_name",
+      "port_number",
+      "port_protocol"
+    ]
+  },
+  {
+    "name": "kube_endpointslice_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_ENDPOINTSLICE_ANNOTATION",
+      "endpointslice",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_endpointslice_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "endpointslice",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_endpointslice_endpoints",
+    "help": "Endpoints attached to the endpointslice",
+    "type": "gauge",
+    "labels": [
+      "endpoint_zone",
+      "endpointslice",
+      "hostname",
+      "namespace",
+      "nodename",
+      "ready",
+      "serving",
+      "targetref_kind",
+      "targetref_name",
+      "targetref_namespace",
+      "terminating"
+    ]
+  },
+  {
+    "name": "kube_endpointslice_endpoints_hints",
+    "help": "Each line is a hint applied to an endpoint-slice",
+    "type": "gauge",
+    "labels": [
+      "address",
+      "endpointslice",
+      "for_zone",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_endpointslice_info",
+    "help": "Information about endpointslice",
+    "type": "gauge",
+    "labels": [
+      "addresstype",
+      "endpointslice",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_endpointslice_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "endpointslice",
+      "label_ENDPOINTSLICE_LABEL",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_endpointslice_ports",
+    "help": "Ports attached to the endpointslice",
+    "type": "gauge",
+    "labels": [
+      "endpointslice",
+      "namespace",
+      "port_name",
+      "port_number",
+      "port_protocol"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_info",
+    "help": "Information about HPA",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "namespace",
+      "scaletargetref_api_version",
+      "scaletargetref_kind",
+      "scaletargetref_name"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_metadata_generation",
+    "help": "The generation observed by the HorizontalPodAutoscaler controller",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_spec_max_replicas",
+    "help": "Upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_spec_min_replicas",
+    "help": "Lower limit for the number of pods that can be set by the autoscaler, default 1",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_spec_target_metric",
+    "help": "The metric specifications used by this autoscaler when calculating the desired replica count",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "metric_name",
+      "metric_target_type",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_status_condition",
+    "help": "The condition of this autoscaler",
+    "type": "gauge",
+    "labels": [
+      "condition",
+      "horizontalpodautoscaler",
+      "namespace",
+      "status"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_status_current_metric",
+    "help": "The current metric value for this autoscaler",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "metric_name",
+      "metric_target_type",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_status_current_replicas",
+    "help": "Current number of replicas of pods managed by this autoscaler",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_status_desired_replicas",
+    "help": "Desired number of replicas of pods managed by this autoscaler",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_horizontalpodautoscaler_status_target_metric",
+    "help": "The target metric value for this autoscaler",
+    "type": "gauge",
+    "labels": [
+      "horizontalpodautoscaler",
+      "metric_name",
+      "metric_target_type",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_ingress_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_INGRESS_ANNOTATION",
+      "ingress",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_ingress_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "ingress",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_ingress_info",
+    "help": "Information about ingress",
+    "type": "gauge",
+    "labels": [
+      "ingress",
+      "ingressclass",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_ingress_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "ingress",
+      "label_INGRESS_LABEL",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_ingress_metadata_resource_version",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "ingress",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_ingress_path",
+    "help": "Ingress host, paths and backend service information",
+    "type": "gauge",
+    "labels": [
+      "host",
+      "ingress",
+      "namespace",
+      "path",
+      "path_type",
+      "resource_api_group",
+      "resource_kind",
+      "resource_name",
+      "service_name",
+      "service_port"
+    ]
+  },
+  {
+    "name": "kube_ingress_tls",
+    "help": "Ingress TLS certificate",
+    "type": "gauge",
+    "labels": [
+      "ingress",
+      "namespace",
+      "secret",
+      "tls_host"
+    ]
+  },
+  {
+    "name": "kube_ingressclass_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_INGRESSCLASS_ANNOTATION",
+      "ingressclass"
+    ]
+  },
+  {
+    "name": "kube_ingressclass_created",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "ingressclass"
+    ]
+  },
+  {
+    "name": "kube_ingressclass_info",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "controller",
+      "ingressclass"
+    ]
+  },
+  {
+    "name": "kube_ingressclass_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "ingressclass",
+      "label_INGRESSCLASS_LABEL"
+    ]
+  },
+  {
+    "name": "kube_job_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_JOB_ANNOTATION",
+      "job_name",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_complete",
+    "help": "The job has completed its execution",
+    "type": "gauge",
+    "labels": [
+      "condition",
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_failed",
+    "help": "The job has failed its execution",
+    "type": "gauge",
+    "labels": [
+      "condition",
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_info",
+    "help": "Information about job",
+    "type": "gauge",
+    "labels": [
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "job_name",
+      "label_JOB_LABEL",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_owner",
+    "help": "Information about the Job's owner",
+    "type": "gauge",
+    "labels": [
+      "job",
+      "namespace",
+      "owner_is_controller",
+      "owner_kind",
+      "owner_name"
+    ]
+  },
+  {
+    "name": "kube_job_spec_active_deadline_seconds",
+    "help": "The duration in seconds relative to the startTime that the job may be active before the system tries to terminate it",
+    "type": "gauge",
+    "labels": [
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_spec_completions",
+    "help": "The desired number of successfully finished pods the job should be run with",
+    "type": "gauge",
+    "labels": [
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_spec_parallelism",
+    "help": "The maximum desired number of pods the job should run at any given time",
+    "type": "gauge",
+    "labels": [
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_status_active",
+    "help": "The number of actively running pods",
+    "type": "gauge",
+    "labels": [
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_status_completion_time",
+    "help": "CompletionTime represents time when the job was completed",
+    "type": "gauge",
+    "labels": [
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_status_failed",
+    "help": "The number of pods which reached Phase Failed",
+    "type": "gauge",
+    "labels": [
+      "job_name",
+      "namespace",
+      "reason"
+    ]
+  },
+  {
+    "name": "kube_job_status_start_time",
+    "help": "Start time in unix timestamp for a job",
+    "type": "gauge",
+    "labels": [
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_status_succeeded",
+    "help": "The number of pods which reached Phase Succeeded",
+    "type": "gauge",
+    "labels": [
+      "job",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_job_status_suspended",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "job_name",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_lease_owner",
+    "help": "Information about the Lease's owner",
+    "type": "gauge",
+    "labels": [
+      "lease",
+      "lease_holder",
+      "namespace",
+      "owner_kind",
+      "owner_name"
+    ]
+  },
+  {
+    "name": "kube_lease_renew_time",
+    "help": "Kube lease renew time",
+    "type": "gauge",
+    "labels": [
+      "lease",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_limitrange",
+    "help": "Information about limit range",
+    "type": "gauge",
+    "labels": [
+      "constraint",
+      "limitrange",
+      "namespace",
+      "resource",
+      "type"
+    ]
+  },
+  {
+    "name": "kube_limitrange_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "limitrange",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_mutatingwebhookconfiguration_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "mutatingwebhookconfiguration",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_mutatingwebhookconfiguration_info",
+    "help": "Information about the MutatingWebhookConfiguration",
+    "type": "gauge",
+    "labels": [
+      "mutatingwebhookconfiguration",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_mutatingwebhookconfiguration_metadata_resource_version",
+    "help": "Resource version representing a specific version of MutatingWebhookConfiguration",
+    "type": "gauge",
+    "labels": [
+      "mutatingwebhookconfiguration",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_mutatingwebhookconfiguration_webhook_clientconfig_service",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "mutatingwebhookconfiguration",
+      "namespace",
+      "service_name",
+      "service_namespace",
+      "webhook_name"
+    ]
+  },
+  {
+    "name": "kube_namespace_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_NS_ANNOTATION",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_namespace_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_namespace_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_NS_LABEL",
+      "namespace"
+    ]
+  },
+  {
+    "name": "kube_namespace_status_condition",
+    "help": "The condition of a namespace",
+    "type": "gauge",
+    "labels": [
+      "condition",
+      "namespace",
+      "status"
+    ]
+  },
+  {
+    "name": "kube_namespace_status_phase",
+    "help": "kubernetes namespace status phase",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "phase"
+    ]
+  },
+  {
+    "name": "kube_networkpolicy_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "networkpolicy"
+    ]
+  },
+  {
+    "name": "kube_networkpolicy_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "networkpolicy"
+    ]
+  },
+  {
+    "name": "kube_networkpolicy_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "networkpolicy"
+    ]
+  },
+  {
+    "name": "kube_networkpolicy_spec_egress_rules",
+    "help": "Number of egress rules on the networkpolicy",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "networkpolicy"
+    ]
+  },
+  {
+    "name": "kube_networkpolicy_spec_ingress_rules",
+    "help": "Number of ingress rules on the networkpolicy",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "networkpolicy"
+    ]
+  },
+  {
+    "name": "kube_node_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_NODE_ANNOTATION",
+      "node"
+    ]
+  },
+  {
+    "name": "kube_node_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "node"
+    ]
+  },
+  {
+    "name": "kube_node_deletion_timestamp",
+    "help": "Unix deletion timestamp",
+    "type": "gauge",
+    "labels": [
+      "node"
+    ]
+  },
+  {
+    "name": "kube_node_info",
+    "help": "Information about a cluster node",
+    "type": "gauge",
+    "labels": [
+      "container_runtime_version",
+      "internal_ip",
+      "kernel_version",
+      "kubelet_version",
+      "kubeproxy_version",
+      "node",
+      "os_image",
+      "pod_cidr",
+      "provider_id",
+      "system_uuid"
+    ]
+  },
+  {
+    "name": "kube_node_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_NODE_LABEL",
+      "node"
+    ]
+  },
+  {
+    "name": "kube_node_role",
+    "help": "The role of a cluster node",
+    "type": "gauge",
+    "labels": [
+      "node",
+      "role"
+    ]
+  },
+  {
+    "name": "kube_node_spec_taint",
+    "help": "The taint of a cluster node",
+    "type": "gauge",
+    "labels": [
+      "effect",
+      "key",
+      "node",
+      "value"
+    ]
+  },
+  {
+    "name": "kube_node_spec_unschedulable",
+    "help": "Whether a node can schedule new pods",
+    "type": "gauge",
+    "labels": [
+      "node"
+    ]
+  },
+  {
+    "name": "kube_node_status_addresses",
+    "help": "The addresses of a node",
+    "type": "gauge",
+    "labels": [
+      "address",
+      "node",
+      "type"
+    ]
+  },
+  {
+    "name": "kube_node_status_allocatable",
+    "help": "The amount of resources allocatable for pods (after reserving some for system daemons)",
+    "type": "gauge",
+    "labels": [
+      "node",
+      "resource",
+      "unit"
+    ]
+  },
+  {
+    "name": "kube_node_status_capacity",
+    "help": "The total amount of resources available for a node",
+    "type": "gauge",
+    "labels": [
+      "node",
+      "resource",
+      "unit"
+    ]
+  },
+  {
+    "name": "kube_node_status_condition",
+    "help": "The condition of a cluster node",
+    "type": "gauge",
+    "labels": [
+      "condition",
+      "node",
+      "status"
+    ]
+  },
+  {
+    "name": "kube_node_status_phase",
+    "help": "The phase the node is currently in",
+    "type": "gauge",
+    "labels": [
+      "node",
+      "phase"
+    ]
+  },
+  {
+    "name": "kube_persistentvolume_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_PERSISTENTVOLUME_ANNOTATION",
+      "persistentvolume"
+    ]
+  },
+  {
+    "name": "kube_persistentvolume_capacity_bytes",
+    "help": "Persistentvolume capacity in bytes",
+    "type": "gauge",
+    "labels": [
+      "persistentvolume"
+    ]
+  },
+  {
+    "name": "kube_persistentvolume_claim_ref",
+    "help": "Information about the Persistent Volume Claim Reference",
+    "type": "gauge",
+    "labels": [
+      "claim_name",
+      "claim_namespace",
+      "persistentvolume"
+    ]
+  },
+  {
+    "name": "kube_persistentvolume_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "persistentvolume"
+    ]
+  },
+  {
+    "name": "kube_persistentvolume_csi_attributes",
+    "help": "CSI attributes of the Persistent Volume, disabled by default, manage with --metric-opt-in-list)",
+    "type": "gauge",
+    "labels": [
+      "csi_map_options",
+      "csi_mounter",
+      "persistentvolume"
+    ]
+  },
+  {
+    "name": "kube_persistentvolume_deletion_timestamp",
+    "help": "Unix deletion timestamp",
+    "type": "gauge",
+    "labels": [
+      "persistentvolume"
+    ]
+  },
+  {
+    "name": "kube_persistentvolume_info",
+    "help": "Information about Persistent Volumes",
+    "type": "gauge",
+    "labels": [
+      "azure_disk_name",
+      "csi_driver",
+      "csi_volume_handle",
+      "ebs_volume_id",
+      "fc_lun",
+      "fc_target_wwns",
+      "fc_wwids",
+      "gce_persistent_disk_name",
+      "host_path",
+      "host_path_type",
+      "iscsi_initiator_name",
+      "iscsi_iqn",
+      "iscsi_lun",
+      "iscsi_target_portal",
+      "local_fs",
+      "local_path",
+      "nfs_path",
+      "nfs_server",
+      "persistentvolume",
+      "reclaim_policy",
+      "storageclass"
+    ]
+  },
+  {
+    "name": "kube_persistentvolume_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_PERSISTENTVOLUME_LABEL",
+      "persistentvolume"
+    ]
+  },
+  {
+    "name": "kube_persistentvolume_status_phase",
+    "help": "The phase the persistent volume is currently in",
+    "type": "gauge",
+    "labels": [
+      "persistentvolume",
+      "phase"
+    ]
+  },
+  {
+    "name": "kube_persistentvolume_volume_mode",
+    "help": "Volume Mode information for the PersistentVolume",
+    "type": "gauge",
+    "labels": [
+      "persistentvolume",
+      "volumemode"
+    ]
+  },
+  {
+    "name": "kube_persistentvolumeclaim_access_mode",
+    "help": "The access mode(s) specified by the persistent volume claim",
+    "type": "gauge",
+    "labels": [
+      "access_mode",
+      "namespace",
+      "persistentvolumeclaim"
+    ]
+  },
+  {
+    "name": "kube_persistentvolumeclaim_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_PERSISTENTVOLUMECLAIM_ANNOTATION",
+      "namespace",
+      "persistentvolumeclaim"
+    ]
+  },
+  {
+    "name": "kube_persistentvolumeclaim_capacity_bytes",
+    "help": "The capacity of storage provisioned for the persistent volume claim",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "persistentvolumeclaim"
+    ]
+  },
+  {
+    "name": "kube_persistentvolumeclaim_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "persistentvolumeclaim"
+    ]
+  },
+  {
+    "name": "kube_persistentvolumeclaim_deletion_timestamp",
+    "help": "Unix deletion timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "persistentvolumeclaim"
+    ]
+  },
+  {
+    "name": "kube_persistentvolumeclaim_info",
+    "help": "Information about persistentvolumeclaim",
+    "type": "gauge",
+    "labels": [
+      "access_mode",
+      "namespace",
+      "persistentvolumeclaim",
+      "storageclass",
+      "volume_mode"
+    ]
+  },
+  {
+    "name": "kube_persistentvolumeclaim_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_PERSISTENTVOLUMECLAIM_LABEL",
+      "namespace",
+      "persistentvolumeclaim"
+    ]
+  },
+  {
+    "name": "kube_persistentvolumeclaim_resource_requests_storage_bytes",
+    "help": "The capacity of storage requested by the persistent volume claim",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "persistentvolumeclaim"
+    ]
+  },
+  {
+    "name": "kube_persistentvolumeclaim_status_condition",
+    "help": "Information about status of different conditions of persistentvolumeclaim",
+    "type": "gauge",
+    "labels": [
+      "condition",
+      "namespace",
+      "persistentvolumeclaim",
+      "status"
+    ]
+  },
+  {
+    "name": "kube_persistentvolumeclaim_status_phase",
+    "help": "The phase the persistent volume claim is currently in",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "persistentvolumeclaim",
+      "phase"
+    ]
+  },
+  {
+    "name": "kube_pod_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_POD_ANNOTATION",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_completion_time",
+    "help": "Completion time in unix timestamp for a pod",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_info",
+    "help": "Information about a container in a pod",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "container_id",
+      "image",
+      "image_id",
+      "image_spec",
+      "namespace",
+      "pod",
+      "restart_policy",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_resource_limits",
+    "help": "The number of requested limit resource by a container. It is recommended to use the `kube_pod_resource_limits` metric exposed by kube-scheduler instead, as it is more precise",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "node",
+      "pod",
+      "resource",
+      "uid",
+      "unit"
+    ]
+  },
+  {
+    "name": "kube_pod_container_resource_requests",
+    "help": "The number of requested request resource by a container. It is recommended to use the `kube_pod_resource_requests` metric exposed by kube-scheduler instead, as it is more precise",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "node",
+      "pod",
+      "resource",
+      "uid",
+      "unit"
+    ]
+  },
+  {
+    "name": "kube_pod_container_state_started",
+    "help": "Start time in unix timestamp for a pod container",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_status_last_terminated_exitcode",
+    "help": "Describes the exit code for the last container in terminated state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_status_last_terminated_reason",
+    "help": "Describes the last reason the container was in terminated state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "reason",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_status_last_terminated_timestamp",
+    "help": "Last terminated time for a pod container in unix timestamp",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_status_ready",
+    "help": "Describes whether the containers readiness check succeeded",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_status_restarts_total",
+    "help": "The number of container restarts per container",
+    "type": "counter",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_status_running",
+    "help": "Describes whether the container is currently in running state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_status_terminated",
+    "help": "Describes whether the container is currently in terminated state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_status_terminated_reason",
+    "help": "Describes the reason the container is currently in terminated state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "reason",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_status_waiting",
+    "help": "Describes whether the container is currently in waiting state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_container_status_waiting_reason",
+    "help": "Describes the reason the container is currently in waiting state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "reason",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_deletion_timestamp",
+    "help": "Unix deletion timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_info",
+    "help": "Information about pod",
+    "type": "gauge",
+    "labels": [
+      "created_by_kind",
+      "created_by_name",
+      "host_ip",
+      "host_network",
+      "namespace",
+      "node",
+      "pod",
+      "pod_ip",
+      "priority_class",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_info",
+    "help": "Information about an init container in a pod",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "container_id",
+      "image",
+      "image_id",
+      "image_spec",
+      "namespace",
+      "pod",
+      "restart_policy",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_resource_limits",
+    "help": "The number of CPU cores requested limit by an init container",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "node",
+      "pod",
+      "resource",
+      "uid",
+      "unit"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_resource_requests",
+    "help": "The number of CPU cores requested by an init container",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "node",
+      "pod",
+      "resource",
+      "uid",
+      "unit"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_status_last_terminated_reason",
+    "help": "Describes the last reason the init container was in terminated state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "reason",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_status_ready",
+    "help": "Describes whether the init containers readiness check succeeded",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_status_restarts_total",
+    "help": "The number of restarts for the init container",
+    "type": "counter",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_status_running",
+    "help": "Describes whether the init container is currently in running state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_status_terminated",
+    "help": "Describes whether the init container is currently in terminated state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_status_terminated_reason",
+    "help": "Describes the reason the init container is currently in terminated state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "reason",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_status_waiting",
+    "help": "Describes whether the init container is currently in waiting state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_init_container_status_waiting_reason",
+    "help": "Describes the reason the init container is currently in waiting state",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "pod",
+      "reason",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_ips",
+    "help": "Pod IP addresses",
+    "type": "gauge",
+    "labels": [
+      "ip",
+      "ip_family",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_POD_LABEL",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_nodeselectors",
+    "help": "Describes the Pod nodeSelectors",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "nodeselector_NODE_SELECTOR",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_overhead_cpu_cores",
+    "help": "The pod overhead in regards to cpu cores associated with running a pod",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_overhead_memory_bytes",
+    "help": "The pod overhead in regards to memory associated with running a pod",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_owner",
+    "help": "Information about the Pod's owner",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "owner_is_controller",
+      "owner_kind",
+      "owner_name",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_restart_policy",
+    "help": "Describes the restart policy in use by this pod",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "type",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_runtimeclass_name_info",
+    "help": "The runtimeclass associated with the pod",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_scheduler",
+    "help": "The scheduler for a pod",
+    "type": "gauge",
+    "labels": [
+      "name",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_service_account",
+    "help": "The service account for a pod",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "service_account",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_spec_volumes_persistentvolumeclaims_info",
+    "help": "Information about persistentvolumeclaim volumes in a pod",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "persistentvolumeclaim",
+      "pod",
+      "uid",
+      "volume"
+    ]
+  },
+  {
+    "name": "kube_pod_spec_volumes_persistentvolumeclaims_readonly",
+    "help": "Describes whether a persistentvolumeclaim is mounted read only",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "persistentvolumeclaim",
+      "pod",
+      "uid",
+      "volume"
+    ]
+  },
+  {
+    "name": "kube_pod_start_time",
+    "help": "Start time in unix timestamp for a pod",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_status_container_ready_time",
+    "help": "Time when the container of the pod entered Ready state",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_status_initialized_time",
+    "help": "Time when the pod is initialized",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_status_phase",
+    "help": "The pods current phase",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "phase",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_status_qos_class",
+    "help": "The pods current qosClass",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "qos_class",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_status_ready",
+    "help": "Describes whether the pod is ready to serve requests",
+    "type": "gauge",
+    "labels": [
+      "condition",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_status_ready_time",
+    "help": "Time when pod passed readiness probes",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_status_reason",
+    "help": "The pod status reasons",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "reason",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_status_scheduled",
+    "help": "Describes the status of the scheduling process for the pod",
+    "type": "gauge",
+    "labels": [
+      "condition",
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_status_scheduled_time",
+    "help": "Unix timestamp when pod moved into scheduled status",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_status_unschedulable",
+    "help": "Describes the unschedulable status for the pod",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "pod",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_pod_tolerations",
+    "help": "Information about the pod tolerations",
+    "type": "gauge",
+    "labels": [
+      "effect",
+      "key",
+      "namespace",
+      "operator",
+      "pod",
+      "toleration_seconds",
+      "uid",
+      "value"
+    ]
+  },
+  {
+    "name": "kube_poddisruptionbudget_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_PODDISRUPTIONBUDGET_ANNOTATION",
+      "namespace",
+      "poddisruptionbudget"
+    ]
+  },
+  {
+    "name": "kube_poddisruptionbudget_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "poddisruptionbudget"
+    ]
+  },
+  {
+    "name": "kube_poddisruptionbudget_info",
+    "help": "Information about PodDisruptionBudget",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "poddisruptionbudget"
+    ]
+  },
+  {
+    "name": "kube_poddisruptionbudget_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_PODDISRUPTIONBUDGET_LABEL",
+      "namespace",
+      "poddisruptionbudget"
+    ]
+  },
+  {
+    "name": "kube_poddisruptionbudget_status_current_healthy",
+    "help": "Current number of healthy pods",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "poddisruptionbudget"
+    ]
+  },
+  {
+    "name": "kube_poddisruptionbudget_status_desired_healthy",
+    "help": "Minimum desired number of healthy pods",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "poddisruptionbudget"
+    ]
+  },
+  {
+    "name": "kube_poddisruptionbudget_status_expected_pods",
+    "help": "Total number of pods counted by this disruption budget",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "poddisruptionbudget"
+    ]
+  },
+  {
+    "name": "kube_poddisruptionbudget_status_observed_generation",
+    "help": "Most recent generation observed when updating this PDB status",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "poddisruptionbudget"
+    ]
+  },
+  {
+    "name": "kube_poddisruptionbudget_status_pod_disruptions_allowed",
+    "help": "Number of pod disruptions that are allowed",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "poddisruptionbudget"
+    ]
+  },
+  {
+    "name": "kube_replicaset_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_REPLICASET_ANNOTATION",
+      "namespace",
+      "replicaset"
+    ]
+  },
+  {
+    "name": "kube_replicaset_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicaset"
+    ]
+  },
+  {
+    "name": "kube_replicaset_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_REPLICASET_LABEL",
+      "namespace",
+      "replicaset"
+    ]
+  },
+  {
+    "name": "kube_replicaset_metadata_generation",
+    "help": "Sequence number representing a specific generation of the desired state",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicaset"
+    ]
+  },
+  {
+    "name": "kube_replicaset_owner",
+    "help": "Information about the ReplicaSet's owner",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "owner_is_controller",
+      "owner_kind",
+      "owner_name",
+      "replicaset"
+    ]
+  },
+  {
+    "name": "kube_replicaset_spec_replicas",
+    "help": "Number of desired pods for a ReplicaSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicaset"
+    ]
+  },
+  {
+    "name": "kube_replicaset_status_fully_labeled_replicas",
+    "help": "The number of fully labeled replicas per ReplicaSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicaset"
+    ]
+  },
+  {
+    "name": "kube_replicaset_status_observed_generation",
+    "help": "The generation observed by the ReplicaSet controller",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicaset"
+    ]
+  },
+  {
+    "name": "kube_replicaset_status_ready_replicas",
+    "help": "The number of ready replicas per ReplicaSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicaset"
+    ]
+  },
+  {
+    "name": "kube_replicaset_status_replicas",
+    "help": "The number of replicas per ReplicaSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicaset"
+    ]
+  },
+  {
+    "name": "kube_replicationcontroller_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicationcontroller"
+    ]
+  },
+  {
+    "name": "kube_replicationcontroller_metadata_generation",
+    "help": "Sequence number representing a specific generation of the desired state",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicationcontroller"
+    ]
+  },
+  {
+    "name": "kube_replicationcontroller_owner",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "owner_is_controller",
+      "owner_kind",
+      "owner_name",
+      "replicationcontroller"
+    ]
+  },
+  {
+    "name": "kube_replicationcontroller_spec_replicas",
+    "help": "Number of desired pods for a ReplicationController",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicationcontroller"
+    ]
+  },
+  {
+    "name": "kube_replicationcontroller_status_available_replicas",
+    "help": "The number of available replicas per ReplicationController",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicationcontroller"
+    ]
+  },
+  {
+    "name": "kube_replicationcontroller_status_fully_labeled_replicas",
+    "help": "The number of fully labeled replicas per ReplicationController",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicationcontroller"
+    ]
+  },
+  {
+    "name": "kube_replicationcontroller_status_observed_generation",
+    "help": "The generation observed by the ReplicationController controller",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicationcontroller"
+    ]
+  },
+  {
+    "name": "kube_replicationcontroller_status_ready_replicas",
+    "help": "The number of ready replicas per ReplicationController",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicationcontroller"
+    ]
+  },
+  {
+    "name": "kube_replicationcontroller_status_replicas",
+    "help": "The number of replicas per ReplicationController",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "replicationcontroller"
+    ]
+  },
+  {
+    "name": "kube_resourcequota",
+    "help": "Information about resource quota",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "resource",
+      "resourcequota",
+      "type"
+    ]
+  },
+  {
+    "name": "kube_resourcequota_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_RESOURCE_QUOTA_ANNOTATION",
+      "namespace",
+      "resourcequota"
+    ]
+  },
+  {
+    "name": "kube_resourcequota_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "resourcequota"
+    ]
+  },
+  {
+    "name": "kube_resourcequota_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_RESOURCE_QUOTA_LABEL",
+      "namespace",
+      "resourcequota"
+    ]
+  },
+  {
+    "name": "kube_role_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "role"
+    ]
+  },
+  {
+    "name": "kube_role_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "role"
+    ]
+  },
+  {
+    "name": "kube_role_info",
+    "help": "Information about role",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "role"
+    ]
+  },
+  {
+    "name": "kube_role_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "role"
+    ]
+  },
+  {
+    "name": "kube_role_metadata_resource_version",
+    "help": "Resource version representing a specific version of the role",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "role"
+    ]
+  },
+  {
+    "name": "kube_rolebinding_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "rolebinding"
+    ]
+  },
+  {
+    "name": "kube_rolebinding_created",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "rolebinding"
+    ]
+  },
+  {
+    "name": "kube_rolebinding_info",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "rolebinding",
+      "roleref_kind",
+      "roleref_name"
+    ]
+  },
+  {
+    "name": "kube_rolebinding_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "rolebinding"
+    ]
+  },
+  {
+    "name": "kube_rolebinding_metadata_resource_version",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "rolebinding"
+    ]
+  },
+  {
+    "name": "kube_runtime_class_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "runtime_class"
+    ]
+  },
+  {
+    "name": "kube_runtime_class_info",
+    "help": "Information about RuntimeClass",
+    "type": "gauge",
+    "labels": [
+      "handler",
+      "runtime_class"
+    ]
+  },
+  {
+    "name": "kube_runtime_class_metadata_resource_version",
+    "help": "Resource version representing a specific version of the RuntimeClass",
+    "type": "gauge",
+    "labels": [
+      "runtime_class"
+    ]
+  },
+  {
+    "name": "kube_secret_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotations_SECRET_ANNOTATION",
+      "namespace",
+      "secret"
+    ]
+  },
+  {
+    "name": "kube_secret_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "secret"
+    ]
+  },
+  {
+    "name": "kube_secret_info",
+    "help": "Information about secret",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "secret"
+    ]
+  },
+  {
+    "name": "kube_secret_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_SECRET_LABEL",
+      "namespace",
+      "secret"
+    ]
+  },
+  {
+    "name": "kube_secret_metadata_resource_version",
+    "help": "Resource version representing a specific version of secret",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "secret"
+    ]
+  },
+  {
+    "name": "kube_secret_owner",
+    "help": "Information about the Secret's owner",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "owner_is_controller",
+      "owner_kind",
+      "owner_name",
+      "secret"
+    ]
+  },
+  {
+    "name": "kube_secret_type",
+    "help": "Type about secret",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "secret",
+      "type"
+    ]
+  },
+  {
+    "name": "kube_service_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_SERVICE_ANNOTATION",
+      "namespace",
+      "service",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_service_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "service",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_service_info",
+    "help": "Information about service",
+    "type": "gauge",
+    "labels": [
+      "cluster_ip",
+      "external_name",
+      "external_traffic_policy",
+      "load_balancer_ip",
+      "namespace",
+      "service",
+      "type"
+    ]
+  },
+  {
+    "name": "kube_service_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_SERVICE_LABEL",
+      "namespace",
+      "service",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_service_spec_external_ip",
+    "help": "Service external ips. One series for each ip",
+    "type": "gauge",
+    "labels": [
+      "external_ip",
+      "namespace",
+      "service",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_service_spec_type",
+    "help": "Type about service",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "service",
+      "type",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_service_status_load_balancer_ingress",
+    "help": "Service load balancer ingress status",
+    "type": "gauge",
+    "labels": [
+      "hostname",
+      "ip",
+      "namespace",
+      "service",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_serviceaccount_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_SERVICE_ACCOUNT_ANNOTATION",
+      "namespace",
+      "serviceaccount",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_serviceaccount_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "serviceaccount",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_serviceaccount_deleted",
+    "help": "Unix deletion timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "serviceaccount",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_serviceaccount_image_pull_secret",
+    "help": "Secret being referenced by a service account for the purpose of pulling images",
+    "type": "gauge",
+    "labels": [
+      "name",
+      "namespace",
+      "serviceaccount",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_serviceaccount_info",
+    "help": "Information about a service account",
+    "type": "gauge",
+    "labels": [
+      "automount_token",
+      "namespace",
+      "serviceaccount",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_serviceaccount_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_SERVICE_ACCOUNT_LABEL",
+      "namespace",
+      "serviceaccount",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_serviceaccount_secret",
+    "help": "Secret being referenced by a service account",
+    "type": "gauge",
+    "labels": [
+      "name",
+      "namespace",
+      "serviceaccount",
+      "uid"
+    ]
+  },
+  {
+    "name": "kube_statefulset_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_STATEFULSET_ANNOTATION",
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_STATEFULSET_LABEL",
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_metadata_generation",
+    "help": "Sequence number representing a specific generation of the desired state",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_ordinals_start",
+    "help": "Start ordinal of the StatefulSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_persistentvolumeclaim_retention_policy",
+    "help": "The PVC retention policy for each StatefulSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset",
+      "when_deleted",
+      "when_scaled"
+    ]
+  },
+  {
+    "name": "kube_statefulset_replicas",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_spec_replicas",
+    "help": "Number of desired pods for a StatefulSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_spec_servicename",
+    "help": "The StatefulSet service name",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "servicename",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_status_current_revision",
+    "help": "Indicates the current revision of a StatefulSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "revision",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_status_observed_generation",
+    "help": "The generation observed by the StatefulSet controller",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_status_replicas",
+    "help": "The number of replicas per StatefulSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_status_replicas_available",
+    "help": "The number of available replicas per StatefulSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_status_replicas_current",
+    "help": "The number of current replicas per StatefulSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_status_replicas_ready",
+    "help": "The number of ready replicas per StatefulSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_status_replicas_updated",
+    "help": "The number of updated replicas per StatefulSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_statefulset_status_update_revision",
+    "help": "Indicates the update revision of a StatefulSet",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "revision",
+      "statefulset"
+    ]
+  },
+  {
+    "name": "kube_storageclass_annotations",
+    "help": "Kubernetes annotations converted to Prometheus labels controlled via --metric-annotations-allowlist",
+    "type": "gauge",
+    "labels": [
+      "annotation_STORAGECLASS_ANNOTATION",
+      "storageclass"
+    ]
+  },
+  {
+    "name": "kube_storageclass_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "storageclass"
+    ]
+  },
+  {
+    "name": "kube_storageclass_info",
+    "help": "Information about storageclass",
+    "type": "gauge",
+    "labels": [
+      "provisioner",
+      "reclaim_policy",
+      "storageclass",
+      "volume_binding_mode"
+    ]
+  },
+  {
+    "name": "kube_storageclass_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_STORAGECLASS_LABEL",
+      "storageclass"
+    ]
+  },
+  {
+    "name": "kube_validatingwebhookconfiguration_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "validatingwebhookconfiguration"
+    ]
+  },
+  {
+    "name": "kube_validatingwebhookconfiguration_info",
+    "help": "Information about the ValidatingWebhookConfiguration",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "validatingwebhookconfiguration"
+    ]
+  },
+  {
+    "name": "kube_validatingwebhookconfiguration_metadata_resource_version",
+    "help": "Resource version representing a specific version of ValidatingWebhookConfiguration",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "validatingwebhookconfiguration"
+    ]
+  },
+  {
+    "name": "kube_validatingwebhookconfiguration_webhook_clientconfig_service",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "service_name",
+      "service_namespace",
+      "validatingwebhookconfiguration",
+      "webhook_name"
+    ]
+  },
+  {
+    "name": "kube_verticalpodautoscaler_info",
+    "help": "Information about VPA",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "target_api_version",
+      "target_kind",
+      "target_name",
+      "verticalpodautoscaler"
+    ]
+  },
+  {
+    "name": "kube_verticalpodautoscaler_labels",
+    "help": "Kubernetes labels converted to Prometheus labels",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "verticalpodautoscaler"
+    ]
+  },
+  {
+    "name": "kube_verticalpodautoscaler_spec_resourcepolicy_container_policies_maxallowed",
+    "help": "Maximum resources the container can use",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "resource",
+      "unit",
+      "verticalpodautoscaler"
+    ]
+  },
+  {
+    "name": "kube_verticalpodautoscaler_spec_resourcepolicy_container_policies_minallowed",
+    "help": "Minimum resources the container can use",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "resource",
+      "unit",
+      "verticalpodautoscaler"
+    ]
+  },
+  {
+    "name": "kube_verticalpodautoscaler_spec_updatepolicy_updatemode",
+    "help": "Update mode of the VPA",
+    "type": "gauge",
+    "labels": [
+      "namespace",
+      "update_mode",
+      "verticalpodautoscaler"
+    ]
+  },
+  {
+    "name": "kube_verticalpodautoscaler_status_recommendation_containerrecommendations_lowerbound",
+    "help": "Lower bound resources the container should use",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "resource",
+      "unit",
+      "verticalpodautoscaler"
+    ]
+  },
+  {
+    "name": "kube_verticalpodautoscaler_status_recommendation_containerrecommendations_target",
+    "help": "Target resources the container should use",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "resource",
+      "unit",
+      "verticalpodautoscaler"
+    ]
+  },
+  {
+    "name": "kube_verticalpodautoscaler_status_recommendation_containerrecommendations_uncappedtarget",
+    "help": "Target resources the container should use uncapped by min/max allowed",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "resource",
+      "unit",
+      "verticalpodautoscaler"
+    ]
+  },
+  {
+    "name": "kube_verticalpodautoscaler_status_recommendation_containerrecommendations_upperbound",
+    "help": "Upper bound resources the container should use",
+    "type": "gauge",
+    "labels": [
+      "container",
+      "namespace",
+      "resource",
+      "unit",
+      "verticalpodautoscaler"
+    ]
+  },
+  {
+    "name": "kube_volumeattachment_created",
+    "help": "Unix creation timestamp",
+    "type": "gauge",
+    "labels": [
+      "volumeattachment"
+    ]
+  },
+  {
+    "name": "kube_volumeattachment_info",
+    "help": "Information about volumeattachment",
+    "type": "gauge",
+    "labels": [
+      "attacher",
+      "node",
+      "pv",
+      "volumeattachment"
+    ]
+  },
+  {
+    "name": "kube_volumeattachment_labels",
+    "help": "Kubernetes labels converted to Prometheus labels controlled via --metric-labels-allowlist",
+    "type": "gauge",
+    "labels": [
+      "label_VOLUMEATTACHMENT_LABEL",
+      "volumeattachment"
+    ]
+  },
+  {
+    "name": "kube_volumeattachment_spec_source_persistentvolume",
+    "help": "",
+    "type": "gauge",
+    "labels": [
+      "volumeattachment",
+      "volumename"
+    ]
+  },
+  {
+    "name": "kube_volumeattachment_status_attached",
+    "help": "Indicates whether the VolumeAttachment is attached",
+    "type": "gauge",
+    "labels": [
+      "volumeattachment"
+    ]
+  },
+  {
+    "name": "kube_volumeattachment_status_attachment_metadata",
+    "help": "VolumeAttachment metadata",
+    "type": "gauge",
+    "labels": [
+      "metadata_name",
+      "metadata_value",
+      "volumeattachment"
+    ]
+  }
+]

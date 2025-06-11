@@ -1,0 +1,771 @@
+[
+  {
+    "name": "cadvisor_version_info",
+    "help": "A metric with a constant '1' value labeled by kernel version, OS version, docker version, cadvisor version & cadvisor revision.",
+    "type": "gauge",
+    "labels": [
+      "kernelVersion",
+      "osVersion",
+      "dockerVersion",
+      "cadvisorVersion",
+      "cadvisorRevision"
+    ]
+  },
+  {
+    "name": "container_blkio_device_usage_total",
+    "help": "Blkio Device bytes usage",
+    "type": "counter",
+    "labels": [
+      "device",
+      "major",
+      "minor",
+      "operation"
+    ]
+  },
+  {
+    "name": "container_cpu_cfs_periods_total",
+    "help": "Number of elapsed enforcement period intervals",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_cpu_cfs_throttled_periods_total",
+    "help": "Number of throttled period intervals",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_cpu_cfs_throttled_seconds_total",
+    "help": "Total time duration the container has been throttled",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_cpu_load_average_10s",
+    "help": "Value of container cpu load average over the last 10 seconds",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_cpu_load_d_average_10s",
+    "help": "Value of container cpu load.d average over the last 10 seconds.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_cpu_schedstat_run_periods_total",
+    "help": "Number of times processes of the cgroup have run on the cpu",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_cpu_schedstat_run_seconds_total",
+    "help": "Time duration the processes of the container have run on the CPU.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_cpu_schedstat_runqueue_seconds_total",
+    "help": "Time duration processes of the container have been waiting on a runqueue.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_cpu_system_seconds_total",
+    "help": "Cumulative system cpu time consumed in seconds",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_cpu_usage_seconds_total",
+    "help": "Cumulative cpu time consumed in seconds",
+    "type": "counter",
+    "labels": [
+      "cpu"
+    ]
+  },
+  {
+    "name": "container_cpu_user_seconds_total",
+    "help": "Cumulative user cpu time consumed in seconds",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_file_descriptors",
+    "help": "Number of open file descriptors for the container.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_fs_inodes_free",
+    "help": "Number of available Inodes",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_inodes_total",
+    "help": "Number of Inodes",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_io_current",
+    "help": "Number of I/Os currently in progress",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_io_time_seconds_total",
+    "help": "Cumulative count of seconds spent doing I/Os",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_io_time_weighted_seconds_total",
+    "help": "Cumulative weighted I/O time in seconds",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_limit_bytes",
+    "help": "Number of bytes that can be consumed by the container on this filesystem",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_read_seconds_total",
+    "help": "Cumulative count of seconds spent reading",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_reads_bytes_total",
+    "help": "Cumulative count of bytes read",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_reads_merged_total",
+    "help": "Cumulative count of reads merged",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_reads_total",
+    "help": "Cumulative count of reads completed",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_sector_reads_total",
+    "help": "Cumulative count of sector reads completed",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_sector_writes_total",
+    "help": "Cumulative count of sector writes completed",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_usage_bytes",
+    "help": "Number of bytes that are consumed by the container on this filesystem",
+    "type": "gauge",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_write_seconds_total",
+    "help": "Cumulative count of seconds spent writing",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_writes_bytes_total",
+    "help": "Cumulative count of bytes written",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_writes_merged_total",
+    "help": "Cumulative count of writes merged",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_fs_writes_total",
+    "help": "Cumulative count of writes completed",
+    "type": "counter",
+    "labels": [
+      "device"
+    ]
+  },
+  {
+    "name": "container_hugetlb_failcnt",
+    "help": "Number of hugepage usage hits limits",
+    "type": "counter",
+    "labels": [
+      "pagesize"
+    ]
+  },
+  {
+    "name": "container_hugetlb_max_usage_bytes",
+    "help": "Maximum hugepage usage recorded in bytes",
+    "type": "gauge",
+    "labels": [
+      "pagesize"
+    ]
+  },
+  {
+    "name": "container_hugetlb_usage_bytes",
+    "help": "Current hugepage usage in bytes",
+    "type": "gauge",
+    "labels": [
+      "pagesize"
+    ]
+  },
+  {
+    "name": "container_last_seen",
+    "help": "Last time a container was seen by the exporter",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_llc_occupancy_bytes",
+    "help": "Last level cache usage statistics for container counted with RDT Memory Bandwidth Monitoring (MBM).",
+    "type": "gauge",
+    "labels": [
+      "node_id"
+    ]
+  },
+  {
+    "name": "container_memory_bandwidth_bytes",
+    "help": "Total memory bandwidth usage statistics for container counted with RDT Memory Bandwidth Monitoring (MBM).",
+    "type": "gauge",
+    "labels": [
+      "node_id"
+    ]
+  },
+  {
+    "name": "container_memory_bandwidth_local_bytes",
+    "help": "Local memory bandwidth usage statistics for container counted with RDT Memory Bandwidth Monitoring (MBM).",
+    "type": "gauge",
+    "labels": [
+      "node_id"
+    ]
+  },
+  {
+    "name": "container_memory_cache",
+    "help": "Number of bytes of page cache memory.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_memory_failcnt",
+    "help": "Number of memory usage hits limits",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_memory_failures_total",
+    "help": "Cumulative count of memory allocation failures",
+    "type": "counter",
+    "labels": [
+      "failure_type",
+      "scope"
+    ]
+  },
+  {
+    "name": "container_memory_kernel_usage",
+    "help": "Size of kernel memory allocated in bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_memory_mapped_file",
+    "help": "Size of memory mapped files in bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_memory_max_usage_bytes",
+    "help": "Maximum memory usage recorded in bytes",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_memory_migrate",
+    "help": "Memory migrate status.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_memory_numa_pages",
+    "help": "Number of used pages per NUMA node",
+    "type": "gauge",
+    "labels": [
+      "type",
+      "scope",
+      "node"
+    ]
+  },
+  {
+    "name": "container_memory_rss",
+    "help": "Size of RSS in bytes",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_memory_swap",
+    "help": "Container swap usage in bytes",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_memory_total_active_file_bytes",
+    "help": "Current total active file in bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_memory_total_inactive_file_bytes",
+    "help": "Current total inactive file in bytes.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_memory_usage_bytes",
+    "help": "Current memory usage in bytes, including all memory regardless of when it was accessed",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_memory_working_set_bytes",
+    "help": "Current working set in bytes",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_network_advance_tcp_stats_total",
+    "help": "advance tcp connections statistic for container",
+    "type": "gauge",
+    "labels": [
+      "tcp_state"
+    ]
+  },
+  {
+    "name": "container_network_receive_bytes_total",
+    "help": "Cumulative count of bytes received",
+    "type": "counter",
+    "labels": [
+      "interface"
+    ]
+  },
+  {
+    "name": "container_network_receive_errors_total",
+    "help": "Cumulative count of errors encountered while receiving",
+    "type": "counter",
+    "labels": [
+      "interface"
+    ]
+  },
+  {
+    "name": "container_network_receive_packets_dropped_total",
+    "help": "Cumulative count of packets dropped while receiving",
+    "type": "counter",
+    "labels": [
+      "interface"
+    ]
+  },
+  {
+    "name": "container_network_receive_packets_total",
+    "help": "Cumulative count of packets received",
+    "type": "counter",
+    "labels": [
+      "interface"
+    ]
+  },
+  {
+    "name": "container_network_tcp6_usage_total",
+    "help": "tcp6 connection usage statistic for container",
+    "type": "gauge",
+    "labels": [
+      "tcp_state"
+    ]
+  },
+  {
+    "name": "container_network_tcp_usage_total",
+    "help": "tcp connection usage statistic for container",
+    "type": "gauge",
+    "labels": [
+      "tcp_state"
+    ]
+  },
+  {
+    "name": "container_network_transmit_bytes_total",
+    "help": "Cumulative count of bytes transmitted",
+    "type": "counter",
+    "labels": [
+      "interface"
+    ]
+  },
+  {
+    "name": "container_network_transmit_errors_total",
+    "help": "Cumulative count of errors encountered while transmitting",
+    "type": "counter",
+    "labels": [
+      "interface"
+    ]
+  },
+  {
+    "name": "container_network_transmit_packets_dropped_total",
+    "help": "Cumulative count of packets dropped while transmitting",
+    "type": "counter",
+    "labels": [
+      "interface"
+    ]
+  },
+  {
+    "name": "container_network_transmit_packets_total",
+    "help": "Cumulative count of packets transmitted",
+    "type": "counter",
+    "labels": [
+      "interface"
+    ]
+  },
+  {
+    "name": "container_network_udp6_usage_total",
+    "help": "udp6 connection usage statistic for container",
+    "type": "gauge",
+    "labels": [
+      "udp_state"
+    ]
+  },
+  {
+    "name": "container_network_udp_usage_total",
+    "help": "udp connection usage statistic for container",
+    "type": "gauge",
+    "labels": [
+      "udp_state"
+    ]
+  },
+  {
+    "name": "container_oom_events_total",
+    "help": "Count of out of memory events observed for the container",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_perf_events_scaling_ratio",
+    "help": "Perf event metric scaling ratio.",
+    "type": "gauge",
+    "labels": [
+      "cpu",
+      "event"
+    ]
+  },
+  {
+    "name": "container_perf_events_total",
+    "help": "Perf event metric.",
+    "type": "counter",
+    "labels": [
+      "cpu",
+      "event"
+    ]
+  },
+  {
+    "name": "container_perf_uncore_events_scaling_ratio",
+    "help": "Perf uncore event metric scaling ratio.",
+    "type": "gauge",
+    "labels": [
+      "socket",
+      "event",
+      "pmu"
+    ]
+  },
+  {
+    "name": "container_perf_uncore_events_total",
+    "help": "Perf uncore event metric.",
+    "type": "counter",
+    "labels": [
+      "socket",
+      "event",
+      "pmu"
+    ]
+  },
+  {
+    "name": "container_pressure_cpu_stalled_seconds_total",
+    "help": "Total time duration no tasks in the container could make progress due to CPU congestion.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_pressure_cpu_waiting_seconds_total",
+    "help": "Total time duration tasks in the container have waited due to CPU congestion.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_pressure_io_stalled_seconds_total",
+    "help": "Total time duration no tasks in the container could make progress due to IO congestion.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_pressure_io_waiting_seconds_total",
+    "help": "Total time duration tasks in the container have waited due to IO congestion.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_pressure_memory_stalled_seconds_total",
+    "help": "Total time duration no tasks in the container could make progress due to memory congestion.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_pressure_memory_waiting_seconds_total",
+    "help": "Total time duration tasks in the container have waited due to memory congestion.",
+    "type": "counter",
+    "labels": []
+  },
+  {
+    "name": "container_processes",
+    "help": "Number of processes running inside the container.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_referenced_bytes",
+    "help": "Container referenced bytes during last measurements cycle",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_scrape_error",
+    "help": "1 if there was an error while getting container metrics, 0 otherwise",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_sockets",
+    "help": "Number of open sockets for the container.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_spec_cpu_period",
+    "help": "CPU period of the container.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_spec_cpu_quota",
+    "help": "CPU quota of the container.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_spec_cpu_shares",
+    "help": "CPU share of the container.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_spec_memory_limit_bytes",
+    "help": "Memory limit for the container.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_spec_memory_reservation_limit_bytes",
+    "help": "Memory reservation limit for the container.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_spec_memory_swap_limit_bytes",
+    "help": "Memory swap limit for the container.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_start_time_seconds",
+    "help": "Start time of the container since unix epoch in seconds.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_tasks_state",
+    "help": "Number of tasks in given state",
+    "type": "gauge",
+    "labels": [
+      "state"
+    ]
+  },
+  {
+    "name": "container_threads",
+    "help": "Number of threads running inside the container",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_threads_max",
+    "help": "Maximum number of threads allowed inside the container, infinity if value is zero",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "container_ulimits_soft",
+    "help": "Soft ulimit values for the container root process. Unlimited if -1, except priority and nice",
+    "type": "gauge",
+    "labels": [
+      "ulimit"
+    ]
+  },
+  {
+    "name": "machine_cpu_cache_capacity_bytes",
+    "help": "Cache size in bytes assigned to NUMA node and CPU core.",
+    "type": "gauge",
+    "labels": [
+      "node_id",
+      "core_id",
+      "type",
+      "level"
+    ]
+  },
+  {
+    "name": "machine_cpu_cores",
+    "help": "Number of logical CPU cores.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "machine_cpu_physical_cores",
+    "help": "Number of physical CPU cores.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "machine_cpu_sockets",
+    "help": "Number of CPU sockets.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "machine_dimm_capacity_bytes",
+    "help": "Total RAM DIMM capacity (all types memory modules) value labeled by dimm type.",
+    "type": "gauge",
+    "labels": [
+      "type"
+    ]
+  },
+  {
+    "name": "machine_dimm_count",
+    "help": "Number of RAM DIMM (all types memory modules) value labeled by dimm type.",
+    "type": "gauge",
+    "labels": [
+      "type"
+    ]
+  },
+  {
+    "name": "machine_memory_bytes",
+    "help": "Amount of memory installed on the machine.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "machine_node_distance",
+    "help": "Distance between NUMA node and target NUMA node.",
+    "type": "gauge",
+    "labels": [
+      "node_id",
+      "target_node_id"
+    ]
+  },
+  {
+    "name": "machine_node_hugepages_count",
+    "help": "Numer of hugepages assigned to NUMA node.",
+    "type": "gauge",
+    "labels": [
+      "node_id",
+      "page_size"
+    ]
+  },
+  {
+    "name": "machine_node_memory_capacity_bytes",
+    "help": "Amount of memory assigned to NUMA node.",
+    "type": "gauge",
+    "labels": [
+      "node_id"
+    ]
+  },
+  {
+    "name": "machine_nvm_avg_power_budget_watts",
+    "help": "NVM power budget.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "machine_nvm_capacity",
+    "help": "NVM capacity value labeled by NVM mode (memory mode or app direct mode).",
+    "type": "gauge",
+    "labels": [
+      "mode"
+    ]
+  },
+  {
+    "name": "machine_scrape_error",
+    "help": "1 if there was an error while getting machine metrics, 0 otherwise.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "machine_swap_bytes",
+    "help": "Amount of swap memory available on the machine.",
+    "type": "gauge",
+    "labels": []
+  },
+  {
+    "name": "machine_thread_siblings_count",
+    "help": "Number of CPU thread siblings.",
+    "type": "gauge",
+    "labels": [
+      "node_id",
+      "core_id",
+      "thread_id"
+    ]
+  }
+]
