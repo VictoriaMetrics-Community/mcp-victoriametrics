@@ -135,20 +135,45 @@ npx -y @smithery/cli install @VictoriaMetrics-Community/mcp-victoriametrics --cl
 
 MCP Server for VictoriaMetrics is configured via environment variables:
 
-| Variable                                 | Description                                                                                               | Required                               | Default | Allowed values         |
-|------------------------------------------|-----------------------------------------------------------------------------------------------------------|----------------------------------------|---------|------------------------|
-| `VM_INSTANCE_ENTRYPOINT` / `VMC_API_KEY` | URL to VictoriaMetrics instance                                                                           | Yes (if you don't use `VMC_API_KEY`)   | - | -                      |
-| `VM_INSTANCE_TYPE`                       | Type of VictoriaMetrics instance                                                                          | Yes (if you don't use ``VMC_API_KEY``) | - | `single`, `cluster`    |
-| `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API                                                              | No                                     | - | -                      |
-| `VMC_API_KEY`                            | [API key from VictoriaMetrics Cloud Console](https://docs.victoriametrics.com/victoriametrics-cloud/api/) | No                                     | - | -                      |
-| `MCP_SERVER_MODE`                        | Server operation mode                                                                                     | No                                     | `stdio` | `stdio`, `sse`, `http` |
-| `MCP_LISTEN_ADDR`                        | Address for SSE or HTTP server to listen on                                                               | No                                     | `localhost:8080` | -                      |
-| `MCP_DISABLED_TOOLS`                     | Comma-separated list of tools to disable                                                                  | No                                     | - | -                      |
+| Variable                                 | Description                                              | Required                               | Default          | Allowed values         |
+|------------------------------------------|----------------------------------------------------------|----------------------------------------|------------------|------------------------|
+| `VM_INSTANCE_ENTRYPOINT` / `VMC_API_KEY` | URL to VictoriaMetrics instance                          | Yes (if you don't use `VMC_API_KEY`)   | -                | -                      |
+| `VM_INSTANCE_TYPE`                       | Type of VictoriaMetrics instance                         | Yes (if you don't use ``VMC_API_KEY``) | -                | `single`, `cluster`    |
+| `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API             | No                                     | -                | -                      |
+| `VMC_API_KEY`                            | [API key from VictoriaMetrics Cloud Console](https://docs.victoriametrics.com/victoriametrics-cloud/api/)        | No                                     | -                | -                      |
+| `MCP_SERVER_MODE`                        | Server operation mode. See [Modes](#modes) for details.  | No                                     | `stdio`          | `stdio`, `sse`, `http` |
+| `MCP_LISTEN_ADDR`                        | Address for SSE or HTTP server to listen on              | No                                     | `localhost:8080` | -                      |
+| `MCP_DISABLED_TOOLS`                     | Comma-separated list of tools to disable                 | No                                     | -                | -                      |
 
 You can use two options to connect to your VictoriaMetrics instance:
 
 - Using `VM_INSTANCE_ENTRYPOINT` + `VM_INSTANCE_TYPE` + `VM_INSTANCE_BEARER_TOKEN` (optional) environment variables to connect to any single-node or cluster instance of VictoriaMetrics.
 - Using `VMC_API_KEY` environment variable to work with your [VictoriaMetrics Cloud](https://victoriametrics.com/products/cloud/) instances.
+
+## Modes
+
+MCP Server supports the following modes of operation (transports):
+
+- `stdio` - Standard input/output mode, where the server reads commands from standard input and writes responses to standard output. This is the default mode and is suitable for local servers.
+- `sse` - Server-Sent Events. Server will expose the `/sse` and `/message` endpoints for SSE connections.
+- `http` - Streamable HTTP. Server will expose the `/mcp` endpoint for HTTP connections.
+
+More info about traqnsports you can find in MCP docs:
+
+- [Core concepts -> Transports](https://modelcontextprotocol.io/docs/concepts/transports)
+- [Specifications -> Transports](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports)
+
+## Endpoints
+
+In SSE and HTTP modes the MCP server provides the following endpoints:
+
+| Endpoint | Description |
+|----------|-------------|
+| `/sse` + `/message`      | Endpoints for messages in SSE mode (for MCP clients that support SSE) |
+| `/mcp`      | HTTP endpoint for streaming messages in HTTP mode (for MCP clients that support Streamable HTTP) |
+| `/metrics`   | Metrics in Prometheus format for monitoring the MCP server |
+| `/health/liveness`       | Liveness check endpoint to ensure the server is running |
+| `/health/readiness`      | Readiness check endpoint to ensure the server is ready to accept requests |
 
 ### Сonfiguration examples
 
