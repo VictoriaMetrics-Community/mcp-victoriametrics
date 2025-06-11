@@ -164,7 +164,7 @@ You can use two options to connect to your VictoriaMetrics instance:
 - Using `VM_INSTANCE_ENTRYPOINT` + `VM_INSTANCE_TYPE` + `VM_INSTANCE_BEARER_TOKEN` (optional) environment variables to connect to any single-node or cluster instance of VictoriaMetrics.
 - Using `VMC_API_KEY` environment variable to work with your [VictoriaMetrics Cloud](https://victoriametrics.com/products/cloud/) instances.
 
-## Modes
+### Modes
 
 MCP Server supports the following modes of operation (transports):
 
@@ -176,18 +176,6 @@ More info about traqnsports you can find in MCP docs:
 
 - [Core concepts -> Transports](https://modelcontextprotocol.io/docs/concepts/transports)
 - [Specifications -> Transports](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports)
-
-## Endpoints
-
-In SSE and HTTP modes the MCP server provides the following endpoints:
-
-| Endpoint | Description |
-|----------|-------------|
-| `/sse` + `/message`      | Endpoints for messages in SSE mode (for MCP clients that support SSE) |
-| `/mcp`      | HTTP endpoint for streaming messages in HTTP mode (for MCP clients that support Streamable HTTP) |
-| `/metrics`   | Metrics in Prometheus format for monitoring the MCP server |
-| `/health/liveness`       | Liveness check endpoint to ensure the server is running |
-| `/health/readiness`      | Readiness check endpoint to ensure the server is ready to accept requests |
 
 ### Сonfiguration examples
 
@@ -209,6 +197,18 @@ export VMC_API_KEY="<you-api-key>"
 export MCP_SERVER_MODE="sse"
 export MCP_LISTEN_ADDR="0.0.0.0:8080"
 ```
+
+## Endpoints
+
+In SSE and HTTP modes the MCP server provides the following endpoints:
+
+| Endpoint | Description |
+|----------|-------------|
+| `/sse` + `/message`      | Endpoints for messages in SSE mode (for MCP clients that support SSE) |
+| `/mcp`      | HTTP endpoint for streaming messages in HTTP mode (for MCP clients that support Streamable HTTP) |
+| `/metrics`   | Metrics in Prometheus format for monitoring the MCP server |
+| `/health/liveness`       | Liveness check endpoint to ensure the server is running |
+| `/health/readiness`      | Readiness check endpoint to ensure the server is ready to accept requests |
 
 ## Setup in clients
 
