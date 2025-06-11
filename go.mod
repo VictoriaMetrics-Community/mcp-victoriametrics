@@ -4,10 +4,11 @@ go 1.24.3
 
 require (
 	github.com/VictoriaMetrics/VictoriaMetrics v1.119.0
+	github.com/VictoriaMetrics/metrics v1.37.0
 	github.com/VictoriaMetrics/metricsql v0.84.5
 	github.com/VictoriaMetrics/victoriametrics-cloud-api-go v0.0.2
 	github.com/blevesearch/bleve/v2 v2.5.2
-	github.com/mark3labs/mcp-go v0.31.0
+	github.com/mark3labs/mcp-go v0.32.0
 	github.com/tmc/langchaingo v0.1.13
 	gopkg.in/yaml.v2 v2.4.0
 )
@@ -17,7 +18,6 @@ require (
 	github.com/RoaringBitmap/roaring/v2 v2.5.0 // indirect
 	github.com/VictoriaMetrics/easyproto v0.1.4 // indirect
 	github.com/VictoriaMetrics/fastcache v1.12.5 // indirect
-	github.com/VictoriaMetrics/metrics v1.37.0 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/bits-and-blooms/bitset v1.22.0 // indirect
 	github.com/blevesearch/bleve_index_api v1.2.8 // indirect

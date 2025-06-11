@@ -465,7 +465,7 @@ func (s *StreamableHTTPServer) handleDelete(w http.ResponseWriter, r *http.Reque
 	}
 
 	// remove the session relateddata from the sessionToolsStore
-	s.sessionTools.set(sessionID, nil)
+	s.sessionTools.delete(sessionID)
 
 	// remove current session's requstID information
 	s.sessionRequestIDs.Delete(sessionID)
@@ -531,6 +531,12 @@ func (s *sessionToolsStore) set(sessionID string, tools map[string]ServerTool) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.tools[sessionID] = tools
+}
+
+func (s *sessionToolsStore) delete(sessionID string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.tools, sessionID)
 }
 
 // streamableHttpSession is a session for streamable-http transport
@@ -608,9 +614,7 @@ func (s *StatelessSessionIdManager) Generate() string {
 	return ""
 }
 func (s *StatelessSessionIdManager) Validate(sessionID string) (isTerminated bool, err error) {
-	if sessionID != "" {
-		return false, fmt.Errorf("session id is not allowed to be set when stateless")
-	}
+	// In stateless mode, ignore session IDs completely - don't validate or reject them
 	return false, nil
 }
 func (s *StatelessSessionIdManager) Terminate(sessionID string) (isNotAllowed bool, err error) {
