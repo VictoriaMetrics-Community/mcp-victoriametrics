@@ -35,6 +35,20 @@ And please note the fact that the quality of the MCP Server and its responses de
 
 You can also combine the MCP server with other observability or doc search related MCP Servers and get even more powerful results.
 
+## Try without installation
+
+There is a publicly available instance of the VictoriaMetrics MCP Server that you can use to test the features without installing it: 
+
+```
+https://play-mcp.victoriametrics.com/sse
+```
+
+It's available in [Server-Sent Events (SSE)](#modes) mode and configured to work with [Public VictoriaMetrics Playground](https://play.victoriametrics.com).
+
+Here is example of configuration in [Claude Desktop](https://claude.ai/download):
+
+![image](https://github.com/user-attachments/assets/aa0a1445-cd98-423a-8a66-0396cba8874e)
+
 ## Requirements
 
 - [VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/) or [VictoriaMetrics Cloud](https://docs.victoriametrics.com/victoriametrics-cloud/) instance ([single-node](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) or [cluster](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/))
