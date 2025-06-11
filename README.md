@@ -76,7 +76,7 @@ tar axvf mcp-victoriametrics_Linux_x86_64.tar.gz
 
 ### Docker
 
-You can run the MCP Helm server using Docker. 
+You can run VictoriaMetrics MCP Server using Docker. 
 
 This is the easiest way to get started without needing to install Go or build from source.
 
