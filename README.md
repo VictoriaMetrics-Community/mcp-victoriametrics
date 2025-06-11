@@ -590,6 +590,10 @@ During this dialog, the assistant was using the following tools:
 
 But you can use any other tools and combine them in your own way.
 
+## Monitoring
+
+In [SSE and HTTP modes](#modes) the MCP Server provides metrics in Prometheus format (see [endpoints](#endpoints)) and you can find [in repo simple grafana dashboard](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/blob/main/dashboard/mcp-victoriametrics-grafana.json) for these metrics. 
+
 ## Roadmap
 
 - [x] Support "Prettify query" tool (done in [`v0.0.5`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.5))
