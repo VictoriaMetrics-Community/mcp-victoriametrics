@@ -508,12 +508,12 @@ func getSyntaxTree(
 		result["type"] = "MetricExpr"
 		labelFilterss := make([]any, 0)
 		for _, labelFilters := range n.LabelFilterss {
-			fs := make([]any, 0)
+			fss := make([]any, 0)
 			for _, filter := range labelFilters {
 				fsInfo := getSyntaxTree(&filter, types, functions, metrics)
-				fs = append(fs, fsInfo)
+				fss = append(fss, fsInfo)
 			}
-			labelFilterss = append(labelFilterss, fs)
+			labelFilterss = append(labelFilterss, fss)
 		}
 		result["label_filters"] = labelFilterss
 	case *metricsql.ModifierExpr:
