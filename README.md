@@ -357,9 +357,7 @@ See [Windsurf MCP docs](https://docs.windsurf.com/windsurf/mcp) for more info.
 
 ### Using Docker instead of binary
 
-### Run with docker
-
-You can run the MCP Helm server using Docker instead of local binary.
+You can run VictoriaMetrics MCP server using Docker instead of local binary.
 
 You should replace run command in configuration examples above in the following way:
 
