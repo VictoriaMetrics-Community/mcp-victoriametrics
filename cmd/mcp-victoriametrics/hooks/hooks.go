@@ -50,7 +50,7 @@ func New(ms *metrics.Set) *server.Hooks {
 
 	hooks.AddAfterReadResource(func(_ context.Context, _ any, message *mcp.ReadResourceRequest, _ *mcp.ReadResourceResult) {
 		ms.GetOrCreateCounter(fmt.Sprintf(
-			`mcp_victoriametrics_read_resource_total{name="%s"}`,
+			`mcp_victoriametrics_read_resource_total{uri="%s"}`,
 			message.Params.URI,
 		)).Inc()
 	})
