@@ -40,14 +40,14 @@ You can also combine the MCP server with other observability or doc search relat
 There is a publicly available instance of the VictoriaMetrics MCP Server that you can use to test the features without installing it: 
 
 ```
-https://play-mcp.victoriametrics.com/sse
+https://play-mcp.victoriametrics.com/mcp
 ```
 
-It's available in [Server-Sent Events (SSE)](#modes) mode and configured to work with [Public VictoriaMetrics Playground](https://play.victoriametrics.com).
+It's available in [Streamable HTTP](#modes) mode and configured to work with [Public VictoriaMetrics Playground](https://play.victoriametrics.com).
 
-Here is example of configuration in [Claude Desktop](https://claude.ai/download):
+Here is example of configuration for [Claude Desktop](https://claude.ai/download):
 
-![image](https://github.com/user-attachments/assets/aa0a1445-cd98-423a-8a66-0396cba8874e)
+![image](https://github.com/user-attachments/assets/b9cca3ff-f4c3-47bc-aac7-9359f12e858e)
 
 ## Requirements
 
