@@ -56,6 +56,9 @@ Here is example of configuration for [Claude Desktop](https://claude.ai/download
 
 ## Installation
 
+In case of VictoriaMetrics Cluster you need to provide the vmselect address (without tenant) in `VM_INSTANCE_ENTRYPOINT`
+For example `VM_INSTANCE_ENTRYPOINT=http://vmselect.local:8481` 
+
 ### Go
 
 ```bash
