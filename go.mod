@@ -4,7 +4,7 @@ go 1.24.4
 
 require (
 	github.com/VictoriaMetrics/VictoriaMetrics v1.119.0
-	github.com/VictoriaMetrics/metrics v1.37.0
+	github.com/VictoriaMetrics/metrics v1.38.0
 	github.com/VictoriaMetrics/metricsql v0.84.6
 	github.com/VictoriaMetrics/victoriametrics-cloud-api-go v0.0.2
 	github.com/blevesearch/bleve/v2 v2.5.2
