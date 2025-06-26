@@ -204,7 +204,7 @@ func getSelectURL(ctx context.Context, cfg *config.Config, tcr mcp.CallToolReque
 	return entrypointURL.JoinPath(append(args, path...)...).String(), nil
 }
 
-func GetTextBodyForRequest(req *http.Request, _ *config.Config) *mcp.CallToolResult {
+func GetTextBodyForRequest(req *http.Request, _ *config.Config, f ...func(s string) (string, error)) *mcp.CallToolResult {
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("failed to do request: %v", err))
@@ -217,7 +217,13 @@ func GetTextBodyForRequest(req *http.Request, _ *config.Config) *mcp.CallToolRes
 	if resp.StatusCode != http.StatusOK {
 		return mcp.NewToolResultError(fmt.Sprintf("unexpected response status code %v: %s", resp.StatusCode, string(body)))
 	}
-	return mcp.NewToolResultText(string(body))
+	result := string(body)
+	for _, fn := range f {
+		if result, err = fn(result); err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to process response body: %v", err))
+		}
+	}
+	return mcp.NewToolResultText(result)
 }
 
 type ToolReqParamType interface {

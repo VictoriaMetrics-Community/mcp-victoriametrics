@@ -2,8 +2,8 @@ cloud.google.com/go/compute/metadata v0.7.0 h1:PBWF+iiAerVNe8UCHxdOt6eHLVc3ydFeO
 cloud.google.com/go/compute/metadata v0.7.0/go.mod h1:j5MvL9PprKL39t166CoB1uVHfQMs4tFQZZcKwksXUjo=
 github.com/RoaringBitmap/roaring/v2 v2.5.0 h1:TJ45qCM7D7fIEBwKd9zhoR0/S1egfnSSIzLU1e1eYLY=
 github.com/RoaringBitmap/roaring/v2 v2.5.0/go.mod h1:FiJcsfkGje/nZBZgCu0ZxCPOKD/hVXDS2dXi7/eUFE0=
-github.com/VictoriaMetrics/VictoriaMetrics v1.119.0 h1:YX054hoLZdd5QLamiq2MzbQNlYQ/lej2hxNu4lgJqLU=
-github.com/VictoriaMetrics/VictoriaMetrics v1.119.0/go.mod h1:eMjkAG9cGZFEylVDbqQgJU58a94ehvUEs//3rpMAL84=
+github.com/VictoriaMetrics/VictoriaMetrics v1.120.0 h1:dLLDWQtD+J5rvFvvx1xJJ3IDWVtQV8qto4U9de9rV14=
+github.com/VictoriaMetrics/VictoriaMetrics v1.120.0/go.mod h1:3ei3a+s7lHOM33wjpDmhOMdUQpKcMBZ0Ub+6ORzYd/Y=
 github.com/VictoriaMetrics/easyproto v0.1.4 h1:r8cNvo8o6sR4QShBXQd1bKw/VVLSQma/V2KhTBPf+Sc=
 github.com/VictoriaMetrics/easyproto v0.1.4/go.mod h1:QlGlzaJnDfFd8Lk6Ci/fuLxfTo3/GThPs2KH23mv710=
 github.com/VictoriaMetrics/fastcache v1.12.5 h1:966OX9JjqYmDAFdp3wEXLwzukiHIm+GVlZHv6B8KW3k=
