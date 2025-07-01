@@ -614,6 +614,10 @@ In [SSE and HTTP modes](#modes) the MCP Server provides metrics in Prometheus fo
 - [ ] Tools for Alertmanager APIs [#6](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/issues/6)
 - [ ] Support for [metrics metadata](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/2974) in case of implementation in VictoriaMetrics
 
+## Mentions
+
+[<img src="https://github.com/user-attachments/assets/76355b76-8a54-487d-a7d9-0b64886938fb" alt="How to Use an AI Assistant with Your Monitoring System – VictoriaMetrics MCP Server" width="520px" />](https://www.youtube.com/watch?v=1k7xgbRi1k0)
+
 ## Disclaimer
 
 AI services and agents along with MCP servers like this cannot guarantee the accuracy, completeness and reliability of results.
