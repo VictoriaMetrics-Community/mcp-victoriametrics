@@ -17,7 +17,7 @@ import (
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/utils"
 )
 
-//go:embed vm/docs vmsite/content/blog
+//go:embed vm/content vmsite/content/blog
 var DocsDir embed.FS
 
 const (

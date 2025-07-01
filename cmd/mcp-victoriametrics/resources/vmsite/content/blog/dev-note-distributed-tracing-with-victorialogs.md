@@ -171,7 +171,7 @@ During implementation, we found that the time range filter has the greatest impa
 
 Therefore, when using VictoriaLogs as trace storage, it is optimal to configure specific lookbehind windows. For example, setting `metadata_lookbehind=3d` ensures that only service names from the past 3 days are retrieved.
 
-{{<image class="img" href="/blog/dev-note-distributed-tracing/lookbehind.webp" alt="Listing service names within lookbehind windows" >}}
+{{<image class="img original-img" href="/blog/dev-note-distributed-tracing/lookbehind.webp" alt="Listing service names within lookbehind windows" >}}
 
 Another example of optimization: When `trace_id_lookbehind_step=7d` is set, each lookup of trace spans by `trace_id` searches for data in 7-day increments. Once the relevant data is found within a given interval, the search stops and does not proceed to the next.
 
