@@ -179,7 +179,7 @@ func initFunctionsInfo() error {
 		textsplitter.WithChunkOverlap(4096),
 	)
 
-	mql, err := resources.DocsDir.ReadFile("vm/docs/victoriametrics/MetricsQL.md")
+	mql, err := resources.DocsDir.ReadFile("vm/content/victoriametrics/MetricsQL.md")
 	if err != nil {
 		return fmt.Errorf("error reading MetricsQL documentation: %w", err)
 	}
