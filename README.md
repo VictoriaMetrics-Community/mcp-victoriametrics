@@ -613,6 +613,7 @@ In [SSE and HTTP modes](#modes) the MCP Server provides metrics in Prometheus fo
 - [x] Enabling/disabling tools via configuration (done in [`v0.0.8`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.8))
 - [ ] Tools for Alertmanager APIs [#6](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/issues/6)
 - [ ] Support for [metrics metadata](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/2974) in case of implementation in VictoriaMetrics
+- [ ] Support authorization
 
 ## Mentions
 
