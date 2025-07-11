@@ -151,7 +151,8 @@ Try not to second guess information - if you don't know something or lack inform
 		mux.Handle(srv.CompleteMessagePath(), srv.MessageHandler())
 	case "http":
 		log.Printf("Starting server in HTTP mode on %s", c.ListenAddr())
-		srv := server.NewStreamableHTTPServer(s)
+		heartBeatOption := server.WithHeartbeatInterval(c.HeartbeatInterval())
+		srv := server.NewStreamableHTTPServer(s, heartBeatOption)
 		mux.Handle("/mcp", srv)
 	default:
 		log.Fatalf("Unknown server mode: %s", c.ServerMode())

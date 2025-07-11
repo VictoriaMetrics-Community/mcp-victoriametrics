@@ -4,6 +4,7 @@ import (
 	"net/url"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestInitConfig(t *testing.T) {
@@ -181,6 +182,33 @@ func TestInitConfig(t *testing.T) {
 		}
 		if !cfg.IsCluster() {
 			t.Error("Expected IsCluster() to be false")
+		}
+	})
+	// Test case 8: Heartbeat interval
+	t.Run("Correct heartbeat interval", func(t *testing.T) {
+		// Set environment variables
+		os.Setenv("VM_INSTANCE_ENTRYPOINT", "http://example.com")
+		os.Setenv("VM_INSTANCE_TYPE", "single")
+		os.Setenv("MCP_HEARTBEAT_INTERVAL", "30s")
+		// Initialize config
+		cfg, err := InitConfig()
+		if err != nil {
+			t.Fatalf("Expected no error, got: %v", err)
+		}
+		// Check values
+		if cfg.HeartbeatInterval() != 30*time.Second {
+			t.Errorf("Expected heartbeat interval to be 30 seconds, got: %d", cfg.HeartbeatInterval())
+		}
+	})
+	t.Run("Incorrect heartbeat interval", func(t *testing.T) {
+		// Set environment variables
+		os.Setenv("VM_INSTANCE_ENTRYPOINT", "http://example.com")
+		os.Setenv("VM_INSTANCE_TYPE", "single")
+		os.Setenv("MCP_HEARTBEAT_INTERVAL", "123")
+		// Initialize config
+		_, err := InitConfig()
+		if err != nil && err.Error() != "failed to parse MCP_HEARTBEAT_INTERVAL: time: missing unit in duration \"123\"" {
+			t.Errorf("Expected error 'invalid heartbeat interval: 123', got: %v", err)
 		}
 	})
 }
