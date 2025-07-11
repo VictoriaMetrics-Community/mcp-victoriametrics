@@ -599,6 +599,7 @@ In [SSE and HTTP modes](#modes) the MCP Server provides metrics in Prometheus fo
 - [x] Support "Explain query" tool (done in [`v0.0.6`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.6))
 - [x] Support CI pipeline for building and pushing multiarch docker images (done in [`v1.0.0`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v1.0.0))
 - [ ] Support tool for analysis of [Query execution statistics](https://docs.victoriametrics.com/victoriametrics/query-stats/)
+- [ ] Support vmanomaly
 - [x] Support tool for [unit-testing of alerting and recording rules](https://docs.victoriametrics.com/victoriametrics/vmalert-tool/) (done in [`v0.0.7`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.7))
 - [x] Support optional integration with [VictoriaMetrics Cloud](https://victoriametrics.com/products/cloud/) (via [API keys](https://docs.victoriametrics.com/victoriametrics-cloud/api/)) (done in [`v0.0.9`](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases/tag/v0.0.9))
 - [ ] Add some extra knowledge to server in addition to current documentation tool:
