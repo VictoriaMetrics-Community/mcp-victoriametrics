@@ -97,17 +97,17 @@ func toolRulesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolR
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	ruleNames, err := GetToolReqParam[[]string](tcr, "rule_names", false)
+	ruleNames, err := GetToolReqParam[[]any](tcr, "rule_names", false)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	ruleGroups, err := GetToolReqParam[[]string](tcr, "rule_groups", false)
+	ruleGroups, err := GetToolReqParam[[]any](tcr, "rule_groups", false)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	ruleFiles, err := GetToolReqParam[[]string](tcr, "rule_files", false)
+	ruleFiles, err := GetToolReqParam[[]any](tcr, "rule_files", false)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
@@ -127,15 +127,31 @@ func toolRulesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolR
 	if excludeAlerts {
 		q.Add("exclude_alerts", "true")
 	}
+
 	for _, ruleName := range ruleNames {
-		q.Add("rule_names", ruleName)
+		ruleNameStr, ok := ruleName.(string)
+		if !ok {
+			return mcp.NewToolResultError("rule_names element must be a string"), nil
+		}
+		q.Add("rule_name[]", ruleNameStr)
 	}
+
 	for _, ruleGroup := range ruleGroups {
-		q.Add("rule_groups", ruleGroup)
+		ruleGroupStr, ok := ruleGroup.(string)
+		if !ok {
+			return mcp.NewToolResultError("rule_groups element must be a string"), nil
+		}
+		q.Add("rule_group[]", ruleGroupStr)
 	}
+
 	for _, ruleFile := range ruleFiles {
-		q.Add("rule_files", ruleFile)
+		ruleFileStr, ok := ruleFile.(string)
+		if !ok {
+			return mcp.NewToolResultError("rule_files element must be a string"), nil
+		}
+		q.Add("file[]", ruleFileStr)
 	}
+
 	req.URL.RawQuery = q.Encode()
 
 	return GetTextBodyForRequest(req, cfg), nil
