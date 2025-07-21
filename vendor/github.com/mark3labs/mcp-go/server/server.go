@@ -317,6 +317,11 @@ func NewMCPServer(
 	return s
 }
 
+// GenerateInProcessSessionID generates a unique session ID for inprocess clients
+func (s *MCPServer) GenerateInProcessSessionID() string {
+	return GenerateInProcessSessionID()
+}
+
 // AddResources registers multiple resources at once
 func (s *MCPServer) AddResources(resources ...ServerResource) {
 	s.implicitlyRegisterResourceCapabilities()
