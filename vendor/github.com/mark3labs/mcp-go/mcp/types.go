@@ -761,6 +761,26 @@ const (
 	LoggingLevelEmergency LoggingLevel = "emergency"
 )
 
+var levelToInt = map[LoggingLevel]int{
+	LoggingLevelDebug:     0,
+	LoggingLevelInfo:      1,
+	LoggingLevelNotice:    2,
+	LoggingLevelWarning:   3,
+	LoggingLevelError:     4,
+	LoggingLevelCritical:  5,
+	LoggingLevelAlert:     6,
+	LoggingLevelEmergency: 7,
+}
+
+func (l LoggingLevel) ShouldSendTo(minLevel LoggingLevel) bool {
+	ia, oka := levelToInt[l]
+	ib, okb := levelToInt[minLevel]
+	if !oka || !okb {
+		return false
+	}
+	return ia >= ib
+}
+
 /* Sampling */
 
 const (
@@ -1062,4 +1082,47 @@ type ServerResult any
 
 type Named interface {
 	GetName() string
+}
+
+// MarshalJSON implements custom JSON marshaling for Content interface
+func MarshalContent(content Content) ([]byte, error) {
+	return json.Marshal(content)
+}
+
+// UnmarshalContent implements custom JSON unmarshaling for Content interface
+func UnmarshalContent(data []byte) (Content, error) {
+	var raw map[string]any
+	if err := json.Unmarshal(data, &raw); err != nil {
+		return nil, err
+	}
+
+	contentType, ok := raw["type"].(string)
+	if !ok {
+		return nil, fmt.Errorf("missing or invalid type field")
+	}
+
+	switch contentType {
+	case "text":
+		var content TextContent
+		err := json.Unmarshal(data, &content)
+		return content, err
+	case "image":
+		var content ImageContent
+		err := json.Unmarshal(data, &content)
+		return content, err
+	case "audio":
+		var content AudioContent
+		err := json.Unmarshal(data, &content)
+		return content, err
+	case "resource_link":
+		var content ResourceLink
+		err := json.Unmarshal(data, &content)
+		return content, err
+	case "resource":
+		var content EmbeddedResource
+		err := json.Unmarshal(data, &content)
+		return content, err
+	default:
+		return nil, fmt.Errorf("unknown content type: %s", contentType)
+	}
 }
