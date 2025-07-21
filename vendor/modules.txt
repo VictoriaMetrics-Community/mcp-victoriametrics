@@ -6,8 +6,12 @@ cloud.google.com/go/compute/metadata
 github.com/RoaringBitmap/roaring/v2
 github.com/RoaringBitmap/roaring/v2/internal
 github.com/RoaringBitmap/roaring/v2/roaring64
-# github.com/VictoriaMetrics/VictoriaMetrics v1.121.0
-## explicit; go 1.24.4
+# github.com/VictoriaMetrics/VictoriaLogs v0.0.0-20250714230749-82aca88cecd8
+## explicit; go 1.24.5
+github.com/VictoriaMetrics/VictoriaLogs/lib/logstorage
+github.com/VictoriaMetrics/VictoriaLogs/lib/prefixfilter
+# github.com/VictoriaMetrics/VictoriaMetrics v1.122.0
+## explicit; go 1.24.5
 github.com/VictoriaMetrics/VictoriaMetrics/app/victoria-metrics/test
 github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert-tool/unittest
 github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/config
@@ -84,12 +88,10 @@ github.com/VictoriaMetrics/VictoriaMetrics/lib/ingestserver/opentsdb
 github.com/VictoriaMetrics/VictoriaMetrics/lib/ingestserver/opentsdbhttp
 github.com/VictoriaMetrics/VictoriaMetrics/lib/leveledbytebufferpool
 github.com/VictoriaMetrics/VictoriaMetrics/lib/logger
-github.com/VictoriaMetrics/VictoriaMetrics/lib/logstorage
 github.com/VictoriaMetrics/VictoriaMetrics/lib/lrucache
 github.com/VictoriaMetrics/VictoriaMetrics/lib/memory
 github.com/VictoriaMetrics/VictoriaMetrics/lib/mergeset
 github.com/VictoriaMetrics/VictoriaMetrics/lib/netutil
-github.com/VictoriaMetrics/VictoriaMetrics/lib/prefixfilter
 github.com/VictoriaMetrics/VictoriaMetrics/lib/procutil
 github.com/VictoriaMetrics/VictoriaMetrics/lib/promauth
 github.com/VictoriaMetrics/VictoriaMetrics/lib/prompb
@@ -288,7 +290,7 @@ github.com/blevesearch/zapx/v15
 # github.com/blevesearch/zapx/v16 v16.2.4
 ## explicit; go 1.23
 github.com/blevesearch/zapx/v16
-# github.com/bmatcuk/doublestar/v4 v4.8.1
+# github.com/bmatcuk/doublestar/v4 v4.9.0
 ## explicit; go 1.16
 github.com/bmatcuk/doublestar/v4
 # github.com/cespare/xxhash/v2 v2.3.0
@@ -417,7 +419,9 @@ go.etcd.io/bbolt
 go.etcd.io/bbolt/errors
 go.etcd.io/bbolt/internal/common
 go.etcd.io/bbolt/internal/freelist
-# golang.org/x/net v0.41.0
+# go.yaml.in/yaml/v2 v2.4.2
+## explicit; go 1.15
+# golang.org/x/net v0.42.0
 ## explicit; go 1.23.0
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
@@ -434,13 +438,13 @@ golang.org/x/oauth2/google/internal/stsexchange
 golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
-# golang.org/x/sys v0.33.0
+# golang.org/x/sys v0.34.0
 ## explicit; go 1.23.0
 golang.org/x/sys/cpu
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
-# golang.org/x/text v0.26.0
+# golang.org/x/text v0.27.0
 ## explicit; go 1.23.0
 golang.org/x/text/unicode/rangetable
 # google.golang.org/protobuf v1.36.6
