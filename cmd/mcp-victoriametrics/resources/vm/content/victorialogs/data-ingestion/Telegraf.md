@@ -12,6 +12,7 @@ aliases:
   - /victorialogs/data-ingestion/Telegraf.html
 ---
 VictoriaLogs supports given below Telegraf outputs:
+
 - [Elasticsearch](#elasticsearch)
 - [HTTP JSON](#http)
 
@@ -50,7 +51,6 @@ for sending the collected logs to [VictoriaLogs](https://docs.victoriametrics.co
      metric_type = "logs"
      log_source = "telegraf"
 ```
-
 
 ## HTTP
 
@@ -91,4 +91,4 @@ See also:
 - [Data ingestion troubleshooting](https://docs.victoriametrics.com/victorialogs/data-ingestion/#troubleshooting).
 - [How to query VictoriaLogs](https://docs.victoriametrics.com/victorialogs/querying/).
 - [Elasticsearch output docs for Telegraf](https://github.com/influxdata/telegraf/tree/master/plugins/outputs/elasticsearch).
-- [Docker-compose demo for Telegraf integration with VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/docker/victorialogs/telegraf).
+- [Docker-compose demo for Telegraf integration with VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/docker/victorialogs/telegraf).

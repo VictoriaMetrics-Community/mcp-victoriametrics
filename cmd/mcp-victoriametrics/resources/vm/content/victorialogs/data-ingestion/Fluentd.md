@@ -86,4 +86,4 @@ See also:
 - [Data ingestion troubleshooting](https://docs.victoriametrics.com/victorialogs/data-ingestion/#troubleshooting).
 - [How to query VictoriaLogs](https://docs.victoriametrics.com/victorialogs/querying/).
 - [Fluentd HTTP output config docs](https://docs.fluentd.org/output/http)
-- [Docker-compose demo for Fluentd integration with VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/docker/victorialogs/fluentd).
+- [Docker-compose demo for Fluentd integration with VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/docker/victorialogs/fluentd).

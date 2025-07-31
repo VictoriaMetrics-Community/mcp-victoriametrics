@@ -14,7 +14,7 @@ tags:
    - metrics
 ---
 `VMSingle` represents database for storing metrics.
-The `VMSingle` CRD declaratively defines a [single-node VM](https://docs.victoriametrics.com/)
+The `VMSingle` CRD declaratively defines a [single-node VM](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/)
 installation to run in a Kubernetes cluster.
 
 For each `VMSingle` resource, the Operator deploys a properly configured `Deployment` in the same namespace.
@@ -26,7 +26,7 @@ For each `VMSingle` resource, the Operator adds `Service` and `VMServiceScrape` 
 
 ## Specification
 
-You can see the full actual specification of the `VMSingle` resource in the **[API docs -> VMSingle](https://docs.victoriametrics.com/operator/api#vmsingle)**.
+You can see the full actual specification of the `VMSingle` resource in the **[API docs -> VMSingle](https://docs.victoriametrics.com/operator/api/#vmsingle)**.
 
 If you can't find necessary field in the specification of the custom resource,
 see [Extra arguments section](./#extra-arguments).
@@ -36,7 +36,7 @@ Also, you can check out the [examples](#examples) section.
 ## High availability
 
 `VMSingle` doesn't support high availability by default, for such purpose
-use [`VMCluster`](https://docs.victoriametrics.com/operator/resources/vmcluster) instead or duplicate the setup.
+use [`VMCluster`](https://docs.victoriametrics.com/operator/resources/vmcluster/) instead or duplicate the setup.
 
 ## Version management
 
@@ -50,7 +50,7 @@ metadata:
 spec:
   image:
     repository: victoriametrics/victoria-metrics
-    tag: v1.93.4
+    tag: v1.110.13
     pullPolicy: Always
   # ...
 ```
@@ -65,7 +65,7 @@ metadata:
 spec:
   image:
     repository: victoriametrics/victoria-metrics
-    tag: v1.93.4
+    tag: v1.110.13
     pullPolicy: Always
   imagePullSecrets:
     - name: my-repo-secret
@@ -94,7 +94,7 @@ spec:
 ```
 
 If these parameters are not specified, then,
-by default all `VMSingle` pods have resource requests and limits from the default values of the following [operator parameters](https://docs.victoriametrics.com/operator/configuration):
+by default all `VMSingle` pods have resource requests and limits from the default values of the following [operator parameters](https://docs.victoriametrics.com/operator/configuration/):
 
 - `VM_VMSINGLEDEFAULT_RESOURCE_LIMIT_MEM` - default memory limit for `VMSingle` pods,
 - `VM_VMSINGLEDEFAULT_RESOURCE_LIMIT_CPU` - default memory limit for `VMSingle` pods,
@@ -115,25 +115,22 @@ Also, you can specify requests without limits - in this case default values for 
 
 ## Enterprise features
 
-VMSingle supports features from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/enterprise#victoriametrics-enterprise):
+VMSingle supports features from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise):
 
-- [Downsampling](https://docs.victoriametrics.com/#downsampling)
-- [Multiple retentions / Retention filters](https://docs.victoriametrics.com/#retention-filters)
-- [Backup automation](https://docs.victoriametrics.com/vmbackupmanager)
+- [Downsampling](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling)
+- [Multiple retentions / Retention filters](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention-filters)
+- [Backup automation](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/)
 
-For using Enterprise version of [vmsingle](https://docs.victoriametrics.com/)
-you need to change version of `VMSingle` to version with `-enterprise` suffix using [Version management](#version-management).
-
-All the enterprise apps require `-eula` command-line flag to be passed to them.
-This flag acknowledges that your usage fits one of the cases listed on [this page](https://docs.victoriametrics.com/enterprise#victoriametrics-enterprise).
-So you can use [extraArgs](./#extra-arguments) for passing this flag to `VMSingle`.
+For using Enterprise version of [vmsingle](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) you need to:
+ - specify license at [`spec.license.key`](https://docs.victoriametrics.com/operator/api/#license-key) or at [`spec.license.keyRef`](https://docs.victoriametrics.com/operator/api/#license-keyref).
+ - change version of `vmsingle` to version with `-enterprise` suffix using [Version management](#version-management).
 
 ### Downsampling
 
-After that you can pass [Downsampling](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/docs/#downsampling)
+After that you can pass [Downsampling](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling)
 flag to `VMSingle` with [extraArgs](./#extra-arguments) too.
 
-Here are complete example for [Downsampling](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/docs/#downsampling):
+Here are complete example for [Downsampling](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling):
  
 ```yaml
 apiVersion: operator.victoriametrics.com/v1beta1
@@ -142,17 +139,15 @@ metadata:
   name: ent-example
 spec:
   # enabling enterprise features
+  license:
+    keyRef:
+      name: k8s-secret-that-contains-license
+      key: key-in-a-secret-that-contains-license
   image:
-    # enterprise version of vmsingle
-    tag: v1.93.5-enterprise
+    tag: v1.110.13-enterprise
   extraArgs:
-    # should be true and means that you have the legal right to run a vmsingle enterprise
-    # that can either be a signed contract or an email with confirmation to run the service in a trial period
-    # https://victoriametrics.com/legal/esa/
-    eula: true
-    
     # using enterprise features: Downsampling
-    # more details about downsampling you can read on https://docs.victoriametrics.com/#downsampling
+    # more details about downsampling you can read on https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling
     downsampling.period: 30d:5m,180d:1h,1y:6h,2y:1d
 
   # ...other fields...
@@ -160,7 +155,7 @@ spec:
 
 ### Retention filters
 
-The same method is used to enable retention filters - here are complete example for [Retention filters](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/docs/#retention-filters).
+The same method is used to enable retention filters - here are complete example for [Retention filters](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention-filters).
 
 ```yaml
 apiVersion: operator.victoriametrics.com/v1beta1
@@ -169,17 +164,15 @@ metadata:
   name: ent-example
 spec:
   # enabling enterprise features
+  license:
+    keyRef:
+      name: k8s-secret-that-contains-license
+      key: key-in-a-secret-that-contains-license
   image:
-    # enterprise version of vmsingle
-    tag: v1.93.5-enterprise
+    tag: v1.110.13-enterprise
   extraArgs:
-    # should be true and means that you have the legal right to run a vmsingle enterprise
-    # that can either be a signed contract or an email with confirmation to run the service in a trial period
-    # https://victoriametrics.com/legal/esa/
-    eula: true
-    
     # using enterprise features: Retention filters
-    # more details about retention filters you can read on https://docs.victoriametrics.com/#retention-filters
+    # more details about retention filters you can read on https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention-filters
     retentionFilter: '{team="juniors"}:3d,{env=~"dev|staging"}:30d'
 
   # ...other fields...
@@ -187,7 +180,7 @@ spec:
 
 ### Backup automation
 
-You can check [vmbackupmanager documentation](https://docs.victoriametrics.com/vmbackupmanager) for backup automation.
+You can check [vmbackupmanager documentation](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/) for backup automation.
 It contains a description of the service and its features. This section covers vmbackumanager integration in vmoperator.
 
 `VMSingle` has built-in backup configuration, it uses `vmbackupmanager` - proprietary tool for backups.
@@ -201,15 +194,16 @@ kind: VMSingle
 metadata:
   name: example
 spec:
-
+  # enabling enterprise features
+  license:
+    keyRef:
+      name: k8s-secret-that-contains-license
+      key: key-in-a-secret-that-contains-license
+  image:
+    tag: v1.110.13-enterprise
   vmBackup:
-    # should be true and means that you have the legal right to run a vmsingle enterprise
-    # that can either be a signed contract or an email with confirmation to run the service in a trial period
-    # https://victoriametrics.com/legal/esa/
-    acceptEULA: true
-
     # using enterprise features: Backup automation
-    # more details about backup automation you can read on https://docs.victoriametrics.com/vmbackupmanager/
+    # more details about backup automation you can read on https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/
     destination: "s3://your_bucket/folder"
     credentialsSecret:
       name: remote-storage-keys
@@ -231,13 +225,13 @@ stringData:
     aws_secret_access_key = your_secret_access_key
 ``` 
 
-You can read more about backup configuration options and mechanics [here](https://docs.victoriametrics.com/vmbackupmanager)
+You can read more about backup configuration options and mechanics [here](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/)
 
-Possible configuration options for backup crd can be found at [link](https://docs.victoriametrics.com/operator/api#vmbackup)
+Possible configuration options for backup crd can be found at [link](https://docs.victoriametrics.com/operator/api/#vmbackup)
 
 #### Restoring backups
 
-There are several ways to restore with [vmrestore](https://docs.victoriametrics.com/vmrestore) or [vmbackupmanager](https://docs.victoriametrics.com/vmbackupmanager).
+There are several ways to restore with [vmrestore](https://docs.victoriametrics.com/victoriametrics/vmrestore/) or [vmbackupmanager](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/).
 
 ##### Manually mounting disk
 
@@ -262,15 +256,16 @@ Steps:
     metadata:
       name: vmsingle
     spec:
-    
+      # enabling enterprise features
+      license:
+        keyRef:
+          name: k8s-secret-that-contains-license
+          key: key-in-a-secret-that-contains-license
+      image:
+        tag: v1.110.13-enterprise
       vmBackup:
-        # should be true and means that you have the legal right to run a vmsingle enterprise
-        # that can either be a signed contract or an email with confirmation to run the service in a trial period
-        # https://victoriametrics.com/legal/esa/
-        acceptEULA: true
-    
         # using enterprise features: Backup automation
-        # more details about backup automation you can read https://docs.victoriametrics.com/vmbackupmanager/
+        # more details about backup automation you can read https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/
         destination: "s3://your_bucket/folder"
         credentialsSecret:
           name: remote-storage-keys
@@ -302,7 +297,7 @@ Note that using `VMRestore` will require adjusting `src` for each pod because re
 
 ##### Using VMBackupmanager init container
 
-Using VMBackupmanager restore in Kubernetes environment is described [here](https://docs.victoriametrics.com/vmbackupmanager#how-to-restore-in-kubernetes).
+Using VMBackupmanager restore in Kubernetes environment is described [here](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/#how-to-restore-in-kubernetes).
 
 Advantages of using `VMBackupmanager` include:
 

@@ -17,7 +17,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.55.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230552)
+![Version](https://img.shields.io/badge/0.58.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230582)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-k8s-stack)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -251,17 +251,19 @@ victoria-metrics-operator:
 
 ## Prerequisites
 
-* Install the follow packages: ``git``, ``kubectl``, ``helm``, ``helm-docs``. See this [tutorial](https://docs.victoriametrics.com/helm/requirements/).
+Before installing this chart, ensure your environment meets the following requirements:
 
-* Add dependency chart repositories
+* **Kubernetes cluster** - A running Kubernetes cluster with sufficient resources
+* **Helm** - Helm package manager installed and configured
 
-```shell
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-```
+Additional requirements depend on your configuration:
 
-* PV support on underlying infrastructure.
+* **Persistent storage** - Required if you enable persistent volumes for data retention (enabled by default)
+* **kubectl** - Needed for cluster management and troubleshooting
+
+For installation instructions, refer to the official documentation:
+* [Installing Helm](https://helm.sh/docs/intro/install/)
+* [Installing kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ## How to install
 
@@ -1849,7 +1851,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">image</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">bitnami/kubectl</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">rancher/kubectl</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">plain</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">operator</span><span class="p">:</span><span class="w">
@@ -2340,7 +2342,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
     <tr id="vmsingle-spec">
       <td><a href="#vmsingle-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraArgs</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;8429&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;8428&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;1&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w">

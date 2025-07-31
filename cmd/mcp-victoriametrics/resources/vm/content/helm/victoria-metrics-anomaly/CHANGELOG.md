@@ -2,6 +2,40 @@
 
 - TODO
 
+## 1.11.2
+
+**Release date:** 30 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.25.2](https://img.shields.io/badge/v1.25.2-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%23v1252)
+
+- Upgraded ['vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.25.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1252).
+
+## 1.11.1
+
+**Release date:** 24 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.25.1](https://img.shields.io/badge/v1.25.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%23v1251)
+
+- Upgraded ['vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.25.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1251).
+
+## 1.11.0
+
+**Release date:** 17 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.25.0](https://img.shields.io/badge/v1.25.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%23v1250)
+
+- Upgraded ['vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.25.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1250).
+- Remove config has from pod annotations, when anomaly detection version is <1.25.0 to support hot-reload
+
+## 1.10.2
+
+**Release date:** 07 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.24.1](https://img.shields.io/badge/v1.24.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%23v1241)
+
+- Support `.Values.topologySpreadConstraints` property. See [#2219](https://github.com/VictoriaMetrics/helm-charts/issues/2219)
+- Add support of using [`VMPodScrape`](https://docs.victoriametrics.com/operator/resources/vmpodscrape/) for monitoring configuration. See `.Values.podMonitor.vm`. 
+
 ## 1.10.1
 
 **Release date:** 20 Jun 2025

@@ -17,47 +17,123 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.0.5-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-cluster%2Fchangelog%2F%23005)
+![Version](https://img.shields.io/badge/0.0.8-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-cluster%2Fchangelog%2F%23008)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-logs-cluster)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
 ![X](https://img.shields.io/twitter/follow/VictoriaMetrics?style=flat&label=Follow&color=black&logo=x&labelColor=black&link=https%3A%2F%2Fx.com%2FVictoriaMetrics)
 ![Reddit](https://img.shields.io/reddit/subreddit-subscribers/VictoriaMetrics?style=flat&label=Join&labelColor=red&logoColor=white&logo=reddit&link=https%3A%2F%2Fwww.reddit.com%2Fr%2FVictoriaMetrics)
 
-VictoriaLogs cluster version - high-performance, cost-effective and scalable logs storage
+The VictoriaLogs cluster chart packages everything required to run a horizontally scalable, highly available log-storage backend inside Kubernetes.
 
 ## Prerequisites
 
-* Install the follow packages: ``git``, ``kubectl``, ``helm``, ``helm-docs``. See this [tutorial](https://docs.victoriametrics.com/helm/requirements/).
+Before installing this chart, ensure your environment meets the following requirements:
 
-* PV support on underlying infrastructure.
+* **Kubernetes cluster** - A running Kubernetes cluster with sufficient resources
+* **Helm** - Helm package manager installed and configured
+
+Additional requirements depend on your configuration:
+
+* **Persistent storage** - Required if you enable persistent volumes for data retention (enabled by default)
+* **kubectl** - Needed for cluster management and troubleshooting
+
+For installation instructions, refer to the official documentation:
+* [Installing Helm](https://helm.sh/docs/intro/install/)
+* [Installing kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ## Chart Details
 
-This chart will do the following:
+### VictoriaLogs Cluster
 
-* Rollout [VictoriaLogs cluster](https://docs.victoriametrics.com/victorialogs/cluster/).
-* (optional) Rollout [vector](https://vector.dev/) to collect logs from pods.
+When you install the chart, it creates the following core services and an optional log collector:
 
-Chart allows to configure logs collection from Kubernetes pods to VictoriaLogs.
-In order to do that you need to enable vector:
+- `vlinsert` receives incoming log streams from various sources and load-balances them across remote nodes.
+- `vlstorage` forms a StatefulSet that stores raw data on persistent volumes.
+- `vlselect` provides the query API and reads data from any storage replica, so adding more `vlselect` pods increases read throughput without impacting the stored data.
+- The log collector `vector` is disabled by default, but as soon as you set `vector.enabled: true`, a DaemonSet is deployed on every node. It starts tailing pod logs using the default parsing pipeline and automatically discovers the internal `vlinsert` addresses.
+
 ```yaml
 vector:
   enabled: true
 ```
-By default, vector will forward logs to VictoriaLogs installation deployed by this chart.
 
-Default chart setup is shown below
+The default chart setup is shown below:
 
 ```mermaid
-graph TB
-  collector["Logs Collector"] --> vlinsert1["vlinsert"] & vlinsert2["vlinsert"]
-  subgraph VictoriaLogs Cluster
-  vlinsert1["vlinsert"] & vlinsert2["vlinsert"] --> vlstorage1["vlstorage"] & vlstorage2["vlstorage"]
-  vlstorage1["vlstorage"] & vlstorage2["vlstorage"] <--> vlselect1["vlselect"] & vlselect2["vlselect"]
-  end
-  vlselect1["vlselect"] & vlselect2["vlselect"] <--> user["User"]
+graph LR
+    Vector["Log Collector"] --> VLI1["vlinsert-1"]
+    Vector --> VLI2["vlinsert-2"]
+   
+    subgraph "VictoriaLogs Cluster"
+        VLI1 --> VLS1["vlstorage-1"]
+        VLI1 --> VLS2["vlstorage-2"]
+        VLI2 --> VLS1
+        VLI2 --> VLS2
+       
+        VLS1 <--> VLQ1["vlselect-1"]
+        VLS1 <--> VLQ2["vlselect-2"]
+        VLS2 <--> VLQ1
+        VLS2 <--> VLQ2
+    end
+   
+    VLQ1 <--> Users["Users/Grafana/vlogscli"]
+    VLQ2 <--> Users
 ```
+
+### Vector
+
+When [Vector](https://github.com/vectordotdev/helm-charts/tree/develop/charts/vector) is enabled with `vector.enabled: true`, the default configuration works out of the box:
+
+* The default role is set to "Agent" (typically deployed as a DaemonSet with a data directory at `/vector-data-dir`).
+* Vector is configured with the `k8s` source, using the `kubernetes_logs` type to collect logs from all Kubernetes pods in the cluster.
+* The default transform configuration includes a parser component that performs JSON parsing on incoming log messages.
+  * It attempts to parse the `message` field as JSON, and if successful, stores the parsed content in a `.log` field.
+  * If JSON parsing fails, it falls back to the original message content.
+* The default sink configuration includes a `vlogs` sink, configured as an Elasticsearch-compatible endpoint, which sends processed logs to `vlinsert` using bulk mode with `gzip` compression.
+
+When you scale the number of `vlinsert` replicas using `vlinsert.replicaCount`, the chart automatically updates Vector's configuration to include all new instances, providing horizontal scaling of ingestion capacity without service interruption.
+
+### vmauth
+
+When you enable `vmauth` with:
+
+```yaml
+vmauth:
+  enabled: true
+```
+
+The chart automatically launches a [`vmauth`](https://docs.victoriametrics.com/victoriametrics/vmauth/) service with a routing configuration that splits read and write traffic according to VictoriaLogs cluster architecture patterns.
+
+External applications can send requests to `vmauth`, which will intelligently route:
+
+- Write requests (log ingestion) to `vlinsert`.
+- Read requests (log queries) to `vlselect`.
+
+The default Vector configuration bypasses this and continues sending logs directly to `vlinsert`. So, the chart can now be thought of as:
+
+```mermaid
+graph LR
+    Vector["Log Collector"] --> VLI1["vlinsert-1"]
+    Vector --> VLI2["vlinsert-2"]
+   
+    subgraph "VictoriaLogs Cluster"
+        VLI1 --> VLS1["vlstorage-1"]
+        VLI1 --> VLS2["vlstorage-2"]
+        VLI2 --> VLS1
+        VLI2 --> VLS2
+       
+        VLS1 <--> VLQ1["vlselect-1"]
+        VLS1 <--> VLQ2["vlselect-2"]
+        VLS2 <--> VLQ1
+        VLS2 <--> VLQ2
+    end
+   
+    VLQ1 <--> Users["vmauth"]
+    VLQ2 <--> Users
+```
+
+Note that `vmauth` can send requests to `vlinsert` as needed. The diagram above shows a common use case.
 
 ## How to install
 
@@ -471,7 +547,7 @@ Change the values according to the need of the environment in ``victoria-logs-cl
 </td>
     </tr>
     <tr id="vlinsert-image-variant">
-      <td><a href="#vlinsert-image-variant"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlinsert.image.variant</span><span class="p">:</span><span class="w"> </span><span class="l">victorialogs</span></span></span></code></pre>
+      <td><a href="#vlinsert-image-variant"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlinsert.image.variant</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Image tag suffix, which is appended to <code>Chart.AppVersion</code> if no <code>server.image.tag</code> is defined</p>
 </td>
@@ -940,7 +1016,7 @@ Change the values according to the need of the environment in ``victoria-logs-cl
 </td>
     </tr>
     <tr id="vlselect-image-variant">
-      <td><a href="#vlselect-image-variant"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlselect.image.variant</span><span class="p">:</span><span class="w"> </span><span class="l">victorialogs</span></span></span></code></pre>
+      <td><a href="#vlselect-image-variant"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlselect.image.variant</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Image tag suffix, which is appended to <code>Chart.AppVersion</code> if no <code>server.image.tag</code> is defined</p>
 </td>
@@ -1423,7 +1499,7 @@ Change the values according to the need of the environment in ``victoria-logs-cl
 </td>
     </tr>
     <tr id="vlstorage-image-variant">
-      <td><a href="#vlstorage-image-variant"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlstorage.image.variant</span><span class="p">:</span><span class="w"> </span><span class="l">victorialogs</span></span></span></code></pre>
+      <td><a href="#vlstorage-image-variant"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlstorage.image.variant</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Image tag suffix, which is appended to <code>Chart.AppVersion</code> if no <code>server.image.tag</code> is defined</p>
 </td>

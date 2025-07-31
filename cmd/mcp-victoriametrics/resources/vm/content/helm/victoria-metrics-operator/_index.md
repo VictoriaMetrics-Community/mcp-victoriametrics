@@ -17,7 +17,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.50.3-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-operator%2Fchangelog%2F%230503)
+![Version](https://img.shields.io/badge/0.51.4-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-operator%2Fchangelog%2F%230514)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-operator)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -28,8 +28,19 @@ VictoriaMetrics Operator
 
 ## Prerequisites
 
-* Install the follow packages: ``git``, ``kubectl``, ``helm``, ``helm-docs``. See this [tutorial](https://docs.victoriametrics.com/helm/requirements/).
-* PV support on underlying infrastructure.
+Before installing this chart, ensure your environment meets the following requirements:
+
+* **Kubernetes cluster** - A running Kubernetes cluster with sufficient resources
+* **Helm** - Helm package manager installed and configured
+
+Additional requirements depend on your configuration:
+
+* **Persistent storage** - Required if you enable persistent volumes for data retention (enabled by default)
+* **kubectl** - Needed for cluster management and troubleshooting
+
+For installation instructions, refer to the official documentation:
+* [Installing Helm](https://helm.sh/docs/intro/install/)
+* [Installing kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ## ArgoCD issues
 
@@ -282,6 +293,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabledCRDValidation</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlagent</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlcluster</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlogs</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlsingle</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
@@ -409,7 +421,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="crds-cleanup-image">
       <td><a href="#crds-cleanup-image"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.cleanup.image</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">bitnami/kubectl</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">rancher/kubectl</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Image configuration for CRD cleanup Job</p>

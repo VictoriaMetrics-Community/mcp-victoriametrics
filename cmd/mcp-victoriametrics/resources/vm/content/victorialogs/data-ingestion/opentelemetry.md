@@ -21,7 +21,7 @@ Consider the following example for Go SDK:
 
 ```go
 logExporter, err := otlploghttp.New(ctx,
-	otlploghttp.WithEndpointURL("http://victorialogs:9428/insert/opentelemetry/v1/logs"),
+  otlploghttp.WithEndpointURL("http://victorialogs:9428/insert/opentelemetry/v1/logs"),
 )
 ```
 
@@ -31,10 +31,10 @@ labels as log stream fields, while the remaining labels are stored as [regular l
 
 ```go
 logExporter, err := otlploghttp.New(ctx,
-	otlploghttp.WithEndpointURL("http://victorialogs:9428/insert/opentelemetry/v1/logs"),
-	otlploghttp.WithHeaders(map[string]string{
-		"VL-Stream-Fields": "host,app",
-	}),
+  otlploghttp.WithEndpointURL("http://victorialogs:9428/insert/opentelemetry/v1/logs"),
+  otlploghttp.WithHeaders(map[string]string{
+    "VL-Stream-Fields": "host,app",
+  }),
 )
 ```
 
@@ -109,4 +109,4 @@ See also:
 
 * [Data ingestion troubleshooting](https://docs.victoriametrics.com/victorialogs/data-ingestion/#troubleshooting).
 * [How to query VictoriaLogs](https://docs.victoriametrics.com/victorialogs/querying/).
-* [Docker-compose demo for OpenTelemetry collector integration with VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/docker/victorialogs/opentelemetry-collector).
+* [Docker-compose demo for OpenTelemetry collector integration with VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/docker/victorialogs/opentelemetry-collector).

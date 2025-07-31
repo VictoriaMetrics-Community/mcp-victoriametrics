@@ -14,7 +14,7 @@ aliases:
   - /helm/victoria-metrics-anomaly/index.html
 ---
 
-![Version](https://img.shields.io/badge/1.10.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-anomaly%2Fchangelog%2F%231101)
+![Version](https://img.shields.io/badge/1.11.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-anomaly%2Fchangelog%2F%231112)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-anomaly)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -25,9 +25,19 @@ VictoriaMetrics Anomaly Detection - a service that continuously scans Victoria M
 
 ## Prerequisites
 
-* Install the follow packages: ``git``, ``kubectl``, ``helm``, ``helm-docs``. See this [tutorial](https://docs.victoriametrics.com/helm/requirements/).
+Before installing this chart, ensure your environment meets the following requirements:
 
-* PV support on underlying infrastructure
+* **Kubernetes cluster** - A running Kubernetes cluster with sufficient resources
+* **Helm** - Helm package manager installed and configured
+
+Additional requirements depend on your configuration:
+
+* **Persistent storage** - Required if you enable persistent volumes for data retention (enabled by default)
+* **kubectl** - Needed for cluster management and troubleshooting
+
+For installation instructions, refer to the official documentation:
+* [Installing Helm](https://helm.sh/docs/intro/install/)
+* [Installing kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ## Chart Details
 
@@ -556,6 +566,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>PodMonitor labels</p>
 </td>
     </tr>
+    <tr id="podmonitor-vm">
+      <td><a href="#podmonitor-vm"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podMonitor.vm</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Whether to use <a href="https://docs.victoriametrics.com/operator/resources/vmpodscrape/" target="_blank">VMPodScrape</a> from VM operator instead of PodMonitor</p>
+</td>
+    </tr>
     <tr id="podsecuritycontext">
       <td><a href="#podsecuritycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podSecurityContext</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
@@ -614,6 +630,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#tolerations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">tolerations</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>Tolerations configurations. Details are <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="topologyspreadconstraints">
+      <td><a href="#topologyspreadconstraints"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">topologySpreadConstraints</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Pod topologySpreadConstraints</p>
 </td>
     </tr>
   </tbody>

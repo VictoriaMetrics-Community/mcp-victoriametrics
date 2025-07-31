@@ -869,6 +869,8 @@ The following meta labels are available on discovered targets during [relabeling
 * `__meta_gce_network`: the network URL of the instance
 * `__meta_gce_private_ip`: the private IP address of the instance
 * `__meta_gce_interface_ipv4_<name>`: IPv4 address of each named interface
+* `__meta_gce_internal_ipv6`: the internal IPv6 address of the instance, if present
+* `__meta_gce_public_ipv6`: the public IPv6 address of the instance, if present
 * `__meta_gce_project`: the GCP project in which the instance is running
 * `__meta_gce_public_ip`: the public IP address of the instance, if present
 * `__meta_gce_subnetwork`: the subnetwork URL of the instance
@@ -2005,7 +2007,17 @@ scrape_configs:
   # label during target relabeling phase.
   # See https://docs.victoriametrics.com/victoriametrics/relabeling/
   #
-  # series_limit: ...
+  # series_limit: <int>
+
+  # label_limit is an optional limit on the number of labels per each sample
+  # exposed by a target. It can be set globally for a whole scrape configuration and for each scrape job
+  #
+  # By default, the limit is disabled.
+  # The label_limit can be set on a per-target basis by specifying `__label_limit__`
+  # label during target relabeling phase. Available starting from v1.121.0.
+  # See https://docs.victoriametrics.com/victoriametrics/relabeling/
+  #
+  # label_limit: <int>
 
   # no_stale_markers allows disabling staleness tracking.
   # By default, staleness tracking is enabled for all the discovered scrape targets.

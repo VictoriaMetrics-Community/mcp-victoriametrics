@@ -18,7 +18,7 @@ tags:
   - enterprise
 ---
 
-![Version](https://img.shields.io/badge/0.15.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-gateway%2Fchangelog%2F%230150)
+![Version](https://img.shields.io/badge/0.17.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-gateway%2Fchangelog%2F%230171)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-gateway)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -38,8 +38,19 @@ VictoriaMetrics Gateway - Auth & Rate-Limitting proxy for Victoria Metrics
 
 ## Prerequisites
 
-* Install the follow packages: ``git``, ``kubectl``, ``helm``, ``helm-docs``. See this [tutorial](https://docs.victoriametrics.com/helm/requirements/).
-* PV support on underlying infrastructure
+Before installing this chart, ensure your environment meets the following requirements:
+
+* **Kubernetes cluster** - A running Kubernetes cluster with sufficient resources
+* **Helm** - Helm package manager installed and configured
+
+Additional requirements depend on your configuration:
+
+* **Persistent storage** - Required if you enable persistent volumes for data retention (enabled by default)
+* **kubectl** - Needed for cluster management and troubleshooting
+
+For installation instructions, refer to the official documentation:
+* [Installing Helm](https://helm.sh/docs/intro/install/)
+* [Installing kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ## Chart Details
 
@@ -721,6 +732,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#tolerations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">tolerations</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>Tolerations configurations. Check <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/" target="_blank">here</a> for details</p>
+</td>
+    </tr>
+    <tr id="topologyspreadconstraints">
+      <td><a href="#topologyspreadconstraints"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">topologySpreadConstraints</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Pod topologySpreadConstraints</p>
 </td>
     </tr>
     <tr id="write-url">
