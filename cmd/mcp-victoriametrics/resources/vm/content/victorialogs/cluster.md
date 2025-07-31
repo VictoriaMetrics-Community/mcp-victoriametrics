@@ -90,9 +90,9 @@ For advanced setups, refer to the [multi-level cluster setup](#multi-level-clust
 
 In the cluster setup, the following rules apply:
 
-- The `vlselect` component requires **all relevant vlstorage nodes to be available** in order to return complete and correct query results. 
+- The `vlselect` component requires **all relevant vlstorage nodes to be available** in order to return complete and correct query results.
 
-  - If even one of the vlstorage nodes is temporarily unavailable, `vlselect` cannot safely return a full response, since some of the required data may reside on the missing node. Rather than risk delivering partial or misleading query results, which can cause confusion, trigger false alerts, or produce incorrect metrics, VictoriaLogs chooses to return an error instead. 
+  - If even one of the vlstorage nodes is temporarily unavailable, `vlselect` cannot safely return a full response, since some of the required data may reside on the missing node. Rather than risk delivering partial or misleading query results, which can cause confusion, trigger false alerts, or produce incorrect metrics, VictoriaLogs chooses to return an error instead.
 
 - The `vlinsert` component continues to function normally when some vlstorage nodes are unavailable. It automatically routes new logs to the remaining available nodes to ensure that data ingestion remains uninterrupted and newly received logs are not lost.
 
@@ -100,7 +100,7 @@ In the cluster setup, the following rules apply:
 > In most real-world cases, `vlstorage` nodes become unavailable during planned maintenance such as upgrades, config changes, or rolling restarts. These are typically infrequent (weekly or monthly) and brief (a few minutes).  
 > A short period of query downtime during such events is acceptable and fits well within most SLAs. For example, 60 minutes of downtime per month still provides around 99.86% availability, which often outperforms complex HA setups that rely on opaque auto-recovery and may fail unpredictably.
 
-VictoriaLogs itself does not handle replication at the storage level. Instead, it relies on an external log shipper, such as [vector](https://docs.victoriametrics.com/victorialogs/data-ingestion/vector/) or [vlagent](https://github.com/VictoriaMetrics/VictoriaMetrics/pull/9034), to send the same log stream to multiple independent VictoriaLogs instances:
+VictoriaLogs itself does not handle replication at the storage level. Instead, it relies on an external log shipper, such as [vector](https://docs.victoriametrics.com/victorialogs/data-ingestion/vector/) or [vlagent](https://docs.victoriametrics.com/victorialogs/vlagent/), to send the same log stream to multiple independent VictoriaLogs instances:
 
 ```mermaid
 graph TD
@@ -240,8 +240,8 @@ The following guide covers the following topics for Linux host:
 Download and unpack the latest VictoriaLogs release:
 
 ```sh
-curl -L -O https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v1.24.0-victorialogs/victoria-logs-linux-amd64-v1.24.0-victorialogs.tar.gz
-tar xzf victoria-logs-linux-amd64-v1.24.0-victorialogs.tar.gz
+curl -L -O https://github.com/VictoriaMetrics/VictoriaLogs/releases/download/v1.26.0-victorialogs/victoria-logs-linux-amd64-v1.26.0.tar.gz
+tar xzf victoria-logs-linux-amd64-v1.26.0.tar.gz
 ```
 
 Start the first [`vlstorage` node](#architecture), which accepts incoming requests at the port `9491` and stores the ingested logs at `victoria-logs-data-1` directory:
@@ -324,7 +324,7 @@ usage on systems with constrained resources:
 
 - `vlselect` requests compressed data from `vlstorage` nodes in order to reduce network bandwidth usage at the cost of slightly higher CPU usage
   at `vlselect` and `vlstorage` nodes. The compression can be disabled by passing `-select.disableCompression` command-line flag to `vlselect`.
-  This reduces CPU usage at `vlselect` and `vlstorage` nodes at the cost of significanlty higher network bandwidth usage.
+  This reduces CPU usage at `vlselect` and `vlstorage` nodes at the cost of significantly higher network bandwidth usage.
 
 ## Advanced usage
 

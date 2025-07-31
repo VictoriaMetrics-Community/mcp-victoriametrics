@@ -1,6 +1,59 @@
 ## Next release
 
-- TODO
+**Update note 1**: In this release default VMSingle port was changed from 8429 to 8428. To prevent unwanted VMSingle restart please set it to old value using `.Values.vmsingle.spec.port: 8429`.
+
+- Changed default VMSingle port 8429 -> 8428. Related issue [#1345](https://github.com/VictoriaMetrics/operator/issues/1345).
+
+## 0.58.2
+
+**Release date:** 23 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.122.0](https://img.shields.io/badge/v1.122.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11220)
+
+- updates operator to [v0.61.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.61.2) version
+
+## 0.58.1
+
+**Release date:** 21 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.122.0](https://img.shields.io/badge/v1.122.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11220)
+
+- Replaced error with warning for a cased described in [#2285](https://github.com/VictoriaMetrics/helm-charts/issues/2285).
+
+## 0.58.0
+
+**Release date:** 21 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.122.0](https://img.shields.io/badge/v1.122.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11220)
+
+- bump version of VM components to [v1.122.0](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/docs/victoriametrics/changelog/CHANGELOG.md#v11220)
+
+## 0.57.1
+
+**Release date:** 21 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.121.0](https://img.shields.io/badge/v1.121.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11210)
+
+- updates operator to [v0.61.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.61.1) version
+
+## 0.57.0
+
+**Release date:** 16 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.121.0](https://img.shields.io/badge/v1.121.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11210)
+
+**Update note 1**: This release contains new CRD VLAgent. It requires to perform CRD versions update.
+
+- updates operator to [v0.61.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.61.0) version
+
+## 0.56.0
+
+**Release date:** 07 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.121.0](https://img.shields.io/badge/v1.121.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11210)
+
+- force storage nodes count be more than 2 * replicationFactor - 1. See [#2285](https://github.com/VictoriaMetrics/helm-charts/issues/2285).
+- bump version of VM components to [v1.121.0](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/docs/victoriametrics/changelog/CHANGELOG.md#v11210)
 
 ## 0.55.2
 

@@ -2,6 +2,48 @@
 
 - TODO
 
+## 0.51.4
+
+**Release date:** 23 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.61.2](https://img.shields.io/badge/v0.61.2-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%23v0612)
+
+- updates operator to [v0.61.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.61.2) version
+
+## 0.51.3
+
+**Release date:** 21 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.61.1](https://img.shields.io/badge/v0.61.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%23v0611)
+
+- updates operator to [v0.61.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.61.1) version
+
+## 0.51.2
+
+**Release date:** 17 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.61.0](https://img.shields.io/badge/v0.61.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%23v0610)
+
+- TODO
+
+## 0.51.1
+
+**Release date:** 16 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.61.0](https://img.shields.io/badge/v0.61.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%23v0610)
+
+- add missing `pods/eviction` RBAC permission. Thanks to the @kevinastone
+
+## 0.51.0
+
+**Release date:** 15 Jul 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.61.0](https://img.shields.io/badge/v0.61.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%23v0610)
+
+**Update note 1**: This release contains new CRD VLAgent. It requires to perform CRD versions update.
+
+- updates operator to [v0.61.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.61.0) version
+
 ## 0.50.3
 
 **Release date:** 27 Jun 2025

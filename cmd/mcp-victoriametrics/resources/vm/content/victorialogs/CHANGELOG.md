@@ -13,10 +13,49 @@ aliases:
 - /victorialogs/CHANGELOG.html
 ---
 
-The following `tip` changes can be tested by building VictoriaLogs from the latest commit of [VictoriaMetrics](https://github.com/VictoriaMetrics/VictoriaMetrics/) repository
+The following `tip` changes can be tested by building VictoriaLogs from the latest commit of [VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaLogs/) repository
 according to [these docs](https://docs.victoriametrics.com/victorialogs/quickstart/#building-from-source-code)
 
 ## tip
+
+* SECURITY: upgrade base docker image (Alpine) from 3.22.0 to 3.22.1. See [Alpine 3.22.1 release notes](https://www.alpinelinux.org/posts/Alpine-3.19.8-3.20.7-3.21.4-3.22.1-released.html).
+
+* BUGFIX: [web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui): fix broken "Collapse all" button in Group view. See [#509](https://github.com/VictoriaMetrics/VictoriaLogs/issues/509). The bug has been introduced in [v1.26.0](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.26.0).
+* BUGFIX: [data ingestion](https://docs.victoriametrics.com/victorialogs/data-ingestion/): prevent from possible crash when ingesting logs for dates, which are concurrently removed because of [the configured retention](https://docs.victoriametrics.com/victorialogs/#retention). See [#505](https://github.com/VictoriaMetrics/VictoriaLogs/issues/505).
+
+## [v1.26.0](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.26.0)
+
+Released at 2025-07-18
+
+* FEATURE: [vlogscli](https://docs.victoriametrics.com/victorialogs/querying/vlogscli/): add ability to configure auth options and TLS options for connections to the `-datasource.url`. See [auth options docs](https://docs.victoriametrics.com/victorialogs/querying/vlogscli/#auth-options) and [TLS options docs](https://docs.victoriametrics.com/victorialogs/querying/vlogscli/#tls-options). See [this feature request](https://github.com/VictoriaMetrics/VictoriaLogs/issues/54). Thanks to @thom-vend for [the initial pull request](https://github.com/VictoriaMetrics/VictoriaLogs/pull/457).
+* FEATURE: [web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui): add the ability to hide the logs panel to view only the graph. When the logs panel is hidden, the `/query` request is not executed.
+* FEATURE: [web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui): improve autocomplete functionality with enhanced quick autocomplete via hotkey support and removed special characters from autocomplete suggestions. See [this comment](https://github.com/VictoriaMetrics/VictoriaLogs/issues/70#issuecomment-3043591443) for details.
+
+* BUGFIX: [web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui): prevent groups from automatically expanding on list updates if all groups were previously collapsed. See [#92](https://github.com/VictoriaMetrics/VictoriaLogs/issues/92).
+* BUGFIX: [data ingestion](https://docs.victoriametrics.com/victorialogs/data-ingestion/): restore logging of too long ingested lines in order to simplify debugging of such cases. See [#430](https://github.com/VictoriaMetrics/VictoriaLogs/issues/430). The regression has been introduced in [v1.24.0-victorialogs](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.24.0-victorialogs).
+* BUGFIX: properly persist newly created data on unclean shutdown such as power off, hardware crash or operating system crash. See [#505](https://github.com/VictoriaMetrics/VictoriaLogs/issues/505).
+
+## [v1.25.1](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.25.1)
+
+Released at 2025-07-14
+
+* SECURITY: upgrade Go builder from Go1.24.4 to Go1.24.5. See [the list of issues addressed in Go1.24.5](https://github.com/golang/go/issues?q=milestone%3AGo1.24.5+label%3ACherryPickApproved).
+
+* FEATURE: [VictoriaLogs cluster](https://docs.victoriametrics.com/victorialogs/cluster/): expose `vl_insert_remote_send_errors_total`, `vl_select_remote_send_errors_total` and `vl_insert_remote_is_reachable` metrics at the [`/metrics` page](https://docs.victoriametrics.com/victorialogs/#monitoring) for monitoring failed remote insert/select attempts per `vlstorage` node and detecting temporarily unavailable `vlstorage` nodes.
+
+* BUGFIX: properly return VictoriaLogs version at `./victoria-logs -version` and at the `vm_app_version` metric exposed via [`/metrics` page](https://docs.victoriametrics.com/victorialogs/#monitoring). See [#409](https://github.com/VictoriaMetrics/VictoriaLogs/issues/409). The bug has been introduced in [v1.25.0](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.25.0).
+
+## [v1.25.0](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.25.0)
+
+Released at 2025-07-07
+
+**VictoriaLogs source code has been moved from [VictoriaMetrics repository](https://github.com/VictoriaMetrics/VictoriaMetrics/) to its own [github.com/VictoriaMetrics/VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaLogs/) repository. All the future development will be performed in the new repository. The `-victorialogs` suffix is removed from the release tag and from docker image tags starting from v1.25.0 release**
+
+* FEATURE: [`format` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe): add support for Unix timestamps in seconds, milliseconds and microseconds additionally to nanoseconds when using `<time:field_name>` formatting. See [this issue](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/8659).
+
+* BUGFIX: [data ingestion](https://docs.victoriametrics.com/victorialogs/data-ingestion/): properly parse fractional Unix timestamps with millisecond, microsecond and nanosecond precision in the ingested logs. Previously the precision loss in the parsed timestamps could occur. See [this comment](https://github.com/VictoriaMetrics/VictoriaMetrics/pull/8767#discussion_r2051657518) for details.
+* BUGFIX: [`rate_sum` stats function](https://docs.victoriametrics.com/victorialogs/logsql/#rate_sum-stats): fix inconsistent per-second rate calculation when time filters are specified via HTTP query parameters instead of LogsQL expression. This affects recording rule results. See [#9303](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9303).
+* BUGFIX: [web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui): disabled opening of autocomplete popup on initial page load.
 
 ## [v1.24.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.24.0-victorialogs)
 

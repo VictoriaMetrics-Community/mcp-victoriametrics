@@ -13,6 +13,7 @@ aliases:
   - /victorialogs/data-ingestion/Logstash.html
 ---
 VictoriaLogs supports given below Logstash outputs:
+
 - [Elasticsearch](#elasticsearch)
 - [HTTP JSON](#http)
 
@@ -131,4 +132,4 @@ See also:
 - [Data ingestion troubleshooting](https://docs.victoriametrics.com/victorialogs/data-ingestion/#troubleshooting).
 - [How to query VictoriaLogs](https://docs.victoriametrics.com/victorialogs/querying/).
 - [Logstash `output.elasticsearch` docs](https://www.elastic.co/guide/en/logstash/current/plugins-outputs-elasticsearch.html).
-- [Docker-compose demo for Logstash integration with VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/docker/victorialogs/logstash).
+- [Docker-compose demo for Logstash integration with VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/docker/victorialogs/logstash).
