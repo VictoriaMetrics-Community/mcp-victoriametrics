@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/yosida95/uritemplate/v3"
+	"net/http"
 )
 
 type MCPMethod string
@@ -96,12 +97,13 @@ func (t *URITemplate) UnmarshalJSON(data []byte) error {
 type JSONRPCMessage any
 
 // LATEST_PROTOCOL_VERSION is the most recent version of the MCP protocol.
-const LATEST_PROTOCOL_VERSION = "2025-03-26"
+const LATEST_PROTOCOL_VERSION = "2025-06-18"
 
 // ValidProtocolVersions lists all known valid MCP protocol versions.
 var ValidProtocolVersions = []string{
-	"2024-11-05",
 	LATEST_PROTOCOL_VERSION,
+	"2025-03-26",
+	"2024-11-05",
 }
 
 // JSONRPC_VERSION is the version of JSON-RPC used by MCP.
@@ -399,6 +401,7 @@ type CancelledNotificationParams struct {
 type InitializeRequest struct {
 	Request
 	Params InitializeParams `json:"params"`
+	Header http.Header      `json:"-"`
 }
 
 type InitializeParams struct {
@@ -489,6 +492,7 @@ type Implementation struct {
 // or else may be disconnected.
 type PingRequest struct {
 	Request
+	Header http.Header `json:"-"`
 }
 
 /* Progress notifications */
@@ -541,6 +545,7 @@ type PaginatedResult struct {
 // the server has.
 type ListResourcesRequest struct {
 	PaginatedRequest
+	Header http.Header `json:"-"`
 }
 
 // ListResourcesResult is the server's response to a resources/list request
@@ -554,6 +559,7 @@ type ListResourcesResult struct {
 // resource templates the server has.
 type ListResourceTemplatesRequest struct {
 	PaginatedRequest
+	Header http.Header `json:"-"`
 }
 
 // ListResourceTemplatesResult is the server's response to a
@@ -567,6 +573,7 @@ type ListResourceTemplatesResult struct {
 // specific resource URI.
 type ReadResourceRequest struct {
 	Request
+	Header http.Header        `json:"-"`
 	Params ReadResourceParams `json:"params"`
 }
 
@@ -598,6 +605,7 @@ type ResourceListChangedNotification struct {
 type SubscribeRequest struct {
 	Request
 	Params SubscribeParams `json:"params"`
+	Header http.Header     `json:"-"`
 }
 
 type SubscribeParams struct {
@@ -612,6 +620,7 @@ type SubscribeParams struct {
 type UnsubscribeRequest struct {
 	Request
 	Params UnsubscribeParams `json:"params"`
+	Header http.Header       `json:"-"`
 }
 
 type UnsubscribeParams struct {
@@ -717,6 +726,7 @@ func (BlobResourceContents) isResourceContents() {}
 type SetLevelRequest struct {
 	Request
 	Params SetLevelParams `json:"params"`
+	Header http.Header    `json:"-"`
 }
 
 type SetLevelParams struct {
@@ -980,6 +990,7 @@ type ModelHint struct {
 type CompleteRequest struct {
 	Request
 	Params CompleteParams `json:"params"`
+	Header http.Header    `json:"-"`
 }
 
 type CompleteParams struct {
@@ -1032,6 +1043,7 @@ type PromptReference struct {
 // structure or access specific locations that the client has permission to read from.
 type ListRootsRequest struct {
 	Request
+	Header http.Header `json:"-"`
 }
 
 // ListRootsResult is the client's response to a roots/list request from the server.
