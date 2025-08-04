@@ -253,6 +253,44 @@ func NewToolResultText(text string) *CallToolResult {
 	}
 }
 
+// NewToolResultStructured creates a new CallToolResult with structured content.
+// It includes both the structured content and a text representation for backward compatibility.
+func NewToolResultStructured(structured any, fallbackText string) *CallToolResult {
+	return &CallToolResult{
+		Content: []Content{
+			TextContent{
+				Type: "text",
+				Text: fallbackText,
+			},
+		},
+		StructuredContent: structured,
+	}
+}
+
+// NewToolResultStructuredOnly creates a new CallToolResult with structured
+// content and creates a JSON string fallback for backwards compatibility.
+// This is useful when you want to provide structured data without any specific text fallback.
+func NewToolResultStructuredOnly(structured any) *CallToolResult {
+	var fallbackText string
+	// Convert to JSON string for backward compatibility
+	jsonBytes, err := json.Marshal(structured)
+	if err != nil {
+		fallbackText = fmt.Sprintf("Error serializing structured content: %v", err)
+	} else {
+		fallbackText = string(jsonBytes)
+	}
+
+	return &CallToolResult{
+		Content: []Content{
+			TextContent{
+				Type: "text",
+				Text: fallbackText,
+			},
+		},
+		StructuredContent: structured,
+	}
+}
+
 // NewToolResultImage creates a new CallToolResult with both text and image content
 func NewToolResultImage(text, imageData, mimeType string) *CallToolResult {
 	return &CallToolResult{
