@@ -3,11 +3,13 @@ module github.com/VictoriaMetrics-Community/mcp-victoriametrics
 go 1.24.5
 
 require (
-	github.com/VictoriaMetrics/VictoriaMetrics v1.122.0
+	github.com/VictoriaMetrics/VictoriaMetrics v1.123.0
 	github.com/VictoriaMetrics/metrics v1.38.0
 	github.com/VictoriaMetrics/metricsql v0.84.6
 	github.com/VictoriaMetrics/victoriametrics-cloud-api-go v0.0.2
 	github.com/blevesearch/bleve/v2 v2.5.2
+	github.com/mark3labs/mcp-go v0.37.0
+	github.com/blevesearch/bleve/v2 v2.5.3
 	github.com/mark3labs/mcp-go v0.37.0
 	github.com/tmc/langchaingo v0.1.13
 	gopkg.in/yaml.v2 v2.4.0
@@ -16,14 +18,14 @@ require (
 require (
 	cloud.google.com/go/compute/metadata v0.7.0 // indirect
 	github.com/RoaringBitmap/roaring/v2 v2.5.0 // indirect
-	github.com/VictoriaMetrics/VictoriaLogs v0.0.0-20250714230749-82aca88cecd8 // indirect
+	github.com/VictoriaMetrics/VictoriaLogs v0.0.0-20250728123024-98593029b5aa // indirect
 	github.com/VictoriaMetrics/easyproto v0.1.4 // indirect
 	github.com/VictoriaMetrics/fastcache v1.12.5 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/bits-and-blooms/bitset v1.22.0 // indirect
 	github.com/blevesearch/bleve_index_api v1.2.8 // indirect
-	github.com/blevesearch/geo v0.2.3 // indirect
+	github.com/blevesearch/geo v0.2.4 // indirect
 	github.com/blevesearch/go-faiss v1.0.25 // indirect
 	github.com/blevesearch/go-porterstemmer v1.0.3 // indirect
 	github.com/blevesearch/gtreap v0.1.1 // indirect
