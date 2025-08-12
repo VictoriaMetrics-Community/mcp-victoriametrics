@@ -6,11 +6,11 @@ cloud.google.com/go/compute/metadata
 github.com/RoaringBitmap/roaring/v2
 github.com/RoaringBitmap/roaring/v2/internal
 github.com/RoaringBitmap/roaring/v2/roaring64
-# github.com/VictoriaMetrics/VictoriaLogs v0.0.0-20250714230749-82aca88cecd8
+# github.com/VictoriaMetrics/VictoriaLogs v0.0.0-20250728123024-98593029b5aa
 ## explicit; go 1.24.5
 github.com/VictoriaMetrics/VictoriaLogs/lib/logstorage
 github.com/VictoriaMetrics/VictoriaLogs/lib/prefixfilter
-# github.com/VictoriaMetrics/VictoriaMetrics v1.122.0
+# github.com/VictoriaMetrics/VictoriaMetrics v1.123.0
 ## explicit; go 1.24.5
 github.com/VictoriaMetrics/VictoriaMetrics/app/victoria-metrics/test
 github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert-tool/unittest
@@ -95,7 +95,6 @@ github.com/VictoriaMetrics/VictoriaMetrics/lib/netutil
 github.com/VictoriaMetrics/VictoriaMetrics/lib/procutil
 github.com/VictoriaMetrics/VictoriaMetrics/lib/promauth
 github.com/VictoriaMetrics/VictoriaMetrics/lib/prompb
-github.com/VictoriaMetrics/VictoriaMetrics/lib/prompbmarshal
 github.com/VictoriaMetrics/VictoriaMetrics/lib/promrelabel
 github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape
 github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape/discovery/azure
