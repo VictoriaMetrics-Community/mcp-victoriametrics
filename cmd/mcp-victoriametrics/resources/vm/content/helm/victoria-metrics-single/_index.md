@@ -7,17 +7,16 @@ menu:
   docs:
     parent: helm
     weight: 3
-    identifier: helm-victoriametrics-single
-url: /helm/victoriametrics-single
+    identifier: helm-victoria-metrics-single
+url: /helm/victoria-metrics-single/
 aliases:
-  - /helm/victoriametrics-single/index.html
-  - /helm/victoria-metrics-single/index.html
+  - /helm/victoriametrics-single/
 tags:
   - metrics
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.24.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-single%2Fchangelog%2F%230241)
+![Version](https://img.shields.io/badge/0.24.3-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-single%2Fchangelog%2F%230243)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-single)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -83,6 +82,8 @@ Export default values of `victoria-metrics-single` chart to file `values.yaml`:
     ```
 
 Change the values according to the need of the environment in ``values.yaml`` file.
+
+> Consider setting `.Values.nameOverride` to a small value like `vms` to avoid hitting resource name limits of 63 characters
 
 Test the installation with command:
 
@@ -230,6 +231,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#license-secret-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">license.secret.name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Existing secret name</p>
+</td>
+    </tr>
+    <tr id="nameoverride">
+      <td><a href="#nameoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">nameOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override chart name</p>
 </td>
     </tr>
     <tr id="poddisruptionbudget">

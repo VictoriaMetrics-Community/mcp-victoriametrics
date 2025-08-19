@@ -7,18 +7,17 @@ menu:
   docs:
     parent: helm
     weight: 6
-    identifier: helm-victoriametrics-alert
-url: /helm/victoriametrics-alert
+    identifier: helm-victoria-metrics-alert
+url: /helm/victoria-metrics-alert/
 aliases:
-  - /helm/victoriametrics-alert/index.html
-  - /helm/victoria-metrics-alert/index.html
+  - /helm/victoriametrics-alert/
 tags:
   - metrics
   - kubernetes
   - logs
 ---
 
-![Version](https://img.shields.io/badge/0.24.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-alert%2Fchangelog%2F%230240)
+![Version](https://img.shields.io/badge/0.25.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-alert%2Fchangelog%2F%230250)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-alert)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -78,6 +77,8 @@ Export default values of `victoria-metrics-alert` chart to file `values.yaml`:
     ```
 
 Change the values according to the need of the environment in ``values.yaml`` file.
+
+> Consider setting `.Values.nameOverride` to a small value like `vma` to avoid hitting resource name limits of 63 characters
 
 Test the installation with command:
 
@@ -178,6 +179,47 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>External URL Prefix, Prefix for the internal routes of web endpoints</p>
 </td>
     </tr>
+    <tr id="alertmanager-cluster">
+      <td><a href="#alertmanager-cluster"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.cluster</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">gossipInterval</span><span class="p">:</span><span class="w"> </span><span class="l">200ms</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">listenAddress</span><span class="p">:</span><span class="w"> </span><span class="m">0.0.0.0</span><span class="p">:</span><span class="m">9094</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">peerTimeout</span><span class="p">:</span><span class="w"> </span><span class="l">15s</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">pushPullInterval</span><span class="p">:</span><span class="w"> </span><span class="l">60s</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">settleTimeout</span><span class="p">:</span><span class="w"> </span><span class="l">1m</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Cluster configuration for alertmanager</p>
+</td>
+    </tr>
+    <tr id="alertmanager-cluster-gossipinterval">
+      <td><a href="#alertmanager-cluster-gossipinterval"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.cluster.gossipInterval</span><span class="p">:</span><span class="w"> </span><span class="l">200ms</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Cluster gossip interval</p>
+</td>
+    </tr>
+    <tr id="alertmanager-cluster-listenaddress">
+      <td><a href="#alertmanager-cluster-listenaddress"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.cluster.listenAddress</span><span class="p">:</span><span class="w"> </span><span class="m">0.0.0.0</span><span class="p">:</span><span class="m">9094</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Cluster listen address</p>
+</td>
+    </tr>
+    <tr id="alertmanager-cluster-peertimeout">
+      <td><a href="#alertmanager-cluster-peertimeout"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.cluster.peerTimeout</span><span class="p">:</span><span class="w"> </span><span class="l">15s</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Cluster peer timeout</p>
+</td>
+    </tr>
+    <tr id="alertmanager-cluster-pushpullinterval">
+      <td><a href="#alertmanager-cluster-pushpullinterval"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.cluster.pushPullInterval</span><span class="p">:</span><span class="w"> </span><span class="l">60s</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Cluster push/pull interval</p>
+</td>
+    </tr>
+    <tr id="alertmanager-cluster-settletimeout">
+      <td><a href="#alertmanager-cluster-settletimeout"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.cluster.settleTimeout</span><span class="p">:</span><span class="w"> </span><span class="l">1m</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Cluster settle timeout</p>
+</td>
+    </tr>
     <tr id="alertmanager-config">
       <td><a href="#alertmanager-config"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.config</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">global</span><span class="p">:</span><span class="w">
@@ -199,6 +241,17 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#alertmanager-configmap"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.configMap</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Use existing configmap if specified otherwise .config values will be used</p>
+</td>
+    </tr>
+    <tr id="alertmanager-deployment">
+      <td><a href="#alertmanager-deployment"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.deployment</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">maxSurge</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">maxUnavailable</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">Recreate</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank">K8s Deployment</a> specific variables</p>
 </td>
     </tr>
     <tr id="alertmanager-emptydir">
@@ -328,6 +381,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Alertmanager listen address</p>
 </td>
     </tr>
+    <tr id="alertmanager-mode">
+      <td><a href="#alertmanager-mode"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.mode</span><span class="p">:</span><span class="w"> </span><span class="l">deployment</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Alertmanager mode: deployment, statefulSet</p>
+</td>
+    </tr>
     <tr id="alertmanager-nodeselector">
       <td><a href="#alertmanager-nodeselector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.nodeSelector</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -435,6 +494,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Startup probe</p>
 </td>
     </tr>
+    <tr id="alertmanager-replicacount">
+      <td><a href="#alertmanager-replicacount"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(int)</code></em><p>Replica count</p>
+</td>
+    </tr>
     <tr id="alertmanager-resources">
       <td><a href="#alertmanager-resources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.resources</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -524,6 +589,27 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#alertmanager-service-type"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.service.type</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterIP</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Service type</p>
+</td>
+    </tr>
+    <tr id="alertmanager-statefulset">
+      <td><a href="#alertmanager-statefulset"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.statefulSet</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">podManagementPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">OrderedReady</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">updateStrategy</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/" target="_blank">K8s StatefulSet</a> specific variables</p>
+</td>
+    </tr>
+    <tr id="alertmanager-statefulset-spec-podmanagementpolicy">
+      <td><a href="#alertmanager-statefulset-spec-podmanagementpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.statefulSet.spec.podManagementPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">OrderedReady</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Deploy order policy for StatefulSet pods</p>
+</td>
+    </tr>
+    <tr id="alertmanager-statefulset-spec-updatestrategy">
+      <td><a href="#alertmanager-statefulset-spec-updatestrategy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.statefulSet.spec.updateStrategy</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>StatefulSet update strategy. Check <a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies" target="_blank">here</a> for details.</p>
 </td>
     </tr>
     <tr id="alertmanager-templates">
@@ -1025,7 +1111,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </td>
     </tr>
     <tr id="server-service-clusterip">
-      <td><a href="#server-service-clusterip"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.clusterIP</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+      <td><a href="#server-service-clusterip"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.clusterIP</span><span class="p">:</span><span class="w"> </span><span class="l">None</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Service ClusterIP</p>
 </td>

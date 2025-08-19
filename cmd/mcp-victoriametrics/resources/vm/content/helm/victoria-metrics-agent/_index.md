@@ -7,17 +7,16 @@ menu:
   docs:
     parent: helm
     weight: 5
-    identifier: helm-victoriametrics-agent
-url: /helm/victoriametrics-agent
+    identifier: helm-victoria-metrics-agent
+url: /helm/victoria-metrics-agent/
 aliases:
-  - /helm/victoriametrics-agent/index.html
-  - /helm/victoria-metrics-agent/index.html
+  - /helm/victoriametrics-agent/
 tags:
   - metrics
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.25.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-agent%2Fchangelog%2F%230250)
+![Version](https://img.shields.io/badge/0.25.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-agent%2Fchangelog%2F%230252)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-agent)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -77,6 +76,8 @@ Export default values of `victoria-metrics-agent` chart to file `values.yaml`:
     ```
 
 Change the values according to the need of the environment in ``values.yaml`` file.
+
+> Consider setting `.Values.nameOverride` to a small value like `vma` to avoid hitting resource name limits of 63 characters
 
 Test the installation with command:
 

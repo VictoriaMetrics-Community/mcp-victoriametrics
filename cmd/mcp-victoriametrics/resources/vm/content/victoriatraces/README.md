@@ -1,7 +1,7 @@
 > VictoriaTraces is currently under active development and not ready for production use. It is built on top of VictoriaLogs and therefore shares some flags and APIs. These will be fully separated once VictoriaTraces reaches a stable release. Until then, features may change or break without notice.
 
 VictoriaTraces is an open-source, user-friendly database designed for storing and querying distributed [tracing data](https://en.wikipedia.org/wiki/Tracing_(software)), 
-built by the [VictoriaMetrics](https://github.com/VictoriaMetrics/VictoriaMetrics) team.
+built by the [VictoriaMetrics](https://github.com/VictoriaMetrics) team.
 
 VictoriaTraces provides the following features:
 - It is resource-efficient and fast. It uses up to [**3.7x less RAM and up to 2.6x less CPU**](https://victoriametrics.com/blog/dev-note-distributed-tracing-with-victorialogs/) than other solutions such as Grafana Tempo.
@@ -35,7 +35,7 @@ To stop the services, run:
 make docker-vt-single-down;
 ```
 
-You can read more about docker compose and what's available there in the [Docker compose environment for VictoriaTraces](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/deployment/victoriatraces/deployment/docker/README.md#victoriatraces-server).
+You can read more about docker compose and what's available there in the [Docker compose environment for VictoriaTraces](https://github.com/VictoriaMetrics/VictoriaTraces/blob/master/deployment/docker/README.md).
 
 ### How to build from sources
 

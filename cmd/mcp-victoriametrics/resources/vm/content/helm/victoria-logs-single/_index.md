@@ -7,17 +7,16 @@ menu:
   docs:
     parent: helm
     weight: 1
-    identifier: helm-victorialogs-single
-url: /helm/victorialogs-single
+    identifier: helm-victoria-logs-single
+url: /helm/victoria-logs-single/
 aliases:
-  - /helm/victorialogs-single/index.html
-  - /helm/victoria-logs-single/index.html
+  - /helm/victorialogs-single/
 tags:
   - logs
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.11.5-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-single%2Fchangelog%2F%230115)
+![Version](https://img.shields.io/badge/0.11.6-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-single%2Fchangelog%2F%230116)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-logs-single)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -196,6 +195,8 @@ Export default values of `victoria-logs-single` chart to file `values.yaml`:
     ```
 
 Change the values according to the need of the environment in ``values.yaml`` file.
+
+> Consider setting `.Values.nameOverride` to a small value like `vls` to avoid hitting resource name limits of 63 characters
 
 Test the installation with command:
 

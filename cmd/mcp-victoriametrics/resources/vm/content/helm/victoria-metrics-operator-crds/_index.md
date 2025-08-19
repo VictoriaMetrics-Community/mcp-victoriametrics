@@ -7,10 +7,10 @@ menu:
   docs:
     parent: helm
     weight: 14
-    identifier: helm-victoriametrics-operator-crds
-url: /helm/victoriametrics-operator-crds
+    identifier: helm-victoria-metrics-operator-crds
+url: /helm/victoria-metrics-operator-crds/
 aliases:
-  - /helm/victoriametrics-operator-crds/index.html
+  - /helm/victoriametrics-operator-crds/
 tags:
   - metrics
   - kubernetes
@@ -66,6 +66,8 @@ Export default values of `victoria-metrics-operator-crds` chart to file `values.
     ```
 
 Change the values according to the need of the environment in ``values.yaml`` file.
+
+> Consider setting `.Values.nameOverride` to a small value like `vmoc` to avoid hitting resource name limits of 63 characters
 
 Test the installation with command:
 

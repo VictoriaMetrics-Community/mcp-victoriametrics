@@ -7,18 +7,17 @@ menu:
   docs:
     parent: helm
     weight: 11
-    identifier: helm-victoriametrics-gateway
-url: /helm/victoriametrics-gateway
+    identifier: helm-victoria-metrics-gateway
+url: /helm/victoria-metrics-gateway/
 aliases:
-  - /helm/victoriametrics-gateway/index.html
-  - /helm/victoria-metrics-gateway/index.html
+  - /helm/victoriametrics-gateway/
 tags:
   - metrics
   - kubernetes
   - enterprise
 ---
 
-![Version](https://img.shields.io/badge/0.17.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-gateway%2Fchangelog%2F%230171)
+![Version](https://img.shields.io/badge/0.17.3-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-gateway%2Fchangelog%2F%230173)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-gateway)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -93,6 +92,8 @@ Export default values of `victoria-metrics-gateway` chart to file `values.yaml`:
     ```
 
 Change the values according to the need of the environment in ``values.yaml`` file.
+
+> Consider setting `.Values.nameOverride` to a small value like `vmg` to avoid hitting resource name limits of 63 characters
 
 Test the installation with command:
 
