@@ -338,6 +338,10 @@ It is possible to specify generic offset for the selected time range by appendin
 - `_time:2023-07Z offset 5h30m` matches logs on July, 2023 by UTC with offset 5h30m.
 - `_time:[2023-02-01Z, 2023-03-01Z) offset 1w` matches logs the week before the time range `[2023-02-01Z, 2023-03-01Z)` by UTC.
 
+See also [`time_offset` option](#query-options), which allows applying the given offset to all the filters on `_time` field without the need to modify the query.
+
+See also [`time_add` pipe](#time_add-pipe), which allows adding the given duration to the given log field.
+
 Performance tips:
 
 - It is recommended specifying the smallest possible time range during the search, since it reduces the amounts of log entries, which need to be scanned during the query.
@@ -1486,6 +1490,7 @@ LogsQL supports the following pipes:
 - [`filter`](#filter-pipe) applies additional [filters](#filters) to results.
 - [`first`](#first-pipe) returns the first N logs after sorting them by the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 - [`format`](#format-pipe) formats output field from input [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+- [`generate_sequence`](#generate_sequence-pipe) generates output logs with messages containing integer sequence.
 - [`join`](#join-pipe) joins query results by the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 - [`json_array_len`](#json_array_len-pipe) returns the length of JSON array stored at the given [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 - [`hash`](#hash-pipe) returns the hash over the given [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) value.
@@ -1504,6 +1509,7 @@ LogsQL supports the following pipes:
 - [`stats`](#stats-pipe) calculates various stats over the selected logs.
 - [`stream_context`](#stream_context-pipe) allows selecting surrounding logs in front and after the matching logs
   per each [log stream](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields).
+- [`time_add`](#time_add-pipe) adds the given duration to the given field containing [RFC3339 time](https://www.rfc-editor.org/rfc/rfc3339).
 - [`top`](#top-pipe) returns top `N` field sets with the maximum number of matching logs.
 - [`union`](#union-pipe) returns results from multiple LogsQL queries.
 - [`uniq`](#uniq-pipe) returns unique log entries.
@@ -2193,6 +2199,26 @@ only if `ip` and `host` [fields](https://docs.victoriametrics.com/victorialogs/k
 ```logsql
 _time:5m | format if (ip:* and host:*) "request from <ip>:<host>" as message
 ```
+
+### generate_sequence pipe
+
+The `<q> | generate_sequence <N>` [pipe](#pipes) skips all the `<q>` results and generates `<N>` output logs
+with the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) containing integer sequence starting from 0 and ending at `N-1`.
+
+This pipe is useful for testing and debugging of the LogsQL pipes. For example, the following query generates 1000 random integers in the range `[0..9]`
+and collects the statistics on the number of hits per each random number:
+
+```logsql
+* | generate_sequence 1000
+    | math round(rand()*10) as rand_num
+    | stats by (rand_num) count() hits
+    | sort by (rand_num)
+```
+
+See also:
+
+- [`rand()` function from `math` pipe](#math-pipe)
+- [`stats` pipe](#stats-pipe)
 
 ### join pipe
 
@@ -3035,6 +3061,35 @@ The `| stream_context` [pipe](#pipes) must go first just after the [filters](#fi
 See also:
 
 - [stream filter](#stream-filter)
+
+### time_add pipe
+
+`<q> | time_add <duration>` adds the given `<duration>` to the [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field).
+The `<duration>` can be in any format described [here](#duration-values).
+
+For example, the following query adds one hour to `_time` field in the selected logs:
+
+```logsql
+_time:5m | time_add 1h
+```
+
+Specify negative duration for subtracting it from the `_time` field:
+
+```logsql
+_time:5m | time_add -1h
+```
+
+Add `at <field_name>` to the end of the `time_add` pipe in order to add the given `<duration>` to the [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+with the given `<field_name>`. For example, the following query adds one week to the field `transaction_time`:
+
+```logsql
+_time:5m | time_add 1w at transaction_time
+```
+
+See also:
+
+- [`_time` filter](#time-filter).
+- [`time_offset` option](#query-options).
 
 ### top pipe
 
@@ -4184,6 +4239,16 @@ VictoriaLogs supports the following options, which can be passed in the beginnin
   options(concurrency=2) _time:1d | count_uniq(user_id)
   ```
 
+- `time_offset` – subtracts the given offset from all the [time filters](#time-filter) in the query,
+  and then adds the given offset to the selected [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) values
+  before passing them to query [pipes](#pipes). Allows comparing query results for the same duration at different offsets.
+  Accepts any [duration value](#duration-values) like `12h`, `1d`, `1y`. For example, the following query returns the number of logs with `error` [words](#word)
+  over the last hour 7 days ago.
+
+  ```logsql
+  options(time_offset=7d) _time:1h error | stats count() as 'errors_7d_ago'
+  ```
+
 - `ignore_global_time_filter` - allows ignoring time filter from `start` and `end` args of [HTTP querying API](https://docs.victoriametrics.com/victorialogs/querying/#http-api)
   for the given (sub)query. For example, the following query returns the number of logs with `user_id` values seen in logs during December 2024, on the `[start...end]`
   time range passed to [`/api/v1/query`](https://docs.victoriametrics.com/victorialogs/querying/#querying-logs):
@@ -4365,37 +4430,78 @@ You can find more details here: [How to determine which log fields occupy the mo
 
 ### Profile pipes incrementally
 
-Start with a simple filter that runs very fast, like `_time:5m error`. Note how long it takes. Then, add the next stage you need and measure the query performance again.
-It is recommended adding `| count()` at the end of the query at every stage in order to exclude the time needed for formatting all output logs.
+Suppose you need to profile and optimize the following query:
+
+```logsql
+_time:5m -"cannot open file" error
+  | extract "user_id=(<uid>)"
+  | top 5 by (uid)
+```
+
+Drop all the [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) from the query and leave only
+the [time range filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) like `_time:5m`.
+This query returns all the logs on the given time range. If the query is executed
+via [the built-in web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui) or
+via [the Grafana plugin for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/victorialogs-datasource/),
+then just leave `*` in the query input field, since both the web UI and Grafana plugin for VictoriaLogs automatically filter
+logs on the selected time range. Add [`| count()`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats) at the end of the query and measure the time it takes to execute.
+This is the worst-case time needed for executing the query. The query also returns the number of logs, which need to be processed
+in the worst case during query execution:
+
+```logsql
+_time:5m | count()
+```
+
+Then add filters from the original query one-by-one and measure the resulting query performance. Try different filters from the original
+query and leaving the filter per each step, which executes faster.
 
 ```logsql
 _time:5m error | count()
 ```
 
 ```logsql
-_time:5m error
-  | extract 'user_id=(<uid>)' from _msg
+_time:5m error -"cannot open file" | count()
+```
+
+If you hit some slow filter, try replacing it with faster and more specific filter.
+See [the performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips) for details.
+For example, the slow `-"cannot open file"` filter can be replaced with the faster [`contains_any(phrase1, ..., phraseN)`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter)
+filter where `phrase1`, ..., `phraseN` are phrases seen in the logs you want to select:
+
+```logsql
+_time:5m error contains_any("access denied", "unauthorized", "403") | count()
+```
+
+After all the needed filters are added to the query, look at the number of matching logs.
+If the number is too big (e.g. exceeds tens of millions), then, probably, more specific
+filters can be added to the query in order to reduce the number of logs to process
+by the [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).
+For example, adding [phrase filters](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) on constant string parts
+from the [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe) pattern can significantly reduce the number of logs
+to process by the `extract` pipe:
+
+```logsql
+_time:5m error contains_any("access denied", "unauthorized", "403") "user_id=(" | count()
+```
+
+Then add pipes from the original query one-by-one and measure the query duration per each step:
+
+```logsql
+_time:5m error contains_any("access denied", "unauthorized", "403") "user_id=("
+  | extract "user_id=(<uid>)"
   | count()
 ```
 
 ```logsql
-_time:5m error
-    | extract 'user_id=(<uid>)' from _msg
-    | stats by (uid) count() as errors
-    | count()
-```
-
-```logsql
-_time:5m error
-  | extract 'user_id=(<uid>)' from _msg
-  | stats by (uid) count() as errors
-  | sort by (errors) desc limit 10
+_time:5m error contains_any("access denied", "unauthorized", "403") "user_id=("
+  | extract "user_id=(<uid>)"
+  | top 5 by (uid)
   | count()
 ```
 
-Always add one stage at a time and check query performance after each change. If something uses too much time or memory, you will know exactly which part of the query to fix.
+If the query becomes slow or starts using a lot of RAM after adding the next filter or pipe, you will know exactly which part of the query to fix.
 
-If you find a slow step, try these ideas:
+If you find a slow filter or pipe, try these ideas:
 
 - Regex matching and JSON parsing are expensive. Use faster alternatives if you can. See [performance tips](#performance-tips).
 - Sorting without a limit with [`sort` pipe](#sort-pipe) stores all logs in memory. Add a `limit` or reduce the input number of logs.

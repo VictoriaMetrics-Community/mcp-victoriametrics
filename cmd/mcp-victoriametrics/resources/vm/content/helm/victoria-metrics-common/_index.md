@@ -2,10 +2,9 @@
 
 ---
 title: VictoriaMetrics Common
-url: /helm/victoriametrics-common
+url: /helm/victoria-metrics-common/
 aliases:
-  - /helm/victoriametrics-common/index.html
-  - /helm/victoria-metrics-common/index.html
+  - /helm/victoriametrics-common/
 tags:
   - metrics
   - kubernetes

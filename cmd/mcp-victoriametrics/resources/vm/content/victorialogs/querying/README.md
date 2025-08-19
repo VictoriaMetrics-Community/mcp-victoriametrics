@@ -54,7 +54,8 @@ By default the `/select/logsql/query` returns all the log entries matching the g
 - By closing the response stream at any time. VictoriaLogs stops query execution and frees all the resources occupied by the request as soon as it detects closed client connection.
   So it is safe running [`*` query](https://docs.victoriametrics.com/victorialogs/logsql/#any-value-filter), which selects all the logs, even if trillions of logs are stored in VictoriaLogs.
 - By specifying the maximum number of log entries, which can be returned in the response via `limit` query arg. For example, the following command returns
-  up to 10 most recently added log entries with the `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word)
+  up to 10 log entries with the biggest [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) values
+  with the `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word)
   in the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
 
   ```sh
@@ -71,6 +72,10 @@ By default the `/select/logsql/query` returns all the log entries matching the g
 - By adding [`_time` filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter). The time range for the query can be specified via optional
   `start` and `end` query args formatted according to [these docs](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#timestamp-formats).
 - By adding more specific [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters) to the query, which select lower number of logs.
+
+If the `limit=N` query arg is passed to `/select/logsql/query`, then it may also accept the `offset=M` query arg. This allows building a simple pagination by selecting
+up to `<N>` matching logs with the biggest [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) values on the selected time range,
+while skipping `<M>` logs with the biggest `_time` value.
 
 The `/select/logsql/query` endpoint returns [a stream of JSON lines](https://jsonlines.org/),
 where each line contains JSON-encoded log entry in the form `{field1="value1",...,fieldN="valueN"}`.
@@ -960,7 +965,8 @@ See also [command line interface](#command-line).
 
 ## Visualization in Grafana
 
-[VictoriaLogs Grafana Datasource](https://docs.victoriametrics.com/victorialogs/victorialogs-datasource/) allows you to query and visualize VictoriaLogs data in Grafana
+[VictoriaLogs Grafana datasource](https://docs.victoriametrics.com/victorialogs/victorialogs-datasource/) allows you to query and visualize VictoriaLogs data in Grafana.
+Try [playground for VictoriaLogs Grafana datasource](https://play-grafana.victoriametrics.com/d/be5zidev72m80f/k8s-logs-via-victorialogs).
 
 ## Command-line
 

@@ -7,17 +7,16 @@ menu:
   docs:
     parent: helm
     weight: 10
-    identifier: helm-victoriametrics-distributed
-url: /helm/victoriametrics-distributed
+    identifier: helm-victoria-metrics-distributed
+url: /helm/victoria-metrics-distributed/
 aliases:
-  - /helm/victoriametrics-distributed/index.html
-  - /helm/victoria-metrics-distributed/index.html
+  - /helm/victoriametrics-distributed/
 tags:
   - metrics
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.20.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-distributed%2Fchangelog%2F%230200)
+![Version](https://img.shields.io/badge/0.21.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-distributed%2Fchangelog%2F%230210)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-distributed)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -177,6 +176,8 @@ Export default values of `victoria-metrics-distributed` chart to file `values.ya
     ```
 
 Change the values according to the need of the environment in ``values.yaml`` file.
+
+> Consider setting `.Values.nameOverride` to a small value like `vmd` to avoid hitting resource name limits of 63 characters
 
 Test the installation with command:
 
@@ -511,8 +512,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">common</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">affinity</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">nodeSelector</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">topology.kubernetes.io/zone</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ (.zone).name }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">nodeSelector</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">topologySpreadConstraints</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="nt">maxSkew</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                  </span><span class="nt">topologyKey</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes.io/hostname</span><span class="w">
@@ -570,8 +570,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="zonetpl-common-spec">
       <td><a href="#zonetpl-common-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">zoneTpl.common.spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">affinity</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">nodeSelector</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">topology.kubernetes.io/zone</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ (.zone).name }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">nodeSelector</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">topologySpreadConstraints</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">maxSkew</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">topologyKey</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes.io/hostname</span><span class="w">

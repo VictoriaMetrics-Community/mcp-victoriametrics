@@ -91,7 +91,7 @@ Bumping the limits may significantly improve build speed.
 1. Bump VictoriaLogs version at `deployment/docker/*.yml`. For example:
 
    ```shell
-   for f in $(grep "v1\.116\.0" -R deployment/docker/ -l); do sed -i 's/v1.116.0/v1.117.0/g' $f; done
+   for f in $(grep "v1\.26\.0" -R deployment/docker/ -l); do sed -i 's/v1.26.0/v1.27.0/g' $f; done
    ```
 
 1. Bump VictoriaLogs version mentioned in [docs](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/7388).

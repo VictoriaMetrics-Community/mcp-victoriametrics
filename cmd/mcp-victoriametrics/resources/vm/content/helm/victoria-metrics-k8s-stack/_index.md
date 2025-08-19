@@ -7,17 +7,16 @@ menu:
   docs:
     parent: helm
     weight: 12
-    identifier: helm-victoriametrics-k8s-stack
-url: /helm/victoriametrics-k8s-stack
+    identifier: helm-victoria-metrics-k8s-stack
+url: /helm/victoria-metrics-k8s-stack/
 aliases:
-  - /helm/victoriametrics-k8s-stack/index.html
-  - /helm/victoria-metrics-k8s-stack/index.html
+  - /helm/victoriametrics-k8s-stack/
 tags:
   - metrics
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.58.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230582)
+![Version](https://img.shields.io/badge/0.59.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230592)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-k8s-stack)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -300,6 +299,8 @@ Export default values of `victoria-metrics-k8s-stack` chart to file `values.yaml
     ```
 
 Change the values according to the need of the environment in ``values.yaml`` file.
+
+> Consider setting `.Values.nameOverride` to a small value like `vmks` to avoid hitting resource name limits of 63 characters
 
 Test the installation with command:
 

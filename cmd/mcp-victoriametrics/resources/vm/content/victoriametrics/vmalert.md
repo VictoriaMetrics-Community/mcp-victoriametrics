@@ -231,13 +231,13 @@ expression and then act according to the Rule type.
 
 There are two types of Rules:
 
-* [alerting](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/) -
+* [Alerting](https://docs.victoriametrics.com/victoriametrics/vmalert/#alerting-rules) -
   Alerting rules allow defining alert conditions via `expr` field and to send notifications to
-  [Alertmanager](https://github.com/prometheus/alertmanager) if execution result is not empty.
-* [recording](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/) -
+  [Alertmanager](https://github.com/prometheus/alertmanager) if execution result is not empty ([Prometheus alerting rules docs](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules)).
+* [Recording](https://docs.victoriametrics.com/victoriametrics/vmalert/#recording-rules) -
   Recording rules allow defining `expr` which result will be then backfilled to configured
   `-remoteWrite.url`. Recording rules are used to precompute frequently needed or computationally
-  expensive expressions and save their result as a new set of time series.
+  expensive expressions and save their result as a new set of time series ([Prometheus recording rules docs](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)).
 
 `vmalert` forbids defining duplicates - rules with the same combination of name, expression, and labels
 within one group.
@@ -865,8 +865,8 @@ There are following non-required `replay` flags:
 * `-replay.disableProgressBar` - whether to disable progress bar which shows progress work.
   Progress bar may generate a lot of log records, which is not formatted as standard VictoriaMetrics logger.
   It could break logs parsing by external system and generate additional load on it.
-* `-replay.ruleEvaluationConcurrency` -  The maximum number of concurrent `/query_range` requests for a single rule. 
-  Increasing this value when replaying for a long time and a single request range is limited by `-replay.maxDatapointsPerQuery`.
+* `-replay.ruleEvaluationConcurrency` -  The maximum number of concurrent `/query_range` requests when replay recording rule or alerting rule with for=0.
+  Increasing this value when replaying for a long time, since each request is limited by `-replay.maxDatapointsPerQuery`.
   The default value is `1`.
 
 See full description for these flags in `./vmalert -help`.

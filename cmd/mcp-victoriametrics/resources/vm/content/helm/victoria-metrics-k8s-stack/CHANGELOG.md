@@ -1,5 +1,41 @@
 ## Next release
 
+- TODO
+
+## 0.59.2
+
+**Release date:** 18 Aug 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.124.0](https://img.shields.io/badge/v1.124.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11240)
+
+- bump version of VM components to [v1.124.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.124.0)
+
+## 0.59.1
+
+**Release date:** 18 Aug 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.123.0](https://img.shields.io/badge/v1.123.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11230)
+
+- updates operator to [v0.62.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.62.0) version. See issue [#2357](https://github.com/VictoriaMetrics/helm-charts/issues/2357).
+
+## 0.59.0
+
+**Release date:** 18 Aug 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.123.0](https://img.shields.io/badge/v1.123.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11230)
+
+- vmcluster: set chart's app version to spec.clusterVersion instead of setting tag for each component. See [#2348](https://github.com/VictoriaMetrics/helm-charts/issues/2348).
+- fixed bug, when explicitly defined tag for vminsert appears in vmagent spec. See [#2349](https://github.com/VictoriaMetrics/helm-charts/issues/2349).
+- updated dashboards and rules
+- use `.Values.prometheus-node-exporter.service.labels.jobLabel` as a value for `job` label in node exporter rules. See [#2340](https://github.com/VictoriaMetrics/helm-charts/pull/2340).
+- updates operator to [v0.62.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.62.0) version
+
+## 0.58.3
+
+**Release date:** 05 Aug 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.123.0](https://img.shields.io/badge/v1.123.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11230)
+
 **Update note 1**: In this release default VMSingle port was changed from 8429 to 8428. To prevent unwanted VMSingle restart please set it to old value using `.Values.vmsingle.spec.port: 8429`.
 
 - Changed default VMSingle port 8429 -> 8428. Related issue [#1345](https://github.com/VictoriaMetrics/operator/issues/1345).
@@ -185,7 +221,7 @@ Please follow this doc https://docs.victoriametrics.com/helm/victoriametrics-k8s
 
 ![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.116.0](https://img.shields.io/badge/v1.116.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11160)
 
-- TODO
+- bump version of VM components to [v1.123.0](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/docs/victoriametrics/changelog/CHANGELOG.md#v11230)
 
 ## 0.45.1
 

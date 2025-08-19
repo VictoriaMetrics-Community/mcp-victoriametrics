@@ -1,14 +1,12 @@
 module github.com/VictoriaMetrics-Community/mcp-victoriametrics
 
-go 1.24.5
+go 1.24.6
 
 require (
-	github.com/VictoriaMetrics/VictoriaMetrics v1.123.0
-	github.com/VictoriaMetrics/metrics v1.38.0
+	github.com/VictoriaMetrics/VictoriaMetrics v1.124.0
+	github.com/VictoriaMetrics/metrics v1.39.1
 	github.com/VictoriaMetrics/metricsql v0.84.6
 	github.com/VictoriaMetrics/victoriametrics-cloud-api-go v0.0.2
-	github.com/blevesearch/bleve/v2 v2.5.2
-	github.com/mark3labs/mcp-go v0.37.0
 	github.com/blevesearch/bleve/v2 v2.5.3
 	github.com/mark3labs/mcp-go v0.37.0
 	github.com/tmc/langchaingo v0.1.13
@@ -20,7 +18,7 @@ require (
 	github.com/RoaringBitmap/roaring/v2 v2.5.0 // indirect
 	github.com/VictoriaMetrics/VictoriaLogs v0.0.0-20250728123024-98593029b5aa // indirect
 	github.com/VictoriaMetrics/easyproto v0.1.4 // indirect
-	github.com/VictoriaMetrics/fastcache v1.12.5 // indirect
+	github.com/VictoriaMetrics/fastcache v1.13.0 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/bits-and-blooms/bitset v1.22.0 // indirect
@@ -41,7 +39,7 @@ require (
 	github.com/blevesearch/zapx/v14 v14.4.2 // indirect
 	github.com/blevesearch/zapx/v15 v15.4.2 // indirect
 	github.com/blevesearch/zapx/v16 v16.2.4 // indirect
-	github.com/bmatcuk/doublestar/v4 v4.9.0 // indirect
+	github.com/bmatcuk/doublestar/v4 v4.9.1 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cheggaaa/pb/v3 v3.1.7 // indirect
@@ -58,7 +56,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/pkoukk/tiktoken-go v0.1.7 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect

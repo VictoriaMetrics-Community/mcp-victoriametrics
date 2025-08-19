@@ -7,14 +7,13 @@ menu:
   docs:
     parent: helm
     weight: 7
-    identifier: helm-victoriametrics-anomaly
-url: /helm/victoriametrics-anomaly
+    identifier: helm-victoria-metrics-anomaly
+url: /helm/victoria-metrics-anomaly/
 aliases:
-  - /helm/victoriametrics-anomaly/index.html
-  - /helm/victoria-metrics-anomaly/index.html
+  - /helm/victoriametrics-anomaly/
 ---
 
-![Version](https://img.shields.io/badge/1.11.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-anomaly%2Fchangelog%2F%231112)
+![Version](https://img.shields.io/badge/1.11.3-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-anomaly%2Fchangelog%2F%231113)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-anomaly)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -80,6 +79,8 @@ Export default values of `victoria-metrics-anomaly` chart to file `values.yaml`:
     ```
 
 Change the values according to the need of the environment in ``values.yaml`` file.
+
+> Consider setting `.Values.nameOverride` to a small value like `vma` to avoid hitting resource name limits of 63 characters
 
 Test the installation with command:
 
