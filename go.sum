@@ -4,8 +4,8 @@ github.com/RoaringBitmap/roaring/v2 v2.5.0 h1:TJ45qCM7D7fIEBwKd9zhoR0/S1egfnSSIz
 github.com/RoaringBitmap/roaring/v2 v2.5.0/go.mod h1:FiJcsfkGje/nZBZgCu0ZxCPOKD/hVXDS2dXi7/eUFE0=
 github.com/VictoriaMetrics/VictoriaLogs v0.0.0-20250728123024-98593029b5aa h1:qTB0QsUpBe/WzXQKcALj3Ossizb2daUHXmaVoWFdVlE=
 github.com/VictoriaMetrics/VictoriaLogs v0.0.0-20250728123024-98593029b5aa/go.mod h1:jeov7Un2x4Dpxw2Qn2MWa0kbwNn1Gc2Iw+8gvPqGsZk=
-github.com/VictoriaMetrics/VictoriaMetrics v1.124.0 h1:DWXDV3a3tZWnHw/PMe3q6lIZ8JuBl0nql2FfJMLlNqE=
-github.com/VictoriaMetrics/VictoriaMetrics v1.124.0/go.mod h1:5hOE8P0IL/JyfUA/PvDlOCYr5JEqm5Ro4Swwj3deAEk=
+github.com/VictoriaMetrics/VictoriaMetrics v1.125.1 h1:40Z12ZqpQzDeHS4wktdhzvXtp89/vtDSz9T4HDCEuk4=
+github.com/VictoriaMetrics/VictoriaMetrics v1.125.1/go.mod h1:mRRUzTxEuernAU9h20/UeZs11dJA2J8LaP9DxbtCag0=
 github.com/VictoriaMetrics/easyproto v0.1.4 h1:r8cNvo8o6sR4QShBXQd1bKw/VVLSQma/V2KhTBPf+Sc=
 github.com/VictoriaMetrics/easyproto v0.1.4/go.mod h1:QlGlzaJnDfFd8Lk6Ci/fuLxfTo3/GThPs2KH23mv710=
 github.com/VictoriaMetrics/fastcache v1.13.0 h1:AW4mheMR5Vd9FkAPUv+NH6Nhw+fmbTMGMsNAoA/+4G0=
@@ -146,8 +146,8 @@ github.com/valyala/fastrand v1.1.0 h1:f+5HkLW4rsgzdNoleUOB69hyT9IlD2ZQh9GyDMfb5G
 github.com/valyala/fastrand v1.1.0/go.mod h1:HWqCzkrkg6QXT8V2EXWvXCoow7vLwOFN002oeRzjapQ=
 github.com/valyala/fasttemplate v1.2.2 h1:lxLXG0uE3Qnshl9QyaK6XJxMXlQZELvChBOCmQD0Loo=
 github.com/valyala/fasttemplate v1.2.2/go.mod h1:KHLXt3tVN2HBp8eijSv/kGJopbvo7S+qRAEEKiv+SiQ=
-github.com/valyala/gozstd v1.22.0 h1:y9gANljS8mrehiLWrnLK3B98ITnLneIO6FiK2jpvNUo=
-github.com/valyala/gozstd v1.22.0/go.mod h1:y5Ew47GLlP37EkTB+B4s7r6A5rdaeB7ftbl9zoYiIPQ=
+github.com/valyala/gozstd v1.23.2 h1:S3rRsskaDvBCM2XJzQFYIDAO6txxmvTc1arA/9Wgi9o=
+github.com/valyala/gozstd v1.23.2/go.mod h1:y5Ew47GLlP37EkTB+B4s7r6A5rdaeB7ftbl9zoYiIPQ=
 github.com/valyala/histogram v1.2.0 h1:wyYGAZZt3CpwUiIb9AU/Zbllg1llXyrtApRS815OLoQ=
 github.com/valyala/histogram v1.2.0/go.mod h1:Hb4kBwb4UxsaNbbbh+RRz8ZR6pdodR57tzWUS3BUzXY=
 github.com/valyala/quicktemplate v1.8.0 h1:zU0tjbIqTRgKQzFY1L42zq0qR3eh4WoQQdIdqCysW5k=

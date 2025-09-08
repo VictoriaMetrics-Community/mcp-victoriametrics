@@ -1,9 +1,9 @@
 module github.com/VictoriaMetrics-Community/mcp-victoriametrics
 
-go 1.24.6
+go 1.25.0
 
 require (
-	github.com/VictoriaMetrics/VictoriaMetrics v1.124.0
+	github.com/VictoriaMetrics/VictoriaMetrics v1.125.1
 	github.com/VictoriaMetrics/metrics v1.39.1
 	github.com/VictoriaMetrics/metricsql v0.84.7
 	github.com/VictoriaMetrics/victoriametrics-cloud-api-go v0.0.2
@@ -65,7 +65,7 @@ require (
 	github.com/valyala/fastjson v1.6.4 // indirect
 	github.com/valyala/fastrand v1.1.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
-	github.com/valyala/gozstd v1.22.0 // indirect
+	github.com/valyala/gozstd v1.23.2 // indirect
 	github.com/valyala/histogram v1.2.0 // indirect
 	github.com/valyala/quicktemplate v1.8.0 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect

@@ -456,7 +456,7 @@ func (s *Storage) MustCreateSnapshot() string {
 	dstIdbDir := filepath.Join(dstDir, indexdbDirname)
 	fs.MustSymlinkRelative(idbSnapshot, dstIdbDir)
 
-	fs.MustSyncPath(dstDir)
+	fs.MustSyncPathAndParentDir(dstDir)
 
 	logger.Infof("created Storage snapshot for %q at %q in %.3f seconds", srcDir, dstDir, time.Since(startTime).Seconds())
 	return snapshotName
@@ -655,6 +655,8 @@ type Metrics struct {
 	MetricNamesUsageTrackerSizeBytes    uint64
 	MetricNamesUsageTrackerSizeMaxBytes uint64
 
+	DeletedMetricsCount uint64
+
 	IndexDBMetrics IndexDBMetrics
 	TableMetrics   TableMetrics
 }
@@ -762,6 +764,8 @@ func (s *Storage) UpdateMetrics(m *Metrics) {
 		d = 0
 	}
 	m.NextRetentionSeconds = uint64(d)
+
+	m.DeletedMetricsCount += uint64(s.getDeletedMetricIDs().Len())
 
 	idbPrev, idbCurr := s.getPrevAndCurrIndexDBs()
 	defer s.putPrevAndCurrIndexDBs(idbPrev, idbCurr)
