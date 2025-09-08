@@ -10,8 +10,8 @@ github.com/RoaringBitmap/roaring/v2/roaring64
 ## explicit; go 1.24.5
 github.com/VictoriaMetrics/VictoriaLogs/lib/logstorage
 github.com/VictoriaMetrics/VictoriaLogs/lib/prefixfilter
-# github.com/VictoriaMetrics/VictoriaMetrics v1.124.0
-## explicit; go 1.24.6
+# github.com/VictoriaMetrics/VictoriaMetrics v1.125.1
+## explicit; go 1.25.0
 github.com/VictoriaMetrics/VictoriaMetrics/app/victoria-metrics/test
 github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert-tool/unittest
 github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/config
@@ -94,6 +94,7 @@ github.com/VictoriaMetrics/VictoriaMetrics/lib/mergeset
 github.com/VictoriaMetrics/VictoriaMetrics/lib/netutil
 github.com/VictoriaMetrics/VictoriaMetrics/lib/procutil
 github.com/VictoriaMetrics/VictoriaMetrics/lib/promauth
+github.com/VictoriaMetrics/VictoriaMetrics/lib/prommetadata
 github.com/VictoriaMetrics/VictoriaMetrics/lib/prompb
 github.com/VictoriaMetrics/VictoriaMetrics/lib/promrelabel
 github.com/VictoriaMetrics/VictoriaMetrics/lib/promscrape
@@ -398,7 +399,7 @@ github.com/valyala/fastrand
 # github.com/valyala/fasttemplate v1.2.2
 ## explicit; go 1.12
 github.com/valyala/fasttemplate
-# github.com/valyala/gozstd v1.22.0
+# github.com/valyala/gozstd v1.23.2
 ## explicit; go 1.12
 github.com/valyala/gozstd
 # github.com/valyala/histogram v1.2.0
