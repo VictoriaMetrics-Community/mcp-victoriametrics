@@ -622,6 +622,8 @@ In [SSE and HTTP modes](#modes) the MCP Server provides metrics in Prometheus fo
 
 [<img src="https://github.com/user-attachments/assets/76355b76-8a54-487d-a7d9-0b64886938fb" alt="How to Use an AI Assistant with Your Monitoring System – VictoriaMetrics MCP Server" width="520px" />](https://www.youtube.com/watch?v=1k7xgbRi1k0)
 
+[<img src="https://github.com/user-attachments/assets/2b93a545-7834-4020-aa2c-369ddcc90a29" alt="MCP Server Integration & Much More: What's New in VictoriaMetrics Cloud Q2 2025" width="520px" />](https://victoriametrics.com/blog/q2-2025-whats-new-victoriametrics-cloud/)
+
 ## Disclaimer
 
 AI services and agents along with MCP servers like this cannot guarantee the accuracy, completeness and reliability of results.
