@@ -16,7 +16,7 @@ This stack collects metrics from the cluster, nodes, and workloads, and forwards
 
 All VictoriaMetrics Cloud integrations, including this one, require an access token for authentication. The configuration examples below contain two placeholders: `<DEPLOYMENT_ENDPOINT_URL>` and `<YOUR_ACCESS_TOKEN>`. These need to be replaced with your actual access token.
 
-To generate your access token (with **write access**, as metrics will be pushed), follow the steps in the [Access Tokens documentation](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens).
+To generate your access token (with **write access**, as metrics will be pushed), follow the steps in the [Access Tokens documentation](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens/).
 
 To set up Kubernetes monitoring using the VictoriaMetrics stack, visit the [cloud console](https://console.victoriametrics.cloud/integrations/kubernetes), or follow this interactive guide:
 

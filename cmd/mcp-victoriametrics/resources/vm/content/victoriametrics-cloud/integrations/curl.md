@@ -16,7 +16,7 @@ The configuration examples below contain two placeholders: `<DEPLOYMENT_ENDPOINT
 `<YOUR_ACCESS_TOKEN>`. These need to be replaced with your actual access token.
 
 To generate your access token (with **write access** for pushing data or **read access** for querying),
-follow the steps in the [Access Tokens documentation](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens).
+follow the steps in the [Access Tokens documentation](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens/).
 
 To integrate CURL with VictoriaMetrics Cloud, visit the [cloud console](https://console.victoriametrics.cloud/integrations/curl),
 or simply follow this interactive guide:

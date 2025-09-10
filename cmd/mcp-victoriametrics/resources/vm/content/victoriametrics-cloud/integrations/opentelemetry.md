@@ -19,7 +19,7 @@ authentication. The configuration examples below contain two placeholders: `<DEP
 and `<YOUR_ACCESS_TOKEN>`. These need to be replaced with your actual access token.
 
 To generate your access token (with **write access**, as metrics are pushed to VictoriaMetrics Cloud),
-follow the steps in the [Access Tokens documentation](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens).
+follow the steps in the [Access Tokens documentation](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens/).
 
 To integrate OpenTelemetry Collector with VictoriaMetrics Cloud, visit the
 [cloud console](https://console.victoriametrics.cloud/integrations/opentelemetry), or follow this interactive guide:

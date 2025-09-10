@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.27.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-cluster%2Fchangelog%2F%230272)
+![Version](https://img.shields.io/badge/0.28.3-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-cluster%2Fchangelog%2F%230283)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-cluster)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -227,7 +227,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Enterprise license key configuration for VictoriaMetrics enterprise. Required only for VictoriaMetrics enterprise. Check docs <a href="https://docs.victoriametrics.com/enterprise" target="_blank">here</a>, for more information, visit <a href="https://victoriametrics.com/products/enterprise/" target="_blank">site</a>. Request a trial license <a href="https://victoriametrics.com/products/enterprise/trial/" target="_blank">here</a> Supported starting from VictoriaMetrics v1.94.0</p>
+      <td><em><code>(object)</code></em><p>Enterprise license key configuration for VictoriaMetrics enterprise. Required only for VictoriaMetrics enterprise. Check docs <a href="https://docs.victoriametrics.com/victoriametrics/enterprise/" target="_blank">here</a>, for more information, visit <a href="https://victoriametrics.com/products/enterprise/" target="_blank">site</a>. Request a trial license <a href="https://victoriametrics.com/products/enterprise/trial/" target="_blank">here</a> Supported starting from VictoriaMetrics v1.94.0</p>
 </td>
     </tr>
     <tr id="license-key">
@@ -337,7 +337,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="vmauth-env">
       <td><a href="#vmauth-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/#environment-variables" target="_blank">here</a> for details</p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a> for details</p>
 </td>
     </tr>
     <tr id="vmauth-envfrom">
@@ -790,7 +790,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="vminsert-env">
       <td><a href="#vminsert-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/#environment-variables" target="_blank">here</a> for details.</p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a> for details.</p>
 </td>
     </tr>
     <tr id="vminsert-envfrom">
@@ -1321,7 +1321,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="vmselect-env">
       <td><a href="#vmselect-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/#environment-variables" target="_blank">here</a> for details.</p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a> for details.</p>
 </td>
     </tr>
     <tr id="vmselect-envfrom">
@@ -1875,7 +1875,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="vmstorage-env">
       <td><a href="#vmstorage-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/#environment-variables" target="_blank">here</a> for details</p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a> for details</p>
 </td>
     </tr>
     <tr id="vmstorage-envfrom">
@@ -2375,7 +2375,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="vmstorage-vmbackupmanager-env">
       <td><a href="#vmstorage-vmbackupmanager-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.vmbackupmanager.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/#environment-variables" target="_blank">here</a> for details</p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a> for details</p>
 </td>
     </tr>
     <tr id="vmstorage-vmbackupmanager-extraargs">
@@ -2479,7 +2479,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">onStart</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Allows to enable restore options for pod. Check <a href="https://docs.victoriametrics.com/vmbackupmanager#restore-commands" target="_blank">here</a> for details</p>
+      <td><em><code>(object)</code></em><p>Allows to enable restore options for pod. Check <a href="https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/#restore-commands" target="_blank">here</a> for details</p>
 </td>
     </tr>
     <tr id="vmstorage-vmbackupmanager-retention">

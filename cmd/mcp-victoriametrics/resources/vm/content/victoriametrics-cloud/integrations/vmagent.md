@@ -20,7 +20,7 @@ authentication. The configuration examples below contain two placeholders: `<DEP
 `<YOUR_ACCESS_TOKEN>`. These need to be replaced with your actual access token.
 
 To generate your access token (for write access in this case), follow the steps in the
-[Access Tokens documentation](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens).
+[Access Tokens documentation](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens/).
 
 To integrate VMAgent with VictoriaMetrics Cloud, visit the [cloud console](https://console.victoriametrics.cloud/integrations/vmagent),
 or simply follow this interactive guide:

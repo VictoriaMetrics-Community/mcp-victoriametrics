@@ -3,6 +3,8 @@ build:
   list: never
   publishResources: false
   render: never
+sitemap:
+  disable: true
 ---
 
 
@@ -19,24 +21,24 @@ allows to query and visualize data from VictoriaMetrics in Grafana.
 
 ## Motivation
 
-Thanks to VictoriaMetrics compatibility with Prometheus API most users can use [Prometheus datasource](https://docs.victoriametrics.com/#grafana-setup) 
+Thanks to VictoriaMetrics compatibility with Prometheus API most users can use [Prometheus datasource](https://docs.victoriametrics.com/victoriametrics/integrations/grafana/) 
 for Grafana to query data from VictoriaMetrics. But with time, Prometheus and VictoriaMetrics diverge more and more.
 The benefits of using VictoriaMetrics plugin are the following:
 
-* [MetricsQL](https://docs.victoriametrics.com/metricsql) functions support;
-* Supports [query tracing](https://docs.victoriametrics.com/#query-tracing) in Explore mode or right in panel's expressions;
-* Supports [WITH expressions](https://docs.victoriametrics.com/victoriametrics-datasource/#how-to-use-with-templates);
+* [MetricsQL](https://docs.victoriametrics.com/victoriametrics/metricsql/) functions support;
+* Supports [query tracing](https://docs.victoriametrics.com/victoriametrics/#query-tracing) in Explore mode or right in panel's expressions;
+* Supports [WITH expressions](https://docs.victoriametrics.com/victoriametrics/victoriametrics-datasource/#how-to-use-with-templates);
 * Plugin fixes [label names validation](https://github.com/grafana/grafana/issues/42615) issue;
-* Integration with [vmui](https://docs.victoriametrics.com/#vmui).
+* Integration with [vmui](https://docs.victoriametrics.com/victoriametrics/#vmui).
 
 ## Capabilities
 
-1. Use [MetricsQL](https://docs.victoriametrics.com/metricsql/) to query metrics in Grafana.
+1. Use [MetricsQL](https://docs.victoriametrics.com/victoriametrics/metricsql/) to query metrics in Grafana.
 1. Use Explore mode with Grafana.
 1. Build dashboards and setup alerts.
 1. Use Ad Hoc filters.
 1. [Template](https://github.com/VictoriaMetrics/victoriametrics-datasource/blob/main/src/README.md#how-to-use-with-templates) queries and expressions.
-1. Get insights about query execution bottlenecks via [tracing](https://docs.victoriametrics.com/#query-tracing).
+1. Get insights about query execution bottlenecks via [tracing](https://docs.victoriametrics.com/victoriametrics/#query-tracing).
 1. Automatically format queries via `Prettify` button.
 
 Try it at [VictoriaMetrics playground](https://play-grafana.victoriametrics.com/d/oS7Bi_0Wz_vm)!

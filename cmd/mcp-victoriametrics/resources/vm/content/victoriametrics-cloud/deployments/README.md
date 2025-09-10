@@ -1,3 +1,11 @@
+---
+build:
+  list: never
+  publishResources: false
+  render: never
+sitemap:
+  disable: true
+---
 ## Deployments
 
 VictoriaMetrics Cloud is a DBaaS (Database as a Service) product for VictoriaMetrics.

@@ -17,7 +17,7 @@ tags:
   - enterprise
 ---
 
-![Version](https://img.shields.io/badge/0.17.3-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-gateway%2Fchangelog%2F%230173)
+![Version](https://img.shields.io/badge/0.17.5-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-gateway%2Fchangelog%2F%230175)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-gateway)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -141,7 +141,7 @@ See the history of versions of `vmg` application with command.
 helm history vmg -n NAMESPACE
 ```
 
-# How to use [JWT signature verification](https://docs.victoriametrics.com/vmgateway#jwt-signature-verification)
+# How to use [JWT signature verification](https://docs.victoriametrics.com/victoriametrics/vmgateway/#jwt-signature-verification)
 
 Kubernetes best-practice is to store sensitive configuration parts in secrets. For example, 2 keys will be stored as:
 ```yaml
@@ -242,7 +242,7 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#auth"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">auth</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Access Control configuration. Check <a href="https://docs.victoriametrics.com/vmgateway#access-control" target="_blank">here</a> for details</p>
+      <td><em><code>(object)</code></em><p>Access Control configuration. Check <a href="https://docs.victoriametrics.com/vmgateway/#access-control" target="_blank">here</a> for details</p>
 </td>
     </tr>
     <tr id="auth-enabled">
@@ -260,7 +260,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="configmap">
       <td><a href="#configmap"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">configMap</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Use existing configmap if specified otherwise .config values will be used. Check <a href="https://docs.victoriametrics.com/vmgateway" target="_blank">here</a> for details</p>
+      <td><em><code>(string)</code></em><p>Use existing configmap if specified otherwise .config values will be used. Check <a href="https://docs.victoriametrics.com/victoriametrics/vmgateway/" target="_blank">here</a> for details</p>
 </td>
     </tr>
     <tr id="containerworkingdir">
@@ -454,7 +454,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Enterprise license key configuration for VictoriaMetrics enterprise. Required only for VictoriaMetrics enterprise. Check docs <a href="https://docs.victoriametrics.com/enterprise" target="_blank">here</a>, for more information, visit <a href="https://victoriametrics.com/products/enterprise/" target="_blank">site</a>. Request a trial license <a href="https://victoriametrics.com/products/enterprise/trial/" target="_blank">here</a> Supported starting from VictoriaMetrics v1.94.0</p>
+      <td><em><code>(object)</code></em><p>Enterprise license key configuration for VictoriaMetrics enterprise. Required only for VictoriaMetrics enterprise. Check docs <a href="https://docs.victoriametrics.com/victoriametrics/enterprise/" target="_blank">here</a>, for more information, visit <a href="https://victoriametrics.com/products/enterprise/" target="_blank">site</a>. Request a trial license <a href="https://victoriametrics.com/products/enterprise/trial/" target="_blank">here</a> Supported starting from VictoriaMetrics v1.94.0</p>
 </td>
     </tr>
     <tr id="license-key">
@@ -554,7 +554,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Rate limiter configuration. Docs are <a href="https://docs.victoriametrics.com/vmgateway#rate-limiter" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Rate limiter configuration. Docs are <a href="https://docs.victoriametrics.com/victoriametrics/vmgateway/#rate-limiter" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="ratelimiter-datasource-url">

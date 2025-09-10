@@ -16,14 +16,14 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.0.9-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-cluster%2Fchangelog%2F%23009)
+![Version](https://img.shields.io/badge/0.0.11-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-cluster%2Fchangelog%2F%230011)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-logs-cluster)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
 ![X](https://img.shields.io/twitter/follow/VictoriaMetrics?style=flat&label=Follow&color=black&logo=x&labelColor=black&link=https%3A%2F%2Fx.com%2FVictoriaMetrics)
 ![Reddit](https://img.shields.io/reddit/subreddit-subscribers/VictoriaMetrics?style=flat&label=Join&labelColor=red&logoColor=white&logo=reddit&link=https%3A%2F%2Fwww.reddit.com%2Fr%2FVictoriaMetrics)
 
-The VictoriaLogs cluster chart packages everything required to run a horizontally scalable, highly available log-storage backend inside Kubernetes.
+The VictoriaLogs cluster Helm chart deploys VictoriaLogs cluster database in Kubernetes. It optionally includes log collector for automatic collection of logs from Kubernetes containers and forwarding them to the deployed VictoriaLogs database.
 
 ## Prerequisites
 
@@ -41,57 +41,76 @@ For installation instructions, refer to the official documentation:
 * [Installing Helm](https://helm.sh/docs/intro/install/)
 * [Installing kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
-## Chart Details
+## Quick start
 
-### VictoriaLogs Cluster
+The chart deploys VictoriaLogs cluster database.
+It deploys the following components according to [VictoriaLogs cluster architecture](https://docs.victoriametrics.com/victorialogs/cluster/#architecture):
 
-When you install the chart, it creates the following core services and an optional log collector:
-
-- `vlinsert` receives incoming log streams from various sources and load-balances them across remote nodes.
-- `vlstorage` forms a StatefulSet that stores raw data on persistent volumes.
-- `vlselect` provides the query API and reads data from any storage replica, so adding more `vlselect` pods increases read throughput without impacting the stored data.
-- The log collector `vector` is disabled by default, but as soon as you set `vector.enabled: true`, a DaemonSet is deployed on every node. It starts tailing pod logs using the default parsing pipeline and automatically discovers the internal `vlinsert` addresses.
-
-```yaml
-vector:
-  enabled: true
-```
+- `vlstorage` stores the ingested logs to the configured persistent volumes
+- `vlinsert` receives incoming logs and spreads them evenly across `vlstorage` nodes
+- `vlselect` provides API for querying the ingested logs
 
 The default chart setup is shown below:
 
 ```mermaid
 graph LR
-    Vector["Log Collector"] --> VLI1["vlinsert-1"]
-    Vector --> VLI2["vlinsert-2"]
-   
+    Collector["Log Collector"] --> VLI1["vlinsert-1"]
+    Collector --> VLI2["vlinsert-2"]
+
     subgraph "VictoriaLogs Cluster"
         VLI1 --> VLS1["vlstorage-1"]
         VLI1 --> VLS2["vlstorage-2"]
         VLI2 --> VLS1
         VLI2 --> VLS2
-       
+
         VLS1 <--> VLQ1["vlselect-1"]
         VLS1 <--> VLQ2["vlselect-2"]
         VLS2 <--> VLQ1
         VLS2 <--> VLQ2
     end
-   
+
     VLQ1 <--> Users["Users/Grafana/vlogscli"]
     VLQ2 <--> Users
 ```
 
-### Vector
+For a quick start, install `victoria-logs-cluster` and
+[`victoria-logs-collector`](https://docs.victoriametrics.com/helm/victorialogs-collector/) charts using the following commands,
+making sure to replace the environment variables with your own values:
 
-When [Vector](https://github.com/vectordotdev/helm-charts/tree/develop/charts/vector) is enabled with `vector.enabled: true`, the default configuration works out of the box:
+```sh
+export RETENTION=30d
+export PVC_SIZE=10Gi
+export VLSTORAGE_REPLICAS=2
+export NAMESPACE=logging
 
-* The default role is set to "Agent" (typically deployed as a DaemonSet with a data directory at `/vector-data-dir`).
-* Vector is configured with the `k8s` source, using the `kubernetes_logs` type to collect logs from all Kubernetes pods in the cluster.
-* The default transform configuration includes a parser component that performs JSON parsing on incoming log messages.
-  * It attempts to parse the `message` field as JSON, and if successful, stores the parsed content in a `.log` field.
-  * If JSON parsing fails, it falls back to the original message content.
-* The default sink configuration includes a `vlogs` sink, configured as an Elasticsearch-compatible endpoint, which sends processed logs to `vlinsert` using bulk mode with `gzip` compression.
+# Install victoria-logs-cluster chart
+helm install vlc vm/victoria-logs-cluster --namespace $NAMESPACE --wait \
+    --set "vlstorage.retentionPeriod=$RETENTION" --set "vlstorage.persistentVolume.size=$PVC_SIZE" \
+    --set vmauth.enabled=true \
+    --set vlstorage.replicaCount=$VLSTORAGE_REPLICAS
 
-When you scale the number of `vlinsert` replicas using `vlinsert.replicaCount`, the chart automatically updates Vector's configuration to include all new instances, providing horizontal scaling of ingestion capacity without service interruption.
+# Install victoria-logs-collector chart
+helm install collector vm/victoria-logs-collector --namespace $NAMESPACE \
+    --set "remoteWrite[0].url=http://vlc-victoria-logs-cluster-vmauth:8427"
+```
+
+These commands configure the collector to collects logs from all the containers running in Kubernetes and to send the data
+to the installed cluster version of VictoriaLogs.
+In the example above, two `vlstorage` instances are deployed, each with a 30-day retention period and a 10 Gi PVC.
+
+To access the data within the cluster, use the vmauth address: `http://vlc-victoria-logs-cluster-vmauth.logging.svc.cluster.local:8427`.
+You can use this address as Data Source URL in Grafana.
+The vmui interface is available at: `http://vlc-victoria-logs-cluster-vmauth.logging.svc.cluster.local:8427/select/vmui/`.
+
+To uninstall these charts, run: `helm uninstall vls collector`.
+Note that this *will not* remove the PVCs, so you will need to delete them manually if no longer needed.
+
+For finer control and easier maintenance, it is recommended to set these
+values in a separate `values` file and use it during installation.
+See [how to install victoria-logs-single](https://docs.victoriametrics.com/helm/victoria-logs-single/#install-victoria-logs-single-chart) for an example.
+You can do this later if you want to configure more settings than shown in the default example.
+
+## Chart configuration
 
 ### vmauth
 
@@ -102,37 +121,31 @@ vmauth:
   enabled: true
 ```
 
-The chart automatically launches a [`vmauth`](https://docs.victoriametrics.com/victoriametrics/vmauth/) service with a routing configuration that splits read and write traffic according to VictoriaLogs cluster architecture patterns.
+The chart launches an [`vmauth`](https://docs.victoriametrics.com/victoriametrics/vmauth/) service
+for proxying and load-balancing incoming data ingestion requests to `vlinsert` nodes and for proxying and load-balancing incoming queries to `vlselect` nodes.
 
-External applications can send requests to `vmauth`, which will intelligently route:
-
-- Write requests (log ingestion) to `vlinsert`.
-- Read requests (log queries) to `vlselect`.
-
-The default Vector configuration bypasses this and continues sending logs directly to `vlinsert`. So, the chart can now be thought of as:
+So, the chart can now be thought of as:
 
 ```mermaid
 graph LR
-    Vector["Log Collector"] --> VLI1["vlinsert-1"]
-    Vector --> VLI2["vlinsert-2"]
-   
+    Collector["Log Collector"] --> VLI1["vlinsert-1"]
+    Collector --> VLI2["vlinsert-2"]
+
     subgraph "VictoriaLogs Cluster"
         VLI1 --> VLS1["vlstorage-1"]
         VLI1 --> VLS2["vlstorage-2"]
         VLI2 --> VLS1
         VLI2 --> VLS2
-       
+
         VLS1 <--> VLQ1["vlselect-1"]
         VLS1 <--> VLQ2["vlselect-2"]
         VLS2 <--> VLQ1
         VLS2 <--> VLQ2
     end
-   
+
     VLQ1 <--> Users["vmauth"]
     VLQ2 <--> Users
 ```
-
-Note that `vmauth` can send requests to `vlinsert` as needed. The diagram above shows a common use case.
 
 ## How to install
 
@@ -334,83 +347,6 @@ Change the values according to the need of the environment in ``victoria-logs-cl
       <td><em><code>(string)</code></em><p>The name of the service account to use. If not set and create is true, a name is generated using the fullname template</p>
 </td>
     </tr>
-    <tr id="vector">
-      <td><a href="#vector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vector</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- -<span class="l">w</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- --<span class="l">config-dir</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">/etc/vector/</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">containerPorts</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="m">9090</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">prom-exporter</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l">TCP</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">customConfig</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">api</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="m">0.0.0.0</span><span class="p">:</span><span class="m">8686</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">playground</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">data_dir</span><span class="p">:</span><span class="w"> </span><span class="l">/vector-data-dir</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">sinks</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">exporter</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="m">0.0.0.0</span><span class="p">:</span><span class="m">9090</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                    </span>- <span class="l">internal_metrics</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">prometheus_exporter</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">vlogs</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">api_version</span><span class="p">:</span><span class="w"> </span><span class="l">v8</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">compression</span><span class="p">:</span><span class="w"> </span><span class="l">gzip</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">endpoints</span><span class="p">:</span><span class="w"> </span><span class="l">&lt;&lt; include &#34;vlogs.es.urls&#34; . &gt;&gt;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">healthcheck</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                    </span>- <span class="l">parser</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l">bulk</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">request</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">headers</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">AccountID</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0&#34;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">ProjectID</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0&#34;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">VL-Msg-Field</span><span class="p">:</span><span class="w"> </span><span class="l">message,msg,_msg,log.msg,log.message,log</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">VL-Stream-Fields</span><span class="p">:</span><span class="w"> </span><span class="l">stream,kubernetes.pod_name,kubernetes.container_name,kubernetes.pod_namespace</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">VL-Time-Field</span><span class="p">:</span><span class="w"> </span><span class="l">timestamp</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">elasticsearch</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">sources</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">internal_metrics</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">internal_metrics</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">k8s</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes_logs</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">transforms</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">parser</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                    </span>- <span class="l">k8s</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
-</span></span></span><span class="line"><span class="cl"><span class="sd">                    .log = parse_json(.message) ?? .message
-</span></span></span><span class="line"><span class="cl"><span class="sd">                    del(.message)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">remap</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">customConfigNamespace</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">dataDir</span><span class="p">:</span><span class="w"> </span><span class="l">/vector-data-dir</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">existingConfigMaps</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">vector-vl-config</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l">Agent</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">service</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(object)</code></em><p>Values for <a href="https://github.com/vectordotdev/helm-charts/tree/develop/charts/vector" target="_blank">vector helm chart</a></p>
-</td>
-    </tr>
-    <tr id="vector-customconfignamespace">
-      <td><a href="#vector-customconfignamespace"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vector.customConfigNamespace</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>Forces custom configuration creation in a given namespace even if vector.enabled is false</p>
-</td>
-    </tr>
-    <tr id="vector-enabled">
-      <td><a href="#vector-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vector.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(bool)</code></em><p>Enable deployment of vector</p>
-</td>
-    </tr>
     <tr id="vlinsert-affinity">
       <td><a href="#vlinsert-affinity"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlinsert.affinity</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -438,7 +374,7 @@ Change the values according to the need of the environment in ``victoria-logs-cl
     <tr id="vlinsert-env">
       <td><a href="#vlinsert-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlinsert.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/#environment-variables" target="_blank">here</a> for details.</p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a> for details.</p>
 </td>
     </tr>
     <tr id="vlinsert-envfrom">
@@ -913,7 +849,7 @@ Change the values according to the need of the environment in ``victoria-logs-cl
     <tr id="vlselect-env">
       <td><a href="#vlselect-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlselect.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/#environment-variables" target="_blank">here</a> for details.</p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a> for details.</p>
 </td>
     </tr>
     <tr id="vlselect-envfrom">
@@ -1394,7 +1330,7 @@ Change the values according to the need of the environment in ``victoria-logs-cl
     <tr id="vlstorage-env">
       <td><a href="#vlstorage-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlstorage.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/#environment-variables" target="_blank">here</a> for details</p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a> for details</p>
 </td>
     </tr>
     <tr id="vlstorage-envfrom">
@@ -1866,7 +1802,7 @@ Change the values according to the need of the environment in ``victoria-logs-cl
     <tr id="vmauth-env">
       <td><a href="#vmauth-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/#environment-variables" target="_blank">here</a> for details</p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a> for details</p>
 </td>
     </tr>
     <tr id="vmauth-envfrom">

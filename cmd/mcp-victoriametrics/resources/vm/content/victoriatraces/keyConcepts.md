@@ -13,8 +13,6 @@ aliases:
 - /victoriatraces/keyConcepts.html
 ---
 
-> VictoriaTraces is currently under active development and not ready for production use. It is built on top of VictoriaLogs and therefore shares some flags and APIs. These will be fully separated once VictoriaTraces reaches a stable release. Until then, features may change or break without notice.
-
 ## Data model
 
 VictoriaTraces is built on VictoriaLogs. It's recommended to go through [the data model of VictoriaLogs](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) first.

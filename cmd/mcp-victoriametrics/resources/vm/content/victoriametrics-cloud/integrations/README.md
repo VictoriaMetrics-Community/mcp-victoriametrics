@@ -1,3 +1,11 @@
+---
+build:
+  list: never
+  publishResources: false
+  render: never
+sitemap:
+  disable: true
+---
 This section contains a collection of quick start guides for integrating various software and tools
 with VictoriaMetrics Cloud. The guides are organized by integration type to help you quickly find
 what you need.

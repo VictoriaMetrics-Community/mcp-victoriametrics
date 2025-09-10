@@ -2,6 +2,22 @@
 
 - TODO
 
+## 0.24.5
+
+**Release date:** 03 Sep 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.125.1](https://img.shields.io/badge/v1.125.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%23v11251)
+
+- bump version of VM components to [v1.125.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.125.1)
+
+## 0.24.4
+
+**Release date:** 01 Sep 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.125.0](https://img.shields.io/badge/v1.125.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%23v11250)
+
+- bump version of VM components to [v1.125.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.125.0)
+
 ## 0.24.3
 
 **Release date:** 18 Aug 2025
@@ -572,7 +588,7 @@
 ![AppVersion: v1.94.0](https://img.shields.io/static/v1?label=AppVersion&message=v1.94.0&color=success&logo=)
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-- Add license enforcement for vmbackupmanager in order to avoid running it without enterprise license key. See [these docs](https://docs.victoriametrics.com/enterprise) for details.
+- Add license enforcement for vmbackupmanager in order to avoid running it without enterprise license key. See [these docs](https://docs.victoriametrics.com/victoriametrics/enterprise/) for details.
 - Fix license flags not being passed to vmsingle when using StatefulSet.
 
 ## 0.9.9
@@ -583,7 +599,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 - bump version of VM components to [v1.94.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.94.0)
-- Add support of providing enterprise license key for VictoriaMetrics enterprise. See [these docs](https://docs.victoriametrics.com/enterprise) for details.
+- Add support of providing enterprise license key for VictoriaMetrics enterprise. See [these docs](https://docs.victoriametrics.com/victoriametrics/enterprise/) for details.
 
 ## 0.9.8
 

@@ -100,7 +100,31 @@ The exact amount depends on your query and the settings:
 period = max(step, window) + silence_interval
 ```
 
-By default, the silence interval is 5 minutes (`-search.minStalenessInterval`). So if you query `rate(http_requests_total[10m])` at 10:00, vmselect will actually fetch data from 09:45. If your metrics are collected at an unusual interval—say, every 15 minutes instead of the usual scrape frequency—you might need to increase this value to make sure vmselect gathers enough data.
+So the actual `start` of the query is shifted by the period:
+
+```go
+start = requested_start - period
+```
+
+Let's take an example: 
+
+- The silence interval is 5 minutes (`-search.minStalenessInterval`)
+- You query `rate(http_requests_total[10m])` at 10:00, so the window is 10 minutes drived from the query (`[10m]`).
+- Assume the `step` is very small compare to the window.
+
+The actual start is:
+
+```go
+period = max(step, window) + silence_interval
+       = max(step, 10m) + 5m
+       = 15m
+
+start = requested_start - period
+      = 10:00 - 15m
+      = 09:45
+```
+
+So, vmselect will actually fetch data from 09:45 instead of your original query 10:00. If your metrics are collected at an unusual interval—say, every 15 minutes instead of the usual scrape frequency—you might need to increase silence interval value to make sure vmselect gathers enough data.
 
 _In the last section of this discussion, you will know that the most recent data points (up to 30 seconds) are not included in the results._
 

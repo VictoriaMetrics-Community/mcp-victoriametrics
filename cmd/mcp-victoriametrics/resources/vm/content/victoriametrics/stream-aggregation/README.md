@@ -1,3 +1,11 @@
+---
+build:
+  list: never
+  publishResources: false
+  render: never
+sitemap:
+  disable: true
+---
 [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) and [single-node VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/)
 can aggregate incoming [samples](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#raw-samples) in streaming mode by time and by labels before data is written to remote storage
 (or local storage for single-node VictoriaMetrics).
@@ -407,7 +415,7 @@ See also [dropping unneeded labels](#dropping-unneeded-labels).
 By default, all the input samples are taken into account during stream aggregation. If samples with old timestamps 
 outside the current [aggregation interval](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/configuration/#aggregation-config) must be ignored, then the following options can be used:
 
-- To pass `-streamAggr.ignoreOldSamples` command-line flag to [single-node VictoriaMetrics](https://docs.victoriametrics.com/)
+- To pass `-streamAggr.ignoreOldSamples` command-line flag to [single-node VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/)
   or to [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/). At [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/)
   `-remoteWrite.streamAggr.ignoreOldSamples` flag can be specified individually per each `-remoteWrite.url`.
   This enables ignoring old samples for all the [aggregation configs](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/configuration/#aggregation-config).
@@ -418,7 +426,7 @@ outside the current [aggregation interval](https://docs.victoriametrics.com/vict
 ## Ignore aggregation intervals on start
 
 Streaming aggregation results may be incorrect for some time after the restart of [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/)
-or [single-node VictoriaMetrics](https://docs.victoriametrics.com/) until all the buffered [samples](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#raw-samples)
+or [single-node VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) until all the buffered [samples](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#raw-samples)
 are sent from remote sources to the `vmagent` or single-node VictoriaMetrics via [supported data ingestion protocols](https://docs.victoriametrics.com/victoriametrics/vmagent/#how-to-push-data-to-vmagent).
 In this case it may be a good idea to drop the aggregated data during the first `N` [aggregation intervals](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/configuration/#aggregation-config)
 just after the restart of `vmagent` or single-node VictoriaMetrics. This can be done via the following options:
@@ -719,6 +727,13 @@ across multiple `-remoteWrite.url`.
 Stream aggregation allows keeping original metric names after aggregation by using `keep_metric_names` setting.
 But the "meaning" of aggregated metrics is usually different to original ones after the aggregation.
 Make sure that you updated queries in your alerting rules and dashboards accordingly if you used `keep_metric_names` setting.
+
+### Use different deduplication intervals on storage and vmagent
+
+If the storage uses `-dedup.minScrapeInterval` but `vmagent` has no deduplication configured, aggregation results may not match queries on the storage. 
+For example, `sum(rate(foo[1m])) by (instance)` query result can differ from the [rate_sum](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/configuration/#rate_sum) aggregation result `foo:1m_by_instance_rate_sum`.
+This happens because vmagent aggregates all samples, while queries on the storage use deduplicated samples. 
+To avoid this, set `-streamAggr.dedupInterval` or `-remoteWrite.streamAggr.dedupInterval` on `vmagent` to match the storage interval.
 
 ---
 

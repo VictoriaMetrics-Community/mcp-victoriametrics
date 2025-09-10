@@ -2,6 +2,30 @@
 
 - TODO
 
+## 0.59.5
+
+**Release date:** 03 Sep 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.125.1](https://img.shields.io/badge/v1.125.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11251)
+
+- bump version of VM components to [v1.125.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.125.1)
+
+## 0.59.4
+
+**Release date:** 01 Sep 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.125.0](https://img.shields.io/badge/v1.125.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11250)
+
+- bump version of VM components to [v1.125.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.125.0)
+
+## 0.59.3
+
+**Release date:** 21 Aug 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.124.0](https://img.shields.io/badge/v1.124.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11240)
+
+- updated rules. See [#2350](https://github.com/VictoriaMetrics/helm-charts/issues/2350).
+
 ## 0.59.2
 
 **Release date:** 18 Aug 2025
@@ -1323,7 +1347,7 @@ Please follow this doc https://docs.victoriametrics.com/helm/victoriametrics-k8s
 ![AppVersion: v1.97.1](https://img.shields.io/static/v1?label=AppVersion&message=v1.97.1&color=success&logo=)
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-- Do not store original labels in `vmagent`'s memory by default. This reduces memory usage of `vmagent` but makes `vmagent`'s debugging UI less informative. See [this docs](https://docs.victoriametrics.com/vmagent/#relabel-debug) for details on relabeling debug.
+- Do not store original labels in `vmagent`'s memory by default. This reduces memory usage of `vmagent` but makes `vmagent`'s debugging UI less informative. See [this docs](https://docs.victoriametrics.com/victoriametrics/vmagent/#relabel-debug) for details on relabeling debug.
 - Update dependencies: kube-state-metrics -> 5.16.0, prometheus-node-exporter -> 4.27.0, grafana -> 7.3.0.
 - Update victoriametrics CRD resources yaml.
 - Update builtin dashboards and rules.
@@ -1507,7 +1531,7 @@ Please follow this doc https://docs.victoriametrics.com/helm/victoriametrics-k8s
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 - Update VictoriaMetrics components from v1.92.1 to v1.93.0
-- delete an obsolete parameter remaining by mistake (see <https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-k8s-stack#upgrade-to-0130>) (#602)
+- delete an obsolete parameter remaining by mistake (see <https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#upgrade-to-0130>) (#602)
 
 ## 0.17.3
 

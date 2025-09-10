@@ -1,6 +1,14 @@
-> VictoriaTraces is currently under active development and not ready for production use. It is built on top of VictoriaLogs and therefore shares some flags and APIs. These will be fully separated once VictoriaTraces reaches a stable release. Until then, features may change or break without notice.
+---
+build:
+  list: never
+  publishResources: false
+  render: never
+sitemap:
+  disable: true
+---
 
-[VictoriaTraces](https://docs.victoriametrics.com/victorialogs/) can be queried with [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/) 
+
+[VictoriaTraces](https://docs.victoriametrics.com/victoriatraces/) can be queried with [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/) 
 via the following ways:
 - [Web UI](#web-ui) - a web-based UI for querying trace spans
 - [HTTP API](#http-api)
@@ -30,7 +38,6 @@ Additionally, the following Jaeger HTTP endpoints are available:
 - `/select/jaeger/api/services/{service_name}/operations` for querying all the span names of a service.
 - [`/select/jaeger/api/traces`](#querying-traces) for querying traces.
 - `/select/jaeger/api/traces/{trace_id}` for querying a trace.
-- `/select/jaeger/api/dependencies` for querying dependencies, currently under developing.
 
 ### Querying traces
 

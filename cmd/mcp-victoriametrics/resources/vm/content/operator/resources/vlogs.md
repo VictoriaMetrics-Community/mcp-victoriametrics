@@ -1,15 +1,16 @@
 ---
-weight: 20
-title: VLogs
-menu:
-  docs:
-    identifier: operator-cr-vlogs
-    parent: operator-cr
-    weight: 20
-aliases:
-  - /operator/resources/vlogs/
-  - /operator/resources/vlogs/index.html
+build:
+  list: never
+  publishResources: false
+  render: never
+sitemap:
+  disable: true
 ---
+
+The resource `VLogs` has been deprecated and replaced by [VLCluster](https://docs.victoriametrics.com/operator/resources/vlcluster/).
+
+---
+
 `VLogs` represents database for storing logs.
 The `VLogs` CRD declaratively defines a [single-node VictoriaLogs](https://docs.victoriametrics.com/victorialogs/)
 installation to run in a Kubernetes cluster.
@@ -23,10 +24,10 @@ For each `VLogs` resource, the Operator adds `Service` and `VMServiceScrape` in 
 
 ## Specification
 
-You can see the full actual specification of the `VLogs` resource in the **[API docs -> VLogs](https://docs.victoriametrics.com/operator/api#vlogs)**.
+You can see the full actual specification of the `VLogs` resource in the **[API docs -> VLogs](https://docs.victoriametrics.com/operator/api/#vlogs)**.
 
 If you can't find necessary field in the specification of the custom resource,
-see [Extra arguments section](./#extra-arguments).
+see [Extra arguments section](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
 
 Also, you can check out the [examples](#examples) section.
 

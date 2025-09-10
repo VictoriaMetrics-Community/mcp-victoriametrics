@@ -6,7 +6,7 @@ menu:
 ---
 
 VictoriaMetrics Cloud allows you to define and manage alerting rules using
-[vmalert](https://docs.victoriametrics.com/vmalert/), and send notifications to an
+[vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/), and send notifications to an
 **external Alertmanager instance** that you host and control in your own environment.
 
 This integration provides full flexibility for organizations that already operate their own

@@ -1,17 +1,19 @@
 ---
-weight: 5
 title: LogsQL
+weight: 7
 menu:
   docs:
+    weight: 7
+    identifier: logsql
     parent: "victorialogs"
-    weight: 5
 tags:
   - logs
 aliases:
-- /VictoriaLogs/LogsQL.html
-- /victorialogs/LogsQL.html
-- /victorialogs/LogsQL/
+  - /VictoriaLogs/LogsQL.html
+  - /victorialogs/LogsQL.html
+  - /victorialogs/LogsQL/
 ---
+
 LogsQL is a simple yet powerful query language for [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/).
 See [examples](https://docs.victoriametrics.com/victorialogs/logsql-examples/), [LogsQL tutorial](#logsql-tutorial),
 [how to convert Loki queries to VictoriaLogs queries](https://docs.victoriametrics.com/victorialogs/logql-to-logsql/)
@@ -264,6 +266,7 @@ The list of LogsQL filters:
 - [Phrase filter](#phrase-filter) - matches logs with the given phrase
 - [Prefix filter](#prefix-filter) - matches logs with the given word prefix or phrase prefix
 - [Substring filter](#substring-filter) - matches logs with the given substring
+- [Pattern match filter](#pattern-match-filter) - matches logs by the given pattern
 - [Range comparison filter](#range-comparison-filter) - matches logs with field values in the provided range
 - [Empty value filter](#empty-value-filter) - matches logs without the given [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
 - [Any value filter](#any-value-filter) - matches logs with the given non-empty [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
@@ -271,8 +274,10 @@ The list of LogsQL filters:
 - [Exact prefix filter](#exact-prefix-filter) - matches logs starting with the given prefix for the given [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
 - [Multi-exact filter](#multi-exact-filter) - matches logs with one of the specified exact values for the given [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
 - [Subquery filter](#subquery-filter) - matches logs with [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) values matching the results of another query
-- [`contains_all` filter](#contains_any-filter) - matches logs with [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) containing all the provided [words](#word) / phrases
-- [`contains_any` filter](#contains_any-filter) - matches logs with [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) containing at least one of the provided [words](#word) / phrases
+- [`contains_all` filter](#contains_any-filter) - matches logs with [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) containing
+  all the provided [words](#word) / phrases
+- [`contains_any` filter](#contains_any-filter) - matches logs with [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) containing
+  at least one of the provided [words](#word) / phrases
 - [Case-insensitive filter](#case-insensitive-filter) - matches logs with the given case-insensitive word, phrase or prefix
 - [Sequence filter](#sequence-filter) - matches logs with the given sequence of words or phrases
 - [Regexp filter](#regexp-filter) - matches logs for the given regexp
@@ -578,6 +583,7 @@ See also:
 - [Phrase filter](#phrase-filter)
 - [Exact filter](#exact-filter)
 - [Prefix filter](#prefix-filter)
+- [Substring filter](#substring-filter)
 - [Logical filter](#logical-filter)
 
 ### Phrase filter
@@ -640,6 +646,7 @@ See also:
 - [Exact filter](#exact-filter)
 - [Word filter](#word-filter)
 - [Prefix filter](#prefix-filter)
+- [Substring filter](#substring-filter)
 - [Logical filter](#logical-filter)
 
 ### Prefix filter
@@ -711,19 +718,56 @@ Performance tips:
 
 See also:
 
+- [Substring filter](#substring-filter)
 - [Exact prefix filter](#exact-prefix-filter)
 - [Word filter](#word-filter)
 - [Phrase filter](#phrase-filter)
 - [Exact-filter](#exact-filter)
 - [Logical filter](#logical-filter)
 
+### Pattern match filter
+
+VictoriaLogs supports filtering logs by patterns with the `pattern_match("pattern")` filter. This filter matches logs where
+[`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) contains the given `"pattern"`.
+
+The filter can be applied to any given log field with the `log_field:pattern_match("pattern")` syntax.
+
+The `"pattern"` must contain the text to match, plus arbitrary number of the following placeholders:
+
+- `<N>` - matches any integer number. It also matches hexadecimal numbers with the length of 4 chars and longer. For example, it matches `123` and `12abcdEF`.
+  It doesn't match floating point numbers such as `123.456`. Use `<N>.<N>` pattern for matching such numbers.
+- `<UUID>` - matches any UUID such as `2edfed59-3e98-4073-bbb2-28d321ca71a7`.
+- `<IP4>` - matches IPv4 such as `123.45.67.89`. Use `<IP4>/<N>` for matching IPv4 masks.
+- `<TIME>` - matches time strings such as `10:20:30`. It also captures fractional seconds such as `10:20:30.123` and `10:20:30,123`.
+- `<DATE>` - matches date strings such as `2025-10-20` and `2025/10/20`.
+- `<DATETIME>` - matches datetime strings such as `2025-10-20T08:09:11` and `2025-10-20 08:09:11`. It also captures fractional seconds and timezones.
+- `<W>` - matches any [word](#word) or any quoted string in single quotes, double quotes and backticks.
+
+Such patterns are generated by the [`collapse_nums` pipe](#collapse_nums-pipe).
+
+For example, the following filter matches `_msg` field with the `<arbitrary_prefix>user_id=123, ip=45.67.89.12, time=2025-10-20T23:32:12Z<aribtrary_suffix>` contents:
+
+```logsql
+pattern_match("user_id=<N>, ip=<IP4>, time=<TIMESTAMP>")
+```
+
+If you need matching the whole `_msg` field value, then use `pattern_match_full("pattern")` filter.
+
+See also:
+
+- [`collapse_nums` pipe](#collapse_nums-pipe)
+- [Sequence filter](#sequence-filter)
+- [Phrase filter](#phrase-filter)
+- [Substring filter](#substring-filter)
+- [Logical filter](#logical-filter)
+
 ### Substring filter
 
-If it is needed to find logs with some substring, then `~"substring"` filter can be used. The substring can be but in quotes according to [these docs](#string-literals).
+If it is needed to find logs with some substring, then `*substring*` filter can be used. The substring can be but in quotes according to [these docs](#string-literals) if needed.
 For example, the following query matches log entries, which contain `ampl` text in the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
 
 ```logsql
-~"ampl"
+*ampl*
 ```
 
 It matches the following messages:
@@ -731,16 +775,14 @@ It matches the following messages:
 - `Example message`
 - `This is a sample`
 
-It doesn't match `EXAMPLE message`, since `AMPL` substring here is in uppercase. Use `~"(?i)ampl"` filter instead. Note that case-insensitive filter
+It doesn't match `EXAMPLE message`, since `AMPL` substring here is in uppercase. Use [`~"(?i)ampl"` filter](#regexp-filter) instead. Note that case-insensitive filter
 may be much slower than case-sensitive one.
-
-Note that the substring filter in reality is just a [regexp filter](#regexp-filter), so special regexp chars must be escaped there. For example,
-if you need to search for `foo.bar` substring, then `~"foo\\.bar"` filter must be used, since the `.` char means `any character` in the regexp filter.
 
 Performance tip: prefer using [word filter](#word-filter) and [phrase filter](#phrase-filter), since substring filter may be quite slow.
 
 See also:
 
+- [Pattern match filter](#pattern-match-filter)
 - [Word filter](#word-filter)
 - [Phrase filter](#phrase-filter)
 - [Regexp filter](#regexp-filter)
@@ -1106,6 +1148,7 @@ For example, the following query matches `event:original` field containing `(err
 
 See also:
 
+- [Pattern match filter](#pattern-match-filter)
 - [`contains_all` filter](#contains_all-filter)
 - [Word filter](#word-filter)
 - [Phrase filter](#phrase-filter)
@@ -1138,8 +1181,16 @@ If the regexp contains double quotes, then either put `\` in front of double quo
 logs matching `"foo":"(bar|baz)"` regexp:
 
 ```logsql
-'"foo":"(bar|baz)"'
+~'"foo":"(bar|baz)"'
 ```
+
+The `\` char inside the regexp must be encoded as `\\`. For example, the following query searches for logs with `a.b` substring inside them:
+
+```logsql
+~"a\\.b"
+```
+
+It is recommended using [substring filter](#substring-filter) when searching for some substring is needed.
 
 By default the regexp filter is applied to the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
 Specify the needed [field name](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) in front of the filter
@@ -1346,6 +1397,7 @@ user_id:value_type(uint64)
 See also:
 
 - [`block_stats` pipe](#block_stats-pipe)
+- [`query_stats` pipe](#query_stats-pipe)
 - [Logical filter](#logical-filter)
 
 ### eq_field filter
@@ -1501,16 +1553,20 @@ LogsQL supports the following pipes:
 - [`offset`](#offset-pipe) skips the given number of selected logs.
 - [`pack_json`](#pack_json-pipe) packs [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) into JSON object.
 - [`pack_logfmt`](#pack_logfmt-pipe) packs [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) into [logfmt](https://brandur.org/logfmt) message.
+- [`query_stats`](#query_stats-pipe) returns query execution statistics.
 - [`rename`](#rename-pipe) renames [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 - [`replace`](#replace-pipe) replaces substrings in the specified [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 - [`replace_regexp`](#replace_regexp-pipe) updates [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) with regular expressions.
+- [`running_stats`](#running_stats-pipe) performs running stats calculations over the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 - [`sample`](#sample-pipe) returns a sample of the matching logs according to the provided `sample` value.
 - [`sort`](#sort-pipe) sorts logs by the given [fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+- [`split`](#split-pipe) splits the given [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) into tokens by the given separator.
 - [`stats`](#stats-pipe) calculates various stats over the selected logs.
 - [`stream_context`](#stream_context-pipe) allows selecting surrounding logs in front and after the matching logs
   per each [log stream](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields).
 - [`time_add`](#time_add-pipe) adds the given duration to the given field containing [RFC3339 time](https://www.rfc-editor.org/rfc/rfc3339).
 - [`top`](#top-pipe) returns top `N` field sets with the maximum number of matching logs.
+- [`total_stats`](#total_stats-pipe) performs total (global) stats calculations over the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 - [`union`](#union-pipe) returns results from multiple LogsQL queries.
 - [`uniq`](#uniq-pipe) returns unique log entries.
 - [`unpack_json`](#unpack_json-pipe) unpacks JSON messages from [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
@@ -1536,6 +1592,7 @@ The `block_stats` pipe is needed mostly for debugging purposes.
 
 See also:
 
+- [`query_stats` pipe](#query_stats-pipe)
 - [`value_type` filter](#value_type-filter)
 - [`blocks_count` pipe](#blocks_count-pipe)
 - [`len` pipe](#len-pipe)
@@ -1546,6 +1603,7 @@ See also:
 
 See also:
 
+- [`query_stats` pipe](#query_stats-pipe)
 - [`block_stats` pipe](#block_stats-pipe)
 - [`len` pipe](#len-pipe)
 
@@ -1591,12 +1649,15 @@ when the following query is executed:
 _time:1h | collapse_nums prettify
 ```
 
+The patterns returned by `collapse_nums prettify` pipe can be used in [pattern match filter](#pattern-match-filter).
+
 `collapse_nums` can miss some numbers or can collapse unexpected numbers. In this case [conditional `collapse_nums`](#conditional-collapse_nums) can be used
 for skipping such values and pre-processing them separately with [`replace_regexp`](#replace_regexp-pipe).
 
 See also:
 
 - [conditional `collapse_nums`](#conditional-collapse_nums)
+- [pattern match filter](#pattern-match-filter)
 - [`replace`](#replace-pipe)
 - [`replace_regexp`](#replace_regexp-pipe)
 
@@ -1766,6 +1827,7 @@ See also:
 - [`extract_regexp` pipe](#extract_regexp-pipe)
 - [`unpack_json` pipe](#unpack_json-pipe)
 - [`unpack_logfmt` pipe](#unpack_logfmt-pipe)
+- [`split` pipe](#split-pipe)
 - [`math` pipe](#math-pipe)
 
 #### Format for extract pipe pattern
@@ -1806,7 +1868,7 @@ Then the following `pattern` can be used for extracting `ip`, `path` and `user_a
 Note that the user-agent part of the log message is in double quotes. This means that it may contain special chars, including escaped double quote, e.g. `\"`.
 This may break proper matching of the string in double quotes.
 
-VictoriaLogs automatically detects quoted strings and automatically unquotes them if the first matching char in the placeholder is double quote or backtick.
+VictoriaLogs automatically detects quoted strings and automatically unquotes them if the first matching char in the placeholder is a single quote, double quote or a backtick.
 So it is better to use the following `pattern` for proper matching of quoted `user_agent` string:
 
 ```
@@ -2565,6 +2627,37 @@ See also:
 - [`pack_json` pipe](#pack_json-pipe)
 - [`unpack_logfmt` pipe](#unpack_logfmt-pipe)
 
+### query_stats pipe
+
+The `<q> | query_stats` [pipe](#pipes) returns the following execution statistics for the given [query `<q>`](#query-syntax):
+
+- `BytesReadColumnsHeaders` - the number of bytes read from disk for columns headers. Use [`fields` pipe](#fields-pipe) for reducing the number of bytes read for columns headers.
+- `BytesReadColumnsHeaderIndexes` - the number of bytes read from disk for column header indexes.
+- `BytesReadBloomFilters` - the number of bytes read from disk for bloom filters.
+- `BytesReadValues` - the number of bytes read from disk for [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+   Use [`fields` pipe](#fields-pipe) for reducing the number of bytes read for log field values.
+- `BytesReadTimestamps` - the number of bytes read from disk for [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field).
+- `BytesReadBlockHeaders` - the number of bytes read from disk for block headers.
+- `BytesReadTotal` - the total number of bytes read from disk.
+- `BlocksProcessed` - the number of data blocks processed during query exectution. Use more narrow [time filter](#time-filter) and [log stream filter](#stream-filter)
+  for reducing the number of data blocks processed.
+- `RowsProcessed` - the number of log entries processed during query execution. Use more narrow [time filter](#time-filter) and [log stream filter](#stream-filter)
+  for reducing the number of processed log entries.
+- `RowsFound` - the number of log entries found by the query.
+- `ValuesRead` - the number of [log field values](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) read during query processing.
+  Use [`fields` pipe](#fields-pipe) for reducing the number of field values read.
+- `TimestampsRead` - the number of [`_time` fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) read during query processing.
+- `BytesProcessedUncompressedValues` - the number of uncompressed bytes for [log field values](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model),
+  which are processed during query exection.
+- `QueryDurationNsecs` - the duration of the query in nanoseconds. It can be used for calculating various rates over the query stats with the [`math` pipe](#math-pipe).
+
+This pipe is useful for investigation and optimizing slow queries.
+
+See also:
+
+- [`block_stats` pipe](#block_stats-pipe)
+- [query troubleshooting](#troubleshooting)
+
 ### rename pipe
 
 If some [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) must be renamed, then `| rename src1 as dst1, ..., srcN as dstN` [pipe](#pipes) can be used.
@@ -2711,6 +2804,107 @@ with `***` in the `foo` field only if `user_type` field equals to `admin`:
 _time:5m | replace_regexp if (user_type:=admin) ("password: [^ ]+", "") at foo
 ```
 
+### running_stats pipe
+
+The `<q> | running_stats ...` [pipe](#pipes) calculates running stats (such as [running count](#count-running_stats) or [running sum](#sum-running_stats))
+over the specified [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) returned by `<q>` [query](#query-syntax)
+and stores the stats in the specified log fields per each input log entry.
+
+The running stats is calculated over the logs sorted by time, so the `<q>` must return the [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field)
+in order to properly calculate the running stats.
+
+The `running_stats` pipe puts all the logs returned by `<q>` in memory, so make sure the `<q>` returns the limited number of logs in order to avoid high memory usage.
+
+For example, the following LogsQL query calculates [running sum](#sum-running_stats) for the `hits` field over the logs for the last 5 minutes:
+
+```logsql
+_time:5m | running_stats sum(hits) as running_hits
+```
+
+The `| running_stats ...` pipe has the following basic format:
+
+```logsql
+... | running_stats
+  stats_func1(...) as result_name1,
+  ...
+  stats_funcN(...) as result_nameN
+```
+
+Where `stats_func*` is any of the supported [running stats function](#running_stats-pipe-functions), while the `result_name*` is the name of the log field
+to store the result of the corresponding stats function. The `as` keyword is optional.
+
+For example, the following query calculates the following running stats for logs over the last 5 minutes:
+
+- the number of logs with the help of [`count` function](#count-running_stats);
+- the sum of `hits` field with the help of [`sum` function](#sum-running_stats):
+
+```logsql
+_time:5m
+    | running_stats
+        count() as running_logs,
+        sum(hits) as running_hits
+```
+
+It is allowed omitting the result name. In this case the result name equals to the string representation of the used [running stats function](#running_stats-pipe-functions).
+For example, the following query returns the same stats as the previous one, but gives `count()` and `sum(hits)` names for the returned fields:
+
+```logsql
+_time:5m | running_stats count(), sum(hits)
+```
+
+It is useful to combine `running_stats` with [stats by time buckets](#stats-by-time-buckets). For example, the following query returns per-hour number of logs over the last day,
+plus running number of logs.
+
+```logsql
+_time:1d
+    | stats by (_time:hour) count() as hits
+    | running_stats sum(hits) as running_hits
+```
+
+See also:
+
+- [`running_stats` pipe functions](#running_stats-pipe-functions)
+- [`running_stats` by fields](#running_stats-by-fields)
+- [`total_stats` pipe](#total_stats-pipe)
+- [`stats` pipe](#stats-pipe)
+- [`sort` pipe](#sort-pipe)
+
+#### running_stats by fields
+
+The following LogsQL syntax can be used for calculating independent running stats per group of log fields:
+
+```logsql
+<q> | running_stats by (field1, ..., fieldM)
+  stats_func1(...) as result_name1,
+  ...
+  stats_funcN(...) as result_nameN
+```
+
+This calculates `stats_func*` per each `(field1, ..., fieldM)` group of [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+seen in the logs returned by `<q>` [query](#query-syntax).
+
+For example, the following query calculates running number of logs and running number of `hits` over the last 5 minutes,
+grouped by `(host, path)` fields:
+
+```logsql
+_time:5m
+    | running_stats by (host, path)
+        count() running_logs,
+        sum(hits) running_hits
+```
+
+The `by` keyword can be skipped in `running_stats ...` pipe. For example, the following query is equivalent to the previous one:
+
+```logsql
+_time:5m | running_stats (host, path) count() running_logs, sum(hits) running_hits
+```
+
+See also:
+
+- [`running_stats` pipe](#running_stats-pipe)
+- [`running_stats` pipe functions](#running_stats-pipe-functions)
+
+
 ### sample pipe
 
 The `<q> | sample N` [pipe](#pipes) returns `1/N`th random sample of logs for the `<q>` [query](#query-syntax).
@@ -2819,16 +3013,54 @@ See also:
 - [`limit` pipe](#limit-pipe)
 - [`offset` pipe](#offset-pipe)
 
+### split pipe
+
+The `<q> | split <separator> from <src_field> as <dst_field>` [pipe](#pipes) splits `<src_field>` [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+obtained from `<q>` [query](#query-syntax) results into `<dst_field>` as a JSON array, by using the given `<separator>`.
+
+For example, the following query splits [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) by `,` and stores the results into `items` field:
+
+```logsql
+_time:5m | split "," from _msg as items
+```
+
+The `as <dst_field>` part is optional. If it is missing, then the result is stored in the `<src_field>` from the `from <src_field>`.
+For example, the following query stores the split result into `_msg` field:
+
+```logsql
+_time:5m | split "," from _msg
+```
+
+The `from <src_field>` part is optional. If it is missing, then the `_msg` field is used as a source field. The following query is equivalent to the previous one:
+
+```logsql
+_time:5m | split ","
+```
+
+It is convenient to use [`unroll` pipe](#unroll-pipe) for unrolling the JSON array with the split results.
+For example, the following query returns top 5 most frequently seen comma-separated items across [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
+for the last 5 minutes:
+
+```logsql
+_time:5m | split "," as items | unroll items | top 5 (items)
+```
+
+See also:
+
+- [`unroll` pipe](#unroll-pipe)
+- [`unpack_words` pipe](#unpack_words-pipe)
+
+
 ### stats pipe
 
-`<q> | stats ...` pipe calculate various stats over the logs returned by `<q>` [query](#query-syntax).
+The `<q> | stats ...` [pipe](#pipes) calculates various stats over the logs returned by `<q>` [query](#query-syntax).
 For example, the following LogsQL query uses [`count` stats function](#count-stats) for calculating the number of logs for the last 5 minutes:
 
 ```logsql
 _time:5m | stats count() as logs_total
 ```
 
-`| stats ...` pipe has the following basic format:
+The `| stats ...` pipe has the following basic format:
 
 ```logsql
 ... | stats
@@ -2837,7 +3069,7 @@ _time:5m | stats count() as logs_total
   stats_funcN(...) as result_nameN
 ```
 
-Where `stats_func*` is any of the supported [stats function](#stats-pipe-functions), while `result_name*` is the name of the log field
+Where `stats_func*` is any of the supported [stats function](#stats-pipe-functions), while the `result_name*` is the name of the log field
 to store the result of the corresponding stats function. The `as` keyword is optional.
 
 For example, the following query calculates the following stats for logs over the last 5 minutes:
@@ -2856,7 +3088,7 @@ _time:5m | count() logs_total, count_uniq(_stream) streams_total
 ```
 
 It is allowed omitting the result name. In this case the result name equals to the string representation of the used [stats function](#stats-pipe-functions).
-For example, the following query returns the same stats as the previous one, but gives uses `count()` and `count_uniq(_stream)` names for the returned fields:
+For example, the following query returns the same stats as the previous one, but gives `count()` and `count_uniq(_stream)` names for the returned fields:
 
 ```logsql
 _time:5m | count(), count_uniq(_stream)
@@ -2871,6 +3103,8 @@ See also:
 - [stats by field buckets](#stats-by-field-buckets)
 - [stats by IPv4 buckets](#stats-by-ipv4-buckets)
 - [stats with additional filters](#stats-with-additional-filters)
+- [`running_stats` pipe](#running_stats-pipe)
+- [`total_stats` pipe](#total_stats-pipe)
 - [`math` pipe](#math-pipe)
 - [`sort` pipe](#sort-pipe)
 - [`uniq` pipe](#uniq-pipe)
@@ -2927,8 +3161,28 @@ This calculates `stats_func*` per each `step` of the [`_time`](https://docs.vict
 across logs returned by `<q>` [query](#query-syntax). The `step` can have any [duration value](#duration-values).
 For example, the following LogsQL query returns per-minute number of logs and unique ip addresses over the last 5 minutes:
 
-```
+```logsql
 _time:5m | stats by (_time:1m) count() logs_total, count_uniq(ip) ips_total
+```
+
+It might be useful to calculate running stats over the calculated per-time bucket stats, with the help of [`running_stats` pipe](#running_stats-pipe).
+For example, the following query adds running number of logs into `running_hits` field for the query above:
+
+```logsql
+_time:5m
+    | stats by (_time:1m) count() as hits
+    | running_stats sum(hits) as running_hits
+```
+
+It might be useful to calculate total stats over the calculated per-time bucket stats, which the help of [`total_stats` pipe](#total_stats-pipe).
+for example, the following query add total number of logs into `total_hits` field and then uses this field for calculating the per-minute percentage of hits
+with the [`math` pipe](#math-pipe):
+
+```logsql
+_time:5m
+    | stats by (_time:1m) count() as hits
+    | total_stats sum(hits) as total_hits
+    | math round((hits / total_hits)*100) as hits_percent
 ```
 
 Additionally, the following `step` values are supported:
@@ -2948,6 +3202,8 @@ See also:
 
 - [`stats` pipe](#stats-pipe)
 - [`stats` pipe functions](#stats-pipe-functions)
+- [`running_stats` pipe](#running_stats-pipe)
+- [`total_stats` pipe](#total_stats-pipe)
 - [`math` pipe](#math-pipe)
 
 #### Stats by time buckets with timezone offset
@@ -3138,6 +3394,108 @@ See also:
 - [`sort` pipe](#sort-pipe)
 - [`histogram` stats function](#histogram-stats)
 
+### total_stats pipe
+
+The `<q> | total_stats ...` [pipe](#pipes) calculates total (global) stats (such as [global count](#count-total_stats) or [global sum](#sum-total_stats))
+over the specified [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) returned by `<q>` [query](#query-syntax)
+and stores this stats in the specified log fields per each input log entry.
+
+The total stats is calculated over the logs sorted by time, so the `<q>` must return the [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field)
+in order to properly calculate the total stats.
+
+The `total_stats` pipe puts all the logs returned by `<q>` in memory, so make sure the `<q>` returns the limited number of logs in order to avoid high memory usage.
+
+For example, the following LogsQL query calculates [total sum](#sum-total_stats) for the `hits` field over the logs for the last 5 minutes:
+
+```logsql
+_time:5m | total_stats sum(hits) as total_hits
+```
+
+The `| total_stats ...` pipe has the following basic format:
+
+```logsql
+... | total_stats
+  stats_func1(...) as result_name1,
+  ...
+  stats_funcN(...) as result_nameN
+```
+
+Where `stats_func*` is any of the supported [total stats function](#total_stats-pipe-functions), while the `result_name*` is the name of the log field
+to store the result of the corresponding stats function. The `as` keyword is optional.
+
+For example, the following query calculates the following total stats for logs over the last 5 minutes:
+
+- the number of logs with the help of [`count` function](#count-total_stats);
+- the sum of `hits` field with the help of [`sum` function](#sum-total_stats):
+
+```logsql
+_time:5m
+    | total_stats
+        count() as total_logs,
+        sum(hits) as total_hits
+```
+
+It is allowed omitting the result name. In this case the result name equals to the string representation of the used [total stats function](#total_stats-pipe-functions).
+For example, the following query returns the same stats as the previous one, but gives `count()` and `sum(hits)` names for the returned fields:
+
+```logsql
+_time:5m | total_stats count(), sum(hits)
+```
+
+It is useful to combine `total_stats` with [stats by time buckets](#stats-by-time-buckets). For example, the following query returns per-hour number of logs over the last day,
+plus the total number of logs, and then calculates the per-hour percent of hits over the daily hits.
+
+```logsql
+_time:1d
+    | stats by (_time:hour) count() as hits
+    | total_stats sum(hits) as total_hits
+    | math round((total_hits / hits)*100) as hits_percent
+```
+
+See also:
+
+- [`total_stats` pipe functions](#total_stats-pipe-functions)
+- [`total_stats` by fields](#total_stats-by-fields)
+- [`running_stats` pipe](#running_stats-pipe)
+- [`stats` pipe](#stats-pipe)
+- [`sort` pipe](#sort-pipe)
+
+#### total_stats by fields
+
+The following LogsQL syntax can be used for calculating independent total stats per group of log fields:
+
+```logsql
+<q> | total_stats by (field1, ..., fieldM)
+  stats_func1(...) as result_name1,
+  ...
+  stats_funcN(...) as result_nameN
+```
+
+This calculates `stats_func*` per each `(field1, ..., fieldM)` group of [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+seen in the logs returned by `<q>` [query](#query-syntax).
+
+For example, the following query calculates total number of logs and total number of `hits` over the last 5 minutes,
+grouped by `(host, path)` fields:
+
+```logsql
+_time:5m
+    | total_stats by (host, path)
+        count() total_logs,
+        sum(hits) total_hits
+```
+
+The `by` keyword can be skipped in `total_stats ...` pipe. For example, the following query is equivalent to the previous one:
+
+```logsql
+_time:5m | total_stats (host, path) count() total_logs, sum(hits) total_hits
+```
+
+See also:
+
+- [`total_stats` pipe](#total_stats-pipe)
+- [`total_stats` pipe functions](#total_stats-pipe-functions)
+
+
 ### union pipe
 
 `<q1> | union (<q2>)` [pipe](#pipes) returns results of `<q1>` [query](#query-syntax) followed by results of `<q2>` [query](#query-syntax).
@@ -3275,6 +3633,7 @@ See also:
 - [`unpack_logfmt` pipe](#unpack_logfmt-pipe)
 - [`unpack_syslog` pipe](#unpack_syslog-pipe)
 - [`extract` pipe](#extract-pipe)
+- [`split` pipe](#split-pipe)
 - [`unroll` pipe](#unroll-pipe)
 - [`pack_json` pipe](#pack_json-pipe)
 - [`pack_logfmt` pipe](#pack_logfmt-pipe)
@@ -3470,13 +3829,27 @@ _time:5m | unpack_syslog if (hostname:"") from foo
 
 ### unpack_words pipe
 
-`<q> | unpack_words from <src_field> as <dst_field>` [pipe](#pipes) unpacks [words](#word) from the given `<src_field>` [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+The `<q> | unpack_words from <src_field> as <dst_field>` [pipe](#pipes) unpacks [words](#word) from the given
+`<src_field>` [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
 of `<q>` [query](#query-syntax) results into `<dst_field>` as a JSON array.
 
 For example, the following query unpacks words from [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) into `words` field:
 
 ```logsql
 _time:5m | unpack_words from _msg as words
+```
+
+The `as <dst_field>` part is optional. If it is missing, then the result is stored in the `<src_field>` from the `from <src_field>`.
+For example, the following query stores the unpacked words into `_msg` field:
+
+```logsql
+_time:5m | unpack_words from _msg
+```
+
+The `from <src_field>` part is optional. If it is missing, then words are unpacked from the `_msg` field. The following query is equivalent to the previous one:
+
+```logsql
+_time:5m | unpack_words
 ```
 
 By default `unpack_words` pipe unpacks all the words, including duplicates, from the `<src_field>`. It is possible to drop duplicate words by adding `drop_duplicates` suffix to the pipe.
@@ -3486,16 +3859,17 @@ For example, the following query extracts only unique words from every `text` fi
 _time:5m | unpack_words from text as words drop_duplicates
 ```
 
-It may be convenient to use [`unroll` pipe](#unroll-pipe) for unrolling the JSON array with unpacked words from the destination field.
+It is convenient to use [`unroll` pipe](#unroll-pipe) for unrolling the JSON array with unpacked words from the destination field.
 For example, the following query returns top 5 most frequently seen words across [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) for the last 5 minutes:
 
 ```logsql
-_time:5m | unpack_words from _msg as words | unroll words | top 5 (words)
+_time:5m | unpack_words as words | unroll words | top 5 (words)
 ```
 
 See also:
 
 - [`unroll` pipe](#unroll-pipe)
+- [`split` pipe](#split-pipe)
 
 ### unroll pipe
 
@@ -3528,6 +3902,222 @@ The `<filters>` can contain arbitrary [filters](#filters). For example, the foll
 ```logsql
 _time:5m | unroll if (value_type:="json_array") (value)
 ```
+
+## running_stats pipe functions
+
+LogsQL supports the following functions for [`running_stats` pipe](#running_stats-pipe):
+
+- [`count`](#count-running_stats) returns the number of log entries.
+- [`max`](#max-running_stats) returns the maximum value over the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+- [`min`](#min-running_stats) returns the minimum value over the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+- [`sum`](#sum-running_stats) returns the sum for the given numeric [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+
+### count running_stats
+
+`count()` [`running_stats` pipe function](#running_stats-pipe-functions) calculates running number of selected logs.
+
+For example, the following query adds the `running_logs` field to the selected logs over the last 5 minutes:
+
+```logsql
+_time:5m | running_stats count() running_logs
+```
+
+It is possible to calculate the number of logs with non-empty values for some [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+with the `count(fieldName)` syntax. For example, the following query returns running number of logs with non-empty `username` field over the last 5 minutes:
+
+```logsql
+_time:5m | running_stats count(username) running_logs_with_username
+```
+
+If multiple fields are enumerated inside `count()`, then it counts the number of logs with at least a single non-empty field mentioned inside `count()`.
+For example, the following query returns the number of logs with non-empty `username` or `password` [fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+over the last 5 minutes:
+
+```logsql
+_time:5m | running_stats count(username, password) running_logs_with_username_or_password
+```
+
+It is possible to calculate the number of logs with at least a single non-empty field with common prefix with `count(prefix*)` syntax.
+For example, the following query returns the number of logs with at least a single non-empty field with `foo` prefix over the last 5 minutes:
+
+```logsql
+_time:5m | running_stats count(foo*)
+```
+
+See also:
+
+- [`sum`](#sum-running_stats)
+- [`min`](#min-running_stats)
+- [`max`](#max-running_stats)
+
+### max running_stats
+
+`max(field1, ..., fieldN)` [`running_stats` pipe function](#running_stats-pipe-functions) returns running maximum across
+all the mentioned [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+
+For example, the following query returns running maximum for the `duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+over logs for the last 5 minutes:
+
+```logsql
+_time:5m | running_stats max(duration) running_max_duration
+```
+
+It is possible to calculate running maximum value across all the fields with common prefix via `max(prefix*)` syntax.
+
+See also:
+
+- [`min`](#min-running_stats)
+- [`sum`](#sum-running_stats)
+- [`count`](#count-running_stats)
+
+### min running_stats
+
+`min(field1, ..., fieldN)` [`running_stats` pipe function](#running_stats-pipe-functions) returns running minimum across
+all the mentioned [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+
+For example, the following query returns running minimum for the `duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+over logs for the last 5 minutes:
+
+```logsql
+_time:5m | running_stats min(duration) running_min_duration
+```
+
+It is possible to find running minimum across all the fields with common prefix via `min(prefix*)` syntax.
+
+See also:
+
+- [`max`](#max-running_stats)
+- [`sum`](#sum-running_stats)
+- [`count`](#count-running_stats)
+
+### sum running_stats
+
+`sum(field1, ..., fieldN)` [`running_stats` pipe function](#running_stats-pipe-functions) calculates running sum of numeric values across
+all the mentioned [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Non-numeric values are skipped. If all the values across `field1`, ..., `fieldN` are non-numeric, then `NaN` is returned.
+
+For example, the following query returns running sum of numeric values for the `duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+over logs for the last 5 minutes:
+
+```logsql
+_time:5m | running_stats sum(duration) running_sum_duration
+```
+
+It is possible to find running sum for all the fields with common prefix via `sum(prefix*)` syntax.
+
+See also:
+
+- [`count`](#count-running_stats)
+- [`max`](#max-running_stats)
+- [`min`](#min-running_stats)
+
+## total_stats pipe functions
+
+LogsQL supports the following functions for [`total_stats` pipe](#running_stats-pipe):
+
+- [`count`](#count-total_stats) returns the number of log entries.
+- [`max`](#max-total_stats) returns the maximum value over the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+- [`min`](#min-total_stats) returns the minimum value over the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+- [`sum`](#sum-total_stats) returns the sum for the given numeric [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+
+### count total_stats
+
+`count()` [`total_stats` pipe function](#total_stats-pipe-functions) calculates the total number of selected logs.
+
+For example, the following query adds the `total_logs` field to the selected logs over the last 5 minutes:
+
+```logsql
+_time:5m | total_stats count() total_logs
+```
+
+It is possible to calculate the number of logs with non-empty values for some [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+with the `count(fieldName)` syntax. For example, the following query returns the total number of logs with non-empty `username` field over the last 5 minutes:
+
+```logsql
+_time:5m | total_stats count(username) total_logs_with_username
+```
+
+If multiple fields are enumerated inside `count()`, then it counts the number of logs with at least a single non-empty field mentioned inside `count()`.
+For example, the following query returns the number of logs with non-empty `username` or `password` [fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+over the last 5 minutes:
+
+```logsql
+_time:5m | total_stats count(username, password) total_logs_with_username_or_password
+```
+
+It is possible to calculate the number of logs with at least a single non-empty field with common prefix with `count(prefix*)` syntax.
+For example, the following query returns the number of logs with at least a single non-empty field with `foo` prefix over the last 5 minutes:
+
+```logsql
+_time:5m | total_stats count(foo*)
+```
+
+See also:
+
+- [`sum`](#sum-total_stats)
+- [`min`](#min-total_stats)
+- [`max`](#max-total_stats)
+
+### max total_stats
+
+`max(field1, ..., fieldN)` [`total_stats` pipe function](#total_stats-pipe-functions) returns the total maximum across
+all the mentioned [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+
+For example, the following query returns the total maximum for the `duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+over logs for the last 5 minutes:
+
+```logsql
+_time:5m | total_stats max(duration) total_max_duration
+```
+
+It is possible to calculate the total maximum value across all the fields with common prefix via `max(prefix*)` syntax.
+
+See also:
+
+- [`min`](#min-total_stats)
+- [`sum`](#sum-total_stats)
+- [`count`](#count-total_stats)
+
+### min total_stats
+
+`min(field1, ..., fieldN)` [`total_stats` pipe function](#running_stats-pipe-functions) returns the total minimum across
+all the mentioned [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+
+For example, the following query returns the total minimum for the `duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+over logs for the last 5 minutes:
+
+```logsql
+_time:5m | total_stats min(duration) total_min_duration
+```
+
+It is possible to find the total minimum across all the fields with common prefix via `min(prefix*)` syntax.
+
+See also:
+
+- [`max`](#max-total_stats)
+- [`sum`](#sum-total_stats)
+- [`count`](#count-total_stats)
+
+### sum total_stats
+
+`sum(field1, ..., fieldN)` [`total_stats` pipe function](#total_stats-pipe-functions) calculates the total sum of numeric values across
+all the mentioned [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Non-numeric values are skipped. If all the values across `field1`, ..., `fieldN` are non-numeric, then `NaN` is returned.
+
+For example, the following query returns the total sum of numeric values for the `duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+over logs for the last 5 minutes:
+
+```logsql
+_time:5m | total_stats sum(duration) total_sum_duration
+```
+
+It is possible to find the total sum for all the fields with common prefix via `sum(prefix*)` syntax.
+
+See also:
+
+- [`count`](#count-total_stats)
+- [`max`](#max-total_stats)
+- [`min`](#min-total_stats)
 
 ## stats pipe functions
 
@@ -3593,7 +4183,7 @@ For example, the following query returns the number of logs over the last 5 minu
 _time:5m | stats count() logs
 ```
 
-It is possible calculating the number of logs with non-empty values for some [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+It is possible to calculate the number of logs with non-empty values for some [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
 with the `count(fieldName)` syntax. For example, the following query returns the number of logs with non-empty `username` field over the last 5 minutes:
 
 ```logsql
@@ -3776,10 +4366,27 @@ returns up to 3 JSON-encoded logs per every `host`:
 _time:5m | stats by (host) json_values() limit 3 as json_logs
 ```
 
+It is possible to sort the selected log entries by appending `sort by (...)`. For example, the following query returns per-`host` logs
+over the last 5 minutes sorted by descending order of [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field):
+
+```logsql
+_time:5m | stats by (host) json_values() sort by (_time desc) as json_logs
+```
+
+The `sort by (...)` allows selecting top N logs per each group if it is combined with `limit N`. For example, the following query selects up to 3 the most recent logs per every `host`
+over the last 5 minutes:
+
+```logsql
+_time:5m | stats by (host) json_values() sort by (_time desc) limit 3 as json_logs
+```
+
 See also:
 
-- [`values`](#values-stats)
 - [`unroll` pipe](#unroll-pipe)
+- [`row_min`](#row_min-stats)
+- [`row_max`](#row_max-stats)
+- [`row_any`](#row_any-stats)
+- [`values`](#values-stats)
 
 ### max stats
 
@@ -3933,6 +4540,7 @@ See also:
 
 - [`row_max`](#row_max-stats)
 - [`row_min`](#row_min-stats)
+- [`json_values`](#json_values-stats)
 
 ### row_max stats
 
@@ -3962,6 +4570,7 @@ See also:
 - [`max`](#max-stats)
 - [`row_min`](#row_min-stats)
 - [`row_any`](#row_any-stats)
+- [`json_values`](#json_values-stats)
 
 ### row_min stats
 
@@ -3991,6 +4600,7 @@ See also:
 - [`min`](#min-stats)
 - [`row_max`](#row_max-stats)
 - [`row_any`](#row_any-stats)
+- [`json_values`](#json_values-stats)
 
 ### sum stats
 
@@ -4428,6 +5038,8 @@ When you know which fields are expensive, you can decide whether to drop the noi
 
 You can find more details here: [How to determine which log fields occupy the most of disk space?](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-fields-occupy-the-most-of-disk-space).
 
+It might be useful to add the [`query_stats` pipe](#query_stats-pipe) to the end of the query in order to understand how much data of different types the query reads and processes.
+
 ### Profile pipes incrementally
 
 Suppose you need to profile and optimize the following query:
@@ -4500,6 +5112,8 @@ _time:5m error contains_any("access denied", "unauthorized", "403") "user_id=("
 ```
 
 If the query becomes slow or starts using a lot of RAM after adding the next filter or pipe, you will know exactly which part of the query to fix.
+
+It might be useful to add the [`query_stats` pipe](#query_stats-pipe) to the end of the query in order to understand how much data of different types the query reads and processes.
 
 If you find a slow filter or pipe, try these ideas:
 
