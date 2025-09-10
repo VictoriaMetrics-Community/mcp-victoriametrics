@@ -2,6 +2,47 @@
 
 - TODO
 
+## 0.21.5
+
+**Release date:** 08 Sep 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.125.1](https://img.shields.io/badge/v1.125.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11251)
+
+- properly add default nodeSelector for requestsLoadBalancer. See [#2393](https://github.com/VictoriaMetrics/helm-charts/issues/2393).
+
+## 0.21.4
+
+**Release date:** 05 Sep 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.125.1](https://img.shields.io/badge/v1.125.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11251)
+
+- merge zoneTpl.common with vmcluster.requestsLoadBalancer. See [#2393](https://github.com/VictoriaMetrics/helm-charts/issues/2393).
+- fixed remote write url, while using vmsingle. See [#2390](https://github.com/VictoriaMetrics/helm-charts/issues/2390).
+
+## 0.21.3
+
+**Release date:** 03 Sep 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.125.1](https://img.shields.io/badge/v1.125.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11251)
+
+- bump version of VM components to [v1.125.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.125.1)
+
+## 0.21.2
+
+**Release date:** 01 Sep 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.125.0](https://img.shields.io/badge/v1.125.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11250)
+
+- bump version of VM components to [v1.125.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.125.0)
+
+## 0.21.1
+
+**Release date:** 29 Aug 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.124.0](https://img.shields.io/badge/v1.124.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11240)
+
+- proxy /admin/tenants API on global read proxy. See [#2380](https://github.com/VictoriaMetrics/helm-charts/issues/2380).
+
 ## 0.21.0
 
 **Release date:** 19 Aug 2025
@@ -244,7 +285,7 @@
 
 ![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.108.1](https://img.shields.io/badge/v1.108.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11081)
 
-- upgraded operator, it's required to [update CRDs manually](../victoriametrics-k8s-stack/#upgrade-guide)
+- upgraded operator, it's required to [update CRDs manually](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#upgrade-guide)
 - bump version of VM components to [v1.108.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.108.1)
 - Exclude markdown files from package
 
@@ -364,7 +405,7 @@
 ![AppVersion: v1.101.0](https://img.shields.io/badge/v1.101.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%2F%23v11010)
 ![Helm: v3.14](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
 
-- Breaking change: disable multitenancy mode by default, see how to enable it in <https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-distributed#how-to-use-multitenancy>. See [this pull request](https://github.com/VictoriaMetrics/helm-charts/pull/1137) for details.
+- Breaking change: disable multitenancy mode by default, see how to enable it in <https://docs.victoriametrics.com/helm/victoria-metrics-distributed/#how-to-use-multitenancy>. See [this pull request](https://github.com/VictoriaMetrics/helm-charts/pull/1137) for details.
 
 ## 0.1.1
 

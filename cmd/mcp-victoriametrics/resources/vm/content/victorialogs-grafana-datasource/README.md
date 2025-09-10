@@ -3,6 +3,8 @@ build:
   list: never
   publishResources: false
   render: never
+sitemap:
+  disable: true
 ---
 
 
@@ -30,6 +32,7 @@ Once installed, start exploring logs from [Grafana's Explore page](https://grafa
 
 * How to use plugin on [Grafana dashboards](https://github.com/VictoriaMetrics/victorialogs-datasource/tree/main/src#building-queries).
 * How to configure [log level rules](https://github.com/VictoriaMetrics/victorialogs-datasource/tree/main/src#log-level-rules).
+* How to connect Logs with Traces using [Derived Fields](https://github.com/VictoriaMetrics/victorialogs-datasource/tree/main/src#derived-fields).
 * [Demo dashboard](https://play-grafana.victoriametrics.com/d/be5zidev72m80f) built with VictoriaLogs plugin.
 
 ## Installation

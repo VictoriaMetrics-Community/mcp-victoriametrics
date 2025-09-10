@@ -131,7 +131,7 @@ A comprehensive list of these parameters is presented here:
 
 
 <br></br>
-For a detailed explanation of each parameter, visit the guide on [Understanding Your Setup Size](https://docs.victoriametrics.com/guides/understand-your-setup-size.html).
+For a detailed explanation of each parameter, visit the guide on [Understanding Your Setup Size](https://docs.victoriametrics.com/guides/understand-your-setup-size/).
 
 {{% collapse name="Selecting a Tier: Real-world example" %}}
 
@@ -165,7 +165,7 @@ you need more information.
 
 ## Advanced Parameters: Flags
 
-Additionally, VictoriaMetrics Cloud exposes certain parameters (or [command-line flags](https://docs.victoriametrics.com/#list-of-command-line-flags))
+Additionally, VictoriaMetrics Cloud exposes certain parameters (or [command-line flags](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#list-of-command-line-flags))
 that **advanced users** can tweak on their own under the `Advanced settings` section of every deployment
 after creation.
 

@@ -1,3 +1,11 @@
+---
+build:
+  list: never
+  publishResources: false
+  render: never
+sitemap:
+  disable: true
+---
 [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/) can be queried with [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/)
 via the following ways:
 
@@ -23,6 +31,11 @@ VictoriaLogs provides the following HTTP endpoints:
 - [`/select/logsql/stream_field_values`](#querying-stream-field-values) for querying [log stream](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) field values.
 - [`/select/logsql/field_names`](#querying-field-names) for querying [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) names.
 - [`/select/logsql/field_values`](#querying-field-values) for querying [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) values.
+
+See also:
+
+- [Extra filters](#extra-filters)
+- [Resource usage limits](#resource-usage-limits)
 
 ### Querying logs
 
@@ -115,8 +128,10 @@ for log messages at `(AccountID=12, ProjectID=34)` tenant:
 curl http://localhost:9428/select/logsql/query -H 'AccountID: 12' -H 'ProjectID: 34' -d 'query=error'
 ```
 
-The number of requests to `/select/logsql/query` can be [monitored](https://docs.victoriametrics.com/victorialogs/#monitoring)
-with `vl_http_requests_total{path="/select/logsql/query"}` metric.
+The number of requests to `/select/logsql/query` can be [monitored](https://docs.victoriametrics.com/victorialogs/metrics/)
+with [`vl_http_requests_total{path="/select/logsql/query"}`](https://docs.victoriametrics.com/victorialogs/metrics/#vl_http_requests_total) metric.
+
+The `/select/logsql/query` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
 
 See also:
 
@@ -195,8 +210,8 @@ for `(AccountID=12, ProjectID=34)` tenant:
 curl -N http://localhost:9428/select/logsql/tail -H 'AccountID: 12' -H 'ProjectID: 34' -d 'query=error'
 ```
 
-The number of currently executed live tailing requests to `/select/logsql/tail` can be [monitored](https://docs.victoriametrics.com/victorialogs/#monitoring)
-with `vl_live_tailing_requests` metric.
+The number of currently executed live tailing requests to `/select/logsql/tail` can be [monitored](https://docs.victoriametrics.com/victorialogs/metrics/)
+with [`vl_live_tailing_requests`](https://docs.victoriametrics.com/victorialogs/metrics/#vl_live_tailing_requests) metric.
 
 See also:
 
@@ -317,6 +332,8 @@ for `(AccountID=12, ProjectID=34)` tenant:
 curl http://localhost:9428/select/logsql/hits -H 'AccountID: 12' -H 'ProjectID: 34' -d 'query=error'
 ```
 
+The `/select/logsql/hits` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
+
 See also:
 
 - [Extra filters](#extra-filters)
@@ -411,6 +428,8 @@ Add `keep_const_fields=1` query arg if you need such log fields:
 curl http://localhost:9428/select/logsql/facets -d 'query=_time:1h' -d 'keep_const_fields=1'
 ```
 
+The `/select/logsql/facets` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
+
 See also:
 
 - [Extra filters](#extra-filters)
@@ -480,6 +499,8 @@ Below is an example JSON output returned from this endpoint:
 ```
 
 The `/select/logsql/stats_query` API is useful for generating Prometheus-compatible alerts and calculating recording rules results.
+
+The `/select/logsql/stats_query` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
 
 See also:
 
@@ -575,6 +596,8 @@ Below is an example JSON output returned from this endpoint:
 
 The `/select/logsql/stats_query_range` API is useful for generating Prometheus-compatible graphs in Grafana.
 
+The `/select/logsql/stats_query_range` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
+
 See also:
 
 - [Extra filters](#extra-filters)
@@ -634,6 +657,8 @@ for `(AccountID=12, ProjectID=34)` tenant:
 curl http://localhost:9428/select/logsql/stream_ids -H 'AccountID: 12' -H 'ProjectID: 34' -d 'query=_time:5m'
 ```
 
+The `/select/logsql/stream_ids` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
+
 See also:
 
 - [Extra filters](#extra-filters)
@@ -692,6 +717,8 @@ for `(AccountID=12, ProjectID=34)` tenant:
 curl http://localhost:9428/select/logsql/streams -H 'AccountID: 12' -H 'ProjectID: 34' -d 'query=_time:5m'
 ```
 
+The `/select/logsql/streams` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
+
 See also:
 
 - [Extra filters](#extra-filters)
@@ -747,6 +774,8 @@ for `(AccountID=12, ProjectID=34)` tenant:
 curl http://localhost:9428/select/logsql/stream_field_names -H 'AccountID: 12' -H 'ProjectID: 34' -d 'query=_time:5m'
 ```
 
+The `/select/logsql/stream_field_names` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
+
 See also:
 
 - [Extra filters](#extra-filters)
@@ -801,6 +830,8 @@ for `(AccountID=12, ProjectID=34)` tenant:
 curl http://localhost:9428/select/logsql/stream_field_values -H 'AccountID: 12' -H 'ProjectID: 34' -d 'query=_time:5m'
 ```
 
+The `/select/logsql/stream_field_values` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
+
 See also:
 
 - [Extra filters](#extra-filters)
@@ -854,6 +885,8 @@ for `(AccountID=12, ProjectID=34)` tenant:
 ```sh
 curl http://localhost:9428/select/logsql/field_names -H 'AccountID: 12' -H 'ProjectID: 34' -d 'query=_time:5m'
 ```
+
+The `/select/logsql/field_names` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
 
 See also:
 
@@ -914,6 +947,8 @@ for `(AccountID=12, ProjectID=34)` tenant:
 curl http://localhost:9428/select/logsql/field_values -H 'AccountID: 12' -H 'ProjectID: 34' -d 'query=_time:5m'
 ```
 
+The `/select/logsql/field_values` returns `VL-Request-Duration-Seconds` HTTP header in the response, which contains the duration of the query until the first response byte.
+
 See also:
 
 - [Extra filters](#extra-filters)
@@ -948,6 +983,21 @@ The `extra_filters` and `extra_stream_filters` values can have the following for
 The `extra_filters` may contain also arbitrary [LogsQL filter](https://docs.victoriametrics.com/victorialogs/logsql/#filters). For example, `extra_filters=foo:~bar%20-baz:x`.
 
 The arg passed to `extra_filters` and `extra_stream_filters` must be properly encoded with [percent encoding](https://en.wikipedia.org/wiki/Percent-encoding).
+
+## Resource usage limits
+
+VictoriaLogs provides the following options to limit resource usage by the executed queries:
+
+- `-search.maxQueryTimeRange` command-line flag disallows queries without [time filters](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) and queries
+  with too broad time filters, which select time ranges bigger than the value passed to `-search.maxQueryTimeRange`. For example, `-search.maxQueryTimeRange=1d` disallows queries,
+  which select logs on time ranges bigger than one day.
+
+- `-search.maxQueryDuration` command-line flag limits the maximum execution time for a single query. For example, `-search.maxQueryDuration=10s` limits the maximum
+  query execution time to 10 seconds. The maximum query duration can be set to lower values via `timeout` query arg, which can be passed to all the [HTTP querying APIs](#http-api).
+
+- `-search.maxConcurrentRequests` command-line flag limits the number of concurrently executed queries. It isn't recommended setting it to too big values,
+  since this usually results in the increased RAM usage and slowdown for the concurrently executed queries. VictoriaLogs waits for up to `-search.maxQueueDuration`
+  before returning errors to queries, which cannot be executed because `-search.maxConcurrentRequests` limit is reached.
 
 ## Web UI
 

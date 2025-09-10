@@ -19,7 +19,7 @@ The configuration examples below contain two placeholders: `<DEPLOYMENT_ENDPOINT
 `<YOUR_ACCESS_TOKEN>`. These need to be replaced with your actual access token.
 
 To generate your access token (with **write access**, since Vector pushes metrics), follow the steps in
-the [Access Tokens documentation](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens).
+the [Access Tokens documentation](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens/).
 
 To set up Vector to forward metrics to VictoriaMetrics Cloud, visit the [cloud console](https://console.victoriametrics.cloud/integrations/vector),
 or follow this interactive guide:

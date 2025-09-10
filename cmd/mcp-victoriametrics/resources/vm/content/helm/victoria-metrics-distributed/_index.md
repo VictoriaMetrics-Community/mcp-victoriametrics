@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.21.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-distributed%2Fchangelog%2F%230210)
+![Version](https://img.shields.io/badge/0.21.5-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-distributed%2Fchangelog%2F%230215)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-distributed)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -54,7 +54,7 @@ The default setup is as shown below:
 For write:
 1. extra-vmagent(optional): scrapes external targets and all the components installed by this chart, sends data to global write entrypoint.
 2. vmauth-global-write: global write entrypoint, proxies requests to one of the zone `vmagent` with `least_loaded` policy.
-3. vmagent(per-zone): remote writes data to availability zones that enabled `.Values.availabilityZones[*].write.allow`, and [buffer data on disk](https://docs.victoriametrics.com/vmagent/#calculating-disk-space-for-persistence-queue) when zone is unavailable to ingest.
+3. vmagent(per-zone): remote writes data to availability zones that enabled `.Values.availabilityZones[*].write.allow`, and [buffer data on disk](https://docs.victoriametrics.com/victoriametrics/vmagent/#calculating-disk-space-for-persistence-queue) when zone is unavailable to ingest.
 4. vmauth-write-balancer(per-zone): proxies requests to vminsert instances inside it's zone with `least_loaded` policy.
 5. vmcluster(per-zone): processes write requests and stores data.
 
@@ -73,18 +73,18 @@ You can install them using dependency [victoria-metrics-k8s-stack](https://githu
 
 One of the best practice of running production kubernetes cluster is running with [multiple availability zones](https://kubernetes.io/docs/setup/best-practices/multiple-zones/). And apart from kubernetes control plane components, we also want to spread our application pods on multiple zones, to continue serving even if zone outage happens.
 
-VictoriaMetrics supports [data replication](https://docs.victoriametrics.com/cluster-victoriametrics/#replication-and-data-safety) natively which can guarantees data availability when part of the vmstorage instances failed. But it doesn't works well if vmstorage instances are spread on multiple availability zones, since data replication could be stored on single availability zone, which will be lost when zone outage happens.
+VictoriaMetrics supports [data replication](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#replication-and-data-safety) natively which can guarantees data availability when part of the vmstorage instances failed. But it doesn't works well if vmstorage instances are spread on multiple availability zones, since data replication could be stored on single availability zone, which will be lost when zone outage happens.
 To avoid this, vmcluster must be installed on multiple availability zones, each containing a 100% copy of data. As long as one zone is available, both global write and read entrypoints should work without interruption.
 
 ### How to write data?
 
-The chart provides `vmauth-global-write` as global write entrypoint, it supports [push-based data ingestion protocols](https://docs.victoriametrics.com/vmagent/#how-to-push-data-to-vmagent) as VictoriaMetrics does.
+The chart provides `vmauth-global-write` as global write entrypoint, it supports [push-based data ingestion protocols](https://docs.victoriametrics.com/victoriametrics/vmagent/#how-to-push-data-to-vmagent) as VictoriaMetrics does.
 Optionally, you can push data to any of the per-zone vmagents, and they will replicate the received data across zones.
 
 ### How to query data?
 
-The chart provides `vmauth-global-read` as global read entrypoint, it picks the first available zone (see [first_available](https://docs.victoriametrics.com/vmauth/#high-availability) policy) as it's preferred datasource and switches automatically to next zone if first one is unavailable, check [vmauth `first_available`](https://docs.victoriametrics.com/vmauth/#high-availability) for more details.
-If you have services like [vmalert](https://docs.victoriametrics.com/vmalert) or Grafana deployed in each zone, then configure them to use local `vmauth-read-proxy`. Per-zone `vmauth-read-proxy` always prefers "local" vmcluster for querying and reduces cross-zone traffic.
+The chart provides `vmauth-global-read` as global read entrypoint, it picks the first available zone (see [first_available](https://docs.victoriametrics.com/victoriametrics/vmauth/#high-availability) policy) as it's preferred datasource and switches automatically to next zone if first one is unavailable, check [vmauth `first_available`](https://docs.victoriametrics.com/victoriametrics/vmauth/#high-availability) for more details.
+If you have services like [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/) or Grafana deployed in each zone, then configure them to use local `vmauth-read-proxy`. Per-zone `vmauth-read-proxy` always prefers "local" vmcluster for querying and reduces cross-zone traffic.
 
 You can also pick other proxies like kubernetes service which supports [Topology Aware Routing](https://kubernetes.io/docs/concepts/services-networking/topology-aware-routing/) as global read entrypoint.
 
@@ -94,13 +94,13 @@ If availability zone `zone-eu-1` is experiencing an outage, `vmauth-global-write
 1. `vmauth-global-write` stops proxying write requests to `zone-eu-1` automatically;
 2. `vmauth-global-read` and `vmauth-read-proxy` stops proxying read requests to `zone-eu-1` automatically;
 3. `vmagent` on `zone-us-1` fails to send data to `zone-eu-1.vmauth-write-balancer`, starts to buffer data on disk(unless `-remoteWrite.disableOnDiskQueue` is specified, which is not recommended for this topology);
-To keep data completeness for all the availability zones, make sure you have enough disk space on vmagent for buffer, see [this doc](https://docs.victoriametrics.com/vmagent/#calculating-disk-space-for-persistence-queue) for size recommendation.
+To keep data completeness for all the availability zones, make sure you have enough disk space on vmagent for buffer, see [this doc](https://docs.victoriametrics.com/victoriametrics/vmagent/#calculating-disk-space-for-persistence-queue) for size recommendation.
 
 And to avoid getting incomplete responses from `zone-eu-1` which gets recovered from outage, check vmagent on `zone-us-1` to see if persistent queue has been drained. If not, remove `zone-eu-1` from serving query by setting `.Values.availabilityZones.{zone-eu-1}.read.allow=false` and change it back after confirm all data are restored.
 
-### How to use [multitenancy](https://docs.victoriametrics.com/cluster-victoriametrics/#multitenancy)?
+### How to use multitenancy?
 
-By default, all the data that written to `vmauth-global-write` belong to tenant `0`. To write data to different tenants, set `.Values.enableMultitenancy=true` and create new tenant users for `vmauth-global-write`.
+By default with [multitenancy](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#multitenancy), all the data that written to `vmauth-global-write` belong to tenant `0`. To write data to different tenants, set `.Values.enableMultitenancy=true` and create new tenant users for `vmauth-global-write`.
 For example, writing data to tenant `1088` with following steps:
 1. create tenant VMUser for vmauth `vmauth-global-write` to use:
 ```yaml
@@ -371,7 +371,7 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#common-vmagent-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">common.vmagent.spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;8429&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Common VMAgent spec, which can be overridden by each VMAgent configuration. Available parameters can be found <a href="https://docs.victoriametrics.com/operator/api/index.html#vmagentspec" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Common VMAgent spec, which can be overridden by each VMAgent configuration. Available parameters can be found <a href="https://docs.victoriametrics.com/operator/api/#vmagentspec" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="common-vmauth-spec-port">
@@ -390,14 +390,14 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmselect</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;8481&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Common VMCluster spec, which can be overridden by each VMCluster configuration. Available parameters can be found <a href="https://docs.victoriametrics.com/operator/api/index.html#vmclusterspec" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Common VMCluster spec, which can be overridden by each VMCluster configuration. Available parameters can be found <a href="https://docs.victoriametrics.com/operator/api/#vmclusterspec" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="common-vmsingle-spec">
       <td><a href="#common-vmsingle-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">common.vmsingle.spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;8428&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Common VMSingle spec, which can be overridden by each VMSingle configuration. Available parameters can be found <a href="https://docs.victoriametrics.com/operator/api/index.html#vmsinglespec" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Common VMSingle spec, which can be overridden by each VMSingle configuration. Available parameters can be found <a href="https://docs.victoriametrics.com/operator/api/#vmsinglespec" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="enablemultitenancy">
@@ -465,7 +465,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="m">502</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="m">503</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Spec for VMAuth CRD, see <a href="https://docs.victoriametrics.com/operator/api#vmauthspec" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Spec for VMAuth CRD, see <a href="https://docs.victoriametrics.com/operator/api/#vmauthspec" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="victoria-metrics-k8s-stack">
@@ -504,7 +504,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="write-global-vmauth-spec">
       <td><a href="#write-global-vmauth-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">write.global.vmauth.spec</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Spec for VMAuth CRD, see <a href="https://docs.victoriametrics.com/operator/api#vmauthspec" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Spec for VMAuth CRD, see <a href="https://docs.victoriametrics.com/operator/api/#vmauthspec" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="zonetpl">
@@ -558,7 +558,6 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ (.zone).name }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">extraArgs</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;14&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">write</span><span class="p">:</span><span class="w">
@@ -607,7 +606,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="m">502</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="m">503</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Spec for VMAuth CRD, see <a href="https://docs.victoriametrics.com/operator/api#vmauthspec" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Spec for VMAuth CRD, see <a href="https://docs.victoriametrics.com/operator/api/#vmauthspec" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="zonetpl-vmagent-annotations">
@@ -631,7 +630,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="zonetpl-vmagent-spec">
       <td><a href="#zonetpl-vmagent-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">zoneTpl.vmagent.spec</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Spec for VMAgent CRD, see <a href="https://docs.victoriametrics.com/operator/api#vmagentspec" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Spec for VMAgent CRD, see <a href="https://docs.victoriametrics.com/operator/api/#vmagentspec" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="zonetpl-vmcluster-enabled">
@@ -663,7 +662,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">storageDataPath</span><span class="p">:</span><span class="w"> </span><span class="l">/vm-data</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Spec for VMCluster CRD, see <a href="https://docs.victoriametrics.com/operator/api#vmclusterspec" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Spec for VMCluster CRD, see <a href="https://docs.victoriametrics.com/operator/api/#vmclusterspec" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="zonetpl-vmsingle-enabled">
@@ -681,11 +680,10 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="zonetpl-vmsingle-spec">
       <td><a href="#zonetpl-vmsingle-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">zoneTpl.vmsingle.spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraArgs</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;14&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Spec for VMSingle CRD, see <a href="https://docs.victoriametrics.com/operator/api#vmsinglespec" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Spec for VMSingle CRD, see <a href="https://docs.victoriametrics.com/operator/api/#vmsinglespec" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="zonetpl-write-allow">

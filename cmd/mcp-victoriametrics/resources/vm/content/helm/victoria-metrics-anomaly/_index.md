@@ -154,7 +154,7 @@ The markdown generation is entirely go template driven. The tool parses metadata
 
 The following tables lists the configurable parameters of the chart and their default values.
 
-For more `vmanomaly` config parameters see https://docs.victoriametrics.com/anomaly-detection/components
+For more `vmanomaly` config parameters see https://docs.victoriametrics.com/anomaly-detection/components/
 
 Change the values according to the need of the environment in ``victoria-metrics-anomaly/values.yaml`` file.
 
@@ -416,7 +416,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>License key configuration for vmanomaly. See <a href="https://docs.victoriametrics.com/vmanomaly#licensing" target="_blank">docs</a> Required starting from v1.5.0.</p>
+      <td><em><code>(object)</code></em><p>License key configuration for vmanomaly. See <a href="https://docs.victoriametrics.com/anomaly-detection/quickstart/#licensing" target="_blank">docs</a> Required starting from v1.5.0.</p>
 </td>
     </tr>
     <tr id="license-key">
@@ -584,7 +584,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="replicationfactor">
       <td><a href="#replicationfactor"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">replicationFactor</span><span class="p">:</span><span class="w"> </span><span class="m">1</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(int)</code></em><p>Number of replicas for sharding. Must be greater than 0. Details are <a href="https://docs.victoriametrics.com/anomaly-detection/faq/index.html#scaling-vmanomaly" target="_blank">here</a></p>
+      <td><em><code>(int)</code></em><p>Number of replicas for sharding. Must be greater than 0. Details are <a href="https://docs.victoriametrics.com/anomaly-detection/faq/#scaling-vmanomaly" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="resources">
@@ -624,7 +624,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="shardscount">
       <td><a href="#shardscount"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">shardsCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(int)</code></em><p>Total number of shards. Must be greater than 0. Details are <a href="https://docs.victoriametrics.com/anomaly-detection/faq/index.html#scaling-vmanomaly" target="_blank">here</a></p>
+      <td><em><code>(int)</code></em><p>Total number of shards. Must be greater than 0. Details are <a href="https://docs.victoriametrics.com/anomaly-detection/faq/#scaling-vmanomaly" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="tolerations">

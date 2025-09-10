@@ -1,11 +1,11 @@
 ---
 title: Querying
-weight: 4
+weight: 5
 menu:
   docs:
     identifier: victoriatraces-querying
     parent: "victoriatraces"
-    weight: 4
+    weight: 5
 tags:
   - traces
 aliases:

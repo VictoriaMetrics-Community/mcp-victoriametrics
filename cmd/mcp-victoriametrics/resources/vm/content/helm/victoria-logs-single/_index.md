@@ -16,14 +16,14 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.11.6-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-single%2Fchangelog%2F%230116)
+![Version](https://img.shields.io/badge/0.11.8-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-single%2Fchangelog%2F%230118)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-logs-single)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
 ![X](https://img.shields.io/twitter/follow/VictoriaMetrics?style=flat&label=Follow&color=black&logo=x&labelColor=black&link=https%3A%2F%2Fx.com%2FVictoriaMetrics)
 ![Reddit](https://img.shields.io/reddit/subreddit-subscribers/VictoriaMetrics?style=flat&label=Join&labelColor=red&logoColor=white&logo=reddit&link=https%3A%2F%2Fwww.reddit.com%2Fr%2FVictoriaMetrics)
 
-The VictoriaLogs single Helm chart deploys a high-performance, cost-effective log storage solution for Kubernetes environments. It optionally includes Vector as a log collector to automatically gather logs from Kubernetes pods and forward them to the VictoriaLogs instance.
+The VictoriaLogs single Helm chart deploys VictoriaLogs database in Kubernetes. It optionally includes log collector for automatic collection of logs from Kubernetes containers and forwarding them to the deployed VictoriaLogs database.
 
 ## Prerequisites
 
@@ -41,124 +41,71 @@ For installation instructions, refer to the official documentation:
 * [Installing Helm](https://helm.sh/docs/intro/install/)
 * [Installing kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
-## Chart Details
+## Quick start
 
-### VictoriaLogs
+The chart deploys VictoriaLogs database in StatefulSet mode.
+For a quick start, install `victoria-logs-single` and
+[`victoria-logs-collector`](http://docs.victoriametrics.com/helm/victorialogs-collector/) charts using the following commands.
+Make sure to replace the environment variables with your own values:
 
-The chart's architecture centers around deploying VictoriaLogs as either a StatefulSet or Deployment, with StatefulSet being the default mode.
+```sh
+export RETENTION=30d
+export PVC_SIZE=10Gi
+export NAMESPACE=logging
 
-The chart provides extensive configuration options for:
+kubectl create namespace $NAMESPACE
 
-- Persistent volume support is enabled by default with a 10GB volume size.
-- Data retention (how long to keep logs): supporting both time-based retention periods (with units of hours, days, weeks, or years) and disk space-based retention limits. The default retention period is set to 1 month, with a minimum requirement of 24 hours.
+# Install victoria-logs-single chart
+helm install vls vm/victoria-logs-single --namespace $NAMESPACE --wait \
+    --set "server.retentionPeriod=$RETENTION" --set "server.persistentVolume.size=$PVC_SIZE"
 
-Out of the box, the chart only deploys VictoriaLogs itself without any log collector. Users need to explicitly enable Vector if they want automated log collection from Kubernetes pods:
-
-```yaml
-vector:
-  enabled: true
+# Install victoria-logs-collector chart
+helm install collector vm/victoria-logs-collector --namespace $NAMESPACE \
+    --set "remoteWrite[0].url=http://vls-victoria-logs-single-server:9428"
 ```
 
-```mermaid
-graph TB
-    subgraph "Kubernetes Node 1"
-        Pod1["App Pod"]
-        Pod2["App Pod"]
-        Vector1["Vector<br/>DaemonSet"]
-        style Vector1 fill:#d0ebff,stroke:#339af0,stroke-width:2px
-    end
+These commands install the collector, which collects logs from all the containers in Kubernetes and sends them to the installed VictoriaLogs instance
+with a 30-day [retention period](https://docs.victoriametrics.com/victorialogs/#retention) and a 10Gi PersistentVolumeClaim (PVC).
 
-    subgraph "Kubernetes Node 2"
-        Pod3["App Pod"]
-        Pod4["App Pod"]
-        Vector2["Vector<br/>DaemonSet"]
-        style Vector2 fill:#d0ebff,stroke:#339af0,stroke-width:2px
-    end
+To uninstall these charts, run: `helm uninstall vls collector`.
+Note that this *will not* remove the PVCs, so you will need to delete them manually if no longer needed.
 
-    Pod1 -.-> Vector1
-    Pod2 -.-> Vector1
-    Pod3 -.-> Vector2
-    Pod4 -.-> Vector2
+For finer control and easier maintenance, it is recommended to set these
+values in a separate `values` file and use it during installation.
+See [how to install victoria-logs-single](https://docs.victoriametrics.com/helm/victoria-logs-single/#install-victoria-logs-single-chart) for an example.
+You can do this later if you want to configure more settings than shown in the example.
 
-    Vector1 --> VL["VictoriaLogs<br/>StatefulSet"]
-    Vector2 --> VL
-    style VL fill:#e6fcf5,stroke:#20c997,stroke-width:2px
-```
+## Chart configuration
 
-### Vector
+The chart provides the following configuration options:
 
-When [Vector](https://github.com/vectordotdev/helm-charts/tree/develop/charts/vector) is enabled, the default configuration is quite comprehensive and well-structured:
-
-* The default role is set to "Agent" (typically deployed as a DaemonSet with a data directory at `/vector-data-dir`.
-* Vector is configured with the `k8s` source uses the `kubernetes_logs` type to collect logs from all Kubernetes pods in the cluster.
-* The default transform configuration includes a parser component that performs JSON parsing on incoming log messages.
-  * It attempts to parse the message field as JSON, and if successful, stores the parsed content in a `.log` field.
-  * If JSON parsing fails, it falls back to keeping the original message content.
-* The default sink configuration includes a `vlogs` sink, configured as an Elasticsearch-compatible endpoint, which sends processed logs to VictoriaLogs using bulk mode with `gzip` compression.
+- Persistent volume size for storing the ingested logs. See `server.persistentVolume.size` config option at the [minimal configuration example](#minimal-configuration).
+- Data retention (how long to keep logs in the database). It can be configurated via time-based retention (with units of days, weeks, or years)
+  or via disk space-based retention limits. See `server.retentionPeriod` and `server.retentionDiskSpaceUsage` config options in the [minimal configuration example](#minimal-configuration).
+  See [retention docs](https://docs.victoriametrics.com/victorialogs/#retention) for details.
 
 ### Minimal Configuration
 
-You can install the chart right away without any configuration ([How to install](#how-to-install)), but here is the minimal configuration that is commonly customized:
+You can install the chart right away without any configuration (see [how to install](#how-to-install)), but here is the minimal configuration that is commonly customized:
 
 ```yaml
-# VictoriaLogs server (enabled by default)
+# VictoriaLogs server
 server:
-  enabled: true
-  # Time-based retention (default: 1 month)
-  retentionPeriod: 7d 
 
-  # OR disk-based retention (default: none)
-  retentionDiskSpaceUsage: 5GB
+  # Time-based retention
+  retentionPeriod: 7d
 
-  # Storage size
+  # Or disk-based retention
+  # retentionDiskSpaceUsage: 5GB
+
+  # Storage size for the ingested logs
   persistentVolume:
-    size: 20Gi  # Adjust based on your log volume
-
-# Vector log collector (disabled by default, needs to be enabled)
-vector:
-  enabled: true
+    size: 20Gi
 ```
 
-The beauty of this chart is that with just `vector.enabled: true`, you get a fully functional log collection and storage system. Vector automatically discovers all pods in the cluster, parses their logs, and forwards them to the VictoriaLogs instance with proper metadata enrichment.
-
-### Sending logs to external VictoriaLogs
-
-The VictoriaLogs single chart provides an option to install logs collection agents only and send logs to external VictoriaLogs:
-
-* `.Values.server.enabled: false` skips deploying any VictoriaLogs server components (StatefulSet/Deployment, Service, PVC, etc.)
-* `.Values.vector.enabled: true` chart deploys Vector as a DaemonSet (by default) with the specified configuration
-* `.Values.vector.customConfig.sinks.vlogs.endpoints: [<remote-endpoint-1>/insert/elasticsearch, <remote-endpoint-n>/insert/elasticsearch]` overrides the destination endpoints to external VictoriaLogs single-node or cluster instances.
-
-```yaml
-# Disable the VictoriaLogs server deployment
-server:
-  enabled: false
-
-# Enable Vector log collector
-vector:
-  enabled: true
-  customConfig:
-    sinks:
-      vlogs:
-        type: elasticsearch
-        inputs: [parser]
-        mode: bulk
-        api_version: v8
-        compression: gzip
-        healthcheck:
-          enabled: false
-        # Specify your external VictoriaLogs endpoints
-        endpoints:
-          - "https://external-vlogs.example.com/insert/elasticsearch"
-          - "https://backup-vlogs.example.com/insert/elasticsearch"
-        request:
-          headers:
-            VL-Time-Field: timestamp
-            VL-Stream-Fields: stream,kubernetes.pod_name,kubernetes.container_name,kubernetes.pod_namespace
-            VL-Msg-Field: message,msg,_msg,log.msg,log.message,log
-            AccountID: "0"
-            ProjectID: "0"
-```
+To collect logs from all containers in Kubernetes and send them to VictoriaLogs,
+install the [`victoria-logs-collector`](https://docs.victoriametrics.com/helm/victorialogs-collector/) chart.
+See also this [quick start guide](#quick-start).
 
 ## How to install
 
@@ -957,82 +904,6 @@ Change the values according to the need of the environment in ``victoria-logs-si
       <td><a href="#serviceaccount-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">serviceAccount.name</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>The name of the service account to use. If not set and create is true, a name is generated using the fullname template</p>
-</td>
-    </tr>
-    <tr id="vector">
-      <td><a href="#vector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vector</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- -<span class="l">w</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- --<span class="l">config-dir</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">/etc/vector/</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">containerPorts</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="m">9090</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">prom-exporter</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l">TCP</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">customConfig</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">api</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="m">0.0.0.0</span><span class="p">:</span><span class="m">8686</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">playground</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">data_dir</span><span class="p">:</span><span class="w"> </span><span class="l">/vector-data-dir</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">sinks</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">exporter</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="m">0.0.0.0</span><span class="p">:</span><span class="m">9090</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                    </span>- <span class="l">internal_metrics</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">prometheus_exporter</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">vlogs</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">api_version</span><span class="p">:</span><span class="w"> </span><span class="l">v8</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">compression</span><span class="p">:</span><span class="w"> </span><span class="l">gzip</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">healthcheck</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                    </span>- <span class="l">parser</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l">bulk</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">request</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">headers</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">AccountID</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0&#34;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">ProjectID</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0&#34;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">VL-Msg-Field</span><span class="p">:</span><span class="w"> </span><span class="l">message,msg,_msg,log.msg,log.message,log</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">VL-Stream-Fields</span><span class="p">:</span><span class="w"> </span><span class="l">stream,kubernetes.pod_name,kubernetes.container_name,kubernetes.pod_namespace</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">VL-Time-Field</span><span class="p">:</span><span class="w"> </span><span class="l">timestamp</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">elasticsearch</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">sources</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">internal_metrics</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">internal_metrics</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">k8s</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes_logs</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">transforms</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">parser</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                    </span>- <span class="l">k8s</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
-</span></span></span><span class="line"><span class="cl"><span class="sd">                    .log = parse_json(.message) ?? .message
-</span></span></span><span class="line"><span class="cl"><span class="sd">                    del(.message)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">remap</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">customConfigNamespace</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">dataDir</span><span class="p">:</span><span class="w"> </span><span class="l">/vector-data-dir</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">existingConfigMaps</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">vl-config</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l">Agent</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">service</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(object)</code></em><p>Values for <a href="https://github.com/vectordotdev/helm-charts/tree/develop/charts/vector" target="_blank">vector helm chart</a></p>
-</td>
-    </tr>
-    <tr id="vector-customconfignamespace">
-      <td><a href="#vector-customconfignamespace"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vector.customConfigNamespace</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>Forces custom configuration creation in a given namespace even if vector.enabled is false</p>
-</td>
-    </tr>
-    <tr id="vector-enabled">
-      <td><a href="#vector-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vector.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(bool)</code></em><p>Enable deployment of vector</p>
 </td>
     </tr>
   </tbody>

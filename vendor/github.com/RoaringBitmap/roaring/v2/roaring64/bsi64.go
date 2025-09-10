@@ -115,9 +115,35 @@ func (b *BSI) SetBigValue(columnID uint64, value *big.Int) {
 	b.eBM.Add(columnID)
 }
 
+func (b *BSI) SetBigMany(foundSet *Bitmap, value *big.Int) {
+	// If max/min values are set to zero then automatically determine bit array size
+	if b.MaxValue == 0 && b.MinValue == 0 {
+		minBits := value.BitLen() + 1
+		if minBits == 1 {
+			minBits = 2
+		}
+		for len(b.bA) < minBits {
+			b.bA = append(b.bA, Bitmap{})
+		}
+	}
+	for i := b.BitCount(); i >= 0; i-- {
+		if value.Bit(i) == 0 {
+			b.bA[i].AndNot(foundSet)
+		} else {
+			b.bA[i].Or(foundSet)
+		}
+	}
+	b.eBM.Or(foundSet)
+}
+
 // SetValue sets a value for a given columnID.
 func (b *BSI) SetValue(columnID uint64, value int64) {
 	b.SetBigValue(columnID, big.NewInt(value))
+}
+
+// SetMany sets a value for all columns in foundSet
+func (b *BSI) SetMany(foundSet *Bitmap, value int64) {
+	b.SetBigMany(foundSet, big.NewInt(value))
 }
 
 // GetValue gets the value at the column ID. Second param will be false for non-existent values.
@@ -738,7 +764,7 @@ func (b *BSI) ParOr(parallelism int, bsis ...*BSI) {
 	bits := len(b.bA)
 	for i := 0; i < len(bsis); i++ {
 		if len(bsis[i].bA) > bits {
-			bits = len(bsis[i].bA )
+			bits = len(bsis[i].bA)
 		}
 	}
 
@@ -942,11 +968,7 @@ func batchEqual(e *task, batch []uint64, resultsChan chan *Bitmap,
 
 // ClearBits cleared the bits that exist in the target if they are also in the found set.
 func ClearBits(foundSet, target *Bitmap) {
-	iter := foundSet.Iterator()
-	for iter.HasNext() {
-		cID := iter.Next()
-		target.Remove(cID)
-	}
+	target.AndNot(foundSet)
 }
 
 // ClearValues removes the values found in foundSet
@@ -956,13 +978,13 @@ func (b *BSI) ClearValues(foundSet *Bitmap) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		ClearBits(foundSet, &b.eBM)
+		b.eBM.AndNot(foundSet)
 	}()
 	for i := 0; i < b.BitCount(); i++ {
 		wg.Add(1)
 		go func(j int) {
 			defer wg.Done()
-			ClearBits(foundSet, &b.bA[j])
+			b.bA[j].AndNot(foundSet)
 		}(i)
 	}
 	wg.Wait()

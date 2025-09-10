@@ -25,8 +25,8 @@ or from docker images at [Docker Hub](https://hub.docker.com/r/victoriametrics/v
 ### Running `vlogscli` from release binary
 
 ```sh
-curl -L -O https://github.com/VictoriaMetrics/VictoriaLogs/releases/download/v1.28.0/vlutils-linux-amd64-v1.28.0.tar.gz
-tar xzf vlutils-linux-amd64-v1.28.0.tar.gz
+curl -L -O https://github.com/VictoriaMetrics/VictoriaLogs/releases/download/v1.33.0/vlutils-linux-amd64-v1.33.0.tar.gz
+tar xzf vlutils-linux-amd64-v1.33.0.tar.gz
 ./vlogscli-prod
 ```
 
@@ -65,7 +65,7 @@ For example:
 
 ```sh
 ;> _time:1y | count();
-executing [_time:1y | stats count(*) as "count(*)"]...; duration: 0.688s
+executing [_time:1y | stats count(*) as "count(*)"]...; server duration: 0.688s
 {
   "count(*)": "1923019991"
 }
@@ -74,8 +74,9 @@ executing [_time:1y | stats count(*) as "count(*)"]...; duration: 0.688s
 `vlogscli` shows the actually executed query on the next line after the query input prompt.
 This helps debugging issues related to incorrectly written queries.
 
-The next line after the query input prompt also shows the query duration. This helps debugging
-and optimizing slow queries.
+The next line after the query input prompt also shows the query duration. It shows the duration
+the query took to execute until the first response byte. It doesn't include the time needed to send the request to the server and receive the response from the server.
+This helps debugging and optimizing slow queries.
 
 Query execution can be interrupted at any time by pressing `Ctrl+C`.
 

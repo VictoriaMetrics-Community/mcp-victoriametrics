@@ -1,6 +1,15 @@
 ## Next release
 
-- TODO
+- Bump VictoriaLogs version to [v1.33.0](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.33.0).
+
+## 0.11.7
+
+**Release date:** 30 Aug 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.31.0](https://img.shields.io/badge/v1.31.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictorialogs%2Fchangelog%2F%23v1310)
+
+- Sync dashboard
+- Bump VictoriaLogs version to [v1.31.0](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.31.0).
 
 ## 0.11.6
 
@@ -513,7 +522,7 @@ to update your agent configuration if you are using it.
 ![Helm: v3](https://img.shields.io/badge/Helm-v3-informational?color=informational&logo=helm)
 
 - Upgrade VictoriaLogs to [v0.8.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v0.8.0-victorialogs)
-- Move `.Values.server.name`, `.Values.server.fullnameOverride` to `.Values.global.victoriaLogs.server`. This allows to avoid issues with Fluent Bit output definition. See the [pull request]() for the details.
+- Move `.Values.server.name`, `.Values.server.fullnameOverride` to `.Values.global.victoriaLogs.server`. This allows to avoid issues with Fluent Bit output definition. See the [pull request](https://github.com/VictoriaMetrics/helm-charts/pull/1028) for the details.
 - Include `kubernetes_namespace_name` field in the [stream fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) configuration of Fluent Bit output.
 
 ## 0.3.8
@@ -569,7 +578,7 @@ to update your agent configuration if you are using it.
 ![AppVersion: v0.4.1](https://img.shields.io/badge/v0.4.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictorialogs%2Fchangelog%2F%23v041)
 ![Helm: v3](https://img.shields.io/badge/Helm-v3-informational?color=informational&logo=helm)
 
-- Add `kubernetes_container_name` into default [stream fields](https://docs.victoriametrics.com/victorialogs/keyconcepts#stream-fields) configuration `fluent-bit`.
+- Add `kubernetes_container_name` into default [stream fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) configuration `fluent-bit`.
 
 ## 0.3.2
 

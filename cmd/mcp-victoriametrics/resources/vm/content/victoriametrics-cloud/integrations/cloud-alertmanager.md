@@ -6,7 +6,7 @@ menu:
 ---
 
 VictoriaMetrics Cloud allows you to define and manage alerting rules using
-[vmalert](https://docs.victoriametrics.com/vmalert/), and send notifications through a fully managed
+[vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/), and send notifications through a fully managed
 Alertmanager instance, built into the platform.
 
 This integration provides a seamless way to trigger alerts based on Prometheus-compatible queries and

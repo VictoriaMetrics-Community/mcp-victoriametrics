@@ -3,6 +3,9 @@ build:
   list: never
   publishResources: false
   render: never
+sitemap:
+  disable: true
+permalink: /index.html
 ---
 ![Artifact Hub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fsearch%3Frepo%3Dvictoriametrics%26verified_publisher%3Dtrue)
 ![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-gray?logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
@@ -25,7 +28,7 @@ helm repo add vm https://victoriametrics.github.io/helm-charts/
 helm repo update
 ```
 
-List [all charts](#list-of-charts) and versions of `vm` repository available to installation:
+List [all charts](https://docs.victoriametrics.com/helm/#list-of-charts) and versions of `vm` repository available to installation:
     
 ```console
 helm search repo vm/
@@ -35,8 +38,8 @@ The command must display existing helm chart e.g.
 
 ```shell
 NAME                             	CHART VERSION	APP VERSION         	DESCRIPTION
-vm/victoria-logs-cluster                0.0.9           v1.28.0                 VictoriaLogs cluster version - high-performance...
-vm/victoria-logs-single                 0.11.6          v1.28.0                 Victoria Logs Single version - high-performance...
+vm/victoria-logs-cluster                0.0.11          v1.33.0                 VictoriaLogs cluster version - high-performance...
+vm/victoria-logs-single                 0.11.8          v1.33.0                 Victoria Logs Single version - high-performance...
 vm/victoria-metrics-agent               0.19.0          v1.116.0                Victoria Metrics Agent - collects metrics from ...
 vm/victoria-metrics-alert               0.18.0          v1.116.0                Victoria Metrics Alert - executes a list of giv...
 vm/victoria-metrics-anomaly             1.9.1           v1.22.0-experimental    Victoria Metrics Anomaly Detection - a service ...
@@ -134,17 +137,17 @@ helm charts tested at kubernetes versions from 1.28 to 1.30.
 
 ## List of Charts
 
-- [VictoriaLogs Single](https://docs.victoriametrics.com/helm/victorialogs-single)
-- [VictoriaLogs Cluster](https://docs.victoriametrics.com/helm/victorialogs-cluster)
-- [VictoriaMetrics Single](https://docs.victoriametrics.com/helm/victoriametrics-single)
-- [VictoriaMetrics Cluster](https://docs.victoriametrics.com/helm/victoriametrics-cluster)
-- [VictoriaMetrics Agent](https://docs.victoriametrics.com/helm/victoriametrics-agent)
-- [VictoriaMetrics Alert](https://docs.victoriametrics.com/helm/victoriametrics-alert)
-- [VictoriaMetrics Anomaly](https://docs.victoriametrics.com/helm/victoriametrics-anomaly)
-- [VictoriaMetrics Auth](https://docs.victoriametrics.com/helm/victoriametrics-auth)
-- [VictoriaMetrics Gateway](https://docs.victoriametrics.com/helm/victoriametrics-gateway)
-- [VictoriaMetrics Distributed](https://docs.victoriametrics.com/helm/victoriametrics-distributed)
-- [VictoriaMetrics K8s Stack](https://docs.victoriametrics.com/helm/victoriametrics-k8s-stack)
-- [VictoriaMetrics Operator](https://docs.victoriametrics.com/helm/victoriametrics-operator)
-- [VictoriaMetrics Operator CRDs](https://docs.victoriametrics.com/helm/victoriametrics-operator-crds)
-
+- [VictoriaLogs Single](https://docs.victoriametrics.com/helm/victorialogs-single/)
+- [VictoriaLogs Cluster](https://docs.victoriametrics.com/helm/victorialogs-cluster/)
+- [VictoriaLogs Collector](https://docs.victoriametrics.com/helm/victorialogs-collector/)
+- [VictoriaMetrics Single](https://docs.victoriametrics.com/helm/victoriametrics-single/)
+- [VictoriaMetrics Cluster](https://docs.victoriametrics.com/helm/victoriametrics-cluster/)
+- [VictoriaMetrics Agent](https://docs.victoriametrics.com/helm/victoriametrics-agent/)
+- [VictoriaMetrics Alert](https://docs.victoriametrics.com/helm/victoriametrics-alert/)
+- [VictoriaMetrics Anomaly](https://docs.victoriametrics.com/helm/victoriametrics-anomaly/)
+- [VictoriaMetrics Auth](https://docs.victoriametrics.com/helm/victoriametrics-auth/)
+- [VictoriaMetrics Gateway](https://docs.victoriametrics.com/helm/victoriametrics-gateway/)
+- [VictoriaMetrics Distributed](https://docs.victoriametrics.com/helm/victoriametrics-distributed/)
+- [VictoriaMetrics K8s Stack](https://docs.victoriametrics.com/helm/victoriametrics-k8s-stack/)
+- [VictoriaMetrics Operator](https://docs.victoriametrics.com/helm/victoriametrics-operator/)
+- [VictoriaMetrics Operator CRDs](https://docs.victoriametrics.com/helm/victoriametrics-operator-crds/)

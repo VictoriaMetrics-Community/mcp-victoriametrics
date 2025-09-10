@@ -135,10 +135,7 @@ But what happens if the tag is `status!=500` instead of `status=500`?
 
 In that case, instead of intersecting, vmstorage **subtracts** the set of metric IDs for `status=500` from the set of metric IDs for `http_request_total`.  
 
-After identifying the metric IDs that meet all the criteria, IndexDB uses these IDs to look up the corresponding `TSIDs` in the `metric ID to TSID` global index. This mapping also has a cache, which takes up 6.25% of vmstorage's total memory (not configurable) and is persistent on disk (`/<-storageDataPath>/cache/metricID_tsid`).  
-
-> [!TIP] Tip: Useful metrics
-> - Total time spent finding metric IDs and TSIDs: `vm_index_search_duration_seconds`  
+After identifying the metric IDs that meet all the criteria, IndexDB uses these IDs to look up the corresponding `TSIDs` in the `metric ID to TSID` global index. This mapping also has a cache, which takes up 6.25% of vmstorage's total memory (not configurable) and is persistent on disk (`/<-storageDataPath>/cache/metricID_tsid`).
 
 ## Find Values & Timestamps of Timeseries  
 

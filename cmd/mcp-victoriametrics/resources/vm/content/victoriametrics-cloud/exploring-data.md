@@ -80,7 +80,7 @@ VMUI offers the following utilities for in-depth debugging:
 In addition, VictoriaMetrics Cloud supports advanced querying through [MetricsQL](https://docs.victoriametrics.com/victoriametrics/metricsql/),
 a powerful PromQL-compatible language that offers enhancements tailored for high-performance
 environments. MetricsQL is fully supported in the Explore UI and can also be used in
-[Grafana dashboards](https://docs.victoriametrics.com/grafana/#step-3-configure-the-data-source)
+[Grafana dashboards](https://docs.victoriametrics.com/victoriametrics/integrations/grafana/)
 for long-term observability workflows.
 
 ### What is MetricsQL?
@@ -91,7 +91,7 @@ for long-term observability workflows.
 
 MetricsQL is natively supported in the **Explore** section of VictoriaMetrics Cloud, where you can write, run, and visualize queries in real time. The interface includes autocomplete for MetricsQL syntax, functions, and label selectors—streamlining query creation and reducing the chance of errors.
 
-You can also use MetricsQL in [Grafana](https://docs.victoriametrics.com/grafana/#step-3-configure-the-data-source)
+You can also use MetricsQL in [Grafana](https://docs.victoriametrics.com/victoriametrics/integrations/grafana/)
 dashboards by configuring the [VictoriaMetrics data source](https://grafana.com/grafana/plugins/victoriametrics-metrics-datasource/),
 enabling consistent query logic across operational and visualization layers.
 

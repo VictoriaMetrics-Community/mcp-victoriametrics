@@ -1,11 +1,11 @@
 ---
 title: Data ingestion
-weight: 3
+weight: 4
 menu:
   docs:
     identifier: victoriatraces-data-ingestion
     parent: "victoriatraces"
-    weight: 3
+    weight: 4
 tags:
   - traces
 aliases:
