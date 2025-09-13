@@ -28,12 +28,12 @@ VictoriaMetrics Gateway - Auth & Rate-Limitting proxy for Victoria Metrics
 
 # Table of Content
 
-* [Prerequisites](#prerequisites)
-* [Chart Details](#chart-details)
-* [How to Install](#how-to-install)
-* [How to Uninstall](#how-to-uninstall)
-* [How to use JWT signature verification](#how-to-use-jwt-signature-verification)
-* [Documentation of Helm Chart](#documentation-of-helm-chart)
+* [Prerequisites](https://docs.victoriametrics.com/helm/victoria-metrics-gateway/#prerequisites)
+* [Chart Details](https://docs.victoriametrics.com/helm/victoria-metrics-gateway/#chart-details)
+* [How to Install](https://docs.victoriametrics.com/helm/victoria-metrics-gateway/#how-to-install)
+* [How to Uninstall](https://docs.victoriametrics.com/helm/victoria-metrics-gateway/#how-to-uninstall)
+* [How to use JWT signature verification](https://docs.victoriametrics.com/helm/victoria-metrics-gateway/#how-to-use-jwt-signature-verification)
+* [Documentation of Helm Chart](https://docs.victoriametrics.com/helm/victoria-metrics-gateway/#documentation-of-helm-chart)
 
 ## Prerequisites
 
@@ -272,7 +272,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="env">
       <td><a href="#env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://github.com/VictoriaMetrics/VictoriaMetrics#environment-variables" target="_blank">here</a> for details.</p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Check <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a> for details.</p>
 </td>
     </tr>
     <tr id="envfrom">

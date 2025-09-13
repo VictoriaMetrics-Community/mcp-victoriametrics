@@ -71,7 +71,7 @@ exporters:
   otlphttp:
     traces_endpoint: http://<victoria-traces>:10428/insert/opentelemetry/v1/traces
     headers:
-      VL-Extra-Fields: foo=bar
+      VT-Extra-Fields: foo=bar
 ```
 
 See also:

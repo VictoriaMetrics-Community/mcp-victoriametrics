@@ -22,15 +22,15 @@ Administrators can manage users in the [User Management section](https://cloud.v
 user list where actions can be applied:
 
 
-|               **User Management field**           | **Description**                                                                                                                                                         |
-|------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **`Email`**       | Registration user email.                                                                                                                                                |
-| **`Status`**      | User profile [status](https://docs.victoriametrics.com/victoriametrics-cloud/account-management/roles-and-permissions/#profile-status).                                 |
-| **`User Role`**   | Admin, Editor or Viewer. See description [here](https://docs.victoriametrics.com/victoriametrics-cloud/account-management/roles-and-permissions#roles-and-permissions). |
-| **`Created At`**  | Date on which this user was created.                                                                                                                                    |
-| **`Last Active`** | User's last login date and time.                                                                                                                                        |
-| **`Auth method`** | User's [authentication method](https://docs.victoriametrics.com/victoriametrics-cloud/account-management/registration-and-trial/#authentication-methods).               |
-| **`Actions`**  | Click here to manage the user.                                                                                                                                          |
+|               **User Management field**           | **Description**                                                                                                                                                          |
+|------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **`Email`**       | Registration user email.                                                                                                                                                 |
+| **`Status`**      | User profile [status](https://docs.victoriametrics.com/victoriametrics-cloud/account-management/roles-and-permissions/#profile-status).                                  |
+| **`User Role`**   | Admin, Editor or Viewer. See description [here](https://docs.victoriametrics.com/victoriametrics-cloud/account-management/roles-and-permissions/#roles-and-permissions). |
+| **`Created At`**  | Date on which this user was created.                                                                                                                                     |
+| **`Last Active`** | User's last login date and time.                                                                                                                                         |
+| **`Auth method`** | User's [authentication method](https://docs.victoriametrics.com/victoriametrics-cloud/account-management/registration-and-trial/#authentication-methods).                |
+| **`Actions`**  | Click here to manage the user.                                                                                                                                           |
 
 ## Adding Users
 
@@ -42,7 +42,7 @@ The user will be saved, and an invitation email to the provided email address wi
 
 > The invitation link is only active for 24 hours.
 
-The user will remain at the `Pending Invitation` [status](https://docs.victoriametrics.com/victoriametrics-cloud/account-management/roles-and-permissions#profile-status)
+The user will remain at the `Pending Invitation` [status](https://docs.victoriametrics.com/victoriametrics-cloud/account-management/roles-and-permissions/#profile-status)
 until the invitation is accepted. At his point the user is all set and transitions to the `Active` status.
 
 ## Updating Users

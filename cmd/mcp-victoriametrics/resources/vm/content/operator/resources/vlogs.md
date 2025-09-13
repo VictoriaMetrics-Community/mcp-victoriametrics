@@ -1,8 +1,9 @@
 ---
-build:
-  list: never
-  publishResources: false
-  render: never
+title: VLogs (deprecated)
+sort: -1 # hide page from menu
+aliases:
+  - /operator/resources/vlogs/
+  - /operator/resources/vlogs/index.html
 sitemap:
   disable: true
 ---
@@ -29,7 +30,7 @@ You can see the full actual specification of the `VLogs` resource in the **[API 
 If you can't find necessary field in the specification of the custom resource,
 see [Extra arguments section](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
 
-Also, you can check out the [examples](#examples) section.
+Also, you can check out the [examples](https://docs.victoriametrics.com/operator/resources/vlogs/#examples) section.
 
 ## High availability
 
@@ -91,7 +92,7 @@ spec:
 ```
 
 If these parameters are not specified, then,
-by default all `VLogs` pods have resource requests and limits from the default values of the following [operator parameters](https://docs.victoriametrics.com/operator/configuration):
+by default all `VLogs` pods have resource requests and limits from the default values of the following [operator parameters](https://docs.victoriametrics.com/operator/configuration/):
 
 - `VM_VLOGSDEFAULT_RESOURCE_LIMIT_MEM` - default memory limit for `VLogs` pods,
 - `VM_VLOGSDEFAULT_RESOURCE_LIMIT_CPU` - default memory limit for `VLogs` pods,

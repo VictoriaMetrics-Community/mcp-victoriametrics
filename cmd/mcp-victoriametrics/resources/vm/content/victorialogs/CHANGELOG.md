@@ -18,6 +18,19 @@ according to [these docs](https://docs.victoriametrics.com/victorialogs/quicksta
 
 ## tip
 
+* BUGFIX: properly detele unneeded directories at [Ossfs2 filesystem](https://www.alibabacloud.com/help/en/oss/developer-reference/ossfs-2-0/). See [#649](https://github.com/VictoriaMetrics/VictoriaLogs/issues/649). Thanks to @xiaozongyang for [the initial pull request](https://github.com/VictoriaMetrics/VictoriaMetrics/pull/9709).
+
+## [v1.33.1](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.33.1)
+
+Released at 2025-09-11
+
+* FEATURE: [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/): optimize queries containing `| offset X | limit Y` for VictoriaLogs cluster. It also improves performance of queries in vmui and Grafana when retrieving sorted logs. See [#620](https://github.com/VictoriaMetrics/VictoriaLogs/issues/620).
+
+* BUGFIX: [`/select/logsql/query` endpoint](https://docs.victoriametrics.com/victorialogs/querying/#querying-logs): properly optimize the query execution when the `limit` query arg is set, while the `offset` query arg isn't set. It wasn't addressed properly in [v1.33.0](#v1330). See [#620](https://github.com/VictoriaMetrics/VictoriaLogs/issues/620).
+* BUGFIX: [`/select/logsql/hits` endpoint](https://docs.victoriametrics.com/victorialogs/querying/#querying-hits-stats): take into account results from the [`union` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#union-pipe) while calculating log hits. See [#641](https://github.com/VictoriaMetrics/VictoriaLogs/issues/641).
+* BUGFIX: [`/select/logsql/hits` endpoint](https://docs.victoriametrics.com/victorialogs/querying/#querying-hits-stats): take into account results from the [`join` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe) while calculating log hits.
+* BUGFIX: [Syslog data ingesting](https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/): keep nanosecond precision when parsing RFC3339 timestamp. See [#303](https://github.com/VictoriaMetrics/VictoriaLogs/issues/303).
+
 ## [v1.33.0](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.33.0)
 
 Released at 2025-09-10

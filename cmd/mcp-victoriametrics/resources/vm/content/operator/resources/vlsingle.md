@@ -9,8 +9,6 @@ menu:
 aliases:
   - /operator/resources/vlsingle/
   - /operator/resources/vlsingle/index.html
-  - /operator/resources/vlogs/
-  - /operator/resources/vlogs/index.html
 tags:
   - kubernetes
   - metrics
@@ -33,7 +31,7 @@ You can see the full actual specification of the `VLSingle` resource in the **[A
 If you can't find necessary field in the specification of the custom resource,
 see [Extra arguments section](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
 
-Also, you can check out the [examples](#examples) section.
+Also, you can check out the [examples](https://docs.victoriametrics.com/operator/resources/vlsingle/#examples) section.
 
 ## High availability
 
@@ -51,7 +49,7 @@ metadata:
 spec:
   image:
     repository: victoriametrics/victoria-logs
-    tag: v1.4.0
+    tag: v1.26.0
     pullPolicy: Always
   # ...
 ```
@@ -66,7 +64,7 @@ metadata:
 spec:
   image:
     repository: victoriametrics/victoria-logs
-    tag: v1.4.0
+    tag: v1.26.0
     pullPolicy: Always
   imagePullSecrets:
     - name: my-repo-secret
@@ -104,12 +102,12 @@ by default all `VLSingle` pods have resource requests and limits from the defaul
 
 These default parameters will be used if:
 
-- `VM_VLOGSDEFAULT_USEDEFAULTRESOURCES` is set to `true` (default value),
+- `VM_VLSINGLEDEFAULT_USEDEFAULTRESOURCES` is set to `true` (default value),
 - `VLSingle` CR doesn't have `resources` field in `spec` section.
 
 Field `resources` in `VLSingle` spec have higher priority than operator parameters.
 
-If you set `VM_VLOGSDEFAULT_USEDEFAULTRESOURCES` to `false` and don't specify `resources` in `VLSingle` CRD,
+If you set `VM_VLSINGLEDEFAULT_USEDEFAULTRESOURCES` to `false` and don't specify `resources` in `VLSingle` CRD,
 then `VLSingle` pods will be created without resource requests and limits.
 
 Also, you can specify requests without limits - in this case default values for limits will not be used.
