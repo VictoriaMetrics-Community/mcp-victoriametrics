@@ -79,14 +79,14 @@ You can do this later if you want to configure more settings than shown in the e
 
 The chart provides the following configuration options:
 
-- Persistent volume size for storing the ingested logs. See `server.persistentVolume.size` config option at the [minimal configuration example](#minimal-configuration).
+- Persistent volume size for storing the ingested logs. See `server.persistentVolume.size` config option at the [minimal configuration example](https://docs.victoriametrics.com/helm/victoria-logs-single/#minimal-configuration).
 - Data retention (how long to keep logs in the database). It can be configurated via time-based retention (with units of days, weeks, or years)
-  or via disk space-based retention limits. See `server.retentionPeriod` and `server.retentionDiskSpaceUsage` config options in the [minimal configuration example](#minimal-configuration).
+  or via disk space-based retention limits. See `server.retentionPeriod` and `server.retentionDiskSpaceUsage` config options in the [minimal configuration example](https://docs.victoriametrics.com/helm/victoria-logs-single/#minimal-configuration).
   See [retention docs](https://docs.victoriametrics.com/victorialogs/#retention) for details.
 
 ### Minimal Configuration
 
-You can install the chart right away without any configuration (see [how to install](#how-to-install)), but here is the minimal configuration that is commonly customized:
+You can install the chart right away without any configuration (see [how to install](https://docs.victoriametrics.com/helm/victoria-logs-single/#how-to-install)), but here is the minimal configuration that is commonly customized:
 
 ```yaml
 # VictoriaLogs server
@@ -105,7 +105,7 @@ server:
 
 To collect logs from all containers in Kubernetes and send them to VictoriaLogs,
 install the [`victoria-logs-collector`](https://docs.victoriametrics.com/helm/victorialogs-collector/) chart.
-See also this [quick start guide](#quick-start).
+See also this [quick start guide](https://docs.victoriametrics.com/helm/victoria-logs-single/#quick-start).
 
 ## How to install
 
@@ -357,7 +357,7 @@ Change the values according to the need of the environment in ``victoria-logs-si
     <tr id="server-env">
       <td><a href="#server-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Details are <a href="https://github.com/VictoriaMetrics/VictoriaMetrics#environment-variables" target="_blank">here</a></p>
+      <td><em><code>(list)</code></em><p>Additional environment variables (ex.: secret tokens, flags). Details are <a href="https://docs.victoriametrics.com/victoriametrics/#environment-variables" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="server-envfrom">

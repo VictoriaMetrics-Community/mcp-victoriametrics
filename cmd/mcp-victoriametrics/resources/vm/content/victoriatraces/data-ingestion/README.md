@@ -47,11 +47,11 @@ additionally to [HTTP query args](#http-query-string-parameters):
 
 - `ProjectID`- projectID of the tenant to ingest data to. See [multitenancy docs](https://docs.victoriametrics.com/victoriatraces/#multitenancy) for details.
 
-- `VL-Extra-Fields` - an optional comma-separated list of [trace fields](https://docs.victoriametrics.com/victoriatraces/keyconcepts/#data-model),
+- `VT-Extra-Fields` - an optional comma-separated list of [trace fields](https://docs.victoriametrics.com/victoriatraces/keyconcepts/#data-model),
   which must be added to all the ingested traces. The format of every `extra_fields` entry is `field_name=field_value`.
   If the trace entry contains fields from the `extra_fields`, then they are overwritten by the values specified in `extra_fields`.
 
-- `VL-Debug` - if this parameter is set to `1`, then the ingested traces aren't stored in VictoriaTraces. Instead,
-  the ingested data is traceged by VictoriaTraces, so it can be investigated later.
+- `VT-Debug` - if this parameter is set to `1`, then the ingested traces aren't stored in VictoriaTraces. Instead,
+  the ingested data is logged by VictoriaTraces, so it can be investigated later.
 
 See also [HTTP Query string parameters](#http-query-string-parameters).

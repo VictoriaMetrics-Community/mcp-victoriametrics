@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.59.5-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230595)
+![Version](https://img.shields.io/badge/0.60.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230600)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-k8s-stack)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -25,17 +25,18 @@ tags:
 
 Kubernetes monitoring on VictoriaMetrics stack. Includes VictoriaMetrics Operator, Grafana dashboards, ServiceScrapes and VMRules
 
-* [Overview](#Overview)
-* [Configuration](#Configuration)
-* [Prerequisites](#Prerequisites)
-* [Dependencies](#Dependencies)
-* [Quick Start](#How-to-install)
-* [Uninstall](#How-to-uninstall)
-* [Version Upgrade](#Upgrade-guide)
-* [Troubleshooting](#Troubleshooting)
-* [Values](#Parameters)
+* [Overview](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#overview)
+* [Configuration](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#configuration)
+* [Prerequisites](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#prerequisites)
+* [Dependencies](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#dependencies)
+* [Quick Start](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#how-to-install)
+* [Uninstall](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#how-to-uninstall)
+* [Version Upgrade](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#upgrade-guide)
+* [Troubleshooting](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#troubleshooting)
+* [Values](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#parameters)
 
 ## Overview
+
 This chart is an All-in-one solution to start monitoring kubernetes cluster.
 It installs multiple dependency charts like [grafana](https://github.com/grafana/helm-charts/tree/main/charts/grafana), [node-exporter](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter), [kube-state-metrics](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-state-metrics) and [victoria-metrics-operator](https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-operator).
 Also it installs Custom Resources like [VMSingle](https://docs.victoriametrics.com/operator/resources/vmsingle/), [VMCluster](https://docs.victoriametrics.com/operator/resources/vmcluster/), [VMAgent](https://docs.victoriametrics.com/operator/resources/vmagent/), [VMAlert](https://docs.victoriametrics.com/operator/resources/vmalert/).
@@ -133,7 +134,7 @@ argocd.argoproj.io/sync-options: ServerSideApply=true
 #### Resources are not completely removed after chart uninstallation
 
 This chart uses `pre-delete` Helm hook to cleanup resources managed by operator, but it's not supported in ArgoCD and this hook is ignored.
-To have a control over resources removal please consider using either [ArgoCD sync phases and waves](https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/) or [installing operator chart separately](#install-operator-separately)
+To have a control over resources removal please consider using either [ArgoCD sync phases and waves](https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/) or [installing operator chart separately](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#install-operator-separately)
 
 ### Rules and dashboards
 
@@ -350,11 +351,11 @@ helm history vmks -n NAMESPACE
 
 ### Install operator separately
 
-To have control over an order of managed resources removal or to be able to remove a whole namespace with managed resources it's recommended to disable operator in k8s-stack chart (`victoria-metrics-operator.enabled: false`) and [install it](https://docs.victoriametrics.com/helm/victoriametrics-operator/) separately. To move operator from existing k8s-stack release to a separate one please follow the steps below:
+To have control over an order of managed resources removal or to be able to remove a whole namespace with managed resources it's recommended to disable operator in k8s-stack chart (`victoria-metrics-operator.enabled: false`) and [install it](https://docs.victoriametrics.com/helm/victoria-metrics-operator/) separately. To move operator from existing k8s-stack release to a separate one please follow the steps below:
 
 - disable cleanup webhook (`victoria-metrics-operator.crds.cleanup.enabled: false`) and apply changes
 - disable operator (`victoria-metrics-operator.enabled: false`) and apply changes
-- [deploy operator](https://docs.victoriametrics.com/helm/victoriametrics-operator/) separately with `crds.plain: true`
+- [deploy operator](https://docs.victoriametrics.com/helm/victoria-metrics-operator/) separately with `crds.plain: true`
 
 If you're planning to delete k8s-stack by a whole namespace removal please consider deploying operator in a separate namespace as due to uncontrollable removal order process can hang if operator is removed before at least one resource it manages.
 
@@ -1860,7 +1861,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">serviceMonitor</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>VictoriaMetrics Operator dependency chart configuration. More values can be found <a href="https://docs.victoriametrics.com/helm/victoriametrics-operator/#parameters" target="_blank">here</a>. Also checkout <a href="https://docs.victoriametrics.com/operator/configuration/#environment-variables" target="_blank">here</a> possible ENV variables to configure operator behaviour</p>
+      <td><em><code>(object)</code></em><p>VictoriaMetrics Operator dependency chart configuration. More values can be found <a href="https://docs.victoriametrics.com/helm/victoria-metrics-operator/#parameters" target="_blank">here</a>. Also checkout <a href="https://docs.victoriametrics.com/operator/configuration/#environment-variables" target="_blank">here</a> possible ENV variables to configure operator behaviour</p>
 </td>
     </tr>
     <tr id="victoria-metrics-operator-operator-disable-prometheus-converter">

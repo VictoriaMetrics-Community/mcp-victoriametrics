@@ -26,12 +26,23 @@ See also [LTS releases](https://docs.victoriametrics.com/victoriametrics/lts-rel
 
 ## tip
 
-* FEATURE: [vmauth](https://docs.victoriametrics.com/victoriametrics/vmauth/): add an ability to merge client query args with the query args specified at backend urls. See (these docs)[https://docs.victoriametrics.com/victoriametrics/vmauth/#query-args-handling]. This allows merging [`extra_filters`](https://docs.victoriametrics.com/victorialogs/querying/#extra-filters) args specified at the particular VictoriaLogs backend in `vmauth` config and the `extra_filters` args specified in the [Grafana datasource for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/victorialogs-datasource/). This is needed for [#106 at VictoriaLogs](https://github.com/VictoriaMetrics/VictoriaLogs/issues/106).
+
+## [v1.126.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.126.0)
+
+Released at 2025-09-12
+
+* FEATURE: [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/): respect `enable.auto.commit` setting for [kafka consumer](https://docs.victoriametrics.com/victoriametrics/integrations/kafka/index.html#reading-metrics) configuration.
+* FEATURE: [vmauth](https://docs.victoriametrics.com/victoriametrics/vmauth/): add an ability to merge client query args with the query args specified at backend urls. This allows merging [`extra_filters`](https://docs.victoriametrics.com/victorialogs/querying/#extra-filters) args specified at the particular VictoriaLogs backend in `vmauth` config and the `extra_filters` args specified in the [Grafana datasource for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/victorialogs-datasource/). This is needed for [VictoriaLogs#106](https://github.com/VictoriaMetrics/VictoriaLogs/issues/106). See [VMAuth - Query args handling](https://docs.victoriametrics.com/victoriametrics/vmauth/#query-args-handling) docs for more details.
 * FEATURE: [dashboards/victoriametrics-cluster](https://grafana.com/grafana/dashboards/11176): add panel `Storage full ETA` in the vmstorage section to display the minimum approximate time across all the nodes to reach 100% of allowed disk capacity.
 * FEATURE: [vmui](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#vmui): show vmselect version in the vmui's footer.
 
 * BUGFIX: [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/): fix possible partial rule update responses in group-related APIs during group updates in hot config reload. See [#9551](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9551)
 * BUGFIX: [vmui](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#vmui): properly apply rollup functions to metrics based on their name in vmui's [metrics explorer](https://docs.victoriametrics.com/victoriametrics/#metrics-explorer). See [#9655](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9655) for details. Thanks to @wbwren-eric for the fix. 
+* BUGFIX: all VictoriaMetrics [enterprise](https://docs.victoriametrics.com/enterprise/) components: fix support for automatic issuing of TLS certificates for HTTPS server via [Let's Encrypt service](https://letsencrypt.org/) using [TLS-ALPN-01 challenge](https://letsencrypt.org/docs/challenge-types/#tls-alpn-01). See [Automatic issuing of TLS certificates](https://docs.victoriametrics.com/victoriametrics/#automatic-issuing-of-tls-certificates) for more info.
+* BUGFIX: [vmui](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#vmui): fix VMUI backend URL, while using multitenant API. See more in [#9703](https://github.com/VictoriaMetrics/VictoriaMetrics/pull/9703).
+* BUGFIX: all components: properly expose metadata for summaries and histograms in VictoriaMetrics components with enabled `-metrics.exposeMetadata` cmd-line flag. See [metrics#98](https://github.com/VictoriaMetrics/metrics/issues/98) for details.
+* BUGFIX: all components: lower severity of the log message for unavailable [Pressure Stall Information (PSI)](https://docs.kernel.org/accounting/psi.html) metrics from `ERROR` to `INFO` level. See [#9161](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9161) for details.
+* BUGFIX: [vmbackupmanager](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/): properly prepare restore mark contents when using a backup shortname (e.g. `vmbackupmanager restore create daily/2025-09-12`). Previously, restore would fail with `failed to restore backup: cannot initialize remote fs: missing scheme in path` error.
 
 ## [v1.125.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.125.1)
 

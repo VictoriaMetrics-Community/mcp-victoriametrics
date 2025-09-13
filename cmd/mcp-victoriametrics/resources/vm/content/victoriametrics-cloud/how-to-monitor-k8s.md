@@ -19,7 +19,7 @@ Monitoring kubernetes cluster is necessary to build SLO/SLI, to analyze performa
 To enable kubernetes cluster monitoring, we will be collecting metrics about cluster performance and utilization from kubernetes components like `kube-api-server`, `kube-controller-manager`, `kube-scheduler`, `kube-state-metrics`,  `etcd`, `core-dns`, `kubelet` and `kube-proxy`. We will also install some recording rules, alert rules and dashboards to provide visibility of cluster performance, as well as alerting for cluster metrics.
 For node resource utilization we will be collecting metrics from `node-exporter`. We will also install dashboard and alerts for node related metrics
 
-For workloads monitoring in kubernetes cluster we will have [VictoriaMetrics Operator](https://docs.victoriametrics.com/operator/). It enables us to define scrape jobs using kubernetes CRDs [VMServiceScrape](https://docs.victoriametrics.com/operator/design.html#vmservicescrape), [VMPodScrape](https://docs.victoriametrics.com/operator/design.html#vmpodscrape). To add alerts or recording rules for workloads we can use [VMRule](https://docs.victoriametrics.com/operator/design.html#vmrule) CRD
+For workloads monitoring in kubernetes cluster we will have [VictoriaMetrics Operator](https://docs.victoriametrics.com/operator/). It enables us to define scrape jobs using kubernetes CRDs [VMServiceScrape](https://docs.victoriametrics.com/operator/resources/vmservicescrape/), [VMPodScrape](https://docs.victoriametrics.com/operator/resources/vmpodscrape/). To add alerts or recording rules for workloads we can use [VMRule](https://docs.victoriametrics.com/operator/resources/vmrule/) CRD
 
 ## Overview
 
@@ -30,7 +30,7 @@ This chart will install `VMOperator`, `VMAgent`, `NodeExporter`, `kube-state-met
 ## Prerequisites
 
 
-- Active VictoriaMetrics Cloud instance. You can learn how to sign up for VictoriaMetrics Cloud [here](https://docs.victoriametrics.com/victoriametrics-cloud/quickstart/#how-to-register).
+- Active VictoriaMetrics Cloud instance. You can learn how to sign up for VictoriaMetrics Cloud [here](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#registration).
 - Access to your kubernetes cluster
 - Helm binary. You can find installation [here](https://helm.sh/docs/intro/install/)
 
