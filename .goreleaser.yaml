@@ -41,17 +41,26 @@ snapshot:
 changelog:
   sort: asc
 
-dockers:
-  - image_templates:
-      - "ghcr.io/victoriametrics-community/mcp-victoriametrics:latest"
-      - "ghcr.io/victoriametrics-community/mcp-victoriametrics:{{ .Tag }}"
+dockers_v2:
+  - images:
+      - "ghcr.io/victoriametrics-community/mcp-victoriametrics"
+    tags:
+      - latest
+      - "{{ .Version }}"
     dockerfile: Dockerfile.goreleaser
-    build_flag_templates:
-      - --label=org.opencontainers.image.title={{ .ProjectName }}
-      - --label=org.opencontainers.image.description={{ .ProjectName }}
-      - --label=org.opencontainers.image.url=https://github.com/victoriametrics-community/mcp-victoriametrics
-      - --label=org.opencontainers.image.source=https://github.com/victoriametrics-community/mcp-victoriametrics
-      - --label=org.opencontainers.image.version={{ .Version }}
-      - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
-      - --label=org.opencontainers.image.revision={{ .FullCommit }}
-      - --label=org.opencontainers.image.licenses=Apache-2.0
+    labels:
+      "org.opencontainers.image.title": "{{.ProjectName}}"
+      "org.opencontainers.image.description": "{{.ProjectName}}"
+      "org.opencontainers.image.url": "{{.GitURL}}"
+      "org.opencontainers.image.source": "{{.GitURL}}"
+      "org.opencontainers.image.version": "{{.Version}}"
+      "org.opencontainers.image.created": "{{.Date}}"
+      "org.opencontainers.image.revision": "{{.FullCommit}}"
+      "org.opencontainers.image.licenses": "Apache-2.0"
+    annotations:
+      "project": "{{.ProjectName}}"
+    platforms:
+      - linux/amd64
+      - linux/arm64
+      - linux/arm
+      - linux/386
