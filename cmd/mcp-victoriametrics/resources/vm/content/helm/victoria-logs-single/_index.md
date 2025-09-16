@@ -45,7 +45,7 @@ For installation instructions, refer to the official documentation:
 
 The chart deploys VictoriaLogs database in StatefulSet mode.
 For a quick start, install `victoria-logs-single` and
-[`victoria-logs-collector`](http://docs.victoriametrics.com/helm/victorialogs-collector/) charts using the following commands.
+[`victoria-logs-collector`](http://docs.victoriametrics.com/helm/victoria-logs-collector/) charts using the following commands.
 Make sure to replace the environment variables with your own values:
 
 ```sh
@@ -104,7 +104,7 @@ server:
 ```
 
 To collect logs from all containers in Kubernetes and send them to VictoriaLogs,
-install the [`victoria-logs-collector`](https://docs.victoriametrics.com/helm/victorialogs-collector/) chart.
+install the [`victoria-logs-collector`](https://docs.victoriametrics.com/helm/victoria-logs-collector/) chart.
 See also this [quick start guide](https://docs.victoriametrics.com/helm/victoria-logs-single/#quick-start).
 
 ## How to install
@@ -326,6 +326,12 @@ Change the values according to the need of the environment in ``victoria-logs-si
       <td><a href="#server-affinity"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.affinity</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Pod affinity</p>
+</td>
+    </tr>
+    <tr id="server-annotations">
+      <td><a href="#server-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>StatefulSet/Deployment annotations</p>
 </td>
     </tr>
     <tr id="server-containerworkingdir">

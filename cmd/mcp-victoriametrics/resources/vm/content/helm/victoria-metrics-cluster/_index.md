@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.28.3-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-cluster%2Fchangelog%2F%230283)
+![Version](https://img.shields.io/badge/0.28.4-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-cluster%2Fchangelog%2F%230284)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-cluster)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -1543,6 +1543,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Persistent volume labels</p>
 </td>
     </tr>
+    <tr id="vmselect-persistentvolume-name">
+      <td><a href="#vmselect-persistentvolume-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.persistentVolume.name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override Persistent Volume Claim name</p>
+</td>
+    </tr>
     <tr id="vmselect-persistentvolume-size">
       <td><a href="#vmselect-persistentvolume-size"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.persistentVolume.size</span><span class="p">:</span><span class="w"> </span><span class="l">2Gi</span></span></span></code></pre>
 </a></td>
@@ -2067,7 +2073,8 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="vmstorage-persistentvolume-name">
       <td><a href="#vmstorage-persistentvolume-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.persistentVolume.name</span><span class="p">:</span><span class="w"> </span><span class="l">vmstorage-volume</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em></td>
+      <td><em><code>(string)</code></em><p>Override Persistent Volume Claim name</p>
+</td>
     </tr>
     <tr id="vmstorage-persistentvolume-size">
       <td><a href="#vmstorage-persistentvolume-size"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.persistentVolume.size</span><span class="p">:</span><span class="w"> </span><span class="l">8Gi</span></span></span></code></pre>
@@ -2177,7 +2184,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="vmstorage-retentionperiod">
       <td><a href="#vmstorage-retentionperiod"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="m">1</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(int)</code></em><p>Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these <a href="https://docs.victoriametrics.com/single-server-victoriametrics/#retention" target="_blank">docs</a></p>
+      <td><em><code>(int)</code></em><p>Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these <a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention" target="_blank">docs</a></p>
 </td>
     </tr>
     <tr id="vmstorage-schedulername">

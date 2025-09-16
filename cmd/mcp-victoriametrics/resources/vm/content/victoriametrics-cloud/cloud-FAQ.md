@@ -78,7 +78,7 @@ Apart from that, there are other mechanisms:
 Also, in case of problems, support is always available to help you at support-cloud@victoriametrics.com.
 
 ## What are the pricing models for VictoriaMetrics Cloud (subscription, usage-based, etc.)?
-VictoriaMetrics Cloud pricing is based in tiers. Tiers are configured based on a handful of parameters. See [Tier Parameters](https://docs.victoriametrics.com/victoriametrics-cloud/tiers-parameters/) for more information.
+VictoriaMetrics Cloud pricing is based in tiers. Tiers are configured based on a handful of parameters. See [Tier Parameters](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/tiers-and-types/#tier-selection-parameters) for more information.
 
 Detailed and updated tier pricing can be checked in the console when [creating deployments](https://cloud.victoriametrics.com/deployments/create).
 

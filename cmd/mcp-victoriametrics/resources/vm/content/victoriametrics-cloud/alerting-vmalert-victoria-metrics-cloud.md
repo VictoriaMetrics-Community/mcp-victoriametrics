@@ -23,8 +23,8 @@ This guide explains the different ways in which you can use vmalert in conjuncti
 
 * [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/) is installed. You can obtain it by building it from [source](https://docs.victoriametrics.com/victoriametrics/vmalert/#quickstart), downloading it from the [GitHub releases page](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest), or using the docker image [Docker Hub](https://hub.docker.com/r/victoriametrics/vmalert) or [Quay](https://quay.io/repository/victoriametrics/vmalert?tab=tags) for the container ecosystem (such as docker, k8s, etc.).
 * [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/) is installed.
-* You have a [single or cluster](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#creating-deployments) deployment in [VictoriaMetrics Cloud](https://docs.victoriametrics.com/victoriametrics-cloud/overview/).
-* If you are using helm, add the [VictoriaMetrics helm chart](https://docs.victoriametrics.com/helm/victoriametrics-alert/#how-to-install) repository to your helm repositories. This step is optional.
+* You have a [single or cluster](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#creating-deployments) deployment in [VictoriaMetrics Cloud](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/overview/).
+* If you are using helm, add the [VictoriaMetrics helm chart](https://docs.victoriametrics.com/helm/victoria-metrics-alert/#how-to-install) repository to your helm repositories. This step is optional.
 * If you are using [vmoperator](https://docs.victoriametrics.com/operator/quick-start/#quick-start), make sure that it and its CRDs are installed. This step is also optional.
 
 ## Setup
@@ -55,7 +55,7 @@ groups:
 
 To use vmalert with VictoriaMetrics Cloud, you must create a read/write token, or use an existing one. The token must have write access to ingest recording rules, ALERTS and ALERTS_FOR_STATE metrics, and read access for rules evaluation.
 
-For instructions on how to create tokens, please refer to this section of the [documentation](https://docs.victoriametrics.com/victoriametrics-cloud/quickstart/#deployment-access).
+For instructions on how to create tokens, please refer to this section of the [documentation](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#start-writing-and-reading-data).
 
 #### Single-Node
 
