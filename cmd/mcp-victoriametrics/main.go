@@ -52,9 +52,9 @@ func main() {
 		fmt.Sprintf("v%s (date: %s)", version, date),
 		server.WithRecovery(),
 		server.WithLogging(),
-		server.WithToolCapabilities(true),
-		server.WithResourceCapabilities(true, true),
-		server.WithPromptCapabilities(true),
+		server.WithToolCapabilities(false),
+		server.WithResourceCapabilities(false, false),
+		server.WithPromptCapabilities(false),
 		server.WithHooks(hooks.New(ms)),
 		server.WithInstructions(`
 You are Virtual Assistant, a tool for interacting with VictoriaMetrics API and documentation in different tasks related to monitoring and observability.

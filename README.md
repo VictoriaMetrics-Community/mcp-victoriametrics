@@ -150,16 +150,17 @@ npx -y @smithery/cli install @VictoriaMetrics-Community/mcp-victoriametrics --cl
 
 MCP Server for VictoriaMetrics is configured via environment variables:
 
-| Variable                                 | Description                                                                                                                                                                                                                                                         | Required                               | Default          | Allowed values         |
-|------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|------------------|------------------------|
-| `VM_INSTANCE_ENTRYPOINT` / `VMC_API_KEY` | URL to VictoriaMetrics instance (it should be root `/` URL of vmsingle or vmselect)                                                                                                                                                                                 | Yes (if you don't use `VMC_API_KEY`)   | -                | -                      |
-| `VM_INSTANCE_TYPE`                       | Type of VictoriaMetrics instance                                                                                                                                                                                                                                    | Yes (if you don't use ``VMC_API_KEY``) | -                | `single`, `cluster`    |
-| `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API                                                                                                                                                                                                                        | No                                     | -                | -                      |
-| `VMC_API_KEY`                            | [API key from VictoriaMetrics Cloud Console](https://docs.victoriametrics.com/victoriametrics-cloud/api/)                                                                                                                                                           | No                                     | -                | -                      |
-| `MCP_SERVER_MODE`                        | Server operation mode. See [Modes](#modes) for details.                                                                                                                                                                                                             | No                                     | `stdio`          | `stdio`, `sse`, `http` |
-| `MCP_LISTEN_ADDR`                        | Address for SSE or HTTP server to listen on                                                                                                                                                                                                                         | No                                     | `localhost:8080` | -                      |
-| `MCP_DISABLED_TOOLS`                     | Comma-separated list of tools to disable                                                                                                                                                                                                                            | No                                     | -                | -                      |
-| `MCP_HEARTBEAT_INTERVAL`                 | Defines the heartbeat interval for the streamable-http protocol. <br /> It means the MCP server will send a heartbeat to the client through the GET connection, <br /> to keep the connection alive from being closed by the network infrastructure (e.g. gateways) | No                                     | `30s`            | -                      |
+| Variable                                 | Description                                                                                                                                                                                                                                                            | Required                               | Default          | Allowed values         |
+|------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|------------------|------------------------|
+| `VM_INSTANCE_ENTRYPOINT` / `VMC_API_KEY` | URL to VictoriaMetrics instance (it should be root `/` URL of vmsingle or vmselect)                                                                                                                                                                                    | Yes (if you don't use `VMC_API_KEY`)   | -                | -                      |
+| `VM_INSTANCE_TYPE`                       | Type of VictoriaMetrics instance                                                                                                                                                                                                                                       | Yes (if you don't use ``VMC_API_KEY``) | -                | `single`, `cluster`    |
+| `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API                                                                                                                                                                                                                           | No                                     | -                | -                      |
+| `VMC_API_KEY`                            | [API key from VictoriaMetrics Cloud Console](https://docs.victoriametrics.com/victoriametrics-cloud/api/)                                                                                                                                                              | No                                     | -                | -                      |
+| `MCP_SERVER_MODE`                        | Server operation mode. See [Modes](#modes) for details.                                                                                                                                                                                                                | No                                     | `stdio`          | `stdio`, `sse`, `http` |
+| `MCP_LISTEN_ADDR`                        | Address for SSE or HTTP server to listen on                                                                                                                                                                                                                            | No                                     | `localhost:8080` | -                      |
+| `MCP_DISABLED_TOOLS`                     | Comma-separated list of tools to disable                                                                                                                                                                                                                               | No                                     | -                | -                      |
+| `MCP_DISABLE_RESOURCES`                  | Disable all resources (documentation tool will continue to work)                                                                                                                                                                                                       | No                                     | `false`          | `false`, `true`        |                   
+| `MCP_HEARTBEAT_INTERVAL`                 | Defines the heartbeat interval for the streamable-http protocol. <br /> It means the MCP server will send a heartbeat to the client through the GET connection, <br /> to keep the connection alive from being closed by the network infrastructure (e.g. gateways)    | No                                     | `30s`            | -                      |
 
 You can use two options to connect to your VictoriaMetrics instance:
 
@@ -204,13 +205,13 @@ export MCP_LISTEN_ADDR="0.0.0.0:8080"
 
 In SSE and HTTP modes the MCP server provides the following endpoints:
 
-| Endpoint | Description |
-|----------|-------------|
-| `/sse` + `/message`      | Endpoints for messages in SSE mode (for MCP clients that support SSE) |
-| `/mcp`      | HTTP endpoint for streaming messages in HTTP mode (for MCP clients that support Streamable HTTP) |
-| `/metrics`   | Metrics in Prometheus format for monitoring the MCP server |
-| `/health/liveness`       | Liveness check endpoint to ensure the server is running |
-| `/health/readiness`      | Readiness check endpoint to ensure the server is ready to accept requests |
+| Endpoint             | Description                                                                                       |
+|----------------------|---------------------------------------------------------------------------------------------------|
+| `/sse` + `/message`  | Endpoints for messages in SSE mode (for MCP clients that support SSE)                             |
+| `/mcp`               | HTTP endpoint for streaming messages in HTTP mode (for MCP clients that support Streamable HTTP)  |
+| `/metrics`           | Metrics in Prometheus format for monitoring the MCP server                                        |
+| `/health/liveness`   | Liveness check endpoint to ensure the server is running                                           |
+| `/health/readiness`  | Readiness check endpoint to ensure the server is ready to accept requests                         |
 
 ## Setup in clients
 
@@ -405,41 +406,41 @@ MCP VictoriaMetrics provides numerous tools for interacting with your VictoriaMe
 
 Here's a list of common available tools:
 
-| Tool | Description                                               |
-|------|-----------------------------------------------------------|
-| `query` | Execute instant PromQL/MetricsQL queries                  |
-| `query_range` | Execute range PromQL/MetricsQL queries over a time period |
-| `metrics` | List available metrics                                    |
-| `labels` | List available label names                                |
-| `label_values` | List values for a specific label                          |
-| `series` | List available time series                                |
-| `export` | Export raw time series data to JSON or CSV                |
-| `rules` | View alerting and recording rules                         |
-| `alerts` | View current alerts (firing and pending)                  |
-| `flags` | View non-default flags of the VictoriaMetrics instance    |
-| `metric_statistics` | Get metrics usage (in queries) statistics                 |
-| `active_queries` | View currently executing queries                          |
-| `top_queries` | View most frequent or slowest queries                     |
-| `tsdb_status` | View TSDB cardinality statistics                          |
-| `tenants` | List available tenants in multi-tenant cluster setup      |
-| `documentation` | Search in embedded VictoriaMetrics documentation          |
-| `metric_relabel_debug` | Debug Prometheus-compatible relabeling rules              |
+| Tool                         | Description                                               |
+|------------------------------|-----------------------------------------------------------|
+| `query`                      | Execute instant PromQL/MetricsQL queries                  |
+| `query_range`                | Execute range PromQL/MetricsQL queries over a time period |
+| `metrics`                    | List available metrics                                    |
+| `labels`                     | List available label names                                |
+| `label_values`               | List values for a specific label                          |
+| `series`                     | List available time series                                |
+| `export`                     | Export raw time series data to JSON or CSV                |
+| `rules`                      | View alerting and recording rules                         |
+| `alerts`                     | View current alerts (firing and pending)                  |
+| `flags`                      | View non-default flags of the VictoriaMetrics instance    |
+| `metric_statistics`          | Get metrics usage (in queries) statistics                 |
+| `active_queries`             | View currently executing queries                          |
+| `top_queries`                | View most frequent or slowest queries                     |
+| `tsdb_status`                | View TSDB cardinality statistics                          |
+| `tenants`                    | List available tenants in multi-tenant cluster setup      |
+| `documentation`              | Search in embedded VictoriaMetrics documentation          |
+| `metric_relabel_debug`       | Debug Prometheus-compatible relabeling rules              |
 | `downsampling_filters_debug` | Debug downsampling configuration                          |
-| `retention_filters_debug` | Debug retention filters configuration                     |
-| `prettify_query` | Prettify and format PromQL/MetricsQL queries              |
-| `explain_query` | Parse PromQL/MetricsQL queries and explain how it works   |
-| `test_rules` | Unit-test alerting and recording rules using vmalert tool |
+| `retention_filters_debug`    | Debug retention filters configuration                     |
+| `prettify_query`             | Prettify and format PromQL/MetricsQL queries              |
+| `explain_query`              | Parse PromQL/MetricsQL queries and explain how it works   |
+| `test_rules`                 | Unit-test alerting and recording rules using vmalert tool |
 
 Here are some additional tools that are available for [VictoriaMetrics Cloud](https://docs.victoriametrics.com/victoriametrics-cloud/) (with specifying `VMC_API_KEY` parameter) users:
 
-| Tool              | Description                                                      |
-|-------------------|------------------------------------------------------------------|
-| `deployments`     | List available deployments in VictoriaMetrics Cloud              |
-| `cloud_providers` | List available cloud providers in VictoriaMetrics Cloud          |
-| `regions`         | List available cloud providers regions in VictoriaMetrics Cloud  |
-| `tiers`           | List available deployment tiers in VictoriaMetrics Cloud         |
-| `access_tokens`   | List available deployment access tokens in VictoriaMetrics Cloud |
-| `rule_filenames`  | List available alerting and recording rule filenames in VictoriaMetrics Cloud |
+| Tool              | Description                                                                    |
+|-------------------|--------------------------------------------------------------------------------|
+| `deployments`     | List available deployments in VictoriaMetrics Cloud                            |
+| `cloud_providers` | List available cloud providers in VictoriaMetrics Cloud                        |
+| `regions`         | List available cloud providers regions in VictoriaMetrics Cloud                |
+| `tiers`           | List available deployment tiers in VictoriaMetrics Cloud                       |
+| `access_tokens`   | List available deployment access tokens in VictoriaMetrics Cloud               |
+| `rule_filenames`  | List available alerting and recording rule filenames in VictoriaMetrics Cloud  |
 | `rule_file`       | Content of a specific alerting or recording rule file in VictoriaMetrics Cloud |
 
 ### Prompts
