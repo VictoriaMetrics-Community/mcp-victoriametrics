@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/mark3labs/mcp-go/mcp"
@@ -59,6 +60,16 @@ func toolAlerts(c *config.Config) mcp.Tool {
 			mcp.Description("Filter alerts by their group name. If not specified, all groups are included."),
 			mcp.DefaultString(""),
 		),
+		mcp.WithNumber("limit",
+			mcp.Title("Limit the number of alerts"),
+			mcp.Description("Maximum number of alerts to return. If not specified, all alerts are returned."),
+			mcp.DefaultNumber(0),
+		),
+		mcp.WithNumber("offset",
+			mcp.Title("Offset for pagination"),
+			mcp.Description("Number of alerts to skip before starting to collect the result set. Default is 0."),
+			mcp.DefaultNumber(0),
+		),
 	)
 	return mcp.NewTool(toolNameAlerts, options...)
 }
@@ -76,6 +87,16 @@ func toolAlertsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 		return mcp.NewToolResultError("invalid state parameter, must be 'firing', 'pending', or 'all'"), nil
 	}
 	group, err := GetToolReqParam[string](tcr, "group", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	limit, err := GetToolReqParam[float64](tcr, "limit", false)
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	offset, err := GetToolReqParam[float64](tcr, "offset", false)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
@@ -107,12 +128,16 @@ func toolAlertsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 		if !ok {
 			return "", fmt.Errorf("unexpected response format, 'alerts' field not found")
 		}
-		alerts, ok := _alerts.([]map[string]any)
+		alerts, ok := _alerts.([]any)
 		if !ok {
 			return "", fmt.Errorf("unexpected response format, 'alerts' field not found or not an array")
 		}
 		filteredAlerts := make([]map[string]any, 0, len(alerts))
-		for _, alert := range alerts {
+		for _, _alert := range alerts {
+			alert, ok := _alert.(map[string]any)
+			if !ok {
+				return "", fmt.Errorf("unexpected response format, 'alerts' field has invalid element")
+			}
 			if state != "all" && alert["state"] != state {
 				continue // Skip alerts that do not match the state filter
 			}
@@ -128,6 +153,14 @@ func toolAlertsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 				continue // Skip alerts that do not match the group filter
 			}
 			filteredAlerts = append(filteredAlerts, alert)
+		}
+		slices.SortFunc(filteredAlerts, func(a, b map[string]any) int {
+			aID, _ := a["id"].(string)
+			bID, _ := b["id"].(string)
+			return strings.Compare(aID, bID)
+		})
+		if limit > 0 {
+			filteredAlerts = filteredAlerts[int(offset):int(offset+limit)]
 		}
 		data["alerts"] = filteredAlerts // Update the alerts field with filtered alerts
 		result["data"] = data           // Update the data field with the modified alerts
