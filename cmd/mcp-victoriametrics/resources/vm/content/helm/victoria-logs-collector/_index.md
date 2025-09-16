@@ -8,9 +8,10 @@ menu:
     parent: helm
     weight: 2
     identifier: helm-victorialogs-collector
-url: /helm/victorialogs-collector
+url: /helm/victoria-logs-collector
 aliases:
-  - /helm/victorialogs-collector/changelog/index.html
+  - /helm/victorialogs-collector/index.html
+  - /helm/victorialogs-collector/
 tags:
   - logs
   - kubernetes

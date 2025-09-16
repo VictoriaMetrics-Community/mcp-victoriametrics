@@ -17,7 +17,7 @@ tags:
   - logs
 ---
 
-![Version](https://img.shields.io/badge/0.25.4-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-alert%2Fchangelog%2F%230254)
+![Version](https://img.shields.io/badge/0.25.5-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-alert%2Fchangelog%2F%230255)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-alert)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -420,6 +420,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#alertmanager-persistentvolume-mountpath"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.persistentVolume.mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/data</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Mount path. Alertmanager data Persistent Volume mount root path.</p>
+</td>
+    </tr>
+    <tr id="alertmanager-persistentvolume-name">
+      <td><a href="#alertmanager-persistentvolume-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.persistentVolume.name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override Persistent Volume Claim name</p>
 </td>
     </tr>
     <tr id="alertmanager-persistentvolume-size">

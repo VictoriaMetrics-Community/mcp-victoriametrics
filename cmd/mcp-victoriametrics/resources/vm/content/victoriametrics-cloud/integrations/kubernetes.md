@@ -6,7 +6,7 @@ menu:
 ---
 
 VictoriaMetrics Cloud supports monitoring Kubernetes clusters using the
-[VictoriaMetrics Kubernetes Stack](https://docs.victoriametrics.com/helm/victoriametrics-k8s-stack/), a Helm-based
+[VictoriaMetrics Kubernetes Stack](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/), a Helm-based
 deployment that includes preconfigured components for efficient and scalable metrics collection in Kubernetes environments.
 
 This stack collects metrics from the cluster, nodes, and workloads, and forwards them to VictoriaMetrics Cloud using
