@@ -31,7 +31,7 @@ var (
 	contents    map[string]mcp.ResourceContents
 )
 
-func RegisterDocsResources(s *server.MCPServer, _ *config.Config) {
+func RegisterDocsResources(s *server.MCPServer, cfg *config.Config) {
 	var err error
 	mapping := bleve.NewIndexMapping()
 	if searchIndex, err = bleve.NewMemOnly(mapping); err != nil {
@@ -52,7 +52,9 @@ func RegisterDocsResources(s *server.MCPServer, _ *config.Config) {
 			mcp.WithMIMEType("text/markdown"),
 			mcp.WithResourceDescription(docFile.Content[:min(len(docFile.Content), maxMarkdownDescriptionSize)]),
 		)
-		s.AddResource(resource, docResourcesHandler)
+		if !cfg.IsResourcesDisabled() {
+			s.AddResource(resource, docResourcesHandler)
+		}
 		resources[resourceURI] = resource
 		contents[resourceURI] = mcp.TextResourceContents{
 			URI:      resourceURI,

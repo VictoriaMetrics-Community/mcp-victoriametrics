@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -19,6 +20,7 @@ type Config struct {
 	disabledTools     map[string]bool
 	apiKey            string
 	heartbeatInterval time.Duration
+	disableResources  bool
 
 	entryPointURL *url.URL
 	vmc           *vmcloud.VMCloudAPIClient
@@ -49,6 +51,16 @@ func InitConfig() (*Config, error) {
 		heartbeatInterval = interval
 	}
 
+	disableResources := false
+	disableResourcesStr := os.Getenv("MCP_DISABLE_RESOURCES")
+	if disableResourcesStr != "" {
+		var err error
+		disableResources, err = strconv.ParseBool(disableResourcesStr)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse MCP_DISABLE_RESOURCES: %w", err)
+		}
+	}
+
 	result := &Config{
 		serverMode:        strings.ToLower(os.Getenv("MCP_SERVER_MODE")),
 		listenAddr:        os.Getenv("MCP_LISTEN_ADDR"),
@@ -58,6 +70,7 @@ func InitConfig() (*Config, error) {
 		disabledTools:     disabledToolsMap,
 		apiKey:            os.Getenv("VMC_API_KEY"),
 		heartbeatInterval: heartbeatInterval,
+		disableResources:  disableResources,
 	}
 	// Left for backward compatibility
 	if result.listenAddr == "" {
@@ -148,6 +161,10 @@ func (c *Config) IsToolDisabled(toolName string) bool {
 	}
 	disabled, ok := c.disabledTools[toolName]
 	return ok && disabled
+}
+
+func (c *Config) IsResourcesDisabled() bool {
+	return c.disableResources
 }
 
 func (c *Config) HeartbeatInterval() time.Duration {
