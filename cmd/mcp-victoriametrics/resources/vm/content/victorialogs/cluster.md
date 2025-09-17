@@ -89,26 +89,37 @@ For advanced setups, refer to the [multi-level cluster setup](https://docs.victo
 
 ## High availability
 
-In the cluster setup, the following rules apply:
+VictoriaLogs cluster provides high availability for data ingestion path. It continues accepting incoming logs if some of `vlstorage` nodes are temporarily unavailable.
+`vlinsert` evenly spreads new logs among the remaining available `vlstorage` nodes in this case, so newly ingested logs are properly stored and are available for querying
+without any delays. This allows performing maintenance tasks for `vlstorage` nodes (such as upgrades, configuration updates, etc.) without worrying of the data loss.
+Make sure that the remaining `vlstorage` nodes have enough capacity for the increased data ingestion workload, in order to avoid availability problems.
 
-- The `vlselect` component requires **all relevant vlstorage nodes to be available** in order to return complete and correct query results.
+VictoriaLogs cluster returns `502 Bad Gateway` errors for incoming queries if some of `vlstorage` nodes are unavailable. This guarantees consistent query responses
+(e.g. all the stored logs are taken into account during the query) during maintenance tasks at `vlstorage` nodes. Note that all the newly incoming logs are properly stored
+to the remaining `vlstorage` nodes - see the paragraph above, so they become available for querying immediately after all the `vlstorage` nodes return back to the cluster.
 
-  - If even one of the vlstorage nodes is temporarily unavailable, `vlselect` cannot safely return a full response, since some of the required data may reside on the missing node. Rather than risk delivering partial or misleading query results, which can cause confusion, trigger false alerts, or produce incorrect metrics, VictoriaLogs chooses to return an error instead.
+There are practical cases when it is preferred to return partial responses instead of `502 Bad Gateway` errors if some of `vlstorage` nodes are unavailable.
+See [these docs](https://docs.victoriametrics.com/victorialogs/querying/#partial-responses) on how to achieve this.
 
-- The `vlinsert` component continues to function normally when some vlstorage nodes are unavailable. It automatically routes new logs to the remaining available nodes to ensure that data ingestion remains uninterrupted and newly received logs are not lost.
+> [!NOTE] Insight
+> In most real-world cases, `vlstorage` nodes become unavailable during planned maintenance such as upgrades, config changes, or rolling restarts.
+> These are typically infrequent (weekly or monthly) and brief (a few minutes) events.
+> A short period of query downtime during maintenance tasks is acceptable and fits well within most SLAs. For example, 43 minutes of downtime per month during maintenance tasks
+> provides ~99.9% cluster availability. This is better in practice comparing to "magic" HA schemes with opaque auto-recovery - if these schemes fail,
+> then it is impossible to debug and fix them in a timely manner, so this will likely result in a long outage, which violates SLAs.
 
-> [!NOTE] Insight  
-> In most real-world cases, `vlstorage` nodes become unavailable during planned maintenance such as upgrades, config changes, or rolling restarts. These are typically infrequent (weekly or monthly) and brief (a few minutes).  
-> A short period of query downtime during such events is acceptable and fits well within most SLAs. For example, 60 minutes of downtime per month still provides around 99.86% availability, which often outperforms complex HA setups that rely on opaque auto-recovery and may fail unpredictably.
-
-VictoriaLogs itself does not handle replication at the storage level. Instead, it relies on an external log shipper, such as [vector](https://docs.victoriametrics.com/victorialogs/data-ingestion/vector/) or [vlagent](https://docs.victoriametrics.com/victorialogs/vlagent/), to send the same log stream to multiple independent VictoriaLogs instances:
+The real HA scheme for both data ingestion and querying can be built only when copies of logs are sent into independent VictoriaLogs instances (or clusters)
+located in fully independent availability zones (datacenters). If an AZ becomes unavailable, then new logs continue to be written to the remaining AZ,
+while queries return full responses from the remaining AZ. When the AZ becomes available, then the pending buffered logs can be written to it, so the AZ
+can be used for querying full responses. This HA sheme can be build with the help of [vlagent](https://docs.victoriametrics.com/victorialogs/vlagent/)
+for data replication and buffering, and [vmauth](https://docs.victoriametrics.com/victoriametrics/vmauth/) for data querying:
 
 ```mermaid
 graph TD
     subgraph "HA Solution"
         subgraph "Ingestion Layer"
             LS["Log Sources<br/>(Applications)"]
-            VECTOR["Log Collector<br/>• Buffering<br/>• Replication<br/>• Delivery Guarantees"]
+            VLAGENT["Log Collector<br/>• Buffering<br/>• Replication<br/>• Delivery Guarantees"]
         end
         
         subgraph "Storage Layer"
@@ -126,15 +137,15 @@ graph TD
             QC["Query Clients<br/>(Grafana, API)"]
         end
         
-        LS --> VECTOR
-        VECTOR -->|"Replicate logs to<br/>Zone A cluster"| VLA
-        VECTOR -->|"Replicate logs to<br/>Zone B cluster"| VLB
+        LS --> VLAGENT
+        VLAGENT -->|"Replicate logs to<br/>Zone A cluster"| VLA
+        VLAGENT -->|"Replicate logs to<br/>Zone B cluster"| VLB
         
         VLA -->|"Serve queries from<br/>Zone A cluster"| LB
         VLB -->|"Serve queries from<br/>Zone B cluster"| LB
         LB --> QC
         
-        style VECTOR fill:#e8f5e8
+        style VLAGENT fill:#e8f5e8
         style VLA fill:#d5e8d4
         style VLB fill:#d5e8d4
         style LB fill:#e1f5fe
@@ -143,18 +154,17 @@ graph TD
     end
 ```
 
-In this HA solution:
+- [vlagent](https://docs.victoriametrics.com/victorialogs/vlagent/) receives and replicates logs to two VictoriaLogs clusters.
+  If one cluster becomes unavailable, the log shipper continues sending logs to the remaining healthy cluster. It also buffers logs that cannot be delivered to the unavailable cluster.
+  When the failed cluster becomes available again, the log shipper sends the buffered logs and then resumes sending new logs to it. This guarantees that both clusters have full copies
+  of all the ingested logs.
+- [vmauth](https://docs.victoriametrics.com/victoriametrics/vmauth/) routes query requests to healthy VictoriaLogs clusters.
+  If one cluster becomes unavailable, `vmauth` detects this and automatically redirects all query traffic to the remaining healthy cluster.
 
-- A log shipper at the top receives logs and replicates them in parallel to two VictoriaLogs clusters.
-  - If one cluster fails completely (i.e., **all** of its storage nodes become unavailable), the log shipper continues to send logs to the remaining healthy cluster and buffers any logs that cannot be delivered. When the failed cluster becomes available again, the log shipper resumes sending both buffered and new logs to it.
-- On the read path, a load balancer (e.g., [vmauth](https://docs.victoriametrics.com/victoriametrics/vmauth/)) sits in front of the VictoriaLogs clusters and routes query requests to any healthy cluster.
-  - If one cluster fails (i.e., **at least one** of its storage nodes is unavailable), the load balancer detects this and automatically redirects all query traffic to the remaining healthy cluster.
-
-There's no hidden coordination logic or consensus algorithm. You can scale it horizontally and operate it safely, even in bare-metal Kubernetes clusters using local PVs,
-as long as the log shipper handles reliable replication and buffering.
+There is no magic coordination logic or consensus algorithms in this scheme. This simplifies managing and troubleshooting this HA scheme.
 
 See also [Security and Load balancing docs](https://docs.victoriametrics.com/victorialogs/security-and-lb/).
-  
+
 ## Single-node and cluster mode duality
 
 Every `vlstorage` node can be used as a single-node VictoriaLogs instance:

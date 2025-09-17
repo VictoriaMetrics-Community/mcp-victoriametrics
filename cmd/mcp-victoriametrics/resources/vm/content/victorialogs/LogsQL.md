@@ -4837,43 +4837,61 @@ Internally duration values are converted into nanoseconds.
 
 ## Query options
 
-VictoriaLogs supports the following options, which can be passed in the beginning of [LogsQL query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) `<q>` via `options(opt1=v1, ..., optN=vN) <q>` syntax:
+VictoriaLogs supports the following options, which can be passed in the beginning of [LogsQL query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) `<q>`
+via `options(opt1=v1, ..., optN=vN) <q>` syntax:
 
-- `concurrency` - query concurrency. By default the query is executed in parallel on all the available CPU cores.
-  This usually provides the best query performance. Sometimes it is needed to reduce the number of used CPU cores,
-  in order to reduce RAM usage and/or CPU usage.
-  This can be done by setting `concurrency` option to the value smaller than the number of available CPU cores.
-  For example, the following query executes on at max 2 CPU cores:
+### `concurrency` query option
 
-  ```logsql
-  options(concurrency=2) _time:1d | count_uniq(user_id)
-  ```
+By default the query is executed in parallel on all the available CPU cores.
+This usually provides the best query performance. Sometimes it is needed to reduce the number of used CPU cores,
+in order to reduce RAM usage and/or CPU usage.
+This can be done by setting `concurrency` option to the value smaller than the number of available CPU cores.
+For example, the following query executes on at max 2 CPU cores:
 
-- `time_offset` – subtracts the given offset from all the [time filters](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) in the query,
-  and then adds the given offset to the selected [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) values
-  before passing them to query [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes). Allows comparing query results for the same duration at different offsets.
-  Accepts any [duration value](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values) like `12h`, `1d`, `1y`. For example, the following query returns the number of logs with `error` [words](https://docs.victoriametrics.com/victorialogs/logsql/#word)
-  over the last hour 7 days ago.
+```logsql
+options(concurrency=2) _time:1d | count_uniq(user_id)
+```
 
-  ```logsql
-  options(time_offset=7d) _time:1h error | stats count() as 'errors_7d_ago'
-  ```
+### `time_offset` query option
 
-- `ignore_global_time_filter` - allows ignoring time filter from `start` and `end` args of [HTTP querying API](https://docs.victoriametrics.com/victorialogs/querying/#http-api)
-  for the given (sub)query. For example, the following query returns the number of logs with `user_id` values seen in logs during December 2024, on the `[start...end]`
-  time range passed to [`/api/v1/query`](https://docs.victoriametrics.com/victorialogs/querying/#querying-logs):
+`time_offset` query option subtracts the given offset from all the [time filters](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) in the query,
+and then adds the given offset to the selected [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) values
+before passing them to query [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes). Allows comparing query results for the same duration at different offsets.
+Accepts [duration values](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values) like `12h`, `1d`, `1y`.
+For example, the following query returns the number of logs with `error` [words](https://docs.victoriametrics.com/victorialogs/logsql/#word)
+over the last hour 7 days ago.
 
-  ```logsql
-  user_id:in(options(ignore_global_time_filter=true) _time:2024-12Z | keep user_id) | count()
-  ```
+```logsql
+options(time_offset=7d) _time:1h error | stats count() as 'errors_7d_ago'
+```
 
-  The `in(...)` [subquery](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter) without `options(ignore_global_time_filter=true)`
-  takes into account only `user_id` values on the intersection of December 2024 and `[start...end]` time range passed
-  to [`/api/v1/query`](https://docs.victoriametrics.com/victorialogs/querying/#querying-logs):
+### `ignore_global_time_filter` query option
 
-  ```logsql
-  user_id:in(_time:2024-12Z | keep user_id) | count()
-  ```
+`ignore_global_time_filter` query option allows ignoring time filter from `start` and `end` args of [HTTP querying API](https://docs.victoriametrics.com/victorialogs/querying/#http-api)
+for the given (sub)query. For example, the following query returns the number of logs with `user_id` values seen in logs during December 2024, on the `[start...end]`
+time range passed to [`/api/v1/query`](https://docs.victoriametrics.com/victorialogs/querying/#querying-logs):
+
+```logsql
+user_id:in(options(ignore_global_time_filter=true) _time:2024-12Z | keep user_id) | count()
+```
+
+The `in(...)` [subquery](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter) without `options(ignore_global_time_filter=true)`
+takes into account only `user_id` values on the intersection of December 2024 and `[start...end]` time range passed
+to [`/api/v1/query`](https://docs.victoriametrics.com/victorialogs/querying/#querying-logs):
+
+```logsql
+user_id:in(_time:2024-12Z | keep user_id) | count()
+```
+
+### `allow_partial_response` query option
+
+`allow_partial_response` query option can be used in [VictoriaLogs cluster setup](https://docs.victoriametrics.com/victorialogs/cluster/)
+for allowing partial responses when some of `vlstorage` nodes are unavailable for querying. For example, the following query returns
+logs for the last 5 minutes when some of the `vlstorage` nodes are unavailable (so the response may miss some logs, which are stored on the unavailable `vlstorage` nodes):
+
+```logsql
+options(allow_partial_response=true) _time:5m
+```
 
 ## Troubleshooting
 

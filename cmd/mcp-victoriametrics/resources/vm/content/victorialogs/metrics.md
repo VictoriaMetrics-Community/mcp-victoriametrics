@@ -244,6 +244,10 @@ These metrics follow the Prometheus exposition format and can be used for monito
 **Type:** Gauge
 **Description:** Current number of queries actively executing. Real-time query processing load when the system approaches the `-search.maxConcurrentRequests` capacity limit.
 
+### vl_concurrent_internalselect_requests_wait_duration
+**Type:** Summary
+**Description:** The wait time for requests to [`/internal/select/*` at `vlstorage` nodes](https://docs.victoriametrics.com/victorialogs/cluster/) because of reaching the limit on the number of concurrently executed requests.
+
 ### vl_insert_processors_count
 **Type:** Gauge
 **Description:** Number of active processors currently handling data ingestion from different sources. Current ingestion pipeline utilization as streams start and finish processing.

@@ -586,6 +586,8 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
         Supports the following optional suffixes for size values: KB, MB, GB, TB, KiB, MiB, GiB, TiB (default 67108864)
   -internalselect.disable
         Whether to disable /internal/select/* HTTP endpoints
+  -internalselect.maxConcurrentRequests int
+        The limit on the number of concurrent requests to /internal/select/* endpoints; other requests are put into the wait queue; see https://docs.victoriametrics.com/victorialogs/cluster/ (default 100)
   -journald.ignoreFields array
         Comma-separated list of fields to ignore for logs ingested over journald protocol. See https://docs.victoriametrics.com/victorialogs/data-ingestion/journald/#dropping-fields
         Supports an array of values separated by comma or specified via multiple flags.
@@ -691,6 +693,8 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -retentionPeriod value
         Log entries with timestamps older than now-retentionPeriod are automatically deleted; log entries with timestamps outside the retention are also rejected during data ingestion; the minimum supported retention is 1d (one day); see https://docs.victoriametrics.com/victorialogs/#retention ; see also -retention.maxDiskSpaceUsageBytes and -retention.maxDiskUsagePercent
         The following optional suffixes are supported: s (second), h (hour), d (day), w (week), y (year). If suffix isn't set, then the duration is counted in months (default 7d)
+  -search.allowPartialResponse
+        Whether to allow returning partial responses when some of vlstorage nodes from the -storageNode list are unavaialbe for querying. This flag works only for cluster setup of VictoriaLogs. See https://docs.victoriametrics.com/victorialogs/querying/#partial-responses
   -search.maxConcurrentRequests int
         The maximum number of concurrent search requests. It shouldn't be high, since a single request can saturate all the CPU cores, while many concurrently executed requests may require high amounts of memory. See also -search.maxQueueDuration (default 16)
   -search.maxQueryDuration duration
@@ -754,6 +758,10 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
         Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.username array
         Optional basic auth username to use for the corresponding -storageNode
+        Supports an array of values separated by comma or specified via multiple flags.
+        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+  -storageNode.usernameFile array
+        Optional path to basic auth username to use for the corresponding -storageNode. The file is re-read every second
         Supports an array of values separated by comma or specified via multiple flags.
         Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.compressMethod.tcp array
