@@ -56,7 +56,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
+          export VERSION=${GITHUB_REF#refs/tags/v}
+          echo '1 - $VERSION'
+          echo "2 - ${{ github.ref_name }}"
+          echo '3 - ${GITHUB_REF##*/}'
           cat server.json | envsubst > tmp && mv -f tmp server.json
 
       - name: Install MCP Publisher
