@@ -1,4 +1,8 @@
 FROM alpine:3.22
+RUN addgroup -S mcp && adduser -S mcp -G mcp
 ARG TARGETPLATFORM
-COPY $TARGETPLATFORM/mcp-victoriametrics /mcp-victoriametrics
-ENTRYPOINT  [ "/mcp-victoriametrics" ]
+COPY --chown=mcp:mcp $TARGETPLATFORM/mcp-victoriametrics /usr/local/bin/mcp-victoriametrics
+RUN chmod +x /usr/local/bin/mcp-victoriametrics
+USER mcp
+WORKDIR /home/mcp
+ENTRYPOINT [ "/usr/local/bin/mcp-victoriametrics" ]
