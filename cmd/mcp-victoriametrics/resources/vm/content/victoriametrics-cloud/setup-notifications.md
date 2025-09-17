@@ -17,9 +17,9 @@ aliases:
 The guide covers how to enable email and Slack notifications.
 
 Table of content:
-1. [Setup Slack notifications](#setup-slack-notifications)
-1. [Setup emails notifications](#setup-emails-notifications)
-1. [Send test notification](#send-test-notification)
+1. [Setup Slack notifications](https://docs.victoriametrics.com/victoriametrics-cloud/setup-notifications/#setup-slack-notifications)
+1. [Setup emails notifications](https://docs.victoriametrics.com/victoriametrics-cloud/setup-notifications/#setup-emails-notifications)
+1. [Send test notification](https://docs.victoriametrics.com/victoriametrics-cloud/setup-notifications/#send-test-notification)
 
 When you enter the notification section, you will be able to fill in the channels in which you
 want to receive notifications
@@ -29,7 +29,7 @@ want to receive notifications
 ## Setup Slack notifications
 
 1. Setup Slack webhook
-   How to do this is indicated on the following link 
+   How to do this is indicated on the following link
 <a href="https://api.slack.com/messaging/webhooks" target="_blank">https://api.slack.com/messaging/webhooks</a>
 
    ![Notifications view](notifications_view.webp)
@@ -43,7 +43,7 @@ want to receive notifications
 
 ## Setup emails notifications
 
-You can specify one or multiple emails for notifications in the input field. By default, 
+You can specify one or multiple emails for notifications in the input field. By default,
 email notifications are enabled for the account owner
 
   ![Setup emails](notifications_setup_emails.webp)
@@ -62,7 +62,7 @@ When both notifications are specified, all notifications will be sent to Slack c
 
 If the Save button is pressed, then entered channels will be only saved, and you get a success message.
 
-If the Save and Test button is pressed, then all entered information will be saved, 
+If the Save and Test button is pressed, then all entered information will be saved,
 and test notifications will be sent to the entered channels
 
   ![Save success](notifications_save_success.webp)

@@ -22,13 +22,13 @@ You have two options to configure Cloud Alertmanager:
 
 1. From integrations section: Menu **"Integrations" `->` "Cloud Alertmanager" `->` "New configuration"**:
    ![Setup for deployment integrations](alertmanager-setup-for-deployment_integrations.webp)
-2. From deployment page: **"Deployment page" `->` "Rules" tab `->` "Settings" `->` "Connect notifier" `/` "New notifier"**: 
+2. From deployment page: **"Deployment page" `->` "Rules" tab `->` "Settings" `->` "Connect notifier" `/` "New notifier"**:
    ![Setup for deployment connect notifier](alertmanager-setup-for-deployment_connect_notifier.webp)
 
 For creating a new configuration, you need to provide the following parameters:
 
 - **Name of the configuration** (it only affects the display in the user interface)
-- **Configuration file** in [specified format](#alertmanager-config-specification)
+- **Configuration file** in [specified format](https://docs.victoriametrics.com/victoriametrics-cloud/alertmanager-setup-for-deployment/#alertmanager-config-specification)
 
 Before saving the configuration, you can validate it by clicking the "Test configuration" button.
 
@@ -72,7 +72,7 @@ route:
  group_interval: 30s
  routes:
  - matchers:
-   - team = team-1 
+   - team = team-1
    receiver: dev-team-1
    continue: true
  - matchers:
@@ -115,7 +115,7 @@ receivers:
     - type: button
       text: 'Silence :no_bell:'
       url: '{{ template "__silenceURL" . }}'
-- name: dev-team-1 
+- name: dev-team-1
   slack_configs:
   - api_url: https://hooks.slack.com/services/valid-url
     channel: dev-alerts
@@ -129,7 +129,7 @@ receivers:
 
 If for some reason Cloud Alertmanager is not suitable for you, you can use VictoriaMetrics Cloud with any external Alertmanager hosted in your infrastructure.
 
-For that select Custom Alertmanager instead of Cloud Alertmanager when [creating the Alertmanager](#configure-alertmanager):
+For that select Custom Alertmanager instead of Cloud Alertmanager when [creating the Alertmanager](https://docs.victoriametrics.com/victoriametrics-cloud/alertmanager-setup-for-deployment/#configure-alertmanager):
 
 ![Custom AlertManager](alertmanager-setup-for-deployment_custom_am.webp)
 
@@ -149,7 +149,7 @@ Alerting and recording rules could be uploaded on **"Deployment page" `->` "Rule
 
 You can click on the upload area or drag and drop the files with rules there.
 
-Files should be in the [Prometheus alerting rules definition format](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/) 
+Files should be in the [Prometheus alerting rules definition format](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)
 or [Prometheus recording rules definition format](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/).
 
 There are limitations for the rules files:
@@ -190,7 +190,7 @@ groups:
         annotations:
           summary: empty result rule
       - alert: always-firing
-        expr: vector(1) > 0 
+        expr: vector(1) > 0
         for: 30s
         labels:
           severity: critical
@@ -214,5 +214,5 @@ It's possible to debug the alerting stack with logs for vmalert and Alertmanager
 
 ### Monitoring
 
-Alertmanager and vmalert errors are tracked by a built-in monitoring system. 
+Alertmanager and vmalert errors are tracked by a built-in monitoring system.
 Deployment's `Alerts` section has information about active incidents and incident history log.
