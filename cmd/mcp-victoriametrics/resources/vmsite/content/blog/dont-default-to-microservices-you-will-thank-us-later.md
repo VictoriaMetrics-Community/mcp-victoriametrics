@@ -24,9 +24,6 @@ images:
  - /blog/dont-default-to-microservices-you-will-thank-us-later/dont-default-to-microservices-you-will-thank-us-later-preview.webp
 ---
 
-![Don’t default to microservices: You’ll thank us later!](/blog/dont-default-to-microservices-you-will-thank-us-later/dont-default-to-microservices-you-will-thank-us-later-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Don’t default to microservices: You’ll thank us later!</figcaption>
-
 Donald Knuth, professor emeritus at Stanford University and "father" of algorithm analysis, once said – now quite famously – that “Premature optimization is the root of all evil.”
 
 It’s one of those sayings that all engineers know, most understand, and many struggle to follow through on consistently. What Knuth misses in this pithy, memorable quote is the fact that evil is *tempting*. Engineers frequently fall for this temptation because, like the devil, the greatest trick premature optimization ever pulled was convincing the world it didn't exist.

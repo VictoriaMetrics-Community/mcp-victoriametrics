@@ -21,9 +21,6 @@ images:
   - /blog/go-protobuf/go-protobuf-preview.webp
 ---
 
-![How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf/go-protobuf-preview.webp) 
-<figcaption style="text-align: center; font-style: italic;">How Protobuf Works—The Art of Data Encoding</figcaption>
-
 This article is part of the series on communication protocols:
 
 - [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc)

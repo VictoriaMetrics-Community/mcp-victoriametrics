@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.25.9-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-agent%2Fchangelog%2F%230259)
+![Version](https://img.shields.io/badge/0.25.10-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-agent%2Fchangelog%2F%2302510)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-agent)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -613,9 +613,16 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l">replace</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">source_labels</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="l">__meta_kubernetes_pod_node_name</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l">node</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l">node</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">useTpl</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>VMAgent scrape configuration</p>
+</td>
+    </tr>
+    <tr id="config-usetpl">
+      <td><a href="#config-usetpl"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">config.useTpl</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable config templating</p>
 </td>
     </tr>
     <tr id="configmap">

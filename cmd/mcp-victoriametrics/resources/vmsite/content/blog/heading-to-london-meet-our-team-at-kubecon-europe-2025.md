@@ -22,8 +22,6 @@ images:
  - /blog/heading-to-london-meet-our-team-at-kubecon-europe-2025/preview.webp
 ---
 
-![Heading to London: Meet Our Team at KubeCon Europe 2025](/blog/heading-to-london-meet-our-team-at-kubecon-europe-2025/preview.webp)
-
 VictoriaMetrics is proud to be a Silver Sponsor at KubeCon Europe 2025, which takes place in London this year from April 1st to 4th.
 
 We are eager to showcase our latest innovations and connect with participants after participating at KubeCon Salt Lake City in 2024, Fosdem, and SCaLE 22x earlier this year.

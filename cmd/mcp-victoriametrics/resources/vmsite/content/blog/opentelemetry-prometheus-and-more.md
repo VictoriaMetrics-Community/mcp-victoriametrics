@@ -24,9 +24,6 @@ images:
   - /blog/opentelemetry-prometheus-and-more/cover.webp
 ---
 
-![OpenTelemetry, Prometheus, and More: Which Is Better for Metrics Collection and Propagation?](/blog/opentelemetry-prometheus-and-more/cover.webp)
-<figcaption style="text-align: center; font-style: italic;">What happens if we put OpenTelemetry, Prometheus 2.x, Prometheus 3.x, and vmagent together for comparison in scraping and pushing data to remote storage?</figcaption>
-
 ## Prometheus and Remote Write
 
 Prometheus is the de facto standard of cloud-native monitoring. The way it works is really simple: applications provide a `/metrics` HTTP API endpoint to expose metric data in text format. Prometheus collects application metrics from `/metrics` endpoints, stores the collected metrics on disk and allows analyzing the collected metrics via http-based querying API.

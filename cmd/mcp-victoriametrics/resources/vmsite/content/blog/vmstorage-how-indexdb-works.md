@@ -37,9 +37,6 @@ This piece is part of our ongoing VictoriaMetrics series, where we break down ho
 > [!IMPORTANT]
 > This discussion assumes you've checked out the earlier articles, which cover how vmstorage handles data ingestion and what goes on when it processes data.
 
-![How vmstorage's IndexDB Works](/blog/vmstorage-how-it-handles-query-requests/vmstorage-how-indexdb-works-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">How vmstorage's IndexDB Works</figcaption>
-
 vmstorage doesn't store the timeseries (e.g. `node_cpu_seconds_total{mode="idle"}`) directly into its **main storage**. Instead, it stores `TSIDs` (unique identifiers for each timeseries), along with the actual values and timestamps.  
 
 ![vmstorage's main storage](/blog/vmstorage-how-it-handles-query-requests/vmstorage-main-storage.webp)

@@ -17,10 +17,8 @@ tags:
   - monitoring
   - victoriaMetrics
 images:
-  - /blog/vmalert-maximize-your-monitoring/preview.webp
+  - /blog/vmalert-maximize-your-monitoring/vmalert-maximize-your-monitoring.webp
 ---
-
-![vmalert: Maximize Your Monitoring](/blog/vmalert-maximize-your-monitoring/vmalert-maximize-your-monitoring.webp)
 
 ## Join the live stream  
 📅 **When:** Thursday, May 22, 2025, at 10:00 AM PDT  
@@ -32,7 +30,6 @@ images:
  [Outlook](https://outlook.live.com/calendar/0/deeplink/compose?subject=Mastering%20vmalert%3A%20Best%20Practices%20for%20Effective%20Alerting&startdt=2025-05-22T10:00:00-07:00&enddt=2025-05-22T11:00:00-07:00&body=Join%20the%20YouTube%20Livestream:%20https://www.youtube.com/watch?v=zpjBSZ8TkGU&location=https://www.youtube.com/watch?v=zpjBSZ8TkGU&allday=false) 
  [Apple](data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ASUMMARY:Mastering%20vmalert%3A%20Best%20Practices%20for%20Effective%20Alerting%0ADESCRIPTION:Join%20the%20YouTube%20Livestream:%20https://www.youtube.com/watch?v=zpjBSZ8TkGU%0AURL:https://www.youtube.com/watch?v=zpjBSZ8TkGU%0ADTSTART:20250522T100000Z%0ADTEND:20250522T110000Z%0ALOCATION:https://www.youtube.com/watch?v=zpjBSZ8TkGU%0AEND:VEVENT%0AEND:VCALENDAR)
  
----
 
 Get ready for the next installment of our **VictoriaMetrics Tech Talk** series! We're excited to announce **Episode 5**, broadcasting live on **Thursday, May 22nd, 2025**, at **10:00 AM Pacific Time (PDT)**.
 
@@ -43,7 +40,6 @@ Effective alerting is the backbone of proactive monitoring, enabling teams to de
 That’s exactly what this Tech Talk will cover.  
 Join us for **"Mastering vmalert: Best Practices for Effective Alerting"**, where we'll explore how to leverage vmalert to its full potential within the **VictoriaMetrics ecosystem**.
 
----
 
 ## What You'll Learn
 
@@ -70,7 +66,6 @@ Whether you're just starting with **vmalert** or looking to refine your existing
 - **Practical Demo**  
   See vmalert in action — from rule evaluation to notification.
 
----
 
 ## Who Should Attend?
 
@@ -81,7 +76,6 @@ This talk is ideal for:
 - System Administrators  
 - Developers or operators responsible for monitoring and alerting using VictoriaMetrics
 
----
 
 ## Event Details
 
@@ -91,7 +85,6 @@ This talk is ideal for:
 - **Duration:** ~60 minutes, including live Q&A  
 - **Platform:** [YouTube Live](https://www.youtube.com/watch?v=zpjBSZ8TkGU)
 
----
 
 ## Ready to transform your alerting strategy?
 

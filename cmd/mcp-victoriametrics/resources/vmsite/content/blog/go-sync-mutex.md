@@ -29,8 +29,6 @@ This post is part of a series about handling concurrency in Go:
 - [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once)
 - [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight)
 
-![Go sync.Mutex: Normal and Starvation Mode](/blog/go-sync-mutex/mutex-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Go sync.Mutex: Normal and Starvation Mode</figcaption>
 
 Mutex, or **MUT**ual **EX**clusion, in Go is basically a way to make sure that only one goroutine is messing with a shared resource at a time. This resource can be a piece of code, an integer, a map, a struct, a channel, or pretty much anything.
 

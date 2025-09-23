@@ -20,9 +20,6 @@ images:
   - /blog/go-grpc-basic-streaming-interceptor/grpc-basic-preview.webp
 ---
 
-![gRPC in Go: Streaming RPCs, Interceptors, and Metadata](/blog/go-grpc-basic-streaming-interceptor/grpc-basic-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">gRPC in Go: Streaming RPCs, Interceptors, and Metadata</figcaption>
-
 This article is part of the ongoing gRPC communication protocol series:
 
 - [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc)

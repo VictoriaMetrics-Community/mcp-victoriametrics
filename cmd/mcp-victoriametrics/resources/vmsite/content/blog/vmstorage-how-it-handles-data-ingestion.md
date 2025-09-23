@@ -33,9 +33,6 @@ This piece is part of our ongoing VictoriaMetrics series, where we break down ho
 6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
 7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
 
-![How vmstorage Turns Raw Metrics into Organized History](/blog/vmstorage-how-it-handles-data-ingestion/vmstorage-how-it-handles-data-ingestion-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">How vmstorage Turns Raw Metrics into Organized History</figcaption>
-
 **vmstorage** is the component in VictoriaMetrics that handles the long-term storage of monitoring data. It receives data from vminsert, organizes the data into efficient storage structures, and manages how long the data is retained.
 
 Before vminsert even sees the data, agents are out there collecting it. These agents gather metrics from various sources and then send them over to vminsert in batches. When vminsert receives the data, it compresses it into smaller packets, making it ready to send to vmstorage:

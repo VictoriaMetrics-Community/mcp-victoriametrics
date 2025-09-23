@@ -99,21 +99,21 @@ After Grafana starts successfully, datasource should be available in the datasou
 
 Example with Grafana [helm chart](https://github.com/grafana/helm-charts/blob/main/charts/grafana/README.md):
 
-Option 1. Using Grafana provisioning:
+##### Option 1. Using Grafana provisioning:
 
 ``` yaml
 env:
   GF_INSTALL_PLUGINS: "victoriametrics-logs-datasource"
 ```
 
-Option 2. Using Grafana plugins section in `values.yaml`:
+##### Option 2. Using Grafana plugins section in `values.yaml`:
 
 ``` yaml
 plugins:
   - victoriametrics-logs-datasource
 ```
 
-Option 3. Using init container.
+##### Option 3. Using init container.
 <details>
 <summary>extraInitContainers.yaml</summary>
 
@@ -156,7 +156,7 @@ sidecar:
 
 See more about chart settings [here](https://github.com/grafana/helm-charts/blob/541d97051de87a309362e02d08741ffc868cfcd6/charts/grafana/values.yaml)
 
-Option 4. would be to build custom Grafana image with plugin based on the same installation instructions.
+##### Option 4. would be to build custom Grafana image with plugin based on the same installation instructions.
 
 #### Grafana operator
 

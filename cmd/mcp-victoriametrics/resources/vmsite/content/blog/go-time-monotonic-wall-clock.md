@@ -19,9 +19,6 @@ images:
   - /blog/go-time-monotonic-wall-clock/preview.webp
 ---
 
-![Monotonic and Wall Clock Time in the Go time package](/blog/go-time-monotonic-wall-clock/preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Monotonic and Wall Clock Time in the Go time package</figcaption>
-
 Modern operating systems usually keep track of two kinds of clocks: a wall clock and a monotonic clock.
 
 The wall clock is the "real-world" clock that shows calendar dates and times, like UTC or your local time. This clock can be adjusted for synchronization (for example, using NTP) or manually changed by system administrators. It can also suddenly jump due to daylight saving time or leap seconds.

@@ -20,9 +20,6 @@ images:
   - /blog/go-net-rpc/go-net-rpc-preview.webp
 ---
 
-![From net/rpc to gRPC in Go Applications](/blog/go-net-rpc/go-net-rpc-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">From net/rpc to gRPC in Go Applications</figcaption>
-
 This article kicks off a series on communication protocols related to gRPC:
 
 1. From net/rpc to gRPC in Go Applications (We're here)

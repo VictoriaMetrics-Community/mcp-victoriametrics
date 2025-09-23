@@ -21,9 +21,6 @@ images:
   - /blog/go-synctest/preview.webp
 ---
 
-![Go synctest: Solving Flaky Tests](/blog/go-synctest/preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Go synctest: Solving Flaky Tests</figcaption>
-
 To understand what `synctest` solves, we must first look at the core issue: non-determinism in concurrent tests.
 
 ```go

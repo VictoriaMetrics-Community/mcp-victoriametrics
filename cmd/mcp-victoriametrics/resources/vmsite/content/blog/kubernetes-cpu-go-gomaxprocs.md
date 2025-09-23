@@ -30,9 +30,6 @@ images:
   - /blog/kubernetes-cpu-go-gomaxprocs/kubernetes-cpu-go-gomaxprocs-preview.webp
 ---
 
-![Container CPU Requests & Limits Explained with GOMAXPROCS Tuning](/blog/kubernetes-cpu-go-gomaxprocs/kubernetes-cpu-go-gomaxprocs-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Container CPU Requests & Limits Explained with GOMAXPROCS Tuning</figcaption>
-
 In this article, we're going to cover a few things that might've puzzled you if you've been running your applications, especially Go applications, in Kubernetes:
 
 - How Kubernetes and the Linux kernel handle CPU stuff for containers

@@ -21,10 +21,6 @@ images:
  - /blog/meet-our-team-at-scale-22x/preview.webp
 ---
 
-![Go Singleflight](/blog/meet-our-team-at-scale-22x/preview.webp)
-<!-- <figcaption style="text-align: center; font-style: italic;">Meet Our Team at Scale 22x
-</figcaption> -->
-
 VictoriaMetrics is proud to be a **Gold Sponsor** at **SCaLE 22x**, which will take place in Pasadena between March 6th and 9th.
 
 After participating at **KubeCon Salt Lake City in 2024** and **Fosdem** earlier this year, we are eager to showcase our latest innovations and connect with participants at **SCaLE 22x** this week.

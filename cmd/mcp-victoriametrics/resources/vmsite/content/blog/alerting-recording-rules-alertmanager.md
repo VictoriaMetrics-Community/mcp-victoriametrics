@@ -24,9 +24,6 @@ images:
   - /blog/alerting-recording-rules-alertmanager/alert-preview.webp
 ---
 
-![Alerting Rules, Recording Rules, and Alertmanager](/blog/alerting-recording-rules-alertmanager/alert-preview.webp) 
-<figcaption style="text-align: center; font-style: italic;">Alerting Rules, Recording Rules, and Alertmanager</figcaption>
-
 This discussion is part of the basic monitoring series, an effort to clarify monitoring concepts for both beginners and experienced users:
 
 1. [Counters, Gauges, Histograms & Summaries](/blog/prometheus-monitoring-metrics-counters-gauges-histogram-summaries/)

@@ -20,8 +20,6 @@ images:
  - /blog/tech-talk-streems/from-chaos-to-clarity-with-victorialogs/preview.webp
 ---
 
-![From Chaos to Clarity with VictoriaLogs](/blog/tech-talk-streems/from-chaos-to-clarity-with-victorialogs/preview.webp)
-
 ## Join the live stream
 
 **When**: Thursday, March 27, 2025, at 10:00am PDT / 6pm GMT / 7pm CET

@@ -23,9 +23,6 @@ This article is the 2nd article in the I/O series:
 1. [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer)
 2. Go I/O Closer, Seeker, WriterTo, and ReaderFrom (We're here).
 
-![Go I/O Closer, Seeker, WriterTo, and ReaderFrom](/blog/go-io-closer-seeker-readfrom-writeto/go-io-closer-seeker-readfrom-writeto-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Go I/O Closer, Seeker, WriterTo, and ReaderFrom</figcaption>
-
 So, we've already covered readers and writers in basic, and even touched on some standard library implementations that make our lives easier things like `bufio.Reader/Writer` and `os.File`.
 
 Still, we haven't really covered some other important interfaces, like `Closer`, `Seeker`, and a few others. And honestly, if you're learning Go, you probably don't want to leave those in the blind spot. After all, the io package comes with over 20 interfaces, and while most of them are just combos of the basics (like `io.ReadWriter`, `io.ReadWriteCloser`, and so on), they're still worth a closer look.

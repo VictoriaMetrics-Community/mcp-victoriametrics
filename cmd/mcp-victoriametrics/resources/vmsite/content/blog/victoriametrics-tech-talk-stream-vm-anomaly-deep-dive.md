@@ -21,8 +21,6 @@ images:
 
 ## Our vmanomaly Deep Dive: My Favorite Takeaways from the Tech Talk
 
-![VM Anomaly Deep Dive: Smarter Alerting with AI (Tech Talk Companion)](/blog/tech-talk-streems/vm-anomaly-deep-dive/preview.webp)
-
 I was thrilled to host our [latest tech talk](https://www.youtube.com/watch?v=Uuix_glPfjM), where we got to do a deep dive into vmanomaly with the best possible guests: Fred Navruzov, the actual team lead for the product, and Co-Host, Matthias Palmersheim.
 
 We covered a ton of ground, from high-level concepts to the nitty-gritty of configuration. For everyone who couldn't make it, I wanted to share my personal recap of the most important technical takeaways from our conversation.
