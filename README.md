@@ -44,6 +44,8 @@ There is a publicly available instance of the VictoriaMetrics MCP Server that yo
 https://play-mcp.victoriametrics.com/mcp
 ```
 
+**Attention!** This URL is not supposed to be opened in a browser, it is intended to be used in MCP clients.
+
 It's available in [Streamable HTTP](#modes) mode and configured to work with [Public VictoriaMetrics Playground](https://play.victoriametrics.com).
 
 Here is example of configuration for [Claude Desktop](https://claude.ai/download):
@@ -618,6 +620,7 @@ In [SSE and HTTP modes](#modes) the MCP Server provides metrics in Prometheus fo
 - [ ] Tools for Alertmanager APIs [#6](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/issues/6)
 - [ ] Support for [metrics metadata](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/2974) in case of implementation in VictoriaMetrics
 - [ ] Support authentication
+- [ ] Add static index page with description and links to documentation
 
 ## Mentions
 
