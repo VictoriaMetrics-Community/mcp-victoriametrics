@@ -18,8 +18,6 @@ images:
  - /blog/go-io-reader-writer/go-io-reader-writer-preview.webp
 ---
 
-![Go I/O Readers, Writers, and Data in Motion](/blog/go-io-reader-writer/go-io-reader-writer-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Go I/O Readers, Writers, and Data in Motion</figcaption>
 
 The `io.Reader` and `io.Writer` interfaces are probably some of the most common tools you'll run into when dealing with input and output, but the ecosystem around them is pretty broad.
 

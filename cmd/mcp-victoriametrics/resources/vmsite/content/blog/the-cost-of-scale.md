@@ -32,8 +32,6 @@ images:
  - /blog/the-cost-of-scale/intro.webp
 ---
 
-{{< image href="/blog/the-cost-of-scale/intro.webp" >}}
-
 When looking for a highly scalable time series database, there are a number of criteria to investigate and evaluate.
 
 First up, it’s always a good idea to consider open source software. It’s more likely to have gone through comprehensive troubleshooting, it’s typically more reliable as it has more timely and widespread peer-review, it better guarantees technology independence, it’s easier to find engineers who are familiar with it and it has great security. Organizations can use open source software for as long as they want including in the form of their choice.

@@ -19,10 +19,6 @@ images:
   - /blog/victorialogs-concepts-message-time-stream/preview.webp
 ---
 
-![VictoriaLogs Practical Ingestion Guide for Message, Time and Streams](/blog/victorialogs-concepts-message-time-stream/preview.webp)
-
-<figcaption style="text-align: center; font-style: italic;">VictoriaLogs Practical Ingestion Guide for Message, Time and Streams</figcaption>
-
 This VictoriaLogs article serves as a quick way to grasp the core concepts of not only VictoriaLogs but also common logging systems. It covers only the most important information from the documentation, along with common cases identified after troubleshooting many real-world scenarios.
 
 If you're just getting started with VictoriaLogs, this is a great place to begin. For more in-depth or advanced details, refer to the [official documentation](https://docs.victoriametrics.com/victorialogs/).

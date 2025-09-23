@@ -31,9 +31,6 @@ images:
   - /blog/victoriametrics-getting-started/preview.webp
 ---
 
-![VictoriaMetrics Components: Getting Started](/blog/victoriametrics-getting-started/preview.webp)
-<figcaption style="text-align: center; font-style: italic;">VictoriaMetrics Components: Getting Started</figcaption>
-
 This article introduces the key components of VictoriaMetrics and kick off the series of articles to explain how to use these components effectively. It's an ongoing series:
 
 1. [vmagent: Key Features Explained in Under 15 Minutes](/blog/vmagent-key-features-explained)

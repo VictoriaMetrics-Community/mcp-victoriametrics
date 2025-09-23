@@ -18,10 +18,6 @@ images:
   - /blog/go-protobuf-basic/go-protobuf-basic-preview.webp
 ---
 
-![Practical Protobuf - From Basic to Best Practices](/blog/go-protobuf-basic/go-protobuf-basic-preview.webp)
-
-<figcaption style="text-align: center; font-style: italic;">Practical Protobuf - From Basic to Best Practices</figcaption>
-
 This article is part of the series on communication protocols:
 
 1. [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc)

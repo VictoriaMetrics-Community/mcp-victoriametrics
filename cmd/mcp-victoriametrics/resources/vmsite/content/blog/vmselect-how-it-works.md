@@ -34,9 +34,6 @@ This piece is part of our ongoing VictoriaMetrics series, where we break down ho
 6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
 7. Inside vmselect: The Query Processing Engine of VictoriaMetrics
 
-![Inside vmselect: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works/vmselect-how-it-works-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Inside vmselect: The Query Processing Engine of VictoriaMetrics</figcaption>
-
 ## Receive Requests
 
 vmselect handles multiple requests from different APIs at the same time. But there's a limit—twice the number of CPU cores, capped at 8 (unless you configure it differently using `-search.maxConcurrentRequests`). 

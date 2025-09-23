@@ -4828,12 +4828,18 @@ Internally duration values are converted into nanoseconds.
 - It is recommended specifying [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) you need in query results
   with the [`fields` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe), if the selected log entries contain big number of fields, which aren't interesting to you.
   This saves disk read IO and CPU time needed for reading and unpacking all the log fields from disk.
-- Move faster filters such as [word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter) and [phrase filter](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) to the beginning of the query.
-  This rule doesn't apply to [time filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) and [stream filter](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter), which can be put at any place of the query.
+- Move faster filters such as [word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter) and [phrase filter](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
+  to the beginning of the query.
+  This rule doesn't apply to [time filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) and [stream filter](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter),
+  which can be put at any place of the query.
 - Move more specific filters, which match lower number of log entries, to the beginning of the query.
-  This rule doesn't apply to [time filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) and [stream filter](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter), which can be put at any place of the query.
+  This rule doesn't apply to [time filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) and [stream filter](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter),
+  which can be put at any place of the query.
 - If the selected logs are passed to [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) for further transformations and statistics' calculations, then it is recommended
-  reducing the number of selected logs by using more specific [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters), which return lower number of logs to process by [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).
+  reducing the number of selected logs by using more specific [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters),
+  which return lower number of logs to process by [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).
+- If the logs are stored at high-latency storage systems such as NFS or S3, then increasing the number of parallel readers can help improving query performance.
+  See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#parallel_readers-query-option) for details.
 
 ## Query options
 
@@ -4842,7 +4848,7 @@ via `options(opt1=v1, ..., optN=vN) <q>` syntax:
 
 ### `concurrency` query option
 
-By default the query is executed in parallel on all the available CPU cores.
+VictoriaLogs executes each query on all the available CPU cores in parallel.
 This usually provides the best query performance. Sometimes it is needed to reduce the number of used CPU cores,
 in order to reduce RAM usage and/or CPU usage.
 This can be done by setting `concurrency` option to the value smaller than the number of available CPU cores.
@@ -4851,6 +4857,30 @@ For example, the following query executes on at max 2 CPU cores:
 ```logsql
 options(concurrency=2) _time:1d | count_uniq(user_id)
 ```
+
+The `concurrency` option is applied individually to every `vlstorage` node in [VictoriaLogs cluster](https://docs.victoriametrics.com/victorialogs/cluster/).
+
+See also [`parallel_readers` query option](https://docs.victoriametrics.com/victorialogs/logsql/#parallel_readers-query-option).
+
+### `parallel_readers` query option
+
+VictoriaLogs uses parallel data readers for query execution. The default number of parallel readers fits the majority of practical use cases.
+Sometimes it may be needed to configure it on a per-query basis (for example, to increase query performance by increasing the number of parallel readers
+when the logs are stored on the persistent storage with high read latency such as NFS or S3).
+This can be done via `parallel_readers` query option. For example, the following query uses 100 parallel readers:
+
+```logsql
+options(parallel_readers=100) _time:1d error | count()
+```
+
+If the `parallel_readers` option isn't set, while [`concurrency` option](https://docs.victoriametrics.com/victorialogs/logsql/#concurrency-query-option) is set
+then the number of parallel readers equals to the `concurrency`.
+
+The default number of parallel readers can be configured via `-defaultParallelReaders` command-line flag.
+
+The `parallel_readers` option is applied individually to every `vlstorage` node in [VictoriaLogs cluster](https://docs.victoriametrics.com/victorialogs/cluster/).
+
+Note that too big number of parallel readers may result in excess usage of RAM and CPU.
 
 ### `time_offset` query option
 
@@ -4892,6 +4922,8 @@ logs for the last 5 minutes when some of the `vlstorage` nodes are unavailable (
 ```logsql
 options(allow_partial_response=true) _time:5m
 ```
+
+See also [partial response docs](https://docs.victoriametrics.com/victorialogs/querying/#partial-responses).
 
 ## Troubleshooting
 

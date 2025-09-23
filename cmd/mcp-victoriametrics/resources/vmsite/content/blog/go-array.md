@@ -20,9 +20,6 @@ images:
  - /blog/go-array/array-preview.webp
 ---
 
-![How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/array-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">How Go Arrays Work and Get Tricky with For-Range</figcaption>
-
 The classic Golang array and slice are pretty straightforward. Arrays are fixed-size, and slices are dynamic. But I've got to tell you, Go might seem simple on the surface, but it's got a lot going on under the hood.
 
 As always, we'll start with the basics and then dig a bit deeper. Don't worry, arrays get pretty interesting when you look at them from different angles.

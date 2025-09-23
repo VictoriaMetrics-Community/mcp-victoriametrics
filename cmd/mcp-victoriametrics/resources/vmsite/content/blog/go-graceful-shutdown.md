@@ -21,9 +21,6 @@ images:
   - /blog/go-graceful-shutdown/preview.webp
 ---
 
-![Graceful Shutdown in Go: Practical Patterns](/blog/go-graceful-shutdown/preview.webp)	
-<figcaption style="text-align: center; font-style: italic;">Graceful Shutdown in Go: Practical Patterns</figcaption>
-
 Graceful shutdown in any application generally satisfies three minimum conditions:
 
 1. Close the entry point by stopping new requests or messages from sources like HTTP, pub/sub systems, etc. However, keep outgoing connections to third-party services like databases or caches active.

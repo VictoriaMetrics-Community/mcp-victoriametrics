@@ -22,9 +22,6 @@ images:
  - /blog/prometheus-monitoring-instant-range-query/prometheus-monitoring-instant-range-query-preview.webp
 ---
 
-![Prometheus Monitoring: Instant Queries and Range Queries Explained](/blog/prometheus-monitoring-instant-range-query/prometheus-monitoring-instant-range-query-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Prometheus Monitoring: Instant Queries and Range Queries Explained</figcaption>
-
 This discussion is part of the basic monitoring series, an effort to clarify monitoring concepts for both beginners and experienced users:
 
 1. [Counters, Gauges, Histograms & Summaries](/blog/prometheus-monitoring-metrics-counters-gauges-histogram-summaries/)

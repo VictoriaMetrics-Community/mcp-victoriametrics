@@ -493,6 +493,8 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
         Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -defaultMsgValue string
         Default value for _msg field if the ingested log entry doesn't contain it; see https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field (default "missing _msg field; see https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field")
+  -defaultParallelReaders int
+        Default number of parallel data readers to use for executing every query; higher number of readers may help increasing query performance on high-latency storage such as NFS or S3 at the cost of higher RAM usage; see https://docs.victoriametrics.com/victorialogs/logsql/#parallel_readers-query-option (default 32)
   -elasticsearch.version string
         Elasticsearch version to report to client (default "8.9.0")
   -enableTCP6

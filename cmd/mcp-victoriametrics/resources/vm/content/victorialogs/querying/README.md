@@ -988,7 +988,7 @@ The arg passed to `extra_filters` and `extra_stream_filters` must be properly en
 
 [VictoriaLogs cluster](https://docs.victoriametrics.com/victorialogs/cluster/) returns `502 Bad Gateway` response if some of the configured `vlstorage` nodes are unavailable.
 This guarantees consistent query responses. There are practical cases where it is preferred to return partial responses (which may be inconsistent) if some of `vlstorage` nodes
-aren unavailable in the cluster. This can be done by the following ways:
+are unavailable in the cluster. This can be done by the following ways:
 
 - To pass `-search.allowPartialResponse` command-line flag to `vlselect`.
 - To pass `allow_partial_response=1` query arg to [http querying APIs](https://docs.victoriametrics.com/victorialogs/querying/#http-api).

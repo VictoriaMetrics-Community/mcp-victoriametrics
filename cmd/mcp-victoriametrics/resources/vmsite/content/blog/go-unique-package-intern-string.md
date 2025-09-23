@@ -21,9 +21,6 @@ images:
  - /blog/go-unique-package-intern-string/go-unique-package-intern-string-preview.webp
 ---
 
-![Go unique package](/blog/go-unique-package-intern-string/go-unique-package-intern-string-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Inside Go's Unique Package: String Interning Simplified</figcaption>
-
 One of the optimizations used in VictoriaMetrics' source code is something called string interning. We actually have a post in our optimization series that dives into this [Performance optimization techniques in time series databases: strings interning](/blog/tsdb-performance-techniques-strings-interning/). 
 
 To explain what that means, in Go 1.23, the Go team rolled out this new 'unique' package. It's all about dealing with duplicates in a "smart" way.

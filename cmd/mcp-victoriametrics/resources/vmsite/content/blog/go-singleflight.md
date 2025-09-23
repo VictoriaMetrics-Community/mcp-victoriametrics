@@ -29,9 +29,6 @@ This post is part of a series about handling concurrency in Go:
 - [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once)
 - Go Singleflight Melts in Your Code, Not in Your DB (We're here)
 
-![Go Singleflight](/blog/go-singleflight/go-singleflight-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Go Singleflight Melts in Your Code, Not in Your DB
-</figcaption>
 
 So, when you've got multiple requests coming in at the same time asking for the **same data**, the default behavior is that each of those requests would go to the database individually to get the same information. What that means is that you'd end up executing the same query several times, which, let's be honest, is just inefficient. 
 

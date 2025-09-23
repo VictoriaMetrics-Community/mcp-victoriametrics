@@ -43,7 +43,6 @@ We'll have to see what would be the cost of serving the same workload at
 [Google Cloud Managed Service for Prometheus](https://cloud.google.com/stackdriver/docs/managed-prometheus) 
 and [VictoriaMetrics Cloud](https://victoriametrics.com/products/cloud/).
 
-{{< image href="/blog/managed-prometheus-pricing/title.webp" >}}
 
 
 ## Workload

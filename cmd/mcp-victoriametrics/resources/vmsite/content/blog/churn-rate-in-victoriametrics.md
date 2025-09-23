@@ -19,9 +19,6 @@ images:
  - /blog/churn-rate-in-victoriametrics/blog-preview-churn-rate.webp
 ---
 
-![Community Question: High Churn Rate Without New Time Series?](/blog/churn-rate-in-victoriametrics/blog-preview-churn-rate.webp)
-<figcaption style="text-align: center; font-style: italic;">Community Question: High Churn Rate Without New Time Series?</figcaption>
-
 Last week, I saw a user asking for help on [Slack](https://victoriametrics.slack.com/archives/CGZF1H6L9/p1722389004202069):
 > _"My VictoriaMetrics cluster has a very high churn rate at 0:00 every day. However, when I enable `-logNewSeries`, I find that these 'new' time series actually already existed. Why is this happening?"_
 

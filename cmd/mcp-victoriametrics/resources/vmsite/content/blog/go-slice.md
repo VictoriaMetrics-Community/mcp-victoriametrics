@@ -18,9 +18,6 @@ images:
   - /blog/go-slice/go-slice-preview.webp
 ---
 
-![Slices in Go: Grow Big or Go Home](/blog/go-slice/go-slice-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Slices in Go: Grow Big or Go Home</figcaption>
-
 New developers often think slices are pretty simple to get, just a dynamic array that can change size compared to a regular array. But honestly, it's trickier than it seems when it comes to how they change size.
 
 So, let's say we have a slice variable `a`, and you assign it to another variable `b`. Now, both `a` and `b` are pointing to the same underlying array. If you make any changes to the slice `a`, you're gonna see those changes reflected in `b` too.

@@ -25,9 +25,6 @@ images:
   - /blog/dev-note-distributed-tracing/cover.webp
 ---
 
-![Developer's Note: Research on Distributed Tracing, Comparing With Tempo and ClickHouse](/blog/dev-note-distributed-tracing/cover.webp)
-<figcaption style="text-align: center; font-style: italic;">Developer's Note: Research on Distributed Tracing, Comparing With Tempo and ClickHouse</figcaption>
-
 When it comes to observability, people often refer to its three pillars: metrics, tracing, and logging. At **VictoriaMetrics**, we already have solutions for metrics and logging: Victoria**Metrics** and Victoria**Logs**. Throughout these years, we've heard a common question from the community: When will Victoria**Traces** be released?
 
 If you are interested in this topic, then this blog post is for you.

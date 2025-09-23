@@ -30,7 +30,7 @@ keywords:
 images:
  - /blog/q1-2022-release-roundup/q1-2022-release-roundup.webp
 ---
-<p><img src="/blog/q1-2022-release-roundup/q1-2022-release-roundup.webp" style="width:100%" alt="Q1/2022 Release Roundup"></p>
+
 Since the beginning of the year, our team has been busy working with the open source community of VictoriaMetrics users and our customers as we continuously enhance and improve Vicky!
 
 Thanks to everyone who has contributed with their feedback, questions, feature requests, bug reports, etc.

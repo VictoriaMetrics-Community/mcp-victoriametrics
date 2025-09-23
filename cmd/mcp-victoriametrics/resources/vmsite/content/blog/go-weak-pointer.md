@@ -18,9 +18,6 @@ images:
  - /blog/go-weak-pointer/weak-pointer-preview.webp
 ---
 
-![Weak Pointers in Go: Why They Matter Now](/blog/go-weak-pointer/weak-pointer-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Weak Pointers in Go: Why They Matter Now</figcaption>
-
 When we talked about string interning earlier, we mentioned a concept that Go uses to implement its unique map feature: the "weak pointer." We kind of breezed through it back then to stay on track with the main flow of that article.
 
 If you haven't checked that piece out yet, I'd highly recommend giving it a read: [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string). It's one of those optimization tricks that makes VictoriaMetrics' products faster. You can read it before or after this one—totally up to you.

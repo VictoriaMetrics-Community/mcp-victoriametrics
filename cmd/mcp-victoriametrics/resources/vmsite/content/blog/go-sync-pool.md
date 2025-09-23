@@ -29,9 +29,6 @@ This post is part of a series about handling concurrency in Go:
 - [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once)
 - [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight)
 
-![Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/go-sync-pool-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Go sync.Pool and the Mechanics Behind It</figcaption>
-
 In the [VictoriaMetrics source code](https://github.com/VictoriaMetrics/VictoriaMetrics/), we use `sync.Pool` a lot, and it's honestly a great fit for how we handle temporary objects, especially byte buffers or slices.
 
 It is commonly used in the standard library. For instance, in the `encoding/json` package:

@@ -29,9 +29,6 @@ This article is part of our ongoing series about handling concurrency in Go, a q
 - Go sync.Once is Simple... Does It Really? (We're here) 
 - [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight)
 
-![Go sync.Once is Simple... Does It Really?](/blog/go-sync-once/go-sync-once-preview.webp) 
-<figcaption style="text-align: center; font-style: italic;">Go sync.Once is Simple... Does It Really?</figcaption>
-
 The `sync.Once` is probably the easiest sync primitive to use, but there's more under the hood than you might think.
 
 It's a good opportunity to understand how it works by juggling both atomic operations and mutexes.

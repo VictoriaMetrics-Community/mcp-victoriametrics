@@ -20,9 +20,6 @@ images:
   - /blog/go-http2/go-http2-preview.webp
 ---
 
-![How HTTP/2 Works and How to Enable It in Go](/blog/go-http2/go-http2-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">How HTTP/2 Works and How to Enable It in Go</figcaption>
-
 This article is part of the ongoing gRPC communication protocol series:
 
 1. [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc)

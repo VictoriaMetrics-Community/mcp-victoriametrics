@@ -33,8 +33,6 @@ This piece is part of our ongoing VictoriaMetrics series where we break down how
 6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
 7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
 
-![How vmstorage Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-how-it-handles-data-ingestion/vmstorage-retention-merging-deduplication-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">How vmstorage Processes Data: Retention, Merging, Deduplication,...</figcaption>
 
 We already know how vmstorage handles data ingestion from vminsert in the [previous article](/blog/vmstorage-how-it-handles-data-ingestion), turning them into what we call "raw-row shards" in memory. However, they're not searchable yet. 
 

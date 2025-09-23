@@ -89,12 +89,14 @@ For advanced setups, refer to the [multi-level cluster setup](https://docs.victo
 
 ## High availability
 
-VictoriaLogs cluster provides high availability for data ingestion path. It continues accepting incoming logs if some of `vlstorage` nodes are temporarily unavailable.
+VictoriaLogs cluster provides high availability for [data ingestion path](https://docs.victoriametrics.com/victorialogs/data-ingestion/).
+It continues accepting incoming logs if some of `vlstorage` nodes are temporarily unavailable.
 `vlinsert` evenly spreads new logs among the remaining available `vlstorage` nodes in this case, so newly ingested logs are properly stored and are available for querying
 without any delays. This allows performing maintenance tasks for `vlstorage` nodes (such as upgrades, configuration updates, etc.) without worrying of the data loss.
 Make sure that the remaining `vlstorage` nodes have enough capacity for the increased data ingestion workload, in order to avoid availability problems.
 
-VictoriaLogs cluster returns `502 Bad Gateway` errors for incoming queries if some of `vlstorage` nodes are unavailable. This guarantees consistent query responses
+VictoriaLogs cluster returns `502 Bad Gateway` errors for [incoming queries](https://docs.victoriametrics.com/victorialogs/querying/)
+if some of `vlstorage` nodes are unavailable. This guarantees consistent query responses
 (e.g. all the stored logs are taken into account during the query) during maintenance tasks at `vlstorage` nodes. Note that all the newly incoming logs are properly stored
 to the remaining `vlstorage` nodes - see the paragraph above, so they become available for querying immediately after all the `vlstorage` nodes return back to the cluster.
 
@@ -111,7 +113,7 @@ See [these docs](https://docs.victoriametrics.com/victorialogs/querying/#partial
 The real HA scheme for both data ingestion and querying can be built only when copies of logs are sent into independent VictoriaLogs instances (or clusters)
 located in fully independent availability zones (datacenters). If an AZ becomes unavailable, then new logs continue to be written to the remaining AZ,
 while queries return full responses from the remaining AZ. When the AZ becomes available, then the pending buffered logs can be written to it, so the AZ
-can be used for querying full responses. This HA sheme can be build with the help of [vlagent](https://docs.victoriametrics.com/victorialogs/vlagent/)
+can be used for querying full responses. This HA sheme can be built with the help of [vlagent](https://docs.victoriametrics.com/victorialogs/vlagent/)
 for data replication and buffering, and [vmauth](https://docs.victoriametrics.com/victoriametrics/vmauth/) for data querying:
 
 ```mermaid
@@ -283,8 +285,8 @@ The following guide covers the following topics for Linux host:
 Download and unpack the latest VictoriaLogs release:
 
 ```sh
-curl -L -O https://github.com/VictoriaMetrics/VictoriaLogs/releases/download/v1.33.1/victoria-logs-linux-amd64-v1.33.1.tar.gz
-tar xzf victoria-logs-linux-amd64-v1.33.1.tar.gz
+curl -L -O https://github.com/VictoriaMetrics/VictoriaLogs/releases/download/v1.34.0/victoria-logs-linux-amd64-v1.34.0.tar.gz
+tar xzf victoria-logs-linux-amd64-v1.34.0.tar.gz
 ```
 
 Start the first [`vlstorage` node](https://docs.victoriametrics.com/victorialogs/cluster/#architecture), which accepts incoming requests at the port `9491` and stores the ingested logs at `victoria-logs-data-1` directory:

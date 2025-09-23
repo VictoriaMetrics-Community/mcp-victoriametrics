@@ -32,8 +32,6 @@ This piece is part of our ongoing VictoriaMetrics series where we break down how
 6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
 7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
 
-![How vmagent Collects and Ships Metrics Fast with Aggregation, Deduplication, and More](/blog/vmagent-how-it-works/vmagent-how-it-works-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">How vmagent Collects and Ships Metrics Fast with Aggregation, Deduplication, and More</figcaption>
 
 ## What is vmagent?
 

@@ -29,9 +29,6 @@ This post is part of a series about handling concurrency in Go:
 - [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once)
 - [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight)
 
-![Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup/sync-waitgroup-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Go sync.WaitGroup and The Alignment Problem</figcaption>
-
 WaitGroup is basically a way to wait for several goroutines to finish their work.
 
 Each of sync primitives has its own set of problems, and this one's no different. We're going to focus on the alignment issues with WaitGroup, which is why its internal structure has changed across different versions.

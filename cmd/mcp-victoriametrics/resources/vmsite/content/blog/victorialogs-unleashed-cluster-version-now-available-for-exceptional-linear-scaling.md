@@ -20,7 +20,6 @@ tags:
 images:
  - /blog/victorialogs-unleashed-cluster-version-now-available/victorialogs-unleashed-cluster-version-now-available-for-exceptional-linear-scaling.webp
 ---
-![VictoriaLogs Cluster Version Now Available for Exceptional, Linear Scaling](/blog/victorialogs-unleashed-cluster-version-now-available/victorialogs-unleashed-cluster-version-now-available-for-exceptional-linear-scaling.webp)
 
 You asked, and we listened!
 

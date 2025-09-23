@@ -20,8 +20,6 @@ images:
  - /blog/tech-talk-streems/victorialogs-gaps-gains-growth/preview.webp
 ---
 
-![VictoriaLogs: Gaps, Gains & Growth](/blog/tech-talk-streems/victorialogs-gaps-gains-growth/preview.webp)
-
 ## VictoriaLogs: Gaps, Gains & Growth – Tech Talk Recap with Co-founder Alex
 
 We just wrapped up our final installment of the VictoriaLogs Tech Talk series! If you missed it live, the recording is now available.

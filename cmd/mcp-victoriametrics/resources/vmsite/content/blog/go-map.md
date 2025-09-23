@@ -18,9 +18,6 @@ images:
   - /blog/go-map/go-map-preview.webp
 ---
 
-![How Go Maps Work](/blog/go-map/go-map-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Go Maps Explained: How Key-Value Pairs Are Actually Stored</figcaption>
-
 If you're new to Go, it can be a bit confusing to figure out how to use maps in Go. And even when you're more experienced, understanding how maps really work can be pretty tough.
 
 Take this example: Have you ever set a 'hint' for a map and wondered why it's called a 'hint' and not something simple like length, like we do with slices?

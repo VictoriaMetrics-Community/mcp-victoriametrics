@@ -18,9 +18,6 @@ images:
   - /blog/go-runtime-finalizer-keepalive/go-runtime-finalizer-keepalive-preview.webp
 ---
 
-![Go Runtime Finalizer and Keep Alive](/blog/go-runtime-finalizer-keepalive/go-runtime-finalizer-keepalive-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Go Runtime Finalizer and Keep Alive</figcaption>
-
 ## 1. Finalizer
 
 So, here's something interesting, there's an API in Go's runtime package called `runtime.SetFinalizer`. This little feature lets you set a "finalizer" for an object. 

@@ -21,7 +21,7 @@ tags:
   - high-availability
   - time series
 images:
-  - /blog/vmstorage-how-it-handles-query-requests/vmstorage-how-it-handles-query-requests-preview.webp
+  - /blog/vmstorage-how-it-handles-query-requests/vmstorage-handle-query-requests-preview.webp
 ---
 
 This piece is part of our ongoing VictoriaMetrics series, where we break down how different components of the system function:
@@ -33,9 +33,6 @@ This piece is part of our ongoing VictoriaMetrics series, where we break down ho
 5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works)
 6. How **vmstorage** Handles Query Requests From vmselect (We're here)
 7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
-
-![How vmstorage Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests/vmstorage-handle-query-requests-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">How vmstorage Handles Query Requests From vmselect</figcaption>
 
 > [!IMPORTANT]
 > This discussion assumes you've checked out the earlier articles, which cover how vmstorage's IndexDB works.

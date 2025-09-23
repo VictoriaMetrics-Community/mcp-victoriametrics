@@ -29,8 +29,6 @@ This post is part of a series about handling concurrency in Go:
 - [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once)
 - [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight)
 
-![Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map/go-sync-map-preview.webp)    
-<figcaption style="text-align: center; font-style: italic;">Go sync.Map: The Right Tool for the Right Job</figcaption>
 
 A regular Go map isn't concurrency safe when you're reading and writing at the same time. 
 

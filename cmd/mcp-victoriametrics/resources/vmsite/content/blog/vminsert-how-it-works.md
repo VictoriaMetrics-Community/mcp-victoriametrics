@@ -32,9 +32,6 @@ This piece is part of our ongoing VictoriaMetrics series where we break down how
 6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
 7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
 
-![When Metrics Meet vminsert: A Data-Delivery Story](/blog/vminsert-how-it-works/vminsert-how-it-works-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">When Metrics Meet vminsert: A Data-Delivery Story</figcaption>
-
 > [!NOTE] Note: a few things to keep in mind
 > - Flags we mention will begin with a dash (`-`), e.g. `-remoteWrite.url`.
 > - Numbers we reference are the default values (these work well for most setups), but you can modify them using flags.

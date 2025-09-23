@@ -29,8 +29,6 @@ This post is part of a series about handling concurrency in Go:
 - [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once)
 - [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight)
 
-![Go sync.Cond, the Most Overlooked Sync Mechanism](/blog/go-sync-cond/go-sync-cond-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Go sync.Cond, the Most Overlooked Sync Mechanism</figcaption>
 
 In Go, `sync.Cond` is a synchronization primitive, though it's not as commonly used as its siblings like sync.Mutex or sync.WaitGroup. You'll rarely see it in most projects or even in the standard libraries, where other sync mechanisms tend to take its place.
 
