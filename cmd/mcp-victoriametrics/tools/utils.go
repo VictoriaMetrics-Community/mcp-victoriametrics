@@ -30,6 +30,12 @@ func CreateSelectRequest(ctx context.Context, cfg *config.Config, tcr mcp.CallTo
 		return nil, fmt.Errorf("failed to get bearer token: %v", err)
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", bearerToken))
+
+	// Add custom headers from configuration
+	for key, value := range cfg.CustomHeaders() {
+		req.Header.Set(key, value)
+	}
+
 	return req, nil
 }
 
@@ -48,6 +54,12 @@ func CreateAdminRequest(ctx context.Context, cfg *config.Config, tcr mcp.CallToo
 		return nil, fmt.Errorf("failed to get bearer token: %v", err)
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", bearerToken))
+
+	// Add custom headers from configuration
+	for key, value := range cfg.CustomHeaders() {
+		req.Header.Set(key, value)
+	}
+
 	return req, nil
 }
 
