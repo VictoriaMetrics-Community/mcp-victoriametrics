@@ -157,6 +157,7 @@ MCP Server for VictoriaMetrics is configured via environment variables:
 | `VM_INSTANCE_ENTRYPOINT` / `VMC_API_KEY` | URL to VictoriaMetrics instance (it should be root `/` URL of vmsingle or vmselect)                                                                                                                                                                                    | Yes (if you don't use `VMC_API_KEY`)   | -                | -                      |
 | `VM_INSTANCE_TYPE`                       | Type of VictoriaMetrics instance                                                                                                                                                                                                                                       | Yes (if you don't use ``VMC_API_KEY``) | -                | `single`, `cluster`    |
 | `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API                                                                                                                                                                                                                           | No                                     | -                | -                      |
+| `VM_INSTANCE_HEADERS`      | Custom HTTP headers to send with requests (comma-separated key=value pairs) | No       | -                | -                      |
 | `VMC_API_KEY`                            | [API key from VictoriaMetrics Cloud Console](https://docs.victoriametrics.com/victoriametrics-cloud/api/)                                                                                                                                                              | No                                     | -                | -                      |
 | `MCP_SERVER_MODE`                        | Server operation mode. See [Modes](#modes) for details.                                                                                                                                                                                                                | No                                     | `stdio`          | `stdio`, `sse`, `http` |
 | `MCP_LISTEN_ADDR`                        | Address for SSE or HTTP server to listen on                                                                                                                                                                                                                            | No                                     | `localhost:8080` | -                      |
@@ -201,6 +202,10 @@ export VMC_API_KEY="<you-api-key>"
 # Server mode
 export MCP_SERVER_MODE="sse"
 export MCP_LISTEN_ADDR="0.0.0.0:8080"
+
+# Custom headers for authentication (e.g., behind a reverse proxy)
+# Expected syntax is key=value separated by commas
+export VM_INSTANCE_HEADERS="<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
 ```
 
 ## Endpoints
@@ -229,7 +234,8 @@ Go to: `Settings` -> `Cursor Settings` -> `MCP` -> `Add new global MCP server` a
       "env": {
         "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
         "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
-        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>"
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
       }
     }
   }
@@ -250,7 +256,8 @@ Add this to your Claude Desktop `claude_desktop_config.json` file (you can find 
       "env": {
         "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
         "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
-        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>"
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
       }
     }
   }
@@ -268,6 +275,7 @@ claude mcp add victoriametrics -- /path/to/mcp-victoriametrics \
   -e VM_INSTANCE_ENTRYPOINT=<YOUR_VM_INSTANCE> \
   -e VM_INSTANCE_TYPE=<YOUR_VM_INSTANCE_TYPE>
   -e VM_INSTANCE_BEARER_TOKEN=<YOUR_VM_BEARER_TOKEN>
+  -e VM_INSTANCE_HEADERS="<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
 ```
 
 See [Claude Code MCP docs](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp) for more info.
@@ -285,7 +293,8 @@ Add this to your VS Code MCP config file:
       "env": {
         "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
         "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
-        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>"
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
       }
     }
   }
@@ -307,7 +316,8 @@ Add the following to your Zed config file:
         "env": {
           "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
           "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
-          "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>"
+          "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+          "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
         }
       },
       "settings": {}
@@ -332,7 +342,8 @@ See [Zed MCP docs](https://zed.dev/docs/ai/mcp) for more info.
       "env": {
         "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
         "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
-        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>"
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
       }
     }
   }
@@ -351,7 +362,8 @@ Add the following to your Windsurf MCP config file.
       "env": {
         "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
         "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
-        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>"
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
       }
     }
   }
@@ -377,12 +389,14 @@ You should replace run command in configuration examples above in the following 
           "-e", "VM_INSTANCE_ENTRYPOINT",
           "-e", "VM_INSTANCE_TYPE",
           "-e", "VM_INSTANCE_BEARER_TOKEN",
+          "-e", "VM_INSTANCE_HEADERS",
           "ghcr.io/victoriametrics-community/mcp-victoriametrics",
         ],
       "env": {
         "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
         "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
-        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>"
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
       }
     }
   }

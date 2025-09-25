@@ -14,6 +14,8 @@ func TestInitConfig(t *testing.T) {
 	originalServerMode := os.Getenv("MCP_SERVER_MODE")
 	originalSSEAddr := os.Getenv("MCP_SSE_ADDR")
 	originalBearerToken := os.Getenv("VM_INSTANCE_BEARER_TOKEN")
+	originalHeartbeatInterval := os.Getenv("MCP_HEARTBEAT_INTERVAL")
+	originalHeaders := os.Getenv("VM_INSTANCE_HEADERS")
 
 	// Restore environment variables after test
 	defer func() {
@@ -22,6 +24,8 @@ func TestInitConfig(t *testing.T) {
 		os.Setenv("MCP_SERVER_MODE", originalServerMode)
 		os.Setenv("MCP_SSE_ADDR", originalSSEAddr)
 		os.Setenv("VM_INSTANCE_BEARER_TOKEN", originalBearerToken)
+		os.Setenv("MCP_HEARTBEAT_INTERVAL", originalHeartbeatInterval)
+		os.Setenv("VM_INSTANCE_HEADERS", originalHeaders)
 	}()
 
 	// Test case 1: Valid configuration
@@ -200,6 +204,7 @@ func TestInitConfig(t *testing.T) {
 			t.Errorf("Expected heartbeat interval to be 30 seconds, got: %d", cfg.HeartbeatInterval())
 		}
 	})
+	// Test case 9: Invalid heartbeat interval
 	t.Run("Incorrect heartbeat interval", func(t *testing.T) {
 		// Set environment variables
 		os.Setenv("VM_INSTANCE_ENTRYPOINT", "http://example.com")
@@ -209,6 +214,97 @@ func TestInitConfig(t *testing.T) {
 		_, err := InitConfig()
 		if err != nil && err.Error() != "failed to parse MCP_HEARTBEAT_INTERVAL: time: missing unit in duration \"123\"" {
 			t.Errorf("Expected error 'invalid heartbeat interval: 123', got: %v", err)
+		}
+
+		os.Setenv("MCP_HEARTBEAT_INTERVAL", originalHeartbeatInterval)
+	})
+
+	// Test case 10: Custom headers parsing
+	t.Run("Custom headers parsing", func(t *testing.T) {
+		// Set environment variables
+		os.Setenv("VM_INSTANCE_ENTRYPOINT", "http://example.com")
+		os.Setenv("VM_INSTANCE_HEADERS", "CF-Access-Client-Id=test-client-id,CF-Access-Client-Secret=test-client-secret,Custom-Header=test-value")
+
+		// Initialize config
+		cfg, err := InitConfig()
+
+		// Check for errors
+		if err != nil {
+			t.Fatalf("Expected no error, got: %v", err)
+		}
+
+		// Check custom headers
+		headers := cfg.CustomHeaders()
+		expectedHeaders := map[string]string{
+			"CF-Access-Client-Id":     "test-client-id",
+			"CF-Access-Client-Secret": "test-client-secret",
+			"Custom-Header":           "test-value",
+		}
+
+		if len(headers) != len(expectedHeaders) {
+			t.Errorf("Expected %d headers, got %d", len(expectedHeaders), len(headers))
+		}
+
+		for key, expectedValue := range expectedHeaders {
+			if actualValue, exists := headers[key]; !exists {
+				t.Errorf("Expected header %s to exist", key)
+			} else if actualValue != expectedValue {
+				t.Errorf("Expected header %s to have value %s, got %s", key, expectedValue, actualValue)
+			}
+		}
+	})
+
+	// Test case 11: Empty custom headers
+	t.Run("Empty custom headers", func(t *testing.T) {
+		// Set environment variables
+		os.Setenv("VM_INSTANCE_ENTRYPOINT", "http://example.com")
+		os.Setenv("VM_INSTANCE_HEADERS", "")
+
+		// Initialize config
+		cfg, err := InitConfig()
+
+		// Check for errors
+		if err != nil {
+			t.Fatalf("Expected no error, got: %v", err)
+		}
+
+		// Check custom headers
+		headers := cfg.CustomHeaders()
+		if len(headers) != 0 {
+			t.Errorf("Expected 0 headers, got %d", len(headers))
+		}
+	})
+
+	// Test case 12: Invalid header format (should be ignored)
+	t.Run("Invalid header format", func(t *testing.T) {
+		// Set environment variables
+		os.Setenv("VM_INSTANCE_ENTRYPOINT", "http://example.com")
+		os.Setenv("VM_INSTANCE_HEADERS", "invalid-header,valid-header=value,another-invalid")
+
+		// Initialize config
+		cfg, err := InitConfig()
+
+		// Check for errors
+		if err != nil {
+			t.Fatalf("Expected no error, got: %v", err)
+		}
+
+		// Check custom headers (only valid ones should be parsed)
+		headers := cfg.CustomHeaders()
+		expectedHeaders := map[string]string{
+			"valid-header": "value",
+		}
+
+		if len(headers) != len(expectedHeaders) {
+			t.Errorf("Expected %d headers, got %d", len(expectedHeaders), len(headers))
+		}
+
+		for key, expectedValue := range expectedHeaders {
+			if actualValue, exists := headers[key]; !exists {
+				t.Errorf("Expected header %s to exist", key)
+			} else if actualValue != expectedValue {
+				t.Errorf("Expected header %s to have value %s, got %s", key, expectedValue, actualValue)
+			}
 		}
 	})
 }
