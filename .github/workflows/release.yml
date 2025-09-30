@@ -55,19 +55,42 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      #- run: |
-      #    export VERSION=${GITHUB_REF#refs/tags/v}
-      #    echo '1 - $VERSION'
-      #    echo "2 - ${{ github.ref_name }}"
-      #    echo '3 - ${GITHUB_REF##*/}'
-      #    cat server.json | envsubst > tmp && mv -f tmp server.json
-      #
-      #- name: Install MCP Publisher
-      #  run: |
-      #    curl -L "https://github.com/modelcontextprotocol/registry/releases/download/v1.0.0/mcp-publisher_1.0.0_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
-      #
-      #- name: Login to MCP Registry
-      #  run: ./mcp-publisher login github-oidc
-      #
-      #- name: Publish to MCP Registry
-      #  run: ./mcp-publisher publish
+      - name: Fetch tags
+        run: |
+          if [[ "${{ github.ref_type }}" != "tag" ]]; then
+            git fetch --tags
+          else
+            echo "Skipping tag fetch - already on tag ${{ github.ref_name }}"
+          fi
+
+      - name: Update server.json version
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            TAG_VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+          else
+            LATEST_TAG=$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+(-.*)?$' | head -n 1)
+            [ -z "$LATEST_TAG" ] && { echo "No release tag found"; exit 1; }
+            TAG_VERSION=$(echo "$LATEST_TAG" | sed 's/^v//')
+            echo "Using latest tag: $LATEST_TAG"
+          fi
+          sed -i "s/\${VERSION}/$TAG_VERSION/g" server.json
+          echo "Version: $TAG_VERSION"
+
+      - name: Validate configuration
+        run: |
+          python3 -m json.tool server.json > /dev/null && echo "Configuration valid" || exit 1
+
+      - name: Display final server.json
+        run: |
+          echo "Final server.json contents:"
+          cat server.json
+
+      - name: Install MCP Publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/download/v1.2.3/mcp-publisher_1.2.3_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+
+      - name: Login to MCP Registry
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish to MCP Registry
+        run: ./mcp-publisher publish
