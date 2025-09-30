@@ -1,63 +1,119 @@
----
-build:
-  list: never
-  publishResources: false
-  render: never
-sitemap:
-  disable: true
----
 
 
-The VictoriaLogs datasource plugin allows you to query and visualize
-[VictoriaLogs](https://docs.victoriametrics.com/victorialogs/) data in [Grafana](https://grafana.com/grafana/plugins/victoriametrics-logs-datasource/).
+The [VictoriaLogs Grafana plugin](https://grafana.com/grafana/plugins/victoriametrics-logs-datasource/) allows Grafana 
+to query, visualize, and interact with [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/),
+a high-performance log storage and processing system.
 
-* [Installation](#installation)
-* [Development](#getting-started-development)
-* [How to make new release](#how-to-make-new-release)
-* [Notes](#notes)
-* [License](#license)
+<img alt="Grafana Dashboard Screenshot" width="100%" src="https://github.com/VictoriaMetrics/victorialogs-datasource/blob/main/src/img/dashboard.png?raw=true">
 
-Read more about plugin capabilities and application at [VictoriaLogs plugin page](https://grafana.com/grafana/plugins/victoriametrics-logs-datasource/).
+## Capabilities
 
-## Quick start
+1. Use [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/) to filter, aggregate, and transform logs data to gain insights into application behavior.
+1. Use Explore mode with Grafana.
+1. Show live-streaming logs.
+1. Build dashboards and setup alerts.
+1. Use Ad Hoc filters.
 
-To install plugin, try searching for `victorialogs` in Grafana's plugin list.
-For gitops follow [installation](#installation) instructions.
-
-Once installed, start exploring logs from [Grafana's Explore page](https://grafana.com/docs/grafana/latest/explore/get-started-with-explore/):
-
-![Grafana Explore](grafana-datasource/assets/explore.webp)
-
-> To search for all logs simply use `*` as a query. See [LogsQL specification](https://docs.victoriametrics.com/victorialogs/logsql/). 
-
-* How to use plugin on [Grafana dashboards](https://github.com/VictoriaMetrics/victorialogs-datasource/tree/main/src#building-queries).
-* How to configure [log level rules](https://github.com/VictoriaMetrics/victorialogs-datasource/tree/main/src#log-level-rules).
-* How to connect Logs with Traces using [Derived Fields](https://github.com/VictoriaMetrics/victorialogs-datasource/tree/main/src#derived-fields).
-* [Demo dashboard](https://play-grafana.victoriametrics.com/d/be5zidev72m80f) built with VictoriaLogs plugin.
+Try it at [VictoriaMetrics playground](https://play-grafana.victoriametrics.com/d/be5zidev72m80f/k8s-logs-demo)!
 
 ## Installation
 
-For detailed instructions on how to install the plugin in Grafana Cloud or locally,
-please check out the [Plugin installation docs](https://grafana.com/docs/grafana/latest/plugins/installation/).
+For detailed instructions on how to install the plugin on Grafana Cloud or locally, please checkout the [Plugin installation docs](https://grafana.com/docs/grafana/latest/plugins/installation/).
+For installation options in Docker or Kubernetes refer to [these docs](https://github.com/VictoriaMetrics/victorialogs-datasource?tab=readme-ov-file#installation).
 
-### Install via Docker
+### Manual configuration via UI
 
-To install plugin via Grafana docker container [specify](https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#build-a-grafana-docker-image-with-pre-installed-plugins)
-`GF_INSTALL_PLUGINS=victoriametrics-logs-datasource` environment variable. It will pre-install the plugin on container start.
-See more details at [Configure a Grafana Docker image](https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/).
+Once the plugin is installed on your Grafana instance, follow [these instructions](https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/)
+to add a new VictoriaLogs data source, and enter configuration options.
 
-### Grafana Provisioning
+### Configuration via file
 
-Provisioning of Grafana plugin requires creating [datasource config file](http://docs.grafana.org/administration/provisioning/#datasources).
-See how to provision Grafana in docker compose environment below. 
-
-1. Create a file at `./provisioning/datasources/vl.yml`:
+Provisioning of Grafana plugin requires creating [datasource config file](http://docs.grafana.org/administration/provisioning/#datasources):
 
 ```yaml
 apiVersion: 1
 datasources:
-    # <string, required> Name of the VictoriaLogs datasource
-    # displayed in Grafana panels and queries.
+  - name: VictoriaLogs
+    type: victoriametrics-logs-datasource
+    access: proxy
+    url: http://victorialogs:9428
+    isDefault: true
+```
+
+## Building queries
+
+VictoriaLogs query language is [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/).
+Queries can be built using raw LogsQL or via QueryBuilder.
+
+See panels examples at [VictoriaMetrics playground](https://play-grafana.victoriametrics.com/d/be5zidev72m80f/k8s-logs-demo)
+and LogsQL examples [here](https://docs.victoriametrics.com/victorialogs/logsql-examples/).
+
+### Logs panel
+
+For using [Logs panel](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/logs/)
+switch to `Raw Logs` query type:
+
+<img alt="Logs panel" src="https://github.com/VictoriaMetrics/victorialogs-datasource/blob/main/src/img/panel_logs.png?raw=true">
+
+### Time series panel
+
+For using [Time series panel](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/time-series/)
+switch to `Range` query type:
+
+<img alt="Time series panel" src="https://github.com/VictoriaMetrics/victorialogs-datasource/blob/main/src/img/panel_time_series.png?raw=true">
+
+### Stats panel
+
+For using [Stats panel](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/stat/)
+switch to `Instant` query type:
+
+<img alt="Stats panel" src="https://github.com/VictoriaMetrics/victorialogs-datasource/blob/main/src/img/panel_stat.png?raw=true">
+
+For enabling background visualization switch to `Range` query type.
+
+### Table panel
+
+For using [Table panel](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/table/)
+switch to `Raw Logs` query type:
+
+<img alt="Table panel" src="https://github.com/VictoriaMetrics/victorialogs-datasource/blob/main/src/img/panel_table.png?raw=true">
+
+And apply `Transformations` by labels:
+
+<img alt="Transformations" src="https://github.com/VictoriaMetrics/victorialogs-datasource/blob/main/src/img/panel_table_transformation.png?raw=true">
+
+### Log level rules
+
+The **Log level rules** section in the datasource configuration allows you to assign log levels based on custom field conditions. This helps classify logs dynamically (e.g., as `error`, `info`, `debug`, etc.) using rules you define.
+
+#### How to use
+
+1. Open the datasource settings.
+
+2. Scroll to the **Log level rules** section.
+
+3. Click **"Add rule"** to define a new rule.
+
+4. For each rule, configure the following:
+
+    * **Enable switch** – enable or disable the rule.
+    * **Field name** – the log field the condition will evaluate.
+    * **Operator** – choose from: `Equals`, `Not equal`, `Matches regex`, `Less than`, `Greater than`
+    * **Value** – the value to compare the field against.
+    * **Log level** – level to assign if the condition matches: `critical`, `warning`, `error`, `info`, `debug`, `trace`, `unknown`
+    * **Delete button** – remove the rule.
+
+5.  After adding or editing rules, click **"Save & test"** to apply the changes.
+
+**Rule priority**: If multiple rules match a log entry, the **first matching rule** (top to bottom) takes precedence.
+
+6. To define rules via the provision file, use the following format of the provision file:
+
+```yaml
+apiVersion: 1
+datasources:
+  # <string, required> Name of the VictoriaLogs datasource
+  # displayed in Grafana panels and queries.
   - name: VictoriaLogs
     # <string, required> Sets the data source type.
     type: victoriametrics-logs-datasource
@@ -66,363 +122,67 @@ datasources:
     access: proxy
     # <string> Sets URL for sending queries to VictoriaLogs server.
     # see https://docs.victoriametrics.com/victorialogs/querying/
-    url: http://victorialogs:9428
+    url: https://play-vmlogs.victoriametrics.com
+    # <string> Sets the pre-selected datasource for new panels.
+    # You can set only one default data source per organization.
+    isDefault: true
+    jsonData:
+      logLevelRules:
+        - field: "_stream_id"
+          value: "123123"
+          level: "error"
+          operator: "regex"
+          enabled: true
+```
+Where:
+* `field` is the name of the log field to evaluate (e.g. `_stream_id`, `status_code`, `message`).
+* `value` is the value to compare against. Can be a string or a number, depending on the field.
+* `level` is the log level to assign if the condition matches. Valid values: `critical`, `error`, `warning`, `info`, `debug`, `trace`, `unknown`.
+* `operator` is the comparison operator to use, such as `equals`, `notEquals`, `regex`, `lessThan`, `greaterThan`.
+* `enabled` is a boolean flag to enable or disable the rule. Defaults to `true` if omitted.
+
+## Correlations
+
+### Trace to logs
+
+Tempo, Jaeger, and Zipkin data sources support [Trace to logs](https://grafana.com/docs/grafana/latest/explore/trace-integration/#trace-to-logs)
+feature for navigating from a span in a trace directly to logs relevant for that span. _(Supported since Grafana v12.2.0)_.
+
+<img alt="Derived fields configuration" width="100%" src="https://github.com/VictoriaMetrics/victorialogs-datasource/blob/main/src/img/trace_to_logs.png?raw=true">
+
+An example of the correlation query in traces datasource is the following:
+```
+trace_id:="${__trace.traceId}" AND span_id:="${__trace.spanId}"
 ```
 
-2. Create a `docker-compose.yaml` file:
+### Log to metrics
 
-```yaml
- services:
-    grafana:
-      image: grafana/grafana:12.0.2
-      environment:
-      - GF_INSTALL_PLUGINS=victoriametrics-logs-datasource
-      ports:
-      - 3000:3000/tcp
-      volumes:
-      - ./provisioning:/etc/grafana/provisioning
-```
+Log to traces correlation is possible via Derived Fields functionality. But for it to work log entries and time series
+in metrics datasource should share common labels that could be used as filters. See example of building logs to metrics
+correlation in [this issue](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9592#issuecomment-3202104607).
 
-3. Run the docker-compose:
+### Log to traces
 
-```sh
-docker compose -f docker-compose.yaml up
-```
+Log to traces correlation is possible via Derived Fields functionality. See its description in the sections below.
 
-After Grafana starts successfully, datasource should be available in the datasources tab
+## Derived Fields
 
-![Configuration](grafana-datasource/assets/provision_datasources.webp)
+In VictoriaLogs datasource settings, you can configure rules of extracting values from a log message to create a link with that value.
 
-### Install in Kubernetes
+For example, if log entries have field `trace_id` then we can configure a Derived Field to make a link to Jaeger datasource
+for viewing an associated trace:
 
-#### Grafana helm chart
+<img alt="Derived fields configuration" width="100%" src="https://github.com/VictoriaMetrics/victorialogs-datasource/blob/main/src/img/derived_fields_cfg.png?raw=true">
 
-Example with Grafana [helm chart](https://github.com/grafana/helm-charts/blob/main/charts/grafana/README.md):
+Once configured, in Explore mode or in Logs panel log entries with field `trace_id` will also get a link that would
+open a Jaeger datasource and search for the `trace_id` value:
 
-##### Option 1. Using Grafana provisioning:
+<img alt="Derived fields explore" src="https://github.com/VictoriaMetrics/victorialogs-datasource/blob/main/src/img/derived_fields_explore.png?raw=true">
 
-``` yaml
-env:
-  GF_INSTALL_PLUGINS: "victoriametrics-logs-datasource"
-```
+If the trace ID is not stored in a separate field but in a log message itself, then use `Regex in log line` option
+to specify a regex expression for extracting the trace value from log message.
 
-##### Option 2. Using Grafana plugins section in `values.yaml`:
-
-``` yaml
-plugins:
-  - victoriametrics-logs-datasource
-```
-
-##### Option 3. Using init container.
-<details>
-<summary>extraInitContainers.yaml</summary>
-
-``` yaml
-extraInitContainers:
-  - name: "load-vm-ds-plugin"
-    image: "curlimages/curl:7.85.0"
-    command: [ "/bin/sh" ]
-    workingDir: "/var/lib/grafana"
-    securityContext:
-      runAsUser: 472
-      runAsNonRoot: true
-      runAsGroup: 472
-    args:
-     - "-c"
-     - |
-       set -ex
-       mkdir -p /var/lib/grafana/plugins/
-       ver=$(curl -s -L https://api.github.com/repos/VictoriaMetrics/victorialogs-datasource/releases/latest | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-       curl -L https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/$ver/victoriametrics-logs-datasource-$ver.tar.gz -o /var/lib/grafana/plugins/vl-plugin.tar.gz
-       tar -xf /var/lib/grafana/plugins/vl-plugin.tar.gz -C /var/lib/grafana/plugins/
-       rm /var/lib/grafana/plugins/vl-plugin.tar.gz
-    volumeMounts:
-      # For grafana-operator users, change `name: storage` to `name: grafana-data`
-      - name: storage
-        mountPath: /var/lib/grafana
-```
-</details>
-
-For `grafana-operator` users, the above configuration should be done for the part `/spec/deployment/spec/template/spec/initContainers` of your `kind=Grafana` resource.
-
-This example uses init container to download and install plugin. To allow Grafana using this container as a sidecar set the following config:
-
-```yaml
-sidecar:
-  datasources:
-    initDatasources: true
-    enabled: true
-```
-
-See more about chart settings [here](https://github.com/grafana/helm-charts/blob/541d97051de87a309362e02d08741ffc868cfcd6/charts/grafana/values.yaml)
-
-##### Option 4. would be to build custom Grafana image with plugin based on the same installation instructions.
-
-#### Grafana operator
-
-Example with Grafana [operator](https://github.com/grafana-operator/grafana-operator).
-<details>
-<summary>deployment.yaml</summary>
-
-```yaml
-apiVersion: grafana.integreatly.org/v1beta1
-kind: Grafana
-metadata:
-  name: grafana-vm
-  labels:
-     dashboards: grafana
-spec:
-  persistentVolumeClaim:
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 200Mi
-  deployment:
-    spec:
-      template:
-        spec:
-          initContainers:
-            - name: "load-vm-ds-plugin"
-              image: "curlimages/curl:7.85.0"
-              command: [ "/bin/sh" ]
-              workingDir: "/var/lib/grafana"
-              securityContext:
-                runAsUser: 472 
-                runAsNonRoot: true
-                runAsGroup: 472 
-              args:
-                - "-c"
-                - |
-                  set -ex
-                  mkdir -p /var/lib/grafana/plugins/
-                  ver=$(curl -s https://api.github.com/repos/VictoriaMetrics/victorialogs-datasource/releases/latest | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-                  curl -L https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/$ver/victoriametrics-logs-datasource-$ver.tar.gz -o /var/lib/grafana/plugins/vl-plugin.tar.gz
-                  tar -xf /var/lib/grafana/plugins/vl-plugin.tar.gz -C /var/lib/grafana/plugins/
-                  rm /var/lib/grafana/plugins/vl-plugin.tar.gz
-              volumeMounts:
-                - name: grafana-data
-                  mountPath: /var/lib/grafana
-```
-</details>
-
-See [Grafana operator reference](https://grafana.github.io/grafana-operator/docs/grafana/) to find more about Grafana operator.
-This example uses init container to download and install plugin.
-
-It is also possible to request plugin at `GrafanaDatasource` or `GrafanaDashboard` CRDs.
-
-<details>
-<summary>datasource-crd.yaml</summary>
-
-```yaml
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDatasource
-metadata:
-  name: vl-datasource
-spec:
-  datasource:
-    access: proxy
-    type: victoriametrics-logs-datasource
-    name: VL
-    url: http://victoria-logs-single-server.monitoring.svc.cluster.local:9428
-  instanceSelector:
-    matchLabels:
-      dashboards: grafana
-  plugins:
-    - name: victoriametrics-logs-datasource
-      version: "0.16.3"
----
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDashboard
-metadata:
-  name: vl-dashboard
-spec:
-  resyncPeriod: 30s
-  plugins:
-    - name: victoriametrics-logs-datasource
-      version: "0.16.3"
-  instanceSelector:
-    matchLabels:
-      dashboards: "grafana"
-  json: |
-     {
-        "annotations": {
-           "list": [
-              {
-                 "builtIn": 1,
-                 "datasource": {
-                    "type": "grafana",
-                    "uid": "-- Grafana --"
-                 },
-                 "enable": true,
-                 "hide": true,
-                 "iconColor": "rgba(0, 211, 255, 1)",
-                 "name": "Annotations & Alerts",
-                 "type": "dashboard"
-              }
-           ]
-        },
-        "editable": true,
-        "fiscalYearStartMonth": 0,
-        "graphTooltip": 0,
-        "links": [],
-        "panels": [],
-        "preload": false,
-        "refresh": "",
-        "schemaVersion": 40,
-        "tags": [],
-        "templating": {
-           "list": []
-        },
-        "time": {
-           "from": "now-6h",
-           "to": "now"
-        },
-        "timepicker": {},
-        "timezone": "browser",
-        "title": "Example",
-        "version": 0,
-        "weekStart": ""
-     }
-```
-</details>
-
-### Dev release installation
-
-To download plugin build and move contents into Grafana plugins directory:
-
-   ``` sh
-   ver=$(curl -s https://api.github.com/repos/VictoriaMetrics/victorialogs-datasource/releases/latest | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-   curl -L https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/$ver/victoriametrics-logs-datasource-$ver.tar.gz -o /var/lib/grafana/plugins/vl-plugin.tar.gz
-   tar -xf /var/lib/grafana/plugins/vl-plugin.tar.gz -C /var/lib/grafana/plugins/
-   rm /var/lib/grafana/plugins/vl-plugin.tar.gz
-   ```
-
-After downloading is finished, restart Grafana to load the plugin.
-
-## Getting started development
-
-### 1. Install [Grafana](https://grafana.com/docs/grafana/latest/setup-grafana/installation/)
-
-<details>
-<summary>Tip for Apple(arm64)</summary>
-
-To download the `arm64` build of grafana for macOS from the [grafana download page](https://grafana.com/grafana/download?platform=mac), need to change `amd64` to `arm64` in the `wget` url.
-
-More details about debugging grafana plugin on **Apple Silicon** can be found in [this article](https://st-g.de/2023/10/grafana-plugin-debugging-on-apple-silicon).
-
-</details>
-
-### 2. Configure Grafana
-
-Installing dev version of Grafana plugin requires to change `grafana.ini` config to allow loading unsigned plugins:
-
-``` ini
-# Directory where Grafana will automatically scan and look for plugins
-plugins = {{path to directory with plugin}}
-```
-
-``` ini
-[plugins]
-allow_loading_unsigned_plugins = victoriametrics-logs-datasource
-```
-
-### 3. Run the plugin
-
-#### 1. How to run a frontend plugin in development mode:
-In the project directory, you can run:
-
-```sh
-# install dependencies
-yarn install
-
-# run the app in the development mode
-yarn dev
-
-# build the plugin for production to the `victoriametrics-logs-datasource` folder and zip build
-yarn build:zip
-```
-#### 2. How to run a debugger for a backend plugin:
-
-
-1. install [delve](https://github.com/go-delve/delve)
-```sh
-  go install github.com/go-delve/delve/cmd/dlv@latest
-```
-2. install [mage](https://magefile.org/)
-```sh
-  go install github.com/magefile/mage@latest
-```
-2. install dependencies
-```sh
-  go mod download
-```
-3. build backend plugin
-```sh
-  mage build
-```
-4. build frontend plugin:
-```sh
-  make vl-frontend-plugin-build
-```
-5. run grafana
-5. run debugger for backend plugin
-```sh
-  mage debugger
-```
-6. run debugger in IDE with the following configuration - port:`3222`.
-
-### 4. How to build backend plugin
-
-From the root folder of the project run the following command:
-
-```
-make vl-backend-plugin-build
-```
-
-This command will build executable multi-platform files to the `victoriametrics-logs-datasource` folder for the following platforms:
-
-* linux/amd64
-* linux/arm64
-* linux/arm
-* linux/386
-* amd64
-* arm64
-* windows
-
-### 5.How to build frontend plugin
-
-From the root folder of the project run the following command:
-
-```
-make vl-frontend-plugin-build
-```
-
-This command will build all frontend app into `victoriametrics-logs-datasource` folder.
-
-### 6. How to build frontend and backend parts of the plugin:
-
-When frontend and backend parts of the plugin is required, run the following command from the root folder of the project:
-
-```
-make vl-plugin-build
-```
-
-This command will build frontend part and backend part or the plugin and locate both parts into `victoriametrics-logs-datasource` folder.
-
-## How to make new release
-
-1. Make sure there are no open security issues.
-1. Change version in package.json in a `main` branch
-1. Trigger [release pipeline](https://github.com/VictoriaMetrics/victorialogs-datasource/actions/workflows/release.yaml).
-1. Go to [releases page](https://github.com/VictoriaMetrics/victorialogs-datasource/releases) once pipeline is finished and verify release with the name `TAG` has been created and has all the needed binaries and checksums attached.
-
-## Notes
-
-In the `plugin.json` file of our plugin, the `metrics` field is set to `true`. This is not to support metric queries in the classical sense but to ensure our plugin can be selected in the Grafana panel editor.
-
-For more information on the fields in `plugin.json`, please refer to the [Grafana documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json#properties).
+Learn more about [Derived Fields in Grafana](https://grafana.com/docs/grafana/next/datasources/loki/configure-loki-data-source/#derived-fields).
 
 ## License
 
