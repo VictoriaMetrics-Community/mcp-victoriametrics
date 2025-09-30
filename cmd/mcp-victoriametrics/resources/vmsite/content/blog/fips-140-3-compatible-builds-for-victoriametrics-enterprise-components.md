@@ -7,7 +7,6 @@ authors:
 date: 2025-06-24
 title: "FIPS 140-3 Compatible Builds for VictoriaMetrics Enterprise Components"
 enableComments: true
-featuredPost: true
 summary: "VictoriaMetrics Enterprise now offers FIPS 140-3 compatible builds, leveraging the BoringCrypto module. This enables organizations in regulated sectors, such as the federal government, finance, and healthcare, to meet stringent cryptographic requirements using VictoriaMetrics."
 categories:
   - Product News

@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.53.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-operator%2Fchangelog%2F%230530)
+![Version](https://img.shields.io/badge/0.54.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-operator%2Fchangelog%2F%230540)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-operator)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -292,27 +292,8 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">subject</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">disabledFor</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabledCRDValidation</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlagent</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlcluster</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlogs</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlsingle</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmagent</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmalert</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmalertmanager</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmalertmanagerconfig</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmanomaly</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmauth</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmcluster</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmnodescrape</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmpodscrape</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmprobe</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmrule</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmservicescrape</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmsingle</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmstaticscrape</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmuser</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">keepTLSSecret</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">policy</span><span class="p">:</span><span class="w"> </span><span class="l">Fail</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tls</span><span class="p">:</span><span class="w">
@@ -371,6 +352,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#admissionwebhooks-certmanager-issuer"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">admissionWebhooks.certManager.issuer</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>If needed, provide own issuer. Operator will create self-signed if empty.</p>
+</td>
+    </tr>
+    <tr id="admissionwebhooks-disabledfor">
+      <td><a href="#admissionwebhooks-disabledfor"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">admissionWebhooks.disabledFor</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>List of CRD names to disable validation for</p>
 </td>
     </tr>
     <tr id="admissionwebhooks-enabled">
@@ -450,6 +437,155 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#crds-plain"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.plain</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>check if plain or templated CRDs should be created. with this option set to <code>false</code>, all CRDs will be rendered from templates. with this option set to <code>true</code>, all CRDs are immutable and require manual upgrade.</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-affinity">
+      <td><a href="#crds-upgrade-affinity"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.affinity</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Upgrade job pod affinity</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-annotations">
+      <td><a href="#crds-upgrade-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Annotations to add to the upgrade job</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-busybox-image-pullpolicy">
+      <td><a href="#crds-upgrade-busybox-image-pullpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.busybox.image.pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
+    <tr id="crds-upgrade-busybox-image-repository">
+      <td><a href="#crds-upgrade-busybox-image-repository"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.busybox.image.repository</span><span class="p">:</span><span class="w"> </span><span class="l">busybox</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
+    <tr id="crds-upgrade-busybox-image-tag">
+      <td><a href="#crds-upgrade-busybox-image-tag"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.busybox.image.tag</span><span class="p">:</span><span class="w"> </span><span class="l">latest</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
+    <tr id="crds-upgrade-enabled">
+      <td><a href="#crds-upgrade-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enables CRD upgrade job</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-env">
+      <td><a href="#crds-upgrade-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra settings for CRD upgrade job</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-extravolumemounts">
+      <td><a href="#crds-upgrade-extravolumemounts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.extraVolumeMounts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Additional upgrade job volume mounts</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-extravolumes">
+      <td><a href="#crds-upgrade-extravolumes"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.extraVolumes</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Additional upgrade job volumes</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-forceconflicts">
+      <td><a href="#crds-upgrade-forceconflicts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.forceConflicts</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Adds <code>--force-conflics</code> argument to kubectl</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-kubectl-image-pullpolicy">
+      <td><a href="#crds-upgrade-kubectl-image-pullpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.kubectl.image.pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
+    <tr id="crds-upgrade-kubectl-image-repository">
+      <td><a href="#crds-upgrade-kubectl-image-repository"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.kubectl.image.repository</span><span class="p">:</span><span class="w"> </span><span class="l">rancher/kubectl</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
+    <tr id="crds-upgrade-kubectl-image-tag">
+      <td><a href="#crds-upgrade-kubectl-image-tag"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.kubectl.image.tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
+    <tr id="crds-upgrade-labels">
+      <td><a href="#crds-upgrade-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Labels to add to the upgrade job</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-nodeselector">
+      <td><a href="#crds-upgrade-nodeselector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.nodeSelector</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Pod&rsquo;s node selector. Details are <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-podannotations">
+      <td><a href="#crds-upgrade-podannotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.podAnnotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Annotations to add to the upgrade job pod</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-podlabels">
+      <td><a href="#crds-upgrade-podlabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.podLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Labels to add to the upgrade job pod</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-podsecuritycontext">
+      <td><a href="#crds-upgrade-podsecuritycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.podSecurityContext</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">fsGroup</span><span class="p">:</span><span class="w"> </span><span class="m">65534</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runAsGroup</span><span class="p">:</span><span class="w"> </span><span class="m">65534</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="m">65534</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">seccompProfile</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">RuntimeDefault</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Pod&rsquo;s security context. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-resources">
+      <td><a href="#crds-upgrade-resources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.resources</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Upgrade job resources.</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-securitycontext">
+      <td><a href="#crds-upgrade-securitycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.securityContext</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">capabilities</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">drop</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="l">ALL</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Container-specific security context configuration. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-serviceaccount">
+      <td><a href="#crds-upgrade-serviceaccount"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.serviceAccount</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">automountServiceAccountToken</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Service account for upgrade CRD job to use.</p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-tolerations">
+      <td><a href="#crds-upgrade-tolerations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.tolerations</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of upgrade job tolerations object. Spec is <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="crds-upgrade-topologyspreadconstraints">
+      <td><a href="#crds-upgrade-topologyspreadconstraints"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.topologySpreadConstraints</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Upgrade job Pod Topology Spread Constraints. Spec is <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="env">

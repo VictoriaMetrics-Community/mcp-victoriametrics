@@ -1,6 +1,11 @@
 ## Next release
 
-- TODO
+- Bump KSM chart version 6.0.* -> 6.3.*
+- Bump node-exporter chart version 4.47.* -> 4.48.*
+- Bump grafana chart version 9.2.* -> 9.4.*
+- Upgrade dashboards
+- Allow optional scheme at `.Values.external.grafana.host`. Thanks to @a-bali for [initial implementation](https://github.com/VictoriaMetrics/helm-charts/pull/2439).
+- Allow overriding service labels for `kubedns`, `coredns`, `kube-controller-manager`, `kube-proxy`, `kube-scheduler`, `etcd`.
 
 ## 0.60.1
 

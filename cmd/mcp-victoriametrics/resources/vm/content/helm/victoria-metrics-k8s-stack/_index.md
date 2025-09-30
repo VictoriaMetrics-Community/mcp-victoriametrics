@@ -658,6 +658,12 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(bool)</code></em><p>Create service for CoreDNS metrics</p>
 </td>
     </tr>
+    <tr id="coredns-service-labels">
+      <td><a href="#coredns-service-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">coreDns.service.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>CoreDNS service labels</p>
+</td>
+    </tr>
     <tr id="coredns-service-port">
       <td><a href="#coredns-service-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">coreDns.service.port</span><span class="p">:</span><span class="w"> </span><span class="m">9153</span></span></span></code></pre>
 </a></td>
@@ -1413,6 +1419,12 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(bool)</code></em><p>Create service for kube controller manager metrics scraping</p>
 </td>
     </tr>
+    <tr id="kubecontrollermanager-service-labels">
+      <td><a href="#kubecontrollermanager-service-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">kubeControllerManager.service.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Kube controller manager service labels</p>
+</td>
+    </tr>
     <tr id="kubecontrollermanager-service-port">
       <td><a href="#kubecontrollermanager-service-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">kubeControllerManager.service.port</span><span class="p">:</span><span class="w"> </span><span class="m">10257</span></span></span></code></pre>
 </a></td>
@@ -1460,6 +1472,12 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#kubedns-service-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">kubeDns.service.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>Create Service for KubeDNS metrics</p>
+</td>
+    </tr>
+    <tr id="kubedns-service-labels">
+      <td><a href="#kubedns-service-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">kubeDns.service.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>KubeDNS service labels</p>
 </td>
     </tr>
     <tr id="kubedns-service-ports">
@@ -1513,6 +1531,12 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#kubeetcd-service-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">kubeEtcd.service.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>Enable service for ETCD metrics scraping</p>
+</td>
+    </tr>
+    <tr id="kubeetcd-service-labels">
+      <td><a href="#kubeetcd-service-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">kubeEtcd.service.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>ETCD service labels</p>
 </td>
     </tr>
     <tr id="kubeetcd-service-port">
@@ -1569,6 +1593,12 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(bool)</code></em><p>Enable service for kube proxy metrics scraping</p>
 </td>
     </tr>
+    <tr id="kubeproxy-service-labels">
+      <td><a href="#kubeproxy-service-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">kubeProxy.service.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Kube proxy service labels</p>
+</td>
+    </tr>
     <tr id="kubeproxy-service-port">
       <td><a href="#kubeproxy-service-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">kubeProxy.service.port</span><span class="p">:</span><span class="w"> </span><span class="m">10249</span></span></span></code></pre>
 </a></td>
@@ -1621,6 +1651,12 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#kubescheduler-service-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">kubeScheduler.service.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>Enable service for KubeScheduler metrics scrape</p>
+</td>
+    </tr>
+    <tr id="kubescheduler-service-labels">
+      <td><a href="#kubescheduler-service-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">kubeScheduler.service.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>KubeScheduler service labels</p>
 </td>
     </tr>
     <tr id="kubescheduler-service-port">

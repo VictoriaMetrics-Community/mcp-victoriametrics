@@ -146,6 +146,10 @@ This means that, with this `Tier` tou can collect metrics from:
 
 {{% /collapse %}}
 
+All tier limits are available in the VictoriaMetrics Cloud deployment overview page.
+
+![Deployment overview](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/tiers-and-types/tiers-and-types-deployment-overview.webp)
+
 ## Selecting Retention and Storage
 
 The last parameter needed to set up a deployment is the Storage needed for this deployment. Recommended

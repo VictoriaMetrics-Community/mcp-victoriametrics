@@ -1,7 +1,7 @@
 ---
 title: "Welcome to VictoriaMetrics Docs"
 layout: home
-description: "Landing page for docs visitors from marketing site."
+description: "Find here all the relevant, technical information about our open source and enterprise observability solutions that you’ll need to efficiently query and visualize your metrics, logs, and traces."
 
 intro:
   heading: "Welcome to the VictoriaMetrics Documentation"
