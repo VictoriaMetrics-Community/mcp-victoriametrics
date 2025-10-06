@@ -231,7 +231,7 @@ func (a *VMCloudAPIClient) ListDeploymentRuleFileNames(ctx context.Context, depl
 	if err := checkDeploymentID(deploymentID); err != nil {
 		return nil, err
 	}
-	return requestAPI[[]string](ctx, a, http.MethodGet, nil, "/api/v1/deployments", deploymentID, "rule-sets/files")
+	return requestAPI[[]string](ctx, a, http.MethodGet, nil, "/api/v1/deployments", deploymentID, "rule-sets", "files")
 }
 
 // GetDeploymentRuleFileContent retrieves the content of a specific alerting/recording rules file for a deployment by deployment ID and file name.
@@ -242,7 +242,7 @@ func (a *VMCloudAPIClient) GetDeploymentRuleFileContent(ctx context.Context, dep
 	if ruleFileName == "" {
 		return "", fmt.Errorf("rule file name cannot be empty")
 	}
-	return requestAPI[string](ctx, a, http.MethodGet, nil, "/api/v1/deployments", deploymentID, "rule-sets/files", ruleFileName)
+	return requestAPI[string](ctx, a, http.MethodGet, nil, "/api/v1/deployments", deploymentID, "rule-sets", "files", ruleFileName)
 }
 
 // UpdateDeploymentRuleFileContent updates the content of an existing alerting/recording rules file for a deployment by deployment ID and file name.
@@ -254,7 +254,7 @@ func (a *VMCloudAPIClient) UpdateDeploymentRuleFileContent(ctx context.Context, 
 		return fmt.Errorf("rule file name cannot be empty")
 	}
 	body := bytes.NewBufferString(content)
-	_, err := requestAPI[any](ctx, a, http.MethodPut, body, "/api/v1/deployments", deploymentID, "rule-sets", ruleFileName)
+	_, err := requestAPI[any](ctx, a, http.MethodPut, body, "/api/v1/deployments", deploymentID, "rule-sets", "files", ruleFileName)
 	if err != nil {
 		return fmt.Errorf("failed to update rule file %q for deployment %q: %w", ruleFileName, deploymentID, err)
 	}
@@ -270,7 +270,7 @@ func (a *VMCloudAPIClient) CreateDeploymentRuleFileContent(ctx context.Context, 
 		return fmt.Errorf("rule file name cannot be empty")
 	}
 	body := bytes.NewBufferString(content)
-	_, err := requestAPI[any](ctx, a, http.MethodPut, body, "/api/v1/deployments", deploymentID, "rule-sets/files", ruleFileName)
+	_, err := requestAPI[any](ctx, a, http.MethodPut, body, "/api/v1/deployments", deploymentID, "rule-sets", "files", ruleFileName)
 	if err != nil {
 		return fmt.Errorf("failed to update rule file %q for deployment %q: %w", ruleFileName, deploymentID, err)
 	}
@@ -285,7 +285,7 @@ func (a *VMCloudAPIClient) DeleteDeploymentRuleFile(ctx context.Context, deploym
 	if ruleFileName == "" {
 		return fmt.Errorf("rule file name cannot be empty")
 	}
-	_, err := requestAPI[any](ctx, a, http.MethodDelete, nil, "/api/v1/deployments", deploymentID, "rule-sets", ruleFileName)
+	_, err := requestAPI[any](ctx, a, http.MethodDelete, nil, "/api/v1/deployments", deploymentID, "rule-sets", "files", ruleFileName)
 	if err != nil {
 		return fmt.Errorf("failed to delete rule file %q for deployment %q: %w", ruleFileName, deploymentID, err)
 	}

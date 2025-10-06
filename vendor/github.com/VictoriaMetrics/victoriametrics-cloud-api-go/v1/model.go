@@ -297,6 +297,8 @@ type AccessToken struct {
 	CreatedAt time.Time `json:"created_at"`
 	// TenantID represents the unique identifier of the tenant associated with this access token (optional)
 	TenantID string `json:"tenant_id,omitempty"`
+	// Timestamp of the last usage of the access token (within the last 7 days)
+	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
 }
 
 // AccessTokenCreateRequest represents the request for creating an access token
