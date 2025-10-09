@@ -1,4 +1,4 @@
-# VictoriaMetrics MCP Server
+# <img width="25" height="25" alt="vm-community-icon" src="https://github.com/user-attachments/assets/1c060750-370a-4440-b619-78b78c7abd7a" /> VictoriaMetrics MCP Server
 
 [![Latest Release](https://img.shields.io/github/v/release/VictoriaMetrics-Community/mcp-victoriametrics?sort=semver&label=&filter=!*-victorialogs&logo=github&labelColor=gray&color=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics-Community%2Fmcp-victoriametrics%2Freleases%2Flatest)](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases)
 [![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/VictoriaMetrics-Community/mcp-victoriametrics)](https://archestra.ai/mcp-catalog/victoriametrics-community__mcp-victoriametrics)
