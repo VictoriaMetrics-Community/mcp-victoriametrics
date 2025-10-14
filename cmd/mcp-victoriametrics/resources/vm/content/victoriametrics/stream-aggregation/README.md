@@ -7,15 +7,15 @@ sitemap:
   disable: true
 ---
 [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) and [single-node VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/)
-can aggregate incoming [samples](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#raw-samples) in streaming mode by time and by labels before data is written to remote storage
+can aggregate incoming [samples](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#raw-samples) in streaming mode **by time** and **by labels** before data is written to remote storage
 (or local storage for single-node VictoriaMetrics).
 The aggregation is applied to all the metrics received via any [supported data ingestion protocol](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#how-to-import-time-series-data)
-and/or scraped from [Prometheus-compatible targets](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#how-to-scrape-prometheus-exporters-such-as-node-exporter)
-after applying all the configured [relabeling stages](https://docs.victoriametrics.com/victoriametrics/relabeling/).
+and/or scraped from [Prometheus-compatible targets](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#how-to-scrape-prometheus-exporters-such-as-node-exporter),
+and allows building [flexible processing pipelines](#routing). 
 
-**By default, stream aggregation ignores timestamps associated with the input [samples](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#raw-samples). It expects that the ingested samples have timestamps close to the current time. See [how to ignore old samples](#ignoring-old-samples).**
+> By default, stream aggregation ignores timestamps associated with the input [samples](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#raw-samples). It expects that the ingested samples have timestamps close to the current time. See [how to ignore old samples](#ignoring-old-samples).
 
-**If `-streamAggr.dedupInterval` is enabled, out-of-order samples (older than already received) within the configured interval are treated as duplicates and ignored. See  [de-duplication](#deduplication).**
+> If `-streamAggr.dedupInterval` is enabled, out-of-order samples (older than already received) within the configured interval are treated as duplicates and ignored. See  [de-duplication](#deduplication).
 
 # Use cases
 
@@ -330,18 +330,7 @@ deduplication and stream aggregation for all the received data, scraped or pushe
 The processed data is then stored in local storage and **can't be forwarded further**.
 
 [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) supports relabeling, deduplication and stream aggregation for all 
-the received data, scraped or pushed. Then, the collected data will be forwarded to specified `-remoteWrite.url` destinations.
-The data processing order is the following:
-
-1. all the received data is relabeled according to the specified [`-remoteWrite.relabelConfig`](https://docs.victoriametrics.com/victoriametrics/relabeling/) (if it is set)
-1. all the received data is deduplicated according to specified [`-streamAggr.dedupInterval`](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/#deduplication)
-   (if it is set to duration bigger than 0)
-1. all the received data is aggregated according to specified [`-streamAggr.config`](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/#configuration) (if it is set)
-1. the resulting data is then replicated to each `-remoteWrite.url`
-1. data sent to each `-remoteWrite.url` can be additionally relabeled according to the corresponding `-remoteWrite.urlRelabelConfig` (set individually per URL)
-1. data sent to each `-remoteWrite.url` can be additionally deduplicated according to the corresponding `-remoteWrite.streamAggr.dedupInterval` (set individually per URL)
-1. data sent to each `-remoteWrite.url` can be additionally aggregated according to the corresponding `-remoteWrite.streamAggr.config` (set individually per URL)
-   It isn't recommended using `-streamAggr.config` and `-remoteWrite.streamAggr.config` simultaneously, unless you understand the complications.
+the received data, scraped or pushed. See the [processing order for vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/#life-of-a-sample).
 
 Typical scenarios for data routing with `vmagent`:
 

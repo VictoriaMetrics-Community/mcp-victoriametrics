@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.0.13-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-cluster%2Fchangelog%2F%230013)
+![Version](https://img.shields.io/badge/0.0.15-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-cluster%2Fchangelog%2F%230015)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-logs-cluster)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -1495,10 +1495,10 @@ Change the values according to the need of the environment in ``victoria-logs-cl
       <td><em><code>(string)</code></em><p>Existing Claim name. Requires vlstorage.persistentVolume.enabled: true. If defined, PVC must be created manually before volume will be bound</p>
 </td>
     </tr>
-    <tr id="vlstorage-persistentvolume-labels">
-      <td><a href="#vlstorage-persistentvolume-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlstorage.persistentVolume.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+    <tr id="vlstorage-persistentvolume-extralabels">
+      <td><a href="#vlstorage-persistentvolume-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlstorage.persistentVolume.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Persistent volume labels</p>
+      <td><em><code>(object)</code></em><p>Persistent volume extra labels</p>
 </td>
     </tr>
     <tr id="vlstorage-persistentvolume-mountpath">

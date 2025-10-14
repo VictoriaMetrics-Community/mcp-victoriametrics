@@ -6,7 +6,6 @@ authors:
   - Artem Navoiev
 date: 2025-09-26
 enableComments: true
-featuredPost: true
 title: "VictoriaMetrics Long-Term Support (LTS): H2 2025 Update"
 summary: "As we’re half-way through the year, we’d like to take this opportunity to provide an update on the most recent changes in our Long-Term Support (LTS) releases."
 categories: 
