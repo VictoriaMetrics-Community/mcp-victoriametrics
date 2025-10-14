@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.25.10-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-agent%2Fchangelog%2F%2302510)
+![Version](https://img.shields.io/badge/0.26.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-agent%2Fchangelog%2F%230261)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-agent)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -1122,6 +1122,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Security context to be added to pod&rsquo;s containers</p>
 </td>
     </tr>
+    <tr id="selectorlabels">
+      <td><a href="#selectorlabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">selectorLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Extra selector labels common for pod and service</p>
+</td>
+    </tr>
     <tr id="service-annotations">
       <td><a href="#service-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">service.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -1192,6 +1198,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#service-loadbalancersourceranges"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">service.loadBalancerSourceRanges</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>Load balancer source range</p>
+</td>
+    </tr>
+    <tr id="service-selectorlabels">
+      <td><a href="#service-selectorlabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">service.selectorLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Extra selector labels common for service only</p>
 </td>
     </tr>
     <tr id="service-serviceport">

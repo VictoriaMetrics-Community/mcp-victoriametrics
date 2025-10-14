@@ -49,11 +49,11 @@ See how to [write](#write-data) or [read](#read-data) from VictoriaTraces.
 
 - Download the correct binary for your OS and architecture from [GitHub](https://github.com/VictoriaMetrics/VictoriaTraces/releases/). Here's an example for `Linux/amd64`:
 ```sh
-curl -L -O https://github.com/VictoriaMetrics/VictoriaTraces/releases/download/v0.3.0/victoria-traces-linux-amd64-v0.3.0.tar.gz
+curl -L -O https://github.com/VictoriaMetrics/VictoriaTraces/releases/download/v0.4.0/victoria-traces-linux-amd64-v0.4.0.tar.gz
 ```
 - Extract the archive by running:
 ```sh
-tar -xvf victoria-traces-linux-amd64-v0.3.0.tar.gz
+tar -xvf victoria-traces-linux-amd64-v0.4.0.tar.gz
 ```
 - Go to the binary's folder and start VictoriaTraces:
 ```sh
@@ -121,7 +121,7 @@ It is recommended to set up monitoring of these metrics via VictoriaMetrics
 (see [these docs](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#how-to-scrape-prometheus-exporters-such-as-node-exporter)),
 vmagent (see [these docs](https://docs.victoriametrics.com/victoriametrics/vmagent/#how-to-collect-metrics-in-prometheus-format)) or via Prometheus.
 
-We recommend installing Grafana dashboard for [VictoriaTraces single-node](https://github.com/VictoriaMetrics/VictoriaTraces/blob/master/dashboards/victoriatraces.json) or [cluster](https://github.com/VictoriaMetrics/VictoriaTraces/blob/master/dashboards/victoriatraces-cluster.json).
+We recommend installing Grafana dashboard for [VictoriaTraces single-node](https://grafana.com/grafana/dashboards/24136) or [cluster](https://grafana.com/grafana/dashboards/24134).
 
 We recommend setting up [alerts](https://github.com/VictoriaMetrics/VictoriaTraces/blob/master/deployment/docker/rules/alerts-vtraces.yml)
 via [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/) or via Prometheus.

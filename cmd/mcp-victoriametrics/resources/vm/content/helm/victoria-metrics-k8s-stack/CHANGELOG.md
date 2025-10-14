@@ -1,11 +1,69 @@
 ## Next release
 
-- Bump KSM chart version 6.0.* -> 6.3.*
-- Bump node-exporter chart version 4.47.* -> 4.48.*
-- Bump grafana chart version 9.2.* -> 9.4.*
-- Upgrade dashboards
-- Allow optional scheme at `.Values.external.grafana.host`. Thanks to @a-bali for [initial implementation](https://github.com/VictoriaMetrics/helm-charts/pull/2439).
-- Allow overriding service labels for `kubedns`, `coredns`, `kube-controller-manager`, `kube-proxy`, `kube-scheduler`, `etcd`.
+- bump grafana dependency chart to version 10.1.0
+
+## 0.61.6
+
+**Release date:** 10 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.127.0](https://img.shields.io/badge/v1.127.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11270)
+
+- compact expression for all rules
+
+## 0.61.5
+
+**Release date:** 10 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.127.0](https://img.shields.io/badge/v1.127.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11270)
+
+- updated ETA panels in VictoriaMetrics dashboards. See [#2474](https://github.com/VictoriaMetrics/helm-charts/issues/2474).
+
+## 0.61.4
+
+**Release date:** 10 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.127.0](https://img.shields.io/badge/v1.127.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11270)
+
+- fixed conditions conditions generations for rules and dashboards. See [#2472](https://github.com/VictoriaMetrics/helm-charts/issues/2472).
+
+## 0.61.3
+
+**Release date:** 09 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.127.0](https://img.shields.io/badge/v1.127.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11270)
+
+- fixed `cluster` variable for dashboards, when `.Values.grafana.sidecar.dashboards.multicluster: false`. See [#2468](https://github.com/VictoriaMetrics/helm-charts/issues/2468).
+
+## 0.61.2
+
+**Release date:** 09 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.127.0](https://img.shields.io/badge/v1.127.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11270)
+
+- fixed metricsql expressions filter update in a hack tool.
+
+## 0.61.1
+
+**Release date:** 09 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.127.0](https://img.shields.io/badge/v1.127.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11270)
+
+- Added vmalert rules. See [#2465](https://github.com/VictoriaMetrics/helm-charts/issues/2465).
+
+## 0.61.0
+
+**Release date:** 08 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.127.0](https://img.shields.io/badge/v1.127.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%23v11270)
+
+- bump KSM chart version 6.0.* -> 6.3.*
+- bump node-exporter chart version 4.47.* -> 4.48.*
+- bump grafana chart version 9.2.* -> 9.4.*
+- upgrade dashboards
+- allow optional scheme at `.Values.external.grafana.host`. Thanks to @a-bali for [initial implementation](https://github.com/VictoriaMetrics/helm-charts/pull/2439).
+- allow overriding service labels for `kubedns`, `coredns`, `kube-controller-manager`, `kube-proxy`, `kube-scheduler`, `etcd`.
+- bump version of VM components to [v1.127.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.127.0)
+- replaced python scripts for dashboards and rules templates generation with golang tool, that uses metricsql library instead of regexp to properly update all expressions with additional labels and produces more compact output.
 
 ## 0.60.1
 

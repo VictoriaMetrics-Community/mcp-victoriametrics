@@ -107,7 +107,7 @@ It is recommended to set up monitoring of these metrics via VictoriaMetrics
 (see [these docs](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#how-to-scrape-prometheus-exporters-such-as-node-exporter)),
 vmagent (see [these docs](https://docs.victoriametrics.com/victoriametrics/vmagent/#how-to-collect-metrics-in-prometheus-format)) or via Prometheus.
 
-We recommend installing Grafana dashboard for [VictoriaTraces single-node](https://grafana.com/grafana/dashboards/todo) or [cluster](https://grafana.com/grafana/dashboards/todo).
+We recommend installing Grafana dashboard for [VictoriaTraces single-node](https://grafana.com/grafana/dashboards/24136) or [cluster](https://grafana.com/grafana/dashboards/24134).
 
 We recommend setting up [alerts](https://github.com/VictoriaMetrics/VictoriaTraces/blob/master/deployment/docker/rules/alerts-vtraces.yml)
 via [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/) or via Prometheus.
@@ -498,6 +498,8 @@ It is recommended protecting internal HTTP endpoints from unauthorized access:
   -retentionPeriod value
     	Trace spans with timestamps older than now-retentionPeriod are automatically deleted; trace spans with timestamps outside the retention are also rejected during data ingestion; the minimum supported retention is 1d (one day); see https://docs.victoriametrics.com/victoriatraces/#retention ; see also -retention.maxDiskSpaceUsageBytes and -retention.maxDiskUsagePercent
     	The following optional suffixes are supported: s (second), h (hour), d (day), w (week), y (year). If suffix isn't set, then the duration is counted in months (default 7d)
+  -search.allowPartialResponse
+    	Whether to allow returning partial responses when some of vtstorage nodes from the -storageNode list are unavailable for querying. This flag works only for cluster setup of VictoriaTraces. See https://docs.victoriametrics.com/victorialogs/querying/#partial-responses
   -search.maxConcurrentRequests int
     	The maximum number of concurrent search requests. It shouldn't be high, since a single request can saturate all the CPU cores, while many concurrently executed requests may require high amounts of memory. See also -search.maxQueueDuration (default 8)
   -search.maxQueryDuration duration
@@ -521,6 +523,16 @@ It is recommended protecting internal HTTP endpoints from unauthorized access:
     	Whether to disable /select/* HTTP endpoints
   -select.disableCompression
     	Whether to disable compression for select query responses received from -storageNode nodes. Disabled compression reduces CPU usage at the cost of higher network usage
+  -servicegraph.enableTask
+    	Whether to enable background task for generating service graph. It should only be enabled on VictoriaTraces single-node or vtstorage.
+  -servicegraph.taskInterval duration
+    	The background task interval for generating service graph data. It requires setting -servicegraph.enableTask=true. (default 1m0s)
+  -servicegraph.taskLimit uint
+    	How many service graph relations each task could fetch for each tenant. It requires setting -servicegraph.enableTask=true. (default 1000)
+  -servicegraph.taskLookbehind duration
+    	The lookbehind window for each time service graph background task run. It requires setting -servicegraph.enableTask=true. (default 1m0s)
+  -servicegraph.taskTimeout duration
+    	The background task timeout duration for generating service graph data. It requires setting -servicegraph.enableTask=true. (default 30s)
   -storage.minFreeDiskSpaceBytes size
     	The minimum free disk space at -storageDataPath after which the storage stops accepting new data
     	Supports the following optional suffixes for size values: KB, MB, GB, TB, KiB, MiB, GiB, TiB (default 10000000)

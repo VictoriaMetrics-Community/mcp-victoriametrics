@@ -382,13 +382,13 @@ Each push to a remote storage has its own manager, known as the "remote write co
 Let's run through this quickly:
 
 - First, we apply relabeling again, but this time it's for each remote storage URL (`-remoteWrite.urlRelabelConfig`).
+- Second, deduplication is applied (`-remoteWrite.streamAggr.dedupInterval`).
 - Then, we apply stream aggregation (`-remoteWrite.streamAggr.config`). Just a heads-up, we don't recommend mixing global stream aggregation with per-remote-storage stream aggregation unless you really know what you're doing.
-- After that, deduplication is applied (`-remoteWrite.streamAggr.dedupInterval`).
 
 ![Per remote storage processing](/blog/vmagent-how-it-works/vmagent-fine-grained-per-url.webp)
 <figcaption style="text-align: center; font-style: italic;">Per remote storage processing</figcaption>
 
-Next, we add global labels (`-remoteWrite.label`) to all the time series data. These labels are applied no matter what relabeling happens at the remote storage level.
+Finally, we add global labels (`-remoteWrite.label`) to all the time series data. These labels are applied no matter what relabeling happens at the remote storage level.
 
 Now, we're done with modifying labels, but we still need to tweak the sample values.
 
