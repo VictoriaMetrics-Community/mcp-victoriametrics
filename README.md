@@ -88,6 +88,7 @@ docker run -d --name mcp-victoriametrics \
   -e MCP_SERVER_MODE=sse \
   -e VM_INSTANCE_ENTRYPOINT=https://play.victoriametrics.com \
   -e VM_INSTANCE_TYPE=cluster \
+  -e MCP_LISTEN_ADDR=:8080 \
   -p 8080:8080 \
   ghcr.io/victoriametrics-community/mcp-victoriametrics
 ```
