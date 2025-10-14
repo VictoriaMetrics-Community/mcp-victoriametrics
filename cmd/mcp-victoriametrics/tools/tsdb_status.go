@@ -48,7 +48,7 @@ This tool returns TSDB stats from "/api/v1/status/tsdb" endpoint of VictoriaMetr
 				mcp.Title("Tenant name"),
 				mcp.Description("Name of the tenant for which the TSDB stats will be displayed"),
 				mcp.DefaultString("0"),
-				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+				mcp.Pattern(`^([0-9]+)(:[0-9]+)?$`),
 			),
 		)
 	}

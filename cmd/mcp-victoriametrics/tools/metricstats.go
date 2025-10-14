@@ -40,7 +40,7 @@ func toolMetricStats(c *config.Config) mcp.Tool {
 				mcp.Title("Tenant name"),
 				mcp.Description("Name of the tenant for which the metric query statistics will be displayed"),
 				mcp.DefaultString("0"),
-				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+				mcp.Pattern(`^([0-9]+)(:[0-9]+)?$`),
 			),
 		)
 	}

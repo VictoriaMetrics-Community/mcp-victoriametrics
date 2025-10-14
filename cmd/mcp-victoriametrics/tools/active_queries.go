@@ -40,7 +40,7 @@ This information is obtained from the "/api/v1/status/active_queries" HTTP endpo
 				mcp.Title("Tenant name"),
 				mcp.Description("Name of the tenant for which the active queries will be displayed"),
 				mcp.DefaultString("0"),
-				mcp.Pattern(`^([0-9]+)(\:[0-9]+)?$`),
+				mcp.Pattern(`^([0-9]+)(:[0-9]+)?$`),
 			),
 		)
 	}
