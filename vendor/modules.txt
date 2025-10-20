@@ -381,8 +381,8 @@ github.com/rivo/uniseg
 ## explicit; go 1.21.0
 github.com/spf13/cast
 github.com/spf13/cast/internal
-# github.com/tmc/langchaingo v0.1.13
-## explicit; go 1.22.0
+# github.com/tmc/langchaingo v0.1.14
+## explicit; go 1.24.4
 github.com/tmc/langchaingo/llms
 github.com/tmc/langchaingo/schema
 github.com/tmc/langchaingo/textsplitter
@@ -437,7 +437,7 @@ go.etcd.io/bbolt/internal/common
 go.etcd.io/bbolt/internal/freelist
 # go.yaml.in/yaml/v2 v2.4.2
 ## explicit; go 1.15
-# golang.org/x/net v0.42.0
+# golang.org/x/net v0.43.0
 ## explicit; go 1.23.0
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
@@ -460,7 +460,7 @@ golang.org/x/sys/cpu
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
-# golang.org/x/text v0.27.0
+# golang.org/x/text v0.28.0
 ## explicit; go 1.23.0
 golang.org/x/text/unicode/rangetable
 # google.golang.org/protobuf v1.36.9
