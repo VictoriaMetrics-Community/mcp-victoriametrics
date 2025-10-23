@@ -13,8 +13,10 @@ aliases:
 
 ## tip
 
+* SECURITY: upgrade Go builder from Go1.25.0 to Go1.25.3. See [the list of issues addressed in Go1.25.3](https://github.com/golang/go/issues?q=milestone%3AGo1.25.3+label%3ACherryPickApproved).
+
 * Dependency: [vmoperator](https://docs.victoriametrics.com/operator/): Updated default versions for VL apps to [v1.36.1](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.36.1).
-* Dependency: [vmoperator](https://docs.victoriametrics.com/operator/): Updated default versions for VM apps to [v1.127.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.127.0) version
+* Dependency: [vmoperator](https://docs.victoriametrics.com/operator/): Updated default versions for VM apps to [v1.128.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.128.0) version
 * Dependency: [vmoperator](https://docs.victoriametrics.com/operator/): Updated default versions for VT apps to [v0.4.0](https://github.com/VictoriaMetrics/VictoriaTraces/releases/tag/v0.4.0) version
 * Dependency: [vmoperator](https://docs.victoriametrics.com/operator/): Updated default versions for VMAnomaly to [v1.26.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1261) version
 
@@ -22,8 +24,15 @@ aliases:
 * FEATURE: [vmoperator](https://docs.victoriametrics.com/operator/): add `unhealthyPodEvictionPolicy` to the `podDisruptionBudget` specification. See this issue [#1534](https://github.com/VictoriaMetrics/operator/issues/1534) for details.
 * FEATURE: [vmoperator](https://docs.victoriametrics.com/operator/): add `rollingUpdate` and `updateStrategy` fields to `VMAuth.spec`, `VMCluster.spec.requestsLoadBalancer.spec`, `VLCluster.spec.requestsLoadBalancer.spec` and `VTCluster.spec.requestsLoadBalancer.spec`. See this issue [#1540](https://github.com/VictoriaMetrics/operator/issues/1540) for details.
 * FEATURE: [vmoperator](https://docs.victoriametrics.com/operator/): preserve 3rd party `labels` on object during `reconcile`. Previously, operator allowed to keep only `managedMetadata.labels`. See this issue [#1533](https://github.com/VictoriaMetrics/operator/issues/1533). Thanks to the @lllamnyp
+* FEATURE: [VLCluster](https://docs.victoriametrics.com/operator/resources/vlcluster/): added `spec.vlselect.extraStorageNodes` to specify list of additional storage nodes, that are available for select only.
+* FEATURE: [VTCluster](https://docs.victoriametrics.com/operator/resources/vtcluster/): added `spec.vtselect.extraStorageNodes` to specify list of additional storage nodes, that are available for select only.
+* FEATURE: [vmagent](https://docs.victoriametrics.com/operator/resources/vmagent/): add `scrapeClass` spec definition and `scrapeClassName` reference to the `VMServiceScrape`, `VMPodScrape`, `VMProbe`, `VMScrapeConfig`, `VMStaticScrape` and `VMNodeScrape`. See this issue [#1531](https://github.com/VictoriaMetrics/operator/issues/1531) for details. Thanks to the @endesapt.
 
+* BUGFIX: [vmoperator](https://docs.victoriametrics.com/operator/): properly generate `oauth2` configuration with missing `clientID`. Previously, it could break whole config generation. See this PR [#1563](https://github.com/VictoriaMetrics/operator/pull/1563) for details.
 * BUGFIX: [vmoperator](https://docs.victoriametrics.com/operator/): fix an issue where the return value from a couple of controllers was always `nil`. See [#1532](https://github.com/VictoriaMetrics/operator/pull/1532) for details.
+* BUGFIX: [VMCluster](https://docs.victoriametrics.com/operator/resources/vmcluster/): emit warning if `vmcluster.spec.vmselect.persistentVolume` is set, previously it was emitted for `vmcluster.spec.vmselect.storage`.
+* BUGFIX: [vmoperator](https://docs.victoriametrics.com/operator/): Prevent endless Service reconcile loop by correctly track changes to Service.spec.LoadBalancerClass. See this issue [#1550](https://github.com/VictoriaMetrics/operator/issues/1550) for details.
+
 
 ## [v0.63.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.63.0)
 

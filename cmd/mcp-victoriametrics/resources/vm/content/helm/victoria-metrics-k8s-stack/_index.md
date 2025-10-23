@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.61.6-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230616)
+![Version](https://img.shields.io/badge/0.61.10-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%2306110)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-k8s-stack)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -601,6 +601,81 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Better alert templates for <a href="https://gist.github.com/milesbxf/e2744fc90e9c41b47aa47925f8ff6512" target="_blank">slack source</a></p>
 </td>
     </tr>
+    <tr id="alertmanager-route">
+      <td><a href="#alertmanager-route"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.alertmanager.spec.routePrefix | default &#34;/&#34; }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.alertmanager.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VMAlertmanager route configuration</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-annotations">
+      <td><a href="#alertmanager-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-enabled">
+      <td><a href="#alertmanager-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for alertmanager component</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-extrarules">
+      <td><a href="#alertmanager-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-filters">
+      <td><a href="#alertmanager-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-hostnames">
+      <td><a href="#alertmanager-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-labels">
+      <td><a href="#alertmanager-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-matches">
+      <td><a href="#alertmanager-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.alertmanager.spec.routePrefix | default &#34;/&#34; }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-parentrefs">
+      <td><a href="#alertmanager-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-port">
+      <td><a href="#alertmanager-route-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.alertmanager.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
     <tr id="alertmanager-spec">
       <td><a href="#alertmanager-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">configSecret</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
@@ -691,8 +766,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">http-metrics</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">jobLabel</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="l">kube-system</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Spec for VMServiceScrape CRD is <a href="https://docs.victoriametrics.com/operator/api/#vmservicescrapespec" target="_blank">here</a></p>
 </td>
@@ -1204,6 +1278,11 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(string)</code></em><p>Runbook url prefix for default rules</p>
 </td>
     </tr>
+    <tr id="defaultscrapeservice-namespace">
+      <td><a href="#defaultscrapeservice-namespace"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultScrapeService.namespace</span><span class="p">:</span><span class="w"> </span><span class="l">kube-system</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
     <tr id="external-grafana-datasource">
       <td><a href="#external-grafana-datasource"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">external.grafana.datasource</span><span class="p">:</span><span class="w"> </span><span class="l">VictoriaMetrics</span></span></span></code></pre>
 </a></td>
@@ -1456,8 +1535,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">serverName</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">jobLabel</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="l">kube-system</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Spec for VMServiceScrape CRD is <a href="https://docs.victoriametrics.com/operator/api/#vmservicescrapespec" target="_blank">here</a></p>
 </td>
@@ -1509,8 +1587,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">http-metrics-skydns</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">jobLabel</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="l">kube-system</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Spec for VMServiceScrape CRD is <a href="https://docs.victoriametrics.com/operator/api/#vmservicescrapespec" target="_blank">here</a></p>
 </td>
@@ -1569,8 +1646,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">caFile</span><span class="p">:</span><span class="w"> </span><span class="l">/var/run/secrets/kubernetes.io/serviceaccount/ca.crt</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">jobLabel</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="l">kube-system</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Spec for VMServiceScrape CRD is <a href="https://docs.victoriametrics.com/operator/api/#vmservicescrapespec" target="_blank">here</a></p>
 </td>
@@ -1629,8 +1705,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">caFile</span><span class="p">:</span><span class="w"> </span><span class="l">/var/run/secrets/kubernetes.io/serviceaccount/ca.crt</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">jobLabel</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="l">kube-system</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Spec for VMServiceScrape CRD is <a href="https://docs.victoriametrics.com/operator/api/#vmservicescrapespec" target="_blank">here</a></p>
 </td>
@@ -1689,8 +1764,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">caFile</span><span class="p">:</span><span class="w"> </span><span class="l">/var/run/secrets/kubernetes.io/serviceaccount/ca.crt</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">jobLabel</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="l">kube-system</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchNames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Spec for VMServiceScrape CRD is <a href="https://docs.victoriametrics.com/operator/api/#vmservicescrapespec" target="_blank">here</a></p>
 </td>
@@ -1945,6 +2019,81 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(object)</code></em><p>VMAgent labels</p>
 </td>
     </tr>
+    <tr id="vmagent-route">
+      <td><a href="#vmagent-route"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.route</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;spec&#34; &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vmagent }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmagent.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VMAgent route configuration</p>
+</td>
+    </tr>
+    <tr id="vmagent-route-annotations">
+      <td><a href="#vmagent-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vmagent-route-enabled">
+      <td><a href="#vmagent-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for vmagent component</p>
+</td>
+    </tr>
+    <tr id="vmagent-route-extrarules">
+      <td><a href="#vmagent-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vmagent-route-filters">
+      <td><a href="#vmagent-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmagent-route-hostnames">
+      <td><a href="#vmagent-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vmagent-route-labels">
+      <td><a href="#vmagent-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vmagent-route-matches">
+      <td><a href="#vmagent-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;spec&#34; &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vmagent }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmagent-route-parentrefs">
+      <td><a href="#vmagent-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vmagent-route-port">
+      <td><a href="#vmagent-route-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.route.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmagent.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
     <tr id="vmagent-spec">
       <td><a href="#vmagent-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">externalLabels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
@@ -2007,6 +2156,81 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#vmalert-remotewritevmagent"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.remoteWriteVMAgent</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>Controls whether VMAlert should use VMAgent or VMInsert as a target for remotewrite</p>
+</td>
+    </tr>
+    <tr id="vmalert-route">
+      <td><a href="#vmalert-route"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.route</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;spec&#34; &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vmalert }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmalert.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VMAlert route configuration</p>
+</td>
+    </tr>
+    <tr id="vmalert-route-annotations">
+      <td><a href="#vmalert-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vmalert-route-enabled">
+      <td><a href="#vmalert-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for vmalert component</p>
+</td>
+    </tr>
+    <tr id="vmalert-route-extrarules">
+      <td><a href="#vmalert-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vmalert-route-filters">
+      <td><a href="#vmalert-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmalert-route-hostnames">
+      <td><a href="#vmalert-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vmalert-route-labels">
+      <td><a href="#vmalert-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vmalert-route-matches">
+      <td><a href="#vmalert-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;spec&#34; &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vmalert }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmalert-route-parentrefs">
+      <td><a href="#vmalert-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vmalert-route-port">
+      <td><a href="#vmalert-route-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.route.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmalert.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
 </td>
     </tr>
     <tr id="vmalert-spec">
@@ -2250,6 +2474,177 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(object)</code></em><p>VMCluster labels</p>
 </td>
     </tr>
+    <tr id="vmcluster-route-insert-annotations">
+      <td><a href="#vmcluster-route-insert-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.insert.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-insert-enabled">
+      <td><a href="#vmcluster-route-insert-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.insert.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for insert component</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-insert-extrarules">
+      <td><a href="#vmcluster-route-insert-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.insert.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-insert-filters">
+      <td><a href="#vmcluster-route-insert-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.insert.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-insert-hostnames">
+      <td><a href="#vmcluster-route-insert-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.insert.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-insert-labels">
+      <td><a href="#vmcluster-route-insert-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.insert.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-insert-matches">
+      <td><a href="#vmcluster-route-insert-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.insert.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vmcluster.spec.vminsert }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-insert-parentrefs">
+      <td><a href="#vmcluster-route-insert-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.insert.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-insert-port">
+      <td><a href="#vmcluster-route-insert-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.insert.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmcluster.spec.vminsert.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-select-annotations">
+      <td><a href="#vmcluster-route-select-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.select.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-select-enabled">
+      <td><a href="#vmcluster-route-select-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.select.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for select component</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-select-extrarules">
+      <td><a href="#vmcluster-route-select-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.select.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-select-filters">
+      <td><a href="#vmcluster-route-select-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.select.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-select-hostnames">
+      <td><a href="#vmcluster-route-select-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.select.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-select-labels">
+      <td><a href="#vmcluster-route-select-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.select.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-select-matches">
+      <td><a href="#vmcluster-route-select-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.select.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vmcluster.spec.vmselect }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-select-parentrefs">
+      <td><a href="#vmcluster-route-select-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.select.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-select-port">
+      <td><a href="#vmcluster-route-select-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.select.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmcluster.spec.vmselect.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-storage-annotations">
+      <td><a href="#vmcluster-route-storage-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.storage.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-storage-enabled">
+      <td><a href="#vmcluster-route-storage-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.storage.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for storage component</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-storage-extrarules">
+      <td><a href="#vmcluster-route-storage-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.storage.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-storage-filters">
+      <td><a href="#vmcluster-route-storage-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.storage.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-storage-hostnames">
+      <td><a href="#vmcluster-route-storage-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.storage.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-storage-labels">
+      <td><a href="#vmcluster-route-storage-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.storage.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-storage-matches">
+      <td><a href="#vmcluster-route-storage-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.storage.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vmcluster.spec.vmstorage }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-storage-parentrefs">
+      <td><a href="#vmcluster-route-storage-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.storage.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vmcluster-route-storage-port">
+      <td><a href="#vmcluster-route-storage-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.route.storage.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmcluster.spec.vmstorage.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
     <tr id="vmcluster-spec">
       <td><a href="#vmcluster-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">replicationFactor</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
@@ -2375,6 +2770,63 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#vmsingle-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>VMSingle labels</p>
+</td>
+    </tr>
+    <tr id="vmsingle-route-annotations">
+      <td><a href="#vmsingle-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vmsingle-route-enabled">
+      <td><a href="#vmsingle-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for server component</p>
+</td>
+    </tr>
+    <tr id="vmsingle-route-extrarules">
+      <td><a href="#vmsingle-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vmsingle-route-filters">
+      <td><a href="#vmsingle-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmsingle-route-hostnames">
+      <td><a href="#vmsingle-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vmsingle-route-labels">
+      <td><a href="#vmsingle-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vmsingle-route-matches">
+      <td><a href="#vmsingle-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;spec&#34; &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vmsingle }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmsingle-route-parentrefs">
+      <td><a href="#vmsingle-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vmsingle-route-port">
+      <td><a href="#vmsingle-route-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.route.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmsingle.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
 </td>
     </tr>
     <tr id="vmsingle-spec">
