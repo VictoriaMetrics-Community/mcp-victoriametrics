@@ -1,17 +1,17 @@
-# cloud.google.com/go/compute/metadata v0.7.0
-## explicit; go 1.23.0
+# cloud.google.com/go/compute/metadata v0.9.0
+## explicit; go 1.24.0
 cloud.google.com/go/compute/metadata
 # github.com/RoaringBitmap/roaring/v2 v2.10.0
 ## explicit; go 1.15
 github.com/RoaringBitmap/roaring/v2
 github.com/RoaringBitmap/roaring/v2/internal
 github.com/RoaringBitmap/roaring/v2/roaring64
-# github.com/VictoriaMetrics/VictoriaLogs v0.0.0-20250728123024-98593029b5aa
-## explicit; go 1.24.5
+# github.com/VictoriaMetrics/VictoriaLogs v1.36.2-0.20251008164716-21c0fb3de84d
+## explicit; go 1.25.2
 github.com/VictoriaMetrics/VictoriaLogs/lib/logstorage
 github.com/VictoriaMetrics/VictoriaLogs/lib/prefixfilter
-# github.com/VictoriaMetrics/VictoriaMetrics v1.127.0
-## explicit; go 1.25.1
+# github.com/VictoriaMetrics/VictoriaMetrics v1.128.0
+## explicit; go 1.25.3
 github.com/VictoriaMetrics/VictoriaMetrics/app/victoria-metrics/test
 github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert-tool/unittest
 github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/config
@@ -192,7 +192,7 @@ github.com/bahlo/generic-list-go
 # github.com/bits-and-blooms/bitset v1.24.0
 ## explicit; go 1.16
 github.com/bits-and-blooms/bitset
-# github.com/blevesearch/bleve/v2 v2.5.3
+# github.com/blevesearch/bleve/v2 v2.5.4
 ## explicit; go 1.23
 github.com/blevesearch/bleve/v2
 github.com/blevesearch/bleve/v2/analysis
@@ -211,6 +211,7 @@ github.com/blevesearch/bleve/v2/analysis/token/stop
 github.com/blevesearch/bleve/v2/analysis/tokenizer/single
 github.com/blevesearch/bleve/v2/analysis/tokenizer/unicode
 github.com/blevesearch/bleve/v2/document
+github.com/blevesearch/bleve/v2/fusion
 github.com/blevesearch/bleve/v2/geo
 github.com/blevesearch/bleve/v2/index/scorch
 github.com/blevesearch/bleve/v2/index/scorch/mergeplan
@@ -233,7 +234,7 @@ github.com/blevesearch/bleve/v2/search/scorer
 github.com/blevesearch/bleve/v2/search/searcher
 github.com/blevesearch/bleve/v2/size
 github.com/blevesearch/bleve/v2/util
-# github.com/blevesearch/bleve_index_api v1.2.9
+# github.com/blevesearch/bleve_index_api v1.2.10
 ## explicit; go 1.21
 github.com/blevesearch/bleve_index_api
 # github.com/blevesearch/geo v0.2.4
@@ -256,7 +257,7 @@ github.com/blevesearch/gtreap
 # github.com/blevesearch/mmap-go v1.0.4
 ## explicit; go 1.13
 github.com/blevesearch/mmap-go
-# github.com/blevesearch/scorch_segment_api/v2 v2.3.11
+# github.com/blevesearch/scorch_segment_api/v2 v2.3.12
 ## explicit; go 1.21
 github.com/blevesearch/scorch_segment_api/v2
 # github.com/blevesearch/segment v0.9.1
@@ -290,7 +291,7 @@ github.com/blevesearch/zapx/v14
 # github.com/blevesearch/zapx/v15 v15.4.2
 ## explicit; go 1.21
 github.com/blevesearch/zapx/v15
-# github.com/blevesearch/zapx/v16 v16.2.5
+# github.com/blevesearch/zapx/v16 v16.2.6
 ## explicit; go 1.23
 github.com/blevesearch/zapx/v16
 # github.com/bmatcuk/doublestar/v4 v4.9.1
@@ -306,6 +307,10 @@ github.com/cespare/xxhash/v2
 ## explicit; go 1.18
 github.com/cheggaaa/pb/v3
 github.com/cheggaaa/pb/v3/termutil
+# github.com/clipperhouse/uax29/v2 v2.2.0
+## explicit; go 1.18
+github.com/clipperhouse/uax29/v2/graphemes
+github.com/clipperhouse/uax29/v2/internal/iterators
 # github.com/dlclark/regexp2 v1.11.5
 ## explicit; go 1.13
 github.com/dlclark/regexp2
@@ -313,9 +318,6 @@ github.com/dlclark/regexp2/syntax
 # github.com/fatih/color v1.18.0
 ## explicit; go 1.17
 github.com/fatih/color
-# github.com/golang/protobuf v1.5.4
-## explicit; go 1.17
-github.com/golang/protobuf/proto
 # github.com/golang/snappy v1.0.0
 ## explicit
 github.com/golang/snappy
@@ -348,8 +350,8 @@ github.com/klauspost/compress/zstd/internal/xxhash
 ## explicit; go 1.12
 github.com/mailru/easyjson/buffer
 github.com/mailru/easyjson/jwriter
-# github.com/mark3labs/mcp-go v0.41.1
-## explicit; go 1.23
+# github.com/mark3labs/mcp-go v0.42.0
+## explicit; go 1.23.0
 github.com/mark3labs/mcp-go/mcp
 github.com/mark3labs/mcp-go/server
 github.com/mark3labs/mcp-go/util
@@ -359,8 +361,8 @@ github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.20
 ## explicit; go 1.15
 github.com/mattn/go-isatty
-# github.com/mattn/go-runewidth v0.0.16
-## explicit; go 1.9
+# github.com/mattn/go-runewidth v0.0.19
+## explicit; go 1.20
 github.com/mattn/go-runewidth
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 ## explicit
@@ -374,9 +376,6 @@ github.com/mschoch/smat
 # github.com/pkoukk/tiktoken-go v0.1.7
 ## explicit; go 1.19
 github.com/pkoukk/tiktoken-go
-# github.com/rivo/uniseg v0.4.7
-## explicit; go 1.18
-github.com/rivo/uniseg
 # github.com/spf13/cast v1.9.2
 ## explicit; go 1.21.0
 github.com/spf13/cast
@@ -435,14 +434,12 @@ go.etcd.io/bbolt
 go.etcd.io/bbolt/errors
 go.etcd.io/bbolt/internal/common
 go.etcd.io/bbolt/internal/freelist
-# go.yaml.in/yaml/v2 v2.4.2
-## explicit; go 1.15
-# golang.org/x/net v0.43.0
-## explicit; go 1.23.0
+# golang.org/x/net v0.46.0
+## explicit; go 1.24.0
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/oauth2 v0.30.0
-## explicit; go 1.23.0
+# golang.org/x/oauth2 v0.32.0
+## explicit; go 1.24.0
 golang.org/x/oauth2
 golang.org/x/oauth2/authhandler
 golang.org/x/oauth2/clientcredentials
@@ -454,16 +451,16 @@ golang.org/x/oauth2/google/internal/stsexchange
 golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
-# golang.org/x/sys v0.36.0
+# golang.org/x/sys v0.37.0
 ## explicit; go 1.24.0
 golang.org/x/sys/cpu
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
-# golang.org/x/text v0.28.0
-## explicit; go 1.23.0
+# golang.org/x/text v0.30.0
+## explicit; go 1.24.0
 golang.org/x/text/unicode/rangetable
-# google.golang.org/protobuf v1.36.9
+# google.golang.org/protobuf v1.36.10
 ## explicit; go 1.23
 google.golang.org/protobuf/encoding/prototext
 google.golang.org/protobuf/encoding/protowire
@@ -471,7 +468,6 @@ google.golang.org/protobuf/internal/descfmt
 google.golang.org/protobuf/internal/descopts
 google.golang.org/protobuf/internal/detrand
 google.golang.org/protobuf/internal/editiondefaults
-google.golang.org/protobuf/internal/editionssupport
 google.golang.org/protobuf/internal/encoding/defval
 google.golang.org/protobuf/internal/encoding/messageset
 google.golang.org/protobuf/internal/encoding/tag
@@ -489,13 +485,10 @@ google.golang.org/protobuf/internal/set
 google.golang.org/protobuf/internal/strs
 google.golang.org/protobuf/internal/version
 google.golang.org/protobuf/proto
-google.golang.org/protobuf/reflect/protodesc
 google.golang.org/protobuf/reflect/protoreflect
 google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
-google.golang.org/protobuf/types/descriptorpb
-google.golang.org/protobuf/types/gofeaturespb
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit; go 1.15
 gopkg.in/yaml.v2
