@@ -1,5 +1,5 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.VictoriaMetrics-Community/mcp-victoriametrics",
   "description": "MCP Server for VictoriaMetrics. Provides integration with VictoriaMetrics API and documentation",
   "status": "active",
@@ -11,9 +11,7 @@
   "packages": [
     {
       "registryType": "oci",
-      "registryBaseUrl": "https://ghcr.io",
-      "identifier": "victoriametrics-community/mcp-victoriametrics",
-      "version": "v${VERSION}",
+      "identifier": "https://ghcr.io/victoriametrics-community/mcp-victoriametrics:v${VERSION}",
       "transport": {
         "type": "stdio"
       },
