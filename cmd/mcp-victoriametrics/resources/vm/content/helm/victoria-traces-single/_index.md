@@ -611,6 +611,57 @@ Change the values according to the need of the environment in ``victoria-traces-
       <td><em><code>(int)</code></em><p>Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these <a href="https://docs.victoriametrics.com/victoriatraces/#retention" target="_blank">docs</a></p>
 </td>
     </tr>
+    <tr id="server-route-annotations">
+      <td><a href="#server-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="server-route-enabled">
+      <td><a href="#server-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for single component</p>
+</td>
+    </tr>
+    <tr id="server-route-extrarules">
+      <td><a href="#server-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="server-route-filters">
+      <td><a href="#server-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="server-route-hostnames">
+      <td><a href="#server-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="server-route-labels">
+      <td><a href="#server-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="server-route-matches">
+      <td><a href="#server-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.server }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="server-route-parentrefs">
+      <td><a href="#server-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
     <tr id="server-schedulername">
       <td><a href="#server-schedulername"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.schedulerName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>

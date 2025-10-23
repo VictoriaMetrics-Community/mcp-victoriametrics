@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.11.13-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-single%2Fchangelog%2F%2301113)
+![Version](https://img.shields.io/badge/0.11.16-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-single%2Fchangelog%2F%2301116)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-logs-single)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -670,6 +670,57 @@ Change the values according to the need of the environment in ``victoria-logs-si
       <td><a href="#server-retentionperiod"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="m">1</span></span></span></code></pre>
 </a></td>
       <td><em><code>(int)</code></em><p>Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these <a href="https://docs.victoriametrics.com/victorialogs/#retention" target="_blank">docs</a></p>
+</td>
+    </tr>
+    <tr id="server-route-annotations">
+      <td><a href="#server-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="server-route-enabled">
+      <td><a href="#server-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for single component</p>
+</td>
+    </tr>
+    <tr id="server-route-extrarules">
+      <td><a href="#server-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="server-route-filters">
+      <td><a href="#server-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="server-route-hostnames">
+      <td><a href="#server-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="server-route-labels">
+      <td><a href="#server-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="server-route-matches">
+      <td><a href="#server-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.server }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="server-route-parentrefs">
+      <td><a href="#server-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
 </td>
     </tr>
     <tr id="server-schedulername">

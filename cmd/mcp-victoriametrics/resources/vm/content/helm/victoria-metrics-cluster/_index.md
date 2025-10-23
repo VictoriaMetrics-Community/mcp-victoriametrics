@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.29.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-cluster%2Fchangelog%2F%230291)
+![Version](https://img.shields.io/badge/0.29.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-cluster%2Fchangelog%2F%230292)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-cluster)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -588,6 +588,57 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Resource object</p>
 </td>
     </tr>
+    <tr id="vmauth-route-annotations">
+      <td><a href="#vmauth-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vmauth-route-enabled">
+      <td><a href="#vmauth-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for vmauth component</p>
+</td>
+    </tr>
+    <tr id="vmauth-route-extrarules">
+      <td><a href="#vmauth-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vmauth-route-filters">
+      <td><a href="#vmauth-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmauth-route-hostnames">
+      <td><a href="#vmauth-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vmauth-route-labels">
+      <td><a href="#vmauth-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vmauth-route-matches">
+      <td><a href="#vmauth-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vmauth }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmauth-route-parentrefs">
+      <td><a href="#vmauth-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
     <tr id="vmauth-securitycontext">
       <td><a href="#vmauth-securitycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.securityContext</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
@@ -1086,6 +1137,57 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vminsert-resources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.resources</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Resource object. Details are <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="vminsert-route-annotations">
+      <td><a href="#vminsert-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vminsert-route-enabled">
+      <td><a href="#vminsert-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for insert component</p>
+</td>
+    </tr>
+    <tr id="vminsert-route-extrarules">
+      <td><a href="#vminsert-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vminsert-route-filters">
+      <td><a href="#vminsert-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vminsert-route-hostnames">
+      <td><a href="#vminsert-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vminsert-route-labels">
+      <td><a href="#vminsert-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vminsert-route-matches">
+      <td><a href="#vminsert-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/insert&#34; .Values.vminsert }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vminsert-route-parentrefs">
+      <td><a href="#vminsert-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
 </td>
     </tr>
     <tr id="vminsert-securitycontext">
@@ -1663,6 +1765,57 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vmselect-resources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.resources</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Resource object. Details are <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="vmselect-route-annotations">
+      <td><a href="#vmselect-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vmselect-route-enabled">
+      <td><a href="#vmselect-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for select component</p>
+</td>
+    </tr>
+    <tr id="vmselect-route-extrarules">
+      <td><a href="#vmselect-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vmselect-route-filters">
+      <td><a href="#vmselect-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmselect-route-hostnames">
+      <td><a href="#vmselect-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vmselect-route-labels">
+      <td><a href="#vmselect-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vmselect-route-matches">
+      <td><a href="#vmselect-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/select&#34; .Values.vmselect }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vmselect-route-parentrefs">
+      <td><a href="#vmselect-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
 </td>
     </tr>
     <tr id="vmselect-securitycontext">

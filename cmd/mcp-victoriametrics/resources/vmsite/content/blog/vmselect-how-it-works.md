@@ -36,7 +36,7 @@ This piece is part of our ongoing VictoriaMetrics series, where we break down ho
 
 ## Receive Requests
 
-vmselect handles multiple requests from different APIs at the same time. But there's a limit—twice the number of CPU cores, capped at 8 (unless you configure it differently using `-search.maxConcurrentRequests`). 
+vmselect handles multiple requests from different APIs at the same time. But there's a limit—twice the number of CPU cores, capped at 16 (unless you configure it differently using `-search.maxConcurrentRequests`). 
 
 The reason for this 8-core limit is that running too many concurrent requests is not beneficial, as each request typically uses all CPU cores during query execution. So, if you're running on more than 4 cores, vmselect allows up to 8 concurrent requests.
 
@@ -54,8 +54,8 @@ vmselect processes range query requests through these HTTP paths:
 
 A few request settings are worth noting:  
 
-- **Deadlines**: By default, a request has 10 seconds to complete (`-search.maxQueryDuration`). You can override this with the `timeout` query parameter.  
-- **Caching**: Query results may be cached in memory. To bypass caching, use the `nocache` parameter to disable caching for individual requests or the `-disableCache` flag to disable caching entirely.  
+- **Deadlines**: By default, a request has 30 seconds to complete (`-search.maxQueryDuration`). You can override this with the `timeout` query parameter.  
+- **Caching**: Query results may be cached in memory. To bypass caching, use the `nocache` parameter to disable caching for individual requests or the `-search.disableCache` flag to disable caching entirely.  
 - **Lookback delta**: is controlled by `-search.maxLookback` or can be set per request using the `max_lookback` parameter. If neither is set, vmselect automatically determines a value based on the data.  
 - **Step**: If the `step` parameter isn't provided, vmselect defaults to 5 minutes. Typically, query editors like Grafana or [vmui](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/app/vmui) handle this for you.  
 
@@ -150,9 +150,11 @@ To check how much memory is allocated for these buffers, use `vm_tmp_blocks_max_
 - If the actual sizes are much smaller than the maximum, the buffer might be too large.  
 - If they often hit the maximum, queries might be spilling to disk too frequently.
 
-You can actually tune the buffer size using `-search.inmemoryBufSizeBytes`.
+You can tune the buffer size using `-search.inmemoryBufSizeBytes` flag.
 
-That said, any extra data that doesn't fit in memory is written to temporary files on disk (`-cacheDataPath/tmp/searchResults`). When query load is high, you might notice increased disk I/O on vmselect nodes.  
+Any intermediate data that doesn’t fit in memory is spilled to temporary files on disk. In the cluster version, enable this by setting `-cacheDataPath`; files are written under `-cacheDataPath/tmp/searchResults`. In single‑node VictoriaMetrics, spilling is always enabled and files are written under `-storageDataPath/tmp/searchResults`.
+
+When query load is high, you might notice increased disk I/O on vmselect nodes.  
 
 > [!TIP] Metrics: Is your disk handling the load?
 > - How many temporary files have been created: `vm_tmp_blocks_files_created_total`.
@@ -180,24 +182,23 @@ To handle this, vmselect should be set up with deduplication using a small inter
 
 vmselect uses up to 60% of system memory (`-memory.allowedPercent`) for its activities. It will try to stay under this limit, but it doesn't guarantee that it will use the full amount.
 
-Before executing a query, vmselect estimates its memory usage and applies several safeguards. All running queries combined can use up to 50% of the allowed memory. If a query would exceed this limit, vmselect rejects it and returns an error.  
+Before executing a query, vmselect estimates its memory usage and applies several safeguards. All running queries combined can use up to 25% of the allowed memory. If a query would exceed this limit, vmselect rejects it and returns an error.  
 
 > [!IMPORTANT] Quiz: How much memory is allocated for running queries in your system?
-> Suppose your vmselect memory limit is 60 GB:
-> - The allowed memory is 60 * 60% = 36 GB.
-> - All running queries combined can use up to 50% of the allowed memory, which is 36 * 50% = 18 GB.
+> Suppose your vmselect memory limit is 60 GiB:
+> - The allowed memory is 60 * 60% = 36 GiB.
+> - All running queries combined can use up to 25% of the allowed memory, which is 36 * 25% = 9 GiB.
 
 To monitor memory usage more closely, set `-search.logQueryMemoryUsage` with a threshold. If a query crosses this limit, vmselect logs a warning and increments the `vm_memory_intensive_queries_total` metric. For stricter control, limit memory per query using `-search.maxMemoryPerQuery`.  
 
 Once the data is ready, vmselect processes it based on your query. If the query includes aggregation functions like `sum`, `avg`, `min`, or `max`, vmselect groups the data and runs calculations across multiple time series. This can be memory-intensive, especially for high-cardinality metrics.  
 
-To reduce memory usage, vmselect applies _incremental aggregation_ where possible. Instead of loading everything at once, it processes time series in batches, updating results step by step.  
+To reduce memory usage, vmselect applies _incremental aggregation_ where possible. Instead of loading everything at once, it processes time series in batches, updating results step by step. 
 
-> [!TIP] Metrics: Is aggregation running efficiently?  
-> - Total incremental aggregation calls: `vm_incremental_aggr_function_calls_total{}`  
-> - Number of series processed per incremental aggregation: `vm_incremental_aggr_function_series_processed_total{}`  
+> [!TIP] Is incremental aggregation applied to your query?
+> To confirm it's used, enable query tracing (`trace=1`) and look for a trace line like "rollup … with incremental aggregation …"; that indicates the optimized path ran.
 
-For more complex functions like `quantile` or `histogram_quantile`, incremental processing isn't an option. These functions need all data points at once to calculate an accurate result, which means higher memory usage.  
+For more complex functions like `quantile` or `histogram_quantile`, incremental processing isn't an option. These functions need all data points at once to calculate an accurate result, which means higher memory usage.
 
 Once the query is evaluated, vmselect caches the results if caching isn't disabled. This **rollup result cache** uses up to 12.5% of allowed memory.
 
