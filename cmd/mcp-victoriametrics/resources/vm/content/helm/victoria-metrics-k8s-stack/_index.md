@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.61.10-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%2306110)
+![Version](https://img.shields.io/badge/0.62.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230621)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-k8s-stack)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -187,7 +187,7 @@ kubelet:
 ### Using externally managed Grafana
 
 If you want to use an externally managed Grafana instance but still want to use the dashboards provided by this chart you can set
- `grafana.enabled` to `false` and set `defaultDashboards.enabled` to `true`. This will install the dashboards
+ `.Values.grafana.enabled` to `false` and set `.Values.defaultDashboards.enabled` to `true`. This will install the dashboards
  but will not install Grafana.
 
 For example:
@@ -202,7 +202,7 @@ grafana:
 This will create ConfigMaps with dashboards to be imported into Grafana.
 
 If additional configuration for labels or annotations is needed in order to import dashboard to an existing Grafana you can
-set `.grafana.sidecar.dashboards.additionalDashboardLabels` or `.grafana.sidecar.dashboards.additionalDashboardAnnotations` in `values.yaml`:
+set `.Values.grafana.sidecar.dashboards.additionalDashboardLabels` or `.Values.grafana.sidecar.dashboards.additionalDashboardAnnotations` in `values.yaml`:
 
 For example:
 ```yaml
@@ -212,6 +212,30 @@ defaultDashboards:
     key: value
   annotations:
     key: value
+```
+
+### Using additional Grafana datasources
+
+To add additional datasources set them using `.Values.defaultDatasources.extra` list property.
+If datasource type is not `prometheus` or `alertmanager` please also add it to `.Values.grafana.plugins` list (even if it belongs to a [list of Grafana built-in datasources](https://grafana.com/docs/grafana/latest/datasources/#built-in-core-data-sources)):
+
+```yaml
+defaultDatasources:
+  extra:
+    - name: Loki
+      type: loki
+      url: http://loki-gateway.loki.svc.cluster.local
+      uid: Loki
+      access: proxy
+      version: 1
+      orgId: 1
+      isDefault: false
+      editable: false
+      jsonData:
+        httpMethod: GET
+grafana:
+  plugins:
+    - loki
 ```
 
 ### Using alternative image registry
