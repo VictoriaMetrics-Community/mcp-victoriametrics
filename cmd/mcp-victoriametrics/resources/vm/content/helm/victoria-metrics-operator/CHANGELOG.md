@@ -2,6 +2,41 @@
 
 - TODO
 
+## 0.55.2
+
+**Release date:** 29 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.64.0](https://img.shields.io/badge/v0.64.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0640)
+
+- allow setting `.Values.operator.useCustomConfigReloader` to `false`
+
+## 0.55.1
+
+**Release date:** 29 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.64.0](https://img.shields.io/badge/v0.64.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0640)
+
+- Use VM config reloader by default, as operator does starting 0.64.0. See [#2510](https://github.com/VictoriaMetrics/helm-charts/issues/2510).
+
+## 0.55.0
+
+**Release date:** 29 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.64.0](https://img.shields.io/badge/v0.64.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0640)
+
+**Update node 1**: operator now uses own config-reloader container image - [victoriametrics/operator:config-reloader](https://github.com/VictoriaMetrics/operator/tree/master/cmd/config-reloader).
+This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOADER=false` to the operator binary.
+
+- updates operator to [v0.64.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.64.0) version
+
+## 0.54.1
+
+**Release date:** 28 Oct 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.63.0](https://img.shields.io/badge/v0.63.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0630)
+
+- set command for cleanup job. fixes [#2501](https://github.com/VictoriaMetrics/helm-charts/issues/2501).
+
 ## 0.54.0
 
 **Release date:** 27 Sep 2025

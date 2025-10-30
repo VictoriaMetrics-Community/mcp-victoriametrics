@@ -26,12 +26,25 @@ See also [LTS releases](https://docs.victoriametrics.com/victoriametrics/lts-rel
 
 ## tip
 
+* FEATURE: [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/): add template function `now` to return the Unix timestamp in seconds at the time of the template evaluation. For example, `{{ (now | toTime).Sub $activeAt }}` can calculate duration the alert has been active. See this issue [#9864](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9864) for more details. Thank you @nguu0123 for the pull request.
+* FEATURE: `vminsert` and `vmstorage` in [VictoriaMetrics cluster](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/): introduce new RPC protocol for insert-storage communication. See this PR [#9820](https://github.com/VictoriaMetrics/VictoriaMetrics/pull/9820) for details.
+* FEATURE: [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/): explicitly check response type for [range queries](https://docs.victoriametrics.com/keyConcepts.html#range-query) during [replay](https://docs.victoriametrics.com/victoriametrics/vmalert/#rules-backfilling) and return error on type mismatch. This change should reduce confusions like in [#9779](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9779).
+* FEATURE: [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/): support `alert_relabel_configs` per each notifier in `-notifier.config` file. See [#5980](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/5980).
+* FEATURE: [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/): add `/remotewrite-relabel-config` and `/api/v1/status/remotewrite-relabel-config` API handlers for returning content of `--remoteWrite.relabelConfig` cmd-line flag. Useful for inspecting and verifying the final global relabeling rules used by vmagent. Access to new handlers can be protected via `--configAuthKey` command-line flag. See [#9504](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9504).
+* FEATURE: [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/): add `/remotewrite-url-relabel-config` and `/api/v1/status/remotewrite-url-relabel-config` API handlers for returning content of `--remoteWrite.urlRelabelConfig` cmd-line flag. Useful for inspecting and verifying the final per-remote-write relabeling rules used by vmagent. Access to new handlers can be protected via `--configAuthKey` command-line flag. See [#9504](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9504).
+* FEATURE: [stream aggregation](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/): change the behavior when both `streamAggr.dropInput` and `streamAggr.keepInput` are set to true. Previously, all input samples were kept when both flags were `true`. Now, only input samples matching any aggregation are retained; all others are dropped. See [#9724](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9724).
+* FEATURE: [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/): improve performance for the [stream aggregation](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/) with multiple configured rules. See this issue [#9878](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9878) for details.
+* FEATURE: [VictoriaMetrics enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/): slow query statistics logging is now enabled by default with `-search.logSlowQueryStats=5s`. This makes it easier to analyze query performance via the [Query Stats dashboard](https://grafana.sandbox.victoriametrics.com/d/feg3od1zt1fy8e/query-stats). See [Query execution stats](https://docs.victoriametrics.com/victoriametrics/enterprise/#query-execution-stats) for more details.
+
+* BUGFIX: [vmbackup](https://docs.victoriametrics.com/victoriametrics/vmbackup/), [vmrestore](https://docs.victoriametrics.com/victoriametrics/vmrestore/), [vmbackupmanager](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/): complete a fix of environment variables configuration parsing for connection to AWS S3. Previously, such settings were ignored starting from [v1.115.0](https://docs.victoriametrics.com/victoriametrics/changelog/#v11150) and releases [v1.128.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.128.0), [v1.122.6](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.122.6) and [v1.110.21](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.110.21) did not fix an issue completely. See this issue [#9858](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9858) for details.
+* BUGFIX: [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/): fix search over group names and other attributes in vmalert's WEB UI. This functionality was broken since [v1.117.0](https://docs.victoriametrics.com/CHANGELOG.html#v11170). See [#9886](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/9886) for details.
+
 ## [v1.128.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.128.0)
 
 Released at 2025-10-17
 
 **Update Note 1:** [vmsingle](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) and [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/): default value of the flag `-promscrape.dropOriginalLabels` changed from `false` to `true`.
-It disables `Discovered targets` debug IU by default.
+It disables `Discovered targets` debug UI by default.
 
 * SECURITY: upgrade Go builder from Go1.25.1 to Go1.25.3. See [the list of issues addressed in Go1.25.3](https://github.com/golang/go/issues?q=milestone%3AGo1.25.3%20label%3ACherryPickApproved).
 * SECURITY: upgrade base docker image (Alpine) from 3.22.1 to 3.22.2. See [Alpine 3.22.2 release notes](https://www.alpinelinux.org/posts/Alpine-3.19.9-3.20.8-3.21.5-3.22.2-released.html).
@@ -161,7 +174,7 @@ Released at 2025-08-01
 
 Released at 2025-10-17
 
-**v1.122.x is a line of [LTS releases](https://docs.victoriametrics.com/victoriametrics/lts-releases/). It contains important up-to-date bugfixes for [VictoriaMetrics enterprise](https://docs.victoriametrics.c>
+**v1.122.x is a line of [LTS releases](https://docs.victoriametrics.com/victoriametrics/lts-releases/). It contains important up-to-date bugfixes for [VictoriaMetrics enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/).
 All these fixes are also included in [the latest community release](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest).
 The v1.122.x line will be supported for at least 12 months since [v1.122.0](https://docs.victoriametrics.com/victoriametrics/changelog/#v11220) release**
 
@@ -601,7 +614,7 @@ Released at 2025-02-10
 
 Released at 2025-10-17
 
-**v1.110.x is a line of [LTS releases](https://docs.victoriametrics.com/victoriametrics/lts-releases/). It contains important up-to-date bugfixes for [VictoriaMetrics enterprise](https://docs.victoriametrics.c>
+**v1.110.x is a line of [LTS releases](https://docs.victoriametrics.com/victoriametrics/lts-releases/). It contains important up-to-date bugfixes for [VictoriaMetrics enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/).
 All these fixes are also included in [the latest community release](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest).
 The v1.110.x line will be supported for at least 12 months since [v1.110.0](https://docs.victoriametrics.com/victoriametrics/changelog/#v11100) release**
 
