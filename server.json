@@ -11,7 +11,7 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "https://ghcr.io/victoriametrics-community/mcp-victoriametrics:v${VERSION}",
+      "identifier": "https://ghcr.io/victoriametrics-community/mcp-victoriametrics:${VERSION}",
       "transport": {
         "type": "stdio"
       },
