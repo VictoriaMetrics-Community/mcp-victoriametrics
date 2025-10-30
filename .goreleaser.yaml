@@ -47,6 +47,7 @@ dockers_v2:
       - "ghcr.io/victoriametrics-community/mcp-victoriametrics"
     tags:
       - latest
+      - "{{ .Version }}"
       - "v{{ .Version }}"
     dockerfile: Dockerfile.goreleaser
     labels:
