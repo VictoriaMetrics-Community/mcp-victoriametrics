@@ -36,8 +36,8 @@ Just download the archive for the needed operating system and architecture, unpa
 For example, the following commands download VictoriaLogs archive for Linux/amd64, unpack and run it:
 
 ```sh
-curl -L -O https://github.com/VictoriaMetrics/VictoriaLogs/releases/download/v1.36.1/victoria-logs-linux-amd64-v1.36.1.tar.gz
-tar xzf victoria-logs-linux-amd64-v1.36.1.tar.gz
+curl -L -O https://github.com/VictoriaMetrics/VictoriaLogs/releases/download/v1.37.2/victoria-logs-linux-amd64-v1.37.2.tar.gz
+tar xzf victoria-logs-linux-amd64-v1.37.2.tar.gz
 ./victoria-logs-prod -storageDataPath=victoria-logs-data
 ```
 
@@ -60,7 +60,7 @@ Here is the command to run VictoriaLogs in a Docker container:
 
 ```sh
 docker run --rm -it -p 9428:9428 -v ./victoria-logs-data:/victoria-logs-data \
-  docker.io/victoriametrics/victoria-logs:v1.36.1 -storageDataPath=victoria-logs-data
+  docker.io/victoriametrics/victoria-logs:v1.37.2 -storageDataPath=victoria-logs-data
 ```
 
 See also:

@@ -297,6 +297,41 @@ the recently ingested data.
 
 The `/internal/force_flush` endpoint can be protected from unauthorized access via `-forceFlushAuthKey` [command-line flag](https://docs.victoriametrics.com/victorialogs/#list-of-command-line-flags).
 
+## How to delete logs
+
+By default VictoriaLogs doesn't allow deleting the [ingested logs](https://docs.victoriametrics.com/victorialogs/data-ingestion/).
+This is good from security PoV - an attacker cannot remove the existing logs. There are cases when it is needed to delete logs
+because of [GDPR compliance](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation) or because some sensitive info is ingested in the logs.
+VictoriaLogs enables HTTP API for deleting logs if `-delete.enable` command-line flag is passed to it.
+The following HTTP endpoints are exposed at `http://victoria-logs:9428/` in this case:
+
+- `/delete/run_task?filter=<logsql_filter>` - starts an asynchronous task for deletion of the logs matching the given `<logsql_filter>`.
+  The `<logsql_filter>` may contain arbitrary [LogsQL filter](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
+  For example, request to `http://victoria-logs:9428/delete/run_task?filter={app=nginx}` starts a task for deleting all the logs with
+  `{app="nginx"}` [log stream field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields).
+  This endpoint returns `{"task_id":"<id>"}` response, where `<id>` is an unique id of the deletion task, which can be used
+  for tracking the status of the deletion operation and for canceling the deletion task.
+  The deletion operation may take significant amounts of time when VictoriaLogs contains terabytes of logs, since the deletion operation
+  rewrites all the stored logs. That's why it isn't recommended to delete logs on a frequent basis - it is intended for rare exceptional cases
+  such as GDPR compliance or removal of accidentally written security-sensitive data.
+
+- `/delete/stop_task?task_id=<id>` - cancels the deletion task with the given `<id>`. If the canceled task was already running,
+  then it doesn't restore already deleted data.
+
+- `/delete/active_tasks` - returns a JSON array with the following information about active deletion tasks:
+  - `task_id` - the `id` of the task
+  - `tenant_ids` - the list of [tenants](https://docs.victoriametrics.com/victorialogs/#multitenancy) for the given deletion task
+  - `filter` - the [LogsQL filter](https://docs.victoriametrics.com/victorialogs/logsql/#filters) passed to `/delete/run_task?filter=...`.
+  - `start_time` - the start time of the deletion task.
+
+The logs scheduled for the deletion via `/delete/run_task` endpoint main remain visible until the deletion task is complete.
+The deletion task is complete when the `/delete/active_task` endpoint stops returning it.
+
+If the deletion API must be enabled in [cluster version of VictoriaLogs](https://docs.victoriametrics.com/victorialogs/cluster/),
+then `-delete.enable` command-line flag must be passed to `vlselect` nodes (this enables the deletion API at `vlselect` nodes),
+while `-internaldelete.enable` command-line flag must be passed to `vlstorage` nodes (this enables internal cluster API
+for receiving deletion requests from `vlselect` nodes).
+
 ## High Availability
 
 ### High Availability (HA) Setup with VictoriaLogs Single-Node Instances
@@ -518,6 +553,8 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
         Default value for _msg field if the ingested log entry doesn't contain it; see https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field (default "missing _msg field; see https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field")
   -defaultParallelReaders int
         Default number of parallel data readers to use for executing every query; higher number of readers may help increasing query performance on high-latency storage such as NFS or S3 at the cost of higher RAM usage; see https://docs.victoriametrics.com/victorialogs/logsql/#parallel_readers-query-option (default 32)
+  -delete.enable
+        Whether to enable /delete/* HTTP endpoints; see https://docs.victoriametrics.com/victorialogs/#how-to-delete-logs
   -elasticsearch.version string
         Elasticsearch version to report to client (default "8.9.0")
   -enableTCP6
@@ -544,6 +581,8 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
         Flag value can be read from the given http/https url when using -forceMergeAuthKey=http://host/path or -forceMergeAuthKey=https://host/path
   -fs.disableMmap
         Whether to use pread() instead of mmap() for reading data files. By default, mmap() is used for 64-bit arches and pread() is used for 32-bit arches, since they cannot read data files bigger than 2^32 bytes in memory. mmap() is usually faster for reading small data chunks than pread()
+  -fs.maxConcurrency int
+        The maximum number of concurrent goroutines to work with files; smaller values may help reducing Go scheduling latency on systems with small number of CPU cores; higher values may help reducing data ingestion latency on systems with high-latency storage such as NFS or Ceph (default 256)
   -futureRetention value
         Log entries with timestamps bigger than now+futureRetention are rejected during data ingestion; see https://docs.victoriametrics.com/victorialogs/#retention
         The following optional suffixes are supported: s (second), h (hour), d (day), w (week), y (year). If suffix isn't set, then the duration is counted in months (default 2d)
@@ -604,6 +643,8 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
         Whether to disable caches for interned strings. This may reduce memory usage at the cost of higher CPU usage. See https://en.wikipedia.org/wiki/String_interning . See also -internStringCacheExpireDuration and -internStringMaxLen
   -internStringMaxLen int
         The maximum length for strings to intern. A lower limit may save memory at the cost of higher CPU usage. See https://en.wikipedia.org/wiki/String_interning . See also -internStringDisableCache and -internStringCacheExpireDuration (default 500)
+  -internaldelete.enable
+        Whether to enable /internal/delete/* HTTP endpoints, which are used by vlselect for deleting logs via delete API at vlstorage nodes; see https://docs.victoriametrics.com/victorialogs/#how-to-delete-logs
   -internalinsert.disable
         Whether to disable /internal/insert HTTP endpoint. See https://docs.victoriametrics.com/victorialogs/cluster/#security
   -internalinsert.maxRequestSize size
@@ -736,6 +777,10 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
         The following unit suffixes are required: s (second), m (minute), h (hour), d (day), w (week), y (year). Bare numbers without units are not allowed (except 0) (default 0)
   -search.maxQueueDuration duration
         The maximum time the search request waits for execution when -search.maxConcurrentRequests limit is reached; see also -search.maxQueryDuration (default 10s)
+  -secret.flags array
+        Comma-separated list of flag names with secret values. Values for these flags are hidden in logs and on /metrics page
+        Supports an array of values separated by comma or specified via multiple flags.
+        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -select.disable
         Whether to disable /select/* HTTP endpoints
   -select.disableCompression

@@ -31,7 +31,7 @@ Every LTS line receives bug fixes and security fixes for 12 months after the ini
 
 ## Important for our users
 
-While the latest LTS versions are an enterprise-license feature, VictoriaMetrics Enterprise is based on open source, meaning version 1.122.x is open source and everyone can update to it.
+While the latest LTS versions are an enterprise-license feature, VictoriaMetrics Enterprise is based on open source, meaning version 1.122.0 is open source and everyone can update to it.
 
 All the bugfixes and security fixes, which are included in LTS releases, are available in [the latest open source release](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest). Please upgrade VictoriaMetrics products regularly to [the latest available open source release](https://docs.victoriametrics.com/victoriametrics/changelog/).
 

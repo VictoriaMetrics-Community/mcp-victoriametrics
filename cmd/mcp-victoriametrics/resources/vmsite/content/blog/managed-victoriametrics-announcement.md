@@ -37,7 +37,7 @@ for details. The most common use cases for VictoriaMetrics are:
 * Cost-efficient alternative for DataDog.
 
 We are glad to announce the availability of Managed VictoriaMetrics - 
-[try it right now](https://console.victoriametrics.cloud/signUp?utm_source=blog&utm_campaign=announcement)!
+[try it right now](https://console.victoriametrics.cloud/signUp)!
 
 Managed VictoriaMetrics allows users to run VictoriaMetrics on AWS without the need 
 to perform typical DevOps tasks such as proper configuration, monitoring, logs collection, 
@@ -107,7 +107,7 @@ It ideally fits as a fast and cost-effective solution for the following use case
 * Long-term remote storage for Prometheus;
 * Global querying view (aka single pane of glass) across metrics collected from many sources.
 
-Hurry up and [try Managed VictoriaMetrics](https://cloud.victoriametrics.com/signUp?utm_source=blog&utm_campaign=announcement)! 
+Hurry up and [try Managed VictoriaMetrics](https://cloud.victoriametrics.com/signUp)! 
 As a welcome pack, we provide **$200 credit** for newly registered accounts.
 This is enough for running a VictoriaMetrics instance with 2vCPU and 4GB of RAM for free for a month. 
 If you feel Managed VictoriaMetrics misses some features or just want to learn more about internal 
