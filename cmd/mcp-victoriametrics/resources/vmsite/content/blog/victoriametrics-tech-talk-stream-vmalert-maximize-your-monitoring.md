@@ -266,7 +266,7 @@ Whether you're captaining a self-managed VictoriaMetrics ship or cruising with t
 
 We definitely encourage you to check out the [official vmalert documentation](https://www.google.com/search?q=%5Bhttps://docs.victoriametrics.com/vmalert.html%5D(https://docs.victoriametrics.com/vmalert.html)) for even more details.
 
-And if you're curious about VictoriaMetrics Cloud, why not [give our free trial a spin](https://console.victoriametrics.cloud/signup?utm_source=blog?utm_campaign=tech_talk5) and see how easy managed alerting can be?
+And if you're curious about VictoriaMetrics Cloud, why not [give our free trial a spin](https://console.victoriametrics.cloud/signup) and see how easy managed alerting can be?
 
 Your feedback is gold to us. Join our community, share what you're building, and let us know how we can make VictoriaMetrics even more awesome!
 

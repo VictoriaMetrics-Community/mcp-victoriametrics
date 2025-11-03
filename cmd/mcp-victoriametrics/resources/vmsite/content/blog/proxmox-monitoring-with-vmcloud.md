@@ -40,7 +40,7 @@ Proxmox VE is a complete, open-source server management platform for enterprise 
 VictoriaMetrics Cloud allows users to run VictoriaMetrics on [AWS](https://aws.amazon.com) without the need to perform typical DevOps tasks such as proper configuration, monitoring, logs collection, access protection, software updates, backups, etc.
 
 **The guide covers:**
-* How to setup a deployment on [VictoriaMetrics Cloud](https://console.victoriametrics.cloud/signUp?utm_source=blog&utm_campaign=proxmox)
+* How to setup a deployment on [VictoriaMetrics Cloud](https://console.victoriametrics.cloud/signUp)
 * How to view data in VictoriaMetrics Cloud
 * How to add VictoriaMetrics Cloud as a datasource in Grafana
 * How to visualize data from VictoriaMetrics Cloud in Grafana
@@ -55,7 +55,7 @@ VictoriaMetrics Cloud allows users to run VictoriaMetrics on [AWS](https://aws.a
 
 ## 1. Setup VictoriaMetrics Cloud deployment
 
-If you don't have the VictoriaMetrics Cloud account yet, just [sign up here](https://console.victoriametrics.cloud/signUp?utm_source=blog&utm_campaign=proxmox) – it's free.
+If you don't have the VictoriaMetrics Cloud account yet, just [sign up here](https://console.victoriametrics.cloud/signUp) – it's free.
 
 To read more about VictoriaMetrics Cloud see the [announcement blog post](https://victoriametrics.com/blog/managed-victoriametrics-announcement/).
 

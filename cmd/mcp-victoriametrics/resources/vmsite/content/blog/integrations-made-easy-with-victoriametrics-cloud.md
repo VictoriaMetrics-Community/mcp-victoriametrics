@@ -32,7 +32,7 @@ very seriously.
 {{<image href="/blog/integrations-made-easy-with-victoriametrics-cloud/integrations.webp" alt="Integrations in VictoriaMetrics Cloud"  width="{{ 35 }}">}}
 
 >[!TIP] Haven’t tried VictoriaMetrics Cloud yet?
-> [Sign up for free](https://console.victoriametrics.cloud/signup?utm_source=blog&utm_campaign=integrations) — no credit card required — and get $200 in credits for one month.
+> [Sign up for free](https://console.victoriametrics.cloud/signup) — no credit card required — and get $200 in credits for one month.
 
 
 ## Integrations in VictoriaMetrics Cloud
@@ -141,4 +141,4 @@ to connect your data source or visualization tool — no guesswork needed!
 
 We’re always looking to make VictoriaMetrics Cloud better. Please take a moment to [fill out our quick survey](https://docs.google.com/forms/d/e/1FAIpQLSfNsqFiyVgWXlLsDpgfpYpeZKdsVjjXOaZnEV0HjC5lLo82Bg/viewform?usp=sharing&ouid=109672915073950352502) and share your feedback.
 
-Thanks for being part of our community! We hope these improvements make your integration journey smoother than ever. As always, [sign up](https://console.victoriametrics.cloud/signup?utm_source=blog&utm_campaign=integrations) to try everything for free with $200 credits — **no credit card required**.
+Thanks for being part of our community! We hope these improvements make your integration journey smoother than ever. As always, [sign up](https://console.victoriametrics.cloud/signup) to try everything for free with $200 credits — **no credit card required**.

@@ -50,10 +50,14 @@ OpenTelemetry comes with many concepts, such as Signal, which means a type of Te
 
 When talking about metrics, it's easy to compare OpenTelemetry with Prometheus:
 
+<div class="table-responsive">
+
 |                              | Prometheus   | OpenTelemetry  |
 |------------------------------|--------------|----------------|
 | Data Model                   | Metrics      | Metrics Signal |
 | Protocol of Data Propagation | Remote Write | OTLP           |
+
+</div>
 
 Have you ever wondered: **Why should we consider OpenTelemetry when Prometheus data model and remote write protocol are already the widely adopted and supported de facto standard in cloud-native monitoring**?
 
@@ -77,6 +81,8 @@ To support OTLP, remote write and its variants, along with various custom testin
 
 Here is the breakdown of the various components involved:
 
+<div class="table-responsive">
+
 |                         | Version  | Machine Type  | vCPUs   | Memory (GB) | Storage Type      |
 |-------------------------|----------|---------------|---------|-------------|-------------------------------|
 | Prometheus              | 2.53.3   | e2-highcpu-2  | 2       | 2           | Standard persistent disk(HDD) |
@@ -85,6 +91,8 @@ Here is the breakdown of the various components involved:
 | vmagent                 | v1.108.0 | e2-highcpu-2  | 2       | 2           | Standard persistent disk(HDD) |
 | Node exporter           | 1.8.2    | e2-micro      | 2(0.25) | 1           | Standard persistent disk(HDD) |
 | No-op Receiver          | N/A      | n2d-highcpu-4 | 4       | 4           | Balanced persistent disk(SSD) |
+
+</div>
 
 The overall benchmark architecture is as follows:
 

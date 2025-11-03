@@ -260,11 +260,15 @@ Prometheus `remote_write` protocol, resulting in a direct impact on their cloud 
 Aside from achieving smaller network usage out of the box, VictoriaMetrics can also be configured to reduce network
 usage further by trading CPU, latency, or precision for less network usage:
 
+<div class="table-responsive">
+
 | Settings                                                                                               | Trade-off                                                                    |
 |--------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
 | **remoteWrite.vmProtoCompressLevel**                                                                   | Increased compression level, traded for higher CPU usage                     |
 | **remoteWrite.maxBlockSize**, <br/>**remoteWrite.maxRowsPerBlock**, <br/>**remoteWrite.flushInterval** | Increased batch size leading to better compression ratio, traded for latency |
 | **remoteWrite.significantFigures**,<br/> **remoteWrite.roundDigits**                                   | Reduced precision/entropy, better compression ratio                          |
+
+</div>
 
 For more, we wrote a whole blog post
 on [saving network costs using VictoriaMetrics](https://victoriametrics.com/blog/victoriametrics-remote-write/).

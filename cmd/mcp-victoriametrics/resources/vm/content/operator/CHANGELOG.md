@@ -13,9 +13,30 @@ aliases:
 
 ## tip
 
+* FEATURE: [vmoperator](https://docs.victoriametrics.com/operator/): add `VM_ENABLETCP6` variable that runs all operator CRs in IPv6 mode. See [#1581](https://github.com/VictoriaMetrics/operator/issues/1581).
+
+## [v0.65.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.65.0)
+
+**Release date:** 31 October 2025
+
+* FEATURE: [vmauth](https://docs.victoriametrics.com/operator/resources/vmauth/): added HPA  support with `spec.hpa` field for the VMAuth. See this issue [#1573](https://github.com/VictoriaMetrics/operator/issues/1573) for details. Thanks to the @endesapt
+* FEATURE: [converter](https://docs.victoriametrics.com/operator/integrations/prometheus/#objects-conversion): support `ServiceMonitor's` [ServiceDiscoveryRole](https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#monitoring.coreos.com/v1.ServiceDiscoveryRole).
+
+* BUGFIX: [vmoperator](https://docs.victoriametrics.com/operator/): properly set default `useVMConfigReloader` value. See [#1589](https://github.com/VictoriaMetrics/operator/issues/1589).
+* BUGFIX: [vmoperator](https://docs.victoriametrics.com/operator/): properly check `StatefulSet` ready status for `rollingUpdateStrategy: RollingUpdate`. See this issue [#1579](https://github.com/VictoriaMetrics/operator/issues/1579) for details.
+* BUGFIX: [vmpodscrape](https://docs.victoriametrics.com/operator/resources/vmpodscrape/), [vmnodescrape](https://docs.victoriametrics.com/operator/resources/vmnodescrape/), [vmservicescrape](https://docs.victoriametrics.com/operator/resources/vmservicescrape/), [vmscrapeconfig](https://docs.victoriametrics.com/operator/resources/vmscrapeconfig/), [vmscrapeconfig](https://docs.victoriametrics.com/operator/resources/vmscrapeconfig/) and [vmprobe](https://docs.victoriametrics.com/operator/resources/vmprobe/): use int type instead of uint64 for scrapes `seriesLimit` and `sampleLimit` parameters.
+
+## [v0.64.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.64.1)
+
+**Release date:** 30 October 2025
+
+* BUGFIX: [VLCluster](https://docs.victoriametrics.com/operator/resources/vlcluster/): fix `-storageNode` argument generation for vlinsert. Bug was introduced in [ff722eb](https://github.com/VictoriaMetrics/operator/commit/ff722eb3ba4e72765548b4353b5f370b42d143f7).
+
 ## [v0.64.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.64.0)
 
 **Release date:** 29 October 2025
+
+**It isn't recommended to use Operator  v0.64.0 because of the bug [#1583](https://github.com/VictoriaMetrics/operator/issues/1583), which incorrectly builds args for `VLCluster` resources. Upgrade to [v0.65.0](https://docs.victoriametrics.com/operator/changelog/#v0641) instead.**
 
 **Update Note 1:** This release deprecates 3rd party config-reloader containers - `jimmidyson/configmap-reload` and `quay.io/prometheus-operator/prometheus-config-reloader` in favor of own implementation - 
 [victoriametrics/operator:config-reloader](https://github.com/VictoriaMetrics/operator/tree/master/cmd/config-reloader).

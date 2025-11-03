@@ -195,5 +195,5 @@ choice for medium and high workloads.
 
 Besides all the features provided by VictoriaMetrics itself, the service also provides easy-to-configure-and-run 
 monitoring solution without extra complexity and maintenance burden. As a welcome pack, we provide **$200** bonus 
-for [newly registered accounts](https://console.victoriametrics.cloud/signUp?utm_source=blog&utm_campaign=prompricing). This is enough for running a VictoriaMetrics instance with 2vCPU and 4GB of RAM 
+for [newly registered accounts](https://console.victoriametrics.cloud/signUp). This is enough for running a VictoriaMetrics instance with 2vCPU and 4GB of RAM 
 for free for a month!

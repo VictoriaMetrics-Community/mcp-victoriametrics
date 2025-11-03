@@ -190,11 +190,17 @@ Grafana Agent used **4.38MB/s** on average. Apparently, Grafana Agent uses simil
 data on disk [if remote receiver can keep up with load](https://grafana.com/docs/agent/latest/static/configuration/metrics-config/#falling-behind).
 
 Here is a table with the mean values of resource usage for each agent:
+
+<div class="table-responsive">
+
+
 | Agent            | CPU (cores) | Memory (GB) | Network (MB/s) | Disk (MB/s) |
 |------------------|-------------|-------------|----------------|-------------|
 | vmagent          | 2.69        | 2.2         | 4.78           | 0           |
 | Prometheus Agent | 3.69        | 19          | 15.2           | 7.61        |
 | Grafana Agent    | 4.16        | 25.3        | 17.3           | 4.38        |
+
+</div>
 
 ## Simulating remote target unavailability
 
@@ -247,11 +253,16 @@ Difference in queue implementation is also very well noticeable on the disk spac
 and Prometheus Agent disk usage fluctuated when WAL truncation occurred. vmagent disk usage was stable and linear.
 
 Here is a table with the mean values of resource usage for each agent:
+
+<div class="table-responsive">
+
 | Agent            | CPU (cores) | Memory (GB) | Network (KB/s) | Disk (MB/s) |
 |------------------|-------------|-------------|----------------|-------------|
 | vmagent          | 2.68        | 1.99        | 442            | 4.58        |
 | Prometheus Agent | 2.26        | 13.7        | 410            | 10.4        |
 | Grafana Agent    | 2.79        | 17.1        | 408            | 21.0        |
+
+</div>
 
 ## A bonus round: Using Prometheus and VictoriaMetrics stacks
 
