@@ -1,0 +1,292 @@
+[
+  {
+    "name": "container.cpu.time",
+    "help": "Total cumulative CPU time (sum of all cores) spent by the container/pod/node since its creation",
+    "type": "counter"
+  },
+  {
+    "name": "container.cpu.usage",
+    "help": "Total CPU usage (sum of all cores per second) averaged over the sample window",
+    "type": "gauge"
+  },
+  {
+    "name": "container.filesystem.available",
+    "help": "Container filesystem available",
+    "type": "gauge"
+  },
+  {
+    "name": "container.filesystem.capacity",
+    "help": "Container filesystem capacity",
+    "type": "gauge"
+  },
+  {
+    "name": "container.filesystem.usage",
+    "help": "Container filesystem usage",
+    "type": "gauge"
+  },
+  {
+    "name": "container.memory.available",
+    "help": "Container memory available",
+    "type": "gauge"
+  },
+  {
+    "name": "container.memory.major_page_faults",
+    "help": "Container memory major_page_faults",
+    "type": "gauge"
+  },
+  {
+    "name": "container.memory.page_faults",
+    "help": "Container memory page_faults",
+    "type": "gauge"
+  },
+  {
+    "name": "container.memory.rss",
+    "help": "Container memory rss",
+    "type": "gauge"
+  },
+  {
+    "name": "container.memory.usage",
+    "help": "Container memory usage",
+    "type": "gauge"
+  },
+  {
+    "name": "container.memory.working_set",
+    "help": "Container memory working_set",
+    "type": "gauge"
+  },
+  {
+    "name": "container.uptime",
+    "help": "The time since the container started",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.container.cpu.node.utilization",
+    "help": "Container cpu utilization as a ratio of the node's capacity",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.cpu_limit_utilization",
+    "help": "Container cpu utilization as a ratio of the container's limits",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.cpu_request_utilization",
+    "help": "Container cpu utilization as a ratio of the container's requests",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.memory.node.utilization",
+    "help": "Container memory utilization as a ratio of the node's capacity",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.memory_limit_utilization",
+    "help": "Container memory utilization as a ratio of the container's limits",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.memory_request_utilization",
+    "help": "Container memory utilization as a ratio of the container's requests",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.cpu.time",
+    "help": "Total cumulative CPU time (sum of all cores) spent by the container/pod/node since its creation",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.node.cpu.usage",
+    "help": "Total CPU usage (sum of all cores per second) averaged over the sample window",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.filesystem.available",
+    "help": "Node filesystem available",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.filesystem.capacity",
+    "help": "Node filesystem capacity",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.filesystem.usage",
+    "help": "Node filesystem usage",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.memory.available",
+    "help": "Node memory available",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.memory.major_page_faults",
+    "help": "Node memory major_page_faults",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.memory.page_faults",
+    "help": "Node memory page_faults",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.memory.rss",
+    "help": "Node memory rss",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.memory.usage",
+    "help": "Node memory usage",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.memory.working_set",
+    "help": "Node memory working_set",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.network.errors",
+    "help": "Node network errors",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.node.network.io",
+    "help": "Node network IO",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.node.uptime",
+    "help": "The time since the node started",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.pod.cpu.node.utilization",
+    "help": "Pod cpu utilization as a ratio of the node's capacity",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.cpu.time",
+    "help": "Total cumulative CPU time (sum of all cores) spent by the container/pod/node since its creation",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.pod.cpu.usage",
+    "help": "Total CPU usage (sum of all cores per second) averaged over the sample window",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.cpu_limit_utilization",
+    "help": "Pod cpu utilization as a ratio of the pod's total container limits. If any container is missing a limit the metric is not emitted.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.cpu_request_utilization",
+    "help": "Pod cpu utilization as a ratio of the pod's total container requests. If any container is missing a request the metric is not emitted.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.filesystem.available",
+    "help": "Pod filesystem available",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.filesystem.capacity",
+    "help": "Pod filesystem capacity",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.filesystem.usage",
+    "help": "Pod filesystem usage",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.memory.available",
+    "help": "Pod memory available",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.memory.major_page_faults",
+    "help": "Pod memory major_page_faults",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.memory.node.utilization",
+    "help": "Pod memory utilization as a ratio of the node's capacity",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.memory.page_faults",
+    "help": "Pod memory page_faults",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.memory.rss",
+    "help": "Pod memory rss",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.memory.usage",
+    "help": "Pod memory usage",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.memory.working_set",
+    "help": "Pod memory working_set",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.memory_limit_utilization",
+    "help": "Pod memory utilization as a ratio of the pod's total container limits. If any container is missing a limit the metric is not emitted.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.memory_request_utilization",
+    "help": "Pod memory utilization as a ratio of the pod's total container requests. If any container is missing a request the metric is not emitted.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.network.errors",
+    "help": "Pod network errors",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.pod.network.io",
+    "help": "Pod network IO",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.pod.uptime",
+    "help": "The time since the pod started",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.pod.volume.usage",
+    "help": "The number of used bytes in the pod volume.",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.volume.available",
+    "help": "The number of available bytes in the volume.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.volume.capacity",
+    "help": "The total capacity in bytes of the volume.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.volume.inodes",
+    "help": "The total inodes in the filesystem.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.volume.inodes.free",
+    "help": "The free inodes in the filesystem.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.volume.inodes.used",
+    "help": "The inodes used by the filesystem. This may not equal inodes - free because filesystem may share inodes with other filesystems.",
+    "type": "gauge"
+  }
+]

@@ -1,0 +1,232 @@
+[
+  {
+    "name": "k8s.container.cpu_limit",
+    "help": "Maximum resource limit set for the container. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#resourcerequirements-v1-core for details",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.cpu_request",
+    "help": "Resource requested for the container. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#resourcerequirements-v1-core for details",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.ephemeralstorage_limit",
+    "help": "Maximum resource limit set for the container. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#resourcerequirements-v1-core for details",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.ephemeralstorage_request",
+    "help": "Resource requested for the container. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#resourcerequirements-v1-core for details",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.memory_limit",
+    "help": "Maximum resource limit set for the container. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#resourcerequirements-v1-core for details",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.memory_request",
+    "help": "Resource requested for the container. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#resourcerequirements-v1-core for details",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.ready",
+    "help": "Whether a container has passed its readiness probe (0 for no, 1 for yes)",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.restarts",
+    "help": "How many times the container has restarted in the recent past. This value is pulled directly from the K8s API and the value can go indefinitely high and be reset to 0 at any time depending on how your kubelet is configured to prune dead containers. It is best to not depend too much on the exact value but rather look at it as either == 0, in which case you can conclude there were no restarts in the recent past, or > 0, in which case you can conclude there were restarts in the recent past, and not try and analyze the value beyond that.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.status.reason",
+    "help": "Experimental metric, may experience breaking changes. Describes the number of K8s containers that are currently in a state for a given reason. All possible container state reasons will be reported at each time interval to avoid missing metrics. Only the value corresponding to the current state reason will be non-zero.",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.container.status.state",
+    "help": "Experimental metric, may experience breaking changes. Describes the number of K8s containers that are currently in a given state. All possible container states will be reported at each time interval to avoid missing metrics. Only the value corresponding to the current state will be non-zero.",
+    "type": "counter"
+  },
+  {
+    "name": "k8s.container.storage_limit",
+    "help": "Maximum resource limit set for the container. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#resourcerequirements-v1-core for details",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.container.storage_request",
+    "help": "Resource requested for the container. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#resourcerequirements-v1-core for details",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.cronjob.active_jobs",
+    "help": "The number of actively running jobs for a cronjob",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.daemonset.current_scheduled_nodes",
+    "help": "Number of nodes that are running at least 1 daemon pod and are supposed to run the daemon pod",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.daemonset.desired_scheduled_nodes",
+    "help": "Number of nodes that should be running the daemon pod (including nodes currently running the daemon pod)",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.daemonset.misscheduled_nodes",
+    "help": "Number of nodes that are running the daemon pod, but are not supposed to run the daemon pod",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.daemonset.ready_nodes",
+    "help": "Number of nodes that should be running the daemon pod and have one or more of the daemon pod running and ready",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.deployment.available",
+    "help": "Total number of available pods (ready for at least minReadySeconds) targeted by this deployment",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.deployment.desired",
+    "help": "Number of desired pods in this deployment",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.hpa.current_replicas",
+    "help": "Current number of pod replicas managed by this autoscaler.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.hpa.desired_replicas",
+    "help": "Desired number of pod replicas managed by this autoscaler.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.hpa.max_replicas",
+    "help": "Maximum number of replicas to which the autoscaler can scale up.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.hpa.min_replicas",
+    "help": "Minimum number of replicas to which the autoscaler can scale up.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.job.active_pods",
+    "help": "The number of actively running pods for a job",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.job.desired_successful_pods",
+    "help": "The desired number of successfully finished pods the job should be run with",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.job.failed_pods",
+    "help": "The number of pods which reached phase Failed for a job",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.job.max_parallel_pods",
+    "help": "The max desired number of pods the job should run at any given time",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.job.successful_pods",
+    "help": "The number of pods which reached phase Succeeded for a job",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.namespace.phase",
+    "help": "The current phase of namespaces (1 for active and 0 for terminating)",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.node.condition",
+    "help": "The condition of a particular Node.",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.phase",
+    "help": "Current phase of the pod (1 - Pending, 2 - Running, 3 - Succeeded, 4 - Failed, 5 - Unknown)",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.pod.status_reason",
+    "help": "Current status reason of the pod (1 - Evicted, 2 - NodeAffinity, 3 - NodeLost, 4 - Shutdown, 5 - UnexpectedAdmissionError, 6 - Unknown)",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.replicaset.available",
+    "help": "Total number of available pods (ready for at least minReadySeconds) targeted by this replicaset",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.replicaset.desired",
+    "help": "Number of desired pods in this replicaset",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.replication_controller.available",
+    "help": "Total number of available pods (ready for at least minReadySeconds) targeted by this replication_controller",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.replication_controller.desired",
+    "help": "Number of desired pods in this replication_controller",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.resource_quota.hard_limit",
+    "help": "The upper limit for a particular resource in a specific namespace. Will only be sent if a quota is specified. CPU requests/limits will be sent as millicores",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.resource_quota.used",
+    "help": "The usage for a particular resource in a specific namespace. Will only be sent if a quota is specified. CPU requests/limits will be sent as millicores",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.statefulset.current_pods",
+    "help": "The number of pods created by the StatefulSet controller from the StatefulSet version",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.statefulset.desired_pods",
+    "help": "Number of desired pods in the stateful set (the `spec.replicas` field)",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.statefulset.ready_pods",
+    "help": "Number of pods created by the stateful set that have the `Ready` condition",
+    "type": "gauge"
+  },
+  {
+    "name": "k8s.statefulset.updated_pods",
+    "help": "Number of pods created by the StatefulSet controller from the StatefulSet version",
+    "type": "gauge"
+  },
+  {
+    "name": "openshift.appliedclusterquota.limit",
+    "help": "The upper limit for a particular resource in a specific namespace.",
+    "type": "gauge"
+  },
+  {
+    "name": "openshift.appliedclusterquota.used",
+    "help": "The usage for a particular resource in a specific namespace.",
+    "type": "gauge"
+  },
+  {
+    "name": "openshift.clusterquota.limit",
+    "help": "The configured upper limit for a particular resource.",
+    "type": "gauge"
+  },
+  {
+    "name": "openshift.clusterquota.used",
+    "help": "The usage for a particular resource with a configured limit.",
+    "type": "gauge"
+  }
+]

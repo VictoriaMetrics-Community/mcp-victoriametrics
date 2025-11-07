@@ -1,0 +1,342 @@
+[
+  {
+    "name": "system.cpu.frequency",
+    "help": "Current frequency of the CPU core in Hz.",
+    "type": "gauge"
+  },
+  {
+    "name": "system.cpu.logical.count",
+    "help": "Number of available logical CPUs.",
+    "type": "counter"
+  },
+  {
+    "name": "system.cpu.physical.count",
+    "help": "Number of available physical CPUs.",
+    "type": "counter"
+  },
+  {
+    "name": "system.cpu.time",
+    "help": "Total seconds each logical CPU spent on each mode.",
+    "type": "counter"
+  },
+  {
+    "name": "system.cpu.utilization",
+    "help": "Difference in system.cpu.time since the last measurement per logical CPU, divided by the elapsed time (value in interval [0,1]).",
+    "type": "gauge"
+  },
+  {
+    "name": "system.disk.io",
+    "help": "Disk bytes transferred.",
+    "type": "counter"
+  },
+  {
+    "name": "system.disk.io_time",
+    "help": "Time disk spent activated. On Windows, this is calculated as the inverse of disk idle time.",
+    "type": "counter"
+  },
+  {
+    "name": "system.disk.merged",
+    "help": "The number of disk reads/writes merged into single physical disk access operations.",
+    "type": "counter"
+  },
+  {
+    "name": "system.disk.operation_time",
+    "help": "Time spent in disk operations.",
+    "type": "counter"
+  },
+  {
+    "name": "system.disk.operations",
+    "help": "Disk operations count.",
+    "type": "counter"
+  },
+  {
+    "name": "system.disk.pending_operations",
+    "help": "The queue size of pending I/O operations.",
+    "type": "counter"
+  },
+  {
+    "name": "system.disk.weighted_io_time",
+    "help": "Time disk spent activated multiplied by the queue length.",
+    "type": "counter"
+  },
+  {
+    "name": "system.filesystem.inodes.usage",
+    "help": "FileSystem inodes used.",
+    "type": "counter"
+  },
+  {
+    "name": "system.filesystem.usage",
+    "help": "Filesystem bytes used.",
+    "type": "counter"
+  },
+  {
+    "name": "system.filesystem.utilization",
+    "help": "Fraction of filesystem bytes used.",
+    "type": "gauge"
+  },
+  {
+    "name": "system.cpu.load_average.15m",
+    "help": "Average CPU Load over 15 minutes.",
+    "type": "gauge"
+  },
+  {
+    "name": "system.cpu.load_average.1m",
+    "help": "Average CPU Load over 1 minute.",
+    "type": "gauge"
+  },
+  {
+    "name": "system.cpu.load_average.5m",
+    "help": "Average CPU Load over 5 minutes.",
+    "type": "gauge"
+  },
+  {
+    "name": "system.linux.memory.available",
+    "help": "An estimate of how much memory is available for starting new applications, without swapping. This is a more accurate alternative than system.memory.usage with state=free. (Linux only)",
+    "type": "counter"
+  },
+  {
+    "name": "system.linux.memory.dirty",
+    "help": "The amount of dirty memory according to `/proc/meminfo`.",
+    "type": "counter"
+  },
+  {
+    "name": "system.memory.limit",
+    "help": "Total bytes of memory available.",
+    "type": "counter"
+  },
+  {
+    "name": "system.memory.page_size",
+    "help": "A constant value for the system's configured page size.",
+    "type": "gauge"
+  },
+  {
+    "name": "system.memory.usage",
+    "help": "Bytes of memory in use.",
+    "type": "counter"
+  },
+  {
+    "name": "system.memory.utilization",
+    "help": "Percentage of memory bytes in use.",
+    "type": "gauge"
+  },
+  {
+    "name": "system.network.connections",
+    "help": "The number of connections.",
+    "type": "counter"
+  },
+  {
+    "name": "system.network.conntrack.count",
+    "help": "The count of entries in conntrack table.",
+    "type": "counter"
+  },
+  {
+    "name": "system.network.conntrack.max",
+    "help": "The limit for entries in the conntrack table.",
+    "type": "counter"
+  },
+  {
+    "name": "system.network.dropped",
+    "help": "The number of packets dropped.",
+    "type": "counter"
+  },
+  {
+    "name": "system.network.errors",
+    "help": "The number of errors encountered.",
+    "type": "counter"
+  },
+  {
+    "name": "system.network.io",
+    "help": "The number of bytes transmitted and received.",
+    "type": "counter"
+  },
+  {
+    "name": "system.network.packets",
+    "help": "The number of packets transferred.",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.client.net.count",
+    "help": "Reports the count of kernel NFS client TCP segments and UDP datagrams handled.",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.client.net.tcp.connection.accepted",
+    "help": "Reports the count of kernel NFS client TCP connections accepted",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.client.operation.count",
+    "help": "Reports the count of kernel NFSv4+ client operations",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.client.procedure.count",
+    "help": "Reports the count of kernel NFS client procedures",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.client.rpc.authrefresh.count",
+    "help": "Reports the count of kernel NFS client RPC authentication refreshes",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.client.rpc.count",
+    "help": "Reports the count of kernel NFS client RPCs sent, regardless of whether they're accepted/rejected by the server.",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.client.rpc.retransmit.count",
+    "help": "Reports the count of kernel NFS client RPC retransmits",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.server.fh.stale.count",
+    "help": "Reports the cumulative count of kernel NFS server stale file handles.",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.server.io",
+    "help": "Reports the count of kernel NFS server bytes returned to receive and transmit (read and write) requests.",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.server.net.count",
+    "help": "Reports the count of kernel NFS server TCP segments and UDP datagrams handled.",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.server.net.tcp.connection.accepted",
+    "help": "Reports the count of kernel NFS server TCP connections accepted",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.server.operation.count",
+    "help": "Reports the count of kernel NFSv4+ server operations",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.server.procedure.count",
+    "help": "Reports the count of kernel NFS server procedures",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.server.repcache.requests",
+    "help": "Reports the kernel NFS server reply cache request count by cache hit status.",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.server.rpc.count",
+    "help": "Reports the count of kernel NFS server RPCs handled.",
+    "type": "counter"
+  },
+  {
+    "name": "nfs.server.thread.count",
+    "help": "Reports the count of kernel NFS server available threads",
+    "type": "counter"
+  },
+  {
+    "name": "system.paging.faults",
+    "help": "The number of page faults.",
+    "type": "counter"
+  },
+  {
+    "name": "system.paging.operations",
+    "help": "The number of paging operations.",
+    "type": "counter"
+  },
+  {
+    "name": "system.paging.usage",
+    "help": "Swap (unix) or pagefile (windows) usage.",
+    "type": "counter"
+  },
+  {
+    "name": "system.paging.utilization",
+    "help": "Swap (unix) or pagefile (windows) utilization.",
+    "type": "gauge"
+  },
+  {
+    "name": "system.processes.count",
+    "help": "Total number of processes in each state.",
+    "type": "counter"
+  },
+  {
+    "name": "system.processes.created",
+    "help": "Total number of created processes.",
+    "type": "counter"
+  },
+  {
+    "name": "process.context_switches",
+    "help": "Number of times the process has been context switched.",
+    "type": "counter"
+  },
+  {
+    "name": "process.cpu.time",
+    "help": "Total CPU seconds broken down by different states.",
+    "type": "counter"
+  },
+  {
+    "name": "process.cpu.utilization",
+    "help": "Percentage of total CPU time used by the process since last scrape, expressed as a value between 0 and 1. On the first scrape, no data point is emitted for this metric.",
+    "type": "gauge"
+  },
+  {
+    "name": "process.disk.io",
+    "help": "Disk bytes transferred.",
+    "type": "counter"
+  },
+  {
+    "name": "process.disk.operations",
+    "help": "Number of disk operations performed by the process.",
+    "type": "counter"
+  },
+  {
+    "name": "process.handles",
+    "help": "Number of open handles held by the process.",
+    "type": "counter"
+  },
+  {
+    "name": "process.memory.usage",
+    "help": "The amount of physical memory in use.",
+    "type": "counter"
+  },
+  {
+    "name": "process.memory.utilization",
+    "help": "Percentage of total physical memory that is used by the process.",
+    "type": "gauge"
+  },
+  {
+    "name": "process.memory.virtual",
+    "help": "Virtual memory size.",
+    "type": "counter"
+  },
+  {
+    "name": "process.open_file_descriptors",
+    "help": "Number of file descriptors in use by the process.",
+    "type": "counter"
+  },
+  {
+    "name": "process.paging.faults",
+    "help": "Number of page faults the process has made.",
+    "type": "counter"
+  },
+  {
+    "name": "process.signals_pending",
+    "help": "Number of pending signals for the process.",
+    "type": "counter"
+  },
+  {
+    "name": "process.threads",
+    "help": "Process threads count.",
+    "type": "counter"
+  },
+  {
+    "name": "process.uptime",
+    "help": "The time the process has been running.",
+    "type": "gauge"
+  },
+  {
+    "name": "system.uptime",
+    "help": "The time the system has been running",
+    "type": "gauge"
+  }
+]
