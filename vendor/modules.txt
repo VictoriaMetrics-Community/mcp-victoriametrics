@@ -10,8 +10,8 @@ github.com/RoaringBitmap/roaring/v2/roaring64
 ## explicit; go 1.25.2
 github.com/VictoriaMetrics/VictoriaLogs/lib/logstorage
 github.com/VictoriaMetrics/VictoriaLogs/lib/prefixfilter
-# github.com/VictoriaMetrics/VictoriaMetrics v1.129.1
-## explicit; go 1.25.3
+# github.com/VictoriaMetrics/VictoriaMetrics v1.130.0
+## explicit; go 1.25.4
 github.com/VictoriaMetrics/VictoriaMetrics/app/victoria-metrics/test
 github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert-tool/unittest
 github.com/VictoriaMetrics/VictoriaMetrics/app/vmalert/config
@@ -159,6 +159,7 @@ github.com/VictoriaMetrics/VictoriaMetrics/lib/slicesutil
 github.com/VictoriaMetrics/VictoriaMetrics/lib/snapshot/snapshotutil
 github.com/VictoriaMetrics/VictoriaMetrics/lib/storage
 github.com/VictoriaMetrics/VictoriaMetrics/lib/storage/metricnamestats
+github.com/VictoriaMetrics/VictoriaMetrics/lib/storage/metricsmetadata
 github.com/VictoriaMetrics/VictoriaMetrics/lib/streamaggr
 github.com/VictoriaMetrics/VictoriaMetrics/lib/stringsutil
 github.com/VictoriaMetrics/VictoriaMetrics/lib/syncwg
@@ -171,7 +172,7 @@ github.com/VictoriaMetrics/VictoriaMetrics/lib/writeconcurrencylimiter
 # github.com/VictoriaMetrics/easyproto v0.1.4
 ## explicit; go 1.18
 github.com/VictoriaMetrics/easyproto
-# github.com/VictoriaMetrics/fastcache v1.13.0
+# github.com/VictoriaMetrics/fastcache v1.13.2
 ## explicit; go 1.24.0
 github.com/VictoriaMetrics/fastcache
 # github.com/VictoriaMetrics/metrics v1.40.2
@@ -399,7 +400,7 @@ github.com/valyala/fastrand
 # github.com/valyala/fasttemplate v1.2.2
 ## explicit; go 1.12
 github.com/valyala/fasttemplate
-# github.com/valyala/gozstd v1.23.2
+# github.com/valyala/gozstd v1.24.0
 ## explicit; go 1.12
 github.com/valyala/gozstd
 # github.com/valyala/histogram v1.2.0
