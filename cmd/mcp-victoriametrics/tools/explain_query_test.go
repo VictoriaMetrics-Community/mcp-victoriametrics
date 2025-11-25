@@ -160,6 +160,16 @@ func TestGetQueryInfo(t *testing.T) {
 		t.Fatalf("Failed to initialize functions info: %v", err)
 	}
 
+	// Initialize metrics info
+	err = initMetricsInfo()
+	if err != nil {
+		t.Fatalf("Failed to initialize metrics info: %v", err)
+	}
+
+	// Create a mock config and request
+	cfg := &config.Config{}
+	tcr := mcp.CallToolRequest{}
+
 	// Test cases
 	testCases := []struct {
 		name        string
@@ -194,7 +204,7 @@ func TestGetQueryInfo(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Call the function
-			info, err := getQueryInfo(tc.query)
+			info, err := getQueryInfo(context.Background(), cfg, tcr, tc.query)
 
 			// Check for errors
 			if tc.expectError {
