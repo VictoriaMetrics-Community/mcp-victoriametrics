@@ -11,6 +11,10 @@ import (
 	vmcloud "github.com/VictoriaMetrics/victoriametrics-cloud-api-go/v1"
 )
 
+const (
+	toolsDisabledByDefault = "export,flags,metric_relabel_debug,downsampling_filters_debug,retention_filters_debug,test_rules"
+)
+
 type Config struct {
 	serverMode        string
 	listenAddr        string
@@ -28,7 +32,10 @@ type Config struct {
 }
 
 func InitConfig() (*Config, error) {
-	disabledTools := os.Getenv("MCP_DISABLED_TOOLS")
+	disabledTools, isDisabledToolsSet := os.LookupEnv("MCP_DISABLED_TOOLS")
+	if disabledTools == "" && !isDisabledToolsSet {
+		disabledTools = toolsDisabledByDefault
+	}
 	disabledToolsMap := make(map[string]bool)
 	if disabledTools != "" {
 		for _, tool := range strings.Split(disabledTools, ",") {
