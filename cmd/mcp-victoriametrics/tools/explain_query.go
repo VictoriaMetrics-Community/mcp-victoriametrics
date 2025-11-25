@@ -38,13 +38,13 @@ var (
 	)
 )
 
-func toolExplainQueryHandler(_ context.Context, _ *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func toolExplainQueryHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	query, err := GetToolReqParam[string](tcr, "query", true)
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	info, err := getQueryInfo(query)
+	info, err := getQueryInfo(ctx, cfg, tcr, query)
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("error explaining query: %s", err)), nil
 	}
@@ -72,7 +72,7 @@ func RegisterToolExplainQuery(s *server.MCPServer, c *config.Config) {
 	})
 }
 
-func getQueryInfo(query string) (map[string]any, error) {
+func getQueryInfo(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest, query string) (map[string]any, error) {
 	expr, err := metricsql.Parse(query)
 	if err != nil {
 		return nil, fmt.Errorf("query parsing error: %w", err)
@@ -85,7 +85,7 @@ func getQueryInfo(query string) (map[string]any, error) {
 		"syntax_tree":    st,
 		"types_info":     getTypesDescriptions(types),
 		"functions_info": getFunctionsInfo(functions),
-		"metrics_info":   getMetricsInfo(metrics),
+		"metrics_info":   getMetricsInfo(ctx, cfg, tcr, metrics),
 	}
 	return result, nil
 }
@@ -120,6 +120,7 @@ type metricInfo struct {
 	Description string   `json:"help"`
 	Type        string   `json:"type"`
 	Labels      []string `json:"labels,omitempty"`
+	Unit        string   `json:"unit,omitempty"`
 }
 
 //go:embed metrics_metadata_db
@@ -127,15 +128,103 @@ var metricsMetadataDBDir embed.FS
 
 var metricsInfo map[string]any
 
-func getMetricsInfo(metrics map[string]struct{}) map[string]metricInfo {
+// fetchMetricsMetadataFromAPI fetches metrics metadata from VictoriaMetrics API
+func fetchMetricsMetadataFromAPI(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest, metricNames []string) (map[string]metricInfo, error) {
+	if len(metricNames) == 0 {
+		return make(map[string]metricInfo), nil
+	}
+
+	// Skip API fetch if config is not properly initialized
+	if cfg == nil || (cfg.EntryPointURL() == nil && !cfg.IsCloud()) {
+		return make(map[string]metricInfo), nil
+	}
+
 	result := make(map[string]metricInfo)
-	for metric := range metrics {
-		if info, ok := metricsInfo[metric]; ok {
-			if mi, ok := info.(metricInfo); ok {
-				result[metric] = mi
+
+	// Fetch metadata for each metric from the API
+	for _, metricName := range metricNames {
+		req, err := CreateSelectRequest(ctx, cfg, tcr, "api", "v1", "metadata")
+		if err != nil {
+			continue // Skip this metric on error
+		}
+
+		q := req.URL.Query()
+		q.Add("metric", metricName)
+		q.Add("limit", "1") // We only need one entry per metric
+		req.URL.RawQuery = q.Encode()
+
+		toolResult := GetTextBodyForRequest(req, cfg)
+		if len(toolResult.Content) == 0 {
+			continue
+		}
+
+		// Parse the API response
+		textContent, ok := toolResult.Content[0].(mcp.TextContent)
+		if !ok {
+			continue
+		}
+
+		var apiResponse struct {
+			Status string `json:"status"`
+			Data   map[string][]struct {
+				Type string `json:"type"`
+				Help string `json:"help"`
+				Unit string `json:"unit"`
+			} `json:"data"`
+		}
+
+		if err := json.Unmarshal([]byte(textContent.Text), &apiResponse); err != nil {
+			continue
+		}
+
+		// Extract metadata for the metric
+		if apiResponse.Status == "success" {
+			if metadataList, exists := apiResponse.Data[metricName]; exists && len(metadataList) > 0 {
+				metadata := metadataList[0]
+				result[metricName] = metricInfo{
+					Name:        metricName,
+					Description: metadata.Help,
+					Type:        metadata.Type,
+					Unit:        metadata.Unit,
+					Group:       "api",
+				}
 			}
 		}
 	}
+
+	return result, nil
+}
+
+func getMetricsInfo(ctx context.Context, cfg *config.Config, tcr mcp.CallToolRequest, metrics map[string]struct{}) map[string]metricInfo {
+	result := make(map[string]metricInfo)
+
+	// First, try to fetch metadata from API if config is available
+	if cfg != nil {
+		metricNames := make([]string, 0, len(metrics))
+		for metric := range metrics {
+			metricNames = append(metricNames, metric)
+		}
+
+		apiMetadata, err := fetchMetricsMetadataFromAPI(ctx, cfg, tcr, metricNames)
+		if err == nil && len(apiMetadata) > 0 {
+			// Use API metadata
+			for metric, info := range apiMetadata {
+				result[metric] = info
+			}
+		}
+	}
+
+	// Fall back to static metadata for metrics not found in API
+	for metric := range metrics {
+		if _, found := result[metric]; !found {
+			if info, ok := metricsInfo[metric]; ok {
+				if mi, ok := info.(metricInfo); ok {
+					result[metric] = mi
+				}
+			}
+		}
+	}
+
 	return result
 }
 

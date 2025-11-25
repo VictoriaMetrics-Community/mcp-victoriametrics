@@ -92,6 +92,7 @@ Try not to second guess information - if you don't know something or lack inform
 	tools.RegisterToolActiveQueries(s, c)
 	tools.RegisterToolDocumentation(s, c)
 	tools.RegisterToolPrettifyQuery(s, c)
+	tools.RegisterToolMetricsMetadata(s, c)
 	tools.RegisterToolMetricRelabelDebug(s, c)
 	tools.RegisterToolRetentionFiltersDebug(s, c)
 	tools.RegisterToolDownsamplingFiltersDebug(s, c)

@@ -424,42 +424,43 @@ MCP VictoriaMetrics provides numerous tools for interacting with your VictoriaMe
 
 Here's a list of common available tools:
 
-| Tool                         | Description                                               |
-|------------------------------|-----------------------------------------------------------|
-| `query`                      | Execute instant PromQL/MetricsQL queries                  |
-| `query_range`                | Execute range PromQL/MetricsQL queries over a time period |
-| `metrics`                    | List available metrics                                    |
-| `labels`                     | List available label names                                |
-| `label_values`               | List values for a specific label                          |
-| `series`                     | List available time series                                |
-| `export`                     | Export raw time series data to JSON or CSV                |
-| `rules`                      | View alerting and recording rules                         |
-| `alerts`                     | View current alerts (firing and pending)                  |
-| `flags`                      | View non-default flags of the VictoriaMetrics instance    |
-| `metric_statistics`          | Get metrics usage (in queries) statistics                 |
-| `active_queries`             | View currently executing queries                          |
-| `top_queries`                | View most frequent or slowest queries                     |
-| `tsdb_status`                | View TSDB cardinality statistics                          |
-| `tenants`                    | List available tenants in multi-tenant cluster setup      |
-| `documentation`              | Search in embedded VictoriaMetrics documentation          |
-| `metric_relabel_debug`       | Debug Prometheus-compatible relabeling rules              |
-| `downsampling_filters_debug` | Debug downsampling configuration                          |
-| `retention_filters_debug`    | Debug retention filters configuration                     |
-| `prettify_query`             | Prettify and format PromQL/MetricsQL queries              |
-| `explain_query`              | Parse PromQL/MetricsQL queries and explain how it works   |
-| `test_rules`                 | Unit-test alerting and recording rules using vmalert tool |
+| Tool                         | Description                                               | Enabled by default |
+|------------------------------|-----------------------------------------------------------|:------------------:|
+| `query`                      | Execute instant PromQL/MetricsQL queries                  |         ✅          |
+| `query_range`                | Execute range PromQL/MetricsQL queries over a time period |         ✅          |
+| `metrics`                    | List available metrics                                    |         ✅          |  
+| `metrics_metadata`           | Stored metrics metadata (type, help and unit)             |         ✅          |
+| `labels`                     | List available label names                                |         ✅          |
+| `label_values`               | List values for a specific label                          |         ✅          |
+| `series`                     | List available time series                                |         ✅          |
+| `export`                     | Export raw time series data to JSON or CSV                |         ❌          |
+| `rules`                      | View alerting and recording rules                         |         ✅          |
+| `alerts`                     | View current alerts (firing and pending)                  |         ✅          |
+| `flags`                      | View non-default flags of the VictoriaMetrics instance    |         ❌          |
+| `metric_statistics`          | Get metrics usage (in queries) statistics                 |         ✅          |
+| `active_queries`             | View currently executing queries                          |         ✅          |
+| `top_queries`                | View most frequent or slowest queries                     |         ✅          |
+| `tsdb_status`                | View TSDB cardinality statistics                          |         ✅          |
+| `tenants`                    | List available tenants in multi-tenant cluster setup      |         ✅          |
+| `documentation`              | Search in embedded VictoriaMetrics documentation          |         ✅          |
+| `metric_relabel_debug`       | Debug Prometheus-compatible relabeling rules              |         ❌          |
+| `downsampling_filters_debug` | Debug downsampling configuration                          |         ❌          |
+| `retention_filters_debug`    | Debug retention filters configuration                     |         ❌          |
+| `prettify_query`             | Prettify and format PromQL/MetricsQL queries              |         ✅          |
+| `explain_query`              | Parse PromQL/MetricsQL queries and explain how it works   |         ✅          |
+| `test_rules`                 | Unit-test alerting and recording rules using vmalert tool |         ❌          |
 
 Here are some additional tools that are available for [VictoriaMetrics Cloud](https://docs.victoriametrics.com/victoriametrics-cloud/) (with specifying `VMC_API_KEY` parameter) users:
 
-| Tool              | Description                                                                    |
-|-------------------|--------------------------------------------------------------------------------|
-| `deployments`     | List available deployments in VictoriaMetrics Cloud                            |
-| `cloud_providers` | List available cloud providers in VictoriaMetrics Cloud                        |
-| `regions`         | List available cloud providers regions in VictoriaMetrics Cloud                |
-| `tiers`           | List available deployment tiers in VictoriaMetrics Cloud                       |
-| `access_tokens`   | List available deployment access tokens in VictoriaMetrics Cloud               |
-| `rule_filenames`  | List available alerting and recording rule filenames in VictoriaMetrics Cloud  |
-| `rule_file`       | Content of a specific alerting or recording rule file in VictoriaMetrics Cloud |
+| Tool              | Description                                                                    | Enabled by default |
+|-------------------|--------------------------------------------------------------------------------|:------------------:|
+| `deployments`     | List available deployments in VictoriaMetrics Cloud                            |         ✅          |
+| `cloud_providers` | List available cloud providers in VictoriaMetrics Cloud                        |         ✅          |
+| `regions`         | List available cloud providers regions in VictoriaMetrics Cloud                |         ✅          |
+| `tiers`           | List available deployment tiers in VictoriaMetrics Cloud                       |         ✅          |
+| `access_tokens`   | List available deployment access tokens in VictoriaMetrics Cloud               |         ✅          |
+| `rule_filenames`  | List available alerting and recording rule filenames in VictoriaMetrics Cloud  |         ✅          |
+| `rule_file`       | Content of a specific alerting or recording rule file in VictoriaMetrics Cloud |         ✅          |
 
 ### Prompts
 
