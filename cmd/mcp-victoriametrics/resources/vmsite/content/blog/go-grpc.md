@@ -22,11 +22,11 @@ images:
 
 This article is part of the ongoing gRPC communication protocol series:
 
-- [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc)
-- [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2)
-- [Practical Protobuf - From Basic to Best Practices](/blog/go-protobuf-basic)
-- [How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf)
-- [gRPC Guide for Go](/blog/go-grpc)
+- [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc/)
+- [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2/)
+- [Practical Protobuf - From Basic to Best Practices](/blog/go-protobuf-basic/)
+- [How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf/)
+- [gRPC Guide for Go](/blog/go-grpc/)
 
 #### Synchronous vs Asynchronous
 

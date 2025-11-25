@@ -195,7 +195,7 @@ We’ve had some nice press coverage in the past few months as well as some comm
 
 ## Our Recent Blog Posts
 
-* [Monitoring Proxmox VE via Managed VictoriaMetrics](https://victoriametrics.com/blog/proxmox-monitoring-with-dbaas/)
+* [Monitoring Proxmox VE via Managed VictoriaMetrics](https://victoriametrics.com/blog/proxmox-monitoring-with-vmcloud/)
 * [Introduction to Managed Monitoring](https://victoriametrics.com/blog/introduction-to-managed-monitoring/)
 * [How to reduce expenses on monitoring: be smarter about data](https://victoriametrics.com/blog/reducing-costs-p2/)
 * [VictoriaMetrics slashes data storage bills by 90% with world’s most cost-efficient monitoring](https://victoriametrics.com/blog/victoriametrics-slashes-data-storage-bills-with-worlds-most-cost-efficient-monitoring/)

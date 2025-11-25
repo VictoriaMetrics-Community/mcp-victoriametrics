@@ -22,12 +22,12 @@ images:
 This post is part of a series about handling concurrency in Go:
 
 - Go sync.Mutex: Normal and Starvation Mode (We're here)
-- [Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup)
-- [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool)
-- [Go sync.Cond, the Most Overlooked Sync Mechanism](/blog/go-sync-cond)
-- [Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map)
-- [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once)
-- [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight)
+- [Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup/)
+- [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/)
+- [Go sync.Cond, the Most Overlooked Sync Mechanism](/blog/go-sync-cond/)
+- [Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map/)
+- [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once/)
+- [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight/)
 
 
 Mutex, or **MUT**ual **EX**clusion, in Go is basically a way to make sure that only one goroutine is messing with a shared resource at a time. This resource can be a piece of code, an integer, a map, a struct, a channel, or pretty much anything.
@@ -118,7 +118,7 @@ func main() {
 
 Now, the result is 1000, just as we expected. Using a mutex here is super straightforward: wrap the critical section with `Lock` and `Unlock`. But watch out, if you call `Unlock` on an already unlocked mutex, it'll cause a fatal error `sync: unlock of unlocked mutex`.
 
-> It's usually a good idea to use defer `mutex.Unlock()` to ensure the unlock happens, even if something goes wrong. We've also got an article about [Golang Defer: From Basic To Traps](/blog/defer-in-go).
+> It's usually a good idea to use defer `mutex.Unlock()` to ensure the unlock happens, even if something goes wrong. We've also got an article about [Golang Defer: From Basic To Traps](/blog/defer-in-go/).
 
 Also, you could set `GOMAXPROCS` to 1 by running `runtime.GOMAXPROCS(1)`, and the result would still be correct at 1000. This is because our goroutines wouldn't be running in parallel, and the function is simple enough not to be preempted while running.
 
@@ -301,13 +301,13 @@ If you spot anything that’s outdated or if you have questions, don’t hesitat
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer/)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 

@@ -24,13 +24,13 @@ images:
 
 This piece is part of our ongoing VictoriaMetrics series where we break down how different components of the system do their thing:
 
-1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works)
-2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion)
-3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication)
+1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works/)
+2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion/)
+3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication/)
 4. When Metrics Meet **vminsert**: A Data-Delivery Story (We're here)
-5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works)
-6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
-7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
+5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works/)
+6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests/)
+7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works/)
 
 > [!NOTE] Note: a few things to keep in mind
 > - Flags we mention will begin with a dash (`-`), e.g. `-remoteWrite.url`.
@@ -175,7 +175,7 @@ Instead, by default, vminsert blocks incoming requests until there's enough spac
 
 It's a valid question, and in fact, spreading the load to other nodes used to be the default behavior in earlier versions.
 
-However, this strategy can lead to new challenges, especially when dealing with entirely new timeseries. As I mentioned earlier, _"the same timeseries will always go to the same storage node"_. But with rerouting, each node ends up needing to register these **new timeseries**. This process is quite resource-intensive and can strain the system significantly (you can check out more details in [vmstorage discussion](/blog/vmstorage-how-it-handles-data-ingestion)).
+However, this strategy can lead to new challenges, especially when dealing with entirely new timeseries. As I mentioned earlier, _"the same timeseries will always go to the same storage node"_. But with rerouting, each node ends up needing to register these **new timeseries**. This process is quite resource-intensive and can strain the system significantly (you can check out more details in [vmstorage discussion](/blog/vmstorage-how-it-handles-data-ingestion/)).
 
 This can lead to unhealthy nodes or even OOM (Out of Memory) crashes. When one node crashes, it again puts extra pressure on the remaining ones, potentially triggering a domino effect.
 
@@ -224,7 +224,7 @@ The vmstorage will immediately send an ACK to indicate it has received the data 
 
 And now, the story shifts to vmstorage's side of things, what it would do with the data after it receives it.
 
-> [!NOTE] Read next: [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works)
+> [!NOTE] Read next: [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works/)
 
 ## Who We Are
 

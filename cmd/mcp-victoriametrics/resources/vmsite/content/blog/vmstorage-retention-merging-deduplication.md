@@ -25,16 +25,16 @@ images:
 
 This piece is part of our ongoing VictoriaMetrics series where we break down how different components of the system do their thing:
 
-1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works)
-2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion)
+1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works/)
+2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion/)
 3. How **vmstorage** Processes Data: Retention, Merging, Deduplication,... (We're here)
-4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works)
-5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works)
-6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
-7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
+4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works/)
+5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works/)
+6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests/)
+7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works/)
 
 
-We already know how vmstorage handles data ingestion from vminsert in the [previous article](/blog/vmstorage-how-it-handles-data-ingestion), turning them into what we call "raw-row shards" in memory. However, they're not searchable yet. 
+We already know how vmstorage handles data ingestion from vminsert in the [previous article](/blog/vmstorage-how-it-handles-data-ingestion/), turning them into what we call "raw-row shards" in memory. However, they're not searchable yet. 
 
 If you've forgotten the details, there's no need to reread the article — here's the summary:
 
@@ -267,7 +267,7 @@ total 641M
 
 The sizes vary quite a bit, but there is a clear pattern. Each file serves a specific purpose and uses different compression strategies to optimize storage. The `values.bin` file is always the largest because it holds the raw metric values. Next in size is usually `timestamps.bin`, followed by `index.bin`. Finally, the file we load into memory is `metaindex.bin`, which is a significantly smaller.
 
-> [!NOTE] Read next: [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works)
+> [!NOTE] Read next: [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works/)
 
 ## Stay Connected
 

@@ -17,7 +17,7 @@ VictoriaTraces provides the following API for OpenTelemetry data ingestion:
 
 - `/insert/opentelemetry/v1/traces`
 
-See more details [in this docs](https://docs.victoriametrics.com/victoriatraces/data-ingestion/opentelemetry/).
+See more details in [OpenTelemetry data ingestion](https://docs.victoriametrics.com/victoriatraces/data-ingestion/opentelemetry/).
 
 ### HTTP parameters
 
@@ -55,3 +55,14 @@ additionally to [HTTP query args](#http-query-string-parameters):
   the ingested data is logged by VictoriaTraces, so it can be investigated later.
 
 See also [HTTP Query string parameters](#http-query-string-parameters).
+
+## gRPC Services and Methods
+
+### OpenTelemetry Collector TraceService
+
+VictoriaTraces implements the OpenTelemetry Collector [TraceService](https://github.com/open-telemetry/opentelemetry-proto/blob/v1.8.0/opentelemetry/proto/collector/trace/v1/trace_service.proto#L30)
+to accept spans pushed by applications or collectors in [OTLP/gRPC](https://opentelemetry.io/docs/specs/otlp/#otlpgrpc).
+
+As gRPC is running over HTTP2, it can also accept optional HTTP parameters via [HTTP headers](https://docs.victoriametrics.com/victoriatraces/data-ingestion/#http-headers)
+
+See more details in [OpenTelemetry data ingestion](https://docs.victoriametrics.com/victoriatraces/data-ingestion/opentelemetry/#grpc-exporter).

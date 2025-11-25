@@ -819,6 +819,12 @@ Change the values according to the need of the environment in ``victoria-logs-si
       <td><em><code>(string)</code></em><p>Target port</p>
 </td>
     </tr>
+    <tr id="server-service-trafficdistribution">
+      <td><a href="#server-service-trafficdistribution"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.trafficDistribution</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service traffic distribution. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution" target="_blank">here</a></p>
+</td>
+    </tr>
     <tr id="server-service-type">
       <td><a href="#server-service-type"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.type</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterIP</span></span></span></code></pre>
 </a></td>

@@ -118,7 +118,7 @@ func main() {
 
 `io.ReadAll` is really convenient — it hides all the details of reading the data and automatically handles the growing of the byte slice for you. 
 
-It starts with an initial buffer of 512 bytes, and if the data is bigger, the buffer grows using `append()`. If you're curious about how `append()` works or how the buffer size increases, you can look into [Slices in Go: Grow Big or Go Home](/blog/go-slice), but most of the time, you won’t need to worry about it.
+It starts with an initial buffer of 512 bytes, and if the data is bigger, the buffer grows using `append()`. If you're curious about how `append()` works or how the buffer size increases, you can look into [Slices in Go: Grow Big or Go Home](/blog/go-slice/), but most of the time, you won’t need to worry about it.
 
 Despite its convenience, one major issue is that it doesn't impose any limit on how much data it reads. 
 
@@ -355,11 +355,11 @@ If you spot anything that's outdated or if you have questions, don't hesitate to
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 

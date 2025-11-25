@@ -242,10 +242,10 @@ If you spot anything that’s outdated or if you have questions, don’t hesitat
 
 Related articles:
 
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Go Sync Mutex: Normal & Starvation Mode](/blog/go-sync-mutex)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Go Sync Mutex: Normal & Starvation Mode](/blog/go-sync-mutex/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
 
 ## Who We Are
 

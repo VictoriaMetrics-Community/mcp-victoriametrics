@@ -22,7 +22,7 @@ images:
   - /blog/vmagent-key-features-explained/preview.webp
 ---
 
-This discussion is a part of the [Basic Series](/blog/victoriametrics-getting-started) serving as the starting point to quickly get you started with VictoriaMetrics.
+This discussion is a part of the [Basic Series](/blog/victoriametrics-getting-started/) serving as the starting point to quickly get you started with VictoriaMetrics.
 
 `vmagent` is a lightweight metrics collection agent that acts as a bridge between your applications and monitoring storage systems like VictoriaMetrics. 
 

@@ -22,13 +22,13 @@ images:
 
 This article is part of the ongoing gRPC communication protocol series:
 
-1. [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc)
+1. [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc/)
 2. How HTTP/2 Works and How to Enable It in Go (We're here)
-3. [Practical Protobuf - From Basic to Best Practices](/blog/go-protobuf-basic)
-4. [How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf)
-5. [gRPC in Go: Streaming RPCs, Interceptors, and Metadata](/blog/go-grpc-basic-streaming-interceptor)
+3. [Practical Protobuf - From Basic to Best Practices](/blog/go-protobuf-basic/)
+4. [How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf/)
+5. [gRPC in Go: Streaming RPCs, Interceptors, and Metadata](/blog/go-grpc-basic-streaming-interceptor/)
 
-Once you're comfortable with net/rpc from previous article ([From net/rpc to gRPC in Go Applications](/blog/go-net-rpc)), it's probably a good idea to start exploring HTTP/2, which is the foundation of the gRPC protocol.
+Once you're comfortable with net/rpc from previous article ([From net/rpc to gRPC in Go Applications](/blog/go-net-rpc/)), it's probably a good idea to start exploring HTTP/2, which is the foundation of the gRPC protocol.
 
 This piece leans a bit more on the theory side, so heads-up, it's text-heavy. We'll focus on understanding HTTP/2 and then briefly touch on enabling it in Go. So, grab a coffee, settle in, and let's break it down.
 
@@ -351,8 +351,8 @@ And we're Gophers, enthusiasts who love researching, experimenting, and sharing 
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)

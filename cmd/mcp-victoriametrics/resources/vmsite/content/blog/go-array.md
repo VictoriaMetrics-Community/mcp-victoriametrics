@@ -24,7 +24,7 @@ The classic Golang array and slice are pretty straightforward. Arrays are fixed-
 
 As always, we'll start with the basics and then dig a bit deeper. Don't worry, arrays get pretty interesting when you look at them from different angles.
 
-We'll cover slices in the next part, ~~I'll drop that here once it's ready.~~, it's already published: [Slices in Go: Grow Big or Go Home](/blog/go-slice).
+We'll cover slices in the next part, ~~I'll drop that here once it's ready.~~, it's already published: [Slices in Go: Grow Big or Go Home](/blog/go-slice/).
 
 ## What is an array?
 
@@ -408,13 +408,13 @@ If you spot anything that’s outdated or if you have questions, don’t hesitat
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Defer: From Basic To Traps](/blog/defer-in-go)
-- [Go Sync Mutex: Normal and Starvation Mode](/blog/go-sync-mutex)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Go Sync Mutex: Normal and Starvation Mode](/blog/go-sync-mutex/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 

@@ -21,13 +21,13 @@ images:
 
 This article is part of our ongoing series about handling concurrency in Go, a quick rundown of what we've covered so far:
 
-- [Go sync.Mutex: Normal and Starvation Mode](/blog/go-sync-mutex)
-- [Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup)
-- [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool)
-- [Go sync.Cond, the Most Overlooked Sync Mechanism](/blog/go-sync-cond)
-- [Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map)
+- [Go sync.Mutex: Normal and Starvation Mode](/blog/go-sync-mutex/)
+- [Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup/)
+- [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/)
+- [Go sync.Cond, the Most Overlooked Sync Mechanism](/blog/go-sync-cond/)
+- [Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map/)
 - Go sync.Once is Simple... Does It Really? (We're here) 
-- [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight)
+- [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight/)
 
 The `sync.Once` is probably the easiest sync primitive to use, but there's more under the hood than you might think.
 
@@ -195,7 +195,7 @@ Also, in the example, we return an error as the second value to match the typica
 
 If you're not familiar with atomic operations or synchronization techniques in Go, then `sync.Once` is a great starting point, as it's one of the simplest synchronization primitives.
 
-It's really simple compared to something like `sync.Mutex`, which is [one of the trickiest synchronization](/blog/go-sync-mutex) tools in Go. So let's take a step back and think about how `sync.Once` is actually implemented.
+It's really simple compared to something like `sync.Mutex`, which is [one of the trickiest synchronization](/blog/go-sync-mutex/) tools in Go. So let's take a step back and think about how `sync.Once` is actually implemented.
 
 Here's the basic structure of `sync.Once`:
 
@@ -351,12 +351,12 @@ If you spot anything that's outdated or if you have questions, don't hesitate to
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 

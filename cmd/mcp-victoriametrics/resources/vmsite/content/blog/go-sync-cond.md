@@ -21,13 +21,13 @@ images:
 
 This post is part of a series about handling concurrency in Go:
 
-- [Go sync.Mutex: Normal and Starvation Mode](/blog/go-sync-mutex)
-- [Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup)
-- [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool)
+- [Go sync.Mutex: Normal and Starvation Mode](/blog/go-sync-mutex/)
+- [Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup/)
+- [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/)
 - Go sync.Cond, the Most Overlooked Sync Mechanism (We're here)
-- [Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map)
-- [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once)
-- [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight)
+- [Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map/)
+- [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once/)
+- [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight/)
 
 
 In Go, `sync.Cond` is a synchronization primitive, though it's not as commonly used as its siblings like sync.Mutex or sync.WaitGroup. You'll rarely see it in most projects or even in the standard libraries, where other sync mechanisms tend to take its place.
@@ -361,9 +361,9 @@ If the `Cond` gets copied after that first use, the program will panic with the 
 
 You might have seen something similar in `sync.WaitGroup` or `sync.Pool`, where they use a `noCopy` field to prevent copying, but in those cases, it just avoids the issue without causing a panic.
 
-> [Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup)
+> [Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup/)
 
-> [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool)
+> [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/)
 
 Now, this `copyChecker` is actually just a `uintptr`, which is basically an integer that holds a memory address, here's how it works:
 
@@ -631,14 +631,14 @@ If you spot anything that's outdated or if you have questions, don't hesitate to
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string)
-- [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer/)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string/)
+- [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 

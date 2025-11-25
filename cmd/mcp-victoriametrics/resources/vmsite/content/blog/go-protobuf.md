@@ -23,11 +23,11 @@ images:
 
 This article is part of the series on communication protocols:
 
-- [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc)
-- [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2)
-- [Practical Protobuf - From Basic to Best Practices](/blog/go-protobuf-basic)
+- [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc/)
+- [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2/)
+- [Practical Protobuf - From Basic to Best Practices](/blog/go-protobuf-basic/)
 - How Protobuf Works—The Art of Data Encoding (We're here)
-- [gRPC in Go: Streaming RPCs, Interceptors, and Metadata](/blog/go-grpc-basic-streaming-interceptor)
+- [gRPC in Go: Streaming RPCs, Interceptors, and Metadata](/blog/go-grpc-basic-streaming-interceptor/)
 
 Protobuf (Protocol Buffers) is a way to serialize data into a compact binary format. This makes it smaller in size and faster to transmit over the network, though at the cost of being less human-readable.
 
@@ -390,9 +390,9 @@ And we're Gophers, enthusiasts who love researching, experimenting, and sharing 
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 

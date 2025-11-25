@@ -1,6 +1,39 @@
 ## Next release
 
-- TODO
+- add support of k8s service traffic distribution. See [#2580](https://github.com/VictoriaMetrics/helm-charts/issues/2580).
+
+## 0.26.6
+
+**Release date:** 18 Nov 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.130.0](https://img.shields.io/badge/v1.130.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11300)
+
+- bump operator chart version 0.0.42 -> 0.0.45
+- bump version of VM components to [v1.130.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.130.0)
+
+## 0.26.5
+
+**Release date:** 07 Nov 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.129.1](https://img.shields.io/badge/v1.129.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11291)
+
+- fix alertmanager pvc template. See [#2552](https://github.com/VictoriaMetrics/helm-charts/issues/2552).
+
+## 0.26.4
+
+**Release date:** 04 Nov 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.129.1](https://img.shields.io/badge/v1.129.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11291)
+
+- bump version of VM components to [v1.129.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.129.1)
+
+## 0.26.3
+
+**Release date:** 03 Nov 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.129.0](https://img.shields.io/badge/v1.129.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11290)
+
+- bump version of VM components to [v1.129.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.129.0)
 
 ## 0.26.2
 

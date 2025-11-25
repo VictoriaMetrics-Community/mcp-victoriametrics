@@ -86,7 +86,7 @@ Please refer to [this page](https://docs.victoriametrics.com/anomaly-detection/p
 
 ## New Models Available
 
-We are continually enhancing `vmanomaly` to be more applicable to various anomaly detection use cases. In [v1.8.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v180), we introduced the [MAD](https://docs.victoriametrics.com/anomaly-detection/components/models/index.html#mad-median-absolute-deviationhttpsenwikipediaorgwikimedian_absolute_deviation) (Median Absolute Deviation) model. This robust anomaly detection method is **less sensitive to outliers compared to standard deviation-based models like [ZScore](https://docs.victoriametrics.com/anomaly-detection/components/models/#zscore)**. However, please note that models like MAD are best used on data with minimal [seasonality](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#seasonality) and [no trends](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#trend).
+We are continually enhancing `vmanomaly` to be more applicable to various anomaly detection use cases. In [v1.8.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v180), we introduced the [MAD](https://docs.victoriametrics.com/anomaly-detection/components/models/index.html#mad-median-absolute-deviation) (Median Absolute Deviation) model. This robust anomaly detection method is **less sensitive to outliers compared to standard deviation-based models like [ZScore](https://docs.victoriametrics.com/anomaly-detection/components/models/#zscore)**. However, please note that models like MAD are best used on data with minimal [seasonality](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#seasonality) and [no trends](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#trend).
 
 Example model [configuration](https://docs.victoriametrics.com/anomaly-detection/components/) using the MAD model:
 
@@ -326,7 +326,7 @@ models:
     # other model args ...
 ```
 
-To attach the **same [query](https://docs.victoriametrics.com/anomaly-detection/components/reader/?highlight=queries#vm-reader) to different models**, i.e. to reduce [false positives](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#false-positive) by composing smarter alerting rules with voting aggregation, like `(avg(anomaly_score) by (for)) > 1`, where `for` label, produced by [`writer`](https://docs.victoriametrics.com/anomaly-detection/components/writer/?highlight=for:#vm-writer) holds a query alias, and the anomaly scores will be averaged for all the models that were attached to the query.
+To attach the **same [query](https://docs.victoriametrics.com/anomaly-detection/components/reader/) to different models**, i.e. to reduce [false positives](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#false-positive) by composing smarter alerting rules with voting aggregation, like `(avg(anomaly_score) by (for)) > 1`, where `for` label, produced by [`writer`](https://docs.victoriametrics.com/anomaly-detection/components/writer/) holds a query alias, and the anomaly scores will be averaged for all the models that were attached to the query.
 
 ```yaml
 # other config sections ...

@@ -803,6 +803,12 @@ Change the values according to the need of the environment in ``victoria-logs-cl
       <td><em><code>(string)</code></em><p>Target port</p>
 </td>
     </tr>
+    <tr id="vlinsert-service-trafficdistribution">
+      <td><a href="#vlinsert-service-trafficdistribution"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlinsert.service.trafficDistribution</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service traffic distribution. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution" target="_blank">here</a></p>
+</td>
+    </tr>
     <tr id="vlinsert-service-type">
       <td><a href="#vlinsert-service-type"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlinsert.service.type</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterIP</span></span></span></code></pre>
 </a></td>
@@ -1329,6 +1335,12 @@ Change the values according to the need of the environment in ``victoria-logs-cl
       <td><em><code>(string)</code></em><p>Target port</p>
 </td>
     </tr>
+    <tr id="vlselect-service-trafficdistribution">
+      <td><a href="#vlselect-service-trafficdistribution"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlselect.service.trafficDistribution</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service traffic distribution. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution" target="_blank">here</a></p>
+</td>
+    </tr>
     <tr id="vlselect-service-type">
       <td><a href="#vlselect-service-type"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlselect.service.type</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterIP</span></span></span></code></pre>
 </a></td>
@@ -1805,6 +1817,12 @@ Change the values according to the need of the environment in ``victoria-logs-cl
       <td><a href="#vlstorage-service-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlstorage.service.targetPort</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Target port</p>
+</td>
+    </tr>
+    <tr id="vlstorage-service-trafficdistribution">
+      <td><a href="#vlstorage-service-trafficdistribution"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlstorage.service.trafficDistribution</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service traffic distribution. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="vlstorage-service-type">
@@ -2293,6 +2311,12 @@ Change the values according to the need of the environment in ``victoria-logs-cl
       <td><a href="#vmauth-service-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.service.targetPort</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Target port</p>
+</td>
+    </tr>
+    <tr id="vmauth-service-trafficdistribution">
+      <td><a href="#vmauth-service-trafficdistribution"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.service.trafficDistribution</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service traffic distribution. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="vmauth-service-type">

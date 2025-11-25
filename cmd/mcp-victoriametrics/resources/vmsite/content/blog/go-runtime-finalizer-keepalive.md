@@ -100,7 +100,7 @@ There's definitely a pattern here, especially for anyone writing libraries. A go
 - Create a method like `Close`, `Release`, `Dispose` (whatever you prefer) so users have a way to release resources programmatically, giving them control rather than leaving things up to the garbage collector.
 - Then, use the finalizer as a fallback to ensure resources get freed if users slip up, maybe with a warning log that points to the specific file and line to help track down any resource leaks.
 
-In short, finalizers should be the safety net, not a replacement for explicit cleanup. This pattern is actually discussed in the article [Go I/O Closer, Seeker, WriterTo, and ReaderFrom](/blog/go-io-closer-seeker-readfrom-writeto) where I mentioned `os.File`.
+In short, finalizers should be the safety net, not a replacement for explicit cleanup. This pattern is actually discussed in the article [Go I/O Closer, Seeker, WriterTo, and ReaderFrom](/blog/go-io-closer-seeker-readfrom-writeto/) where I mentioned `os.File`.
 
 Let's take a quick step back here:
 
@@ -308,11 +308,11 @@ If you spot anything that's outdated or if you have questions, don't hesitate to
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 

@@ -27,7 +27,7 @@ VictoriaLogs provides the following features:
 - It provides easy yet powerful query language, which supports fast full-text search, fast advanced analytics and fast data extraction and transformation at query time.
   See [LogsQL docs](https://docs.victoriametrics.com/victorialogs/logsql/).
 - It provides [built-in web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui) for logs' exploration.
-- It provides [Grafana plugin](https://docs.victoriametrics.com/victorialogs/victorialogs-datasource/) for building arbitrary dashboards in Grafana.
+- It provides [Grafana plugin](https://docs.victoriametrics.com/victorialogs/integrations/grafana/) for building arbitrary dashboards in Grafana.
 - It provides [interactive command-line tool for querying VictoriaLogs](https://docs.victoriametrics.com/victorialogs/querying/vlogscli/).
 - It can be seamlessly combined with good old Unix tools for log analysis such as `grep`, `less`, `sort`, `jq`, etc.
   See [these docs](https://docs.victoriametrics.com/victorialogs/querying/#command-line) for details.
@@ -254,6 +254,16 @@ This scheme can be implemented with the following simple cron job, which must ru
 
 All the VictoriaLogs instances with NVMe and HDD disks can be queried simultaneously via `vlselect` component of [VictoriaLogs cluster](https://docs.victoriametrics.com/victorialogs/cluster/),
 since [single-node VictoriaLogs instances can be a part of cluster](https://docs.victoriametrics.com/victorialogs/cluster/#single-node-and-cluster-mode-duality).
+
+## Capacity planning
+
+It is recommended leaving the following amounts of spare resource for smooth work of VictoriaLogs:
+
+- 50% of free RAM for reducing the probability of OOM (out of memory) crashes and slowdowns during temporary spikes in workload.
+- 50% of spare CPU for reducing the probability of slowdowns during temporary spikes in workload.
+- At least 20% of free storage space at the directory pointed by the [`-storageDataPath`](https://docs.victoriametrics.com/victorialogs/#storage) command-line flag.
+  Too small amounts of free disk space may result in significant slowdown for both data ingestion and querying
+  because of inability to merge newly created smaller data parts into bigger data parts.
 
 ## Logging new streams
 
@@ -768,6 +778,8 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
         The following optional suffixes are supported: s (second), h (hour), d (day), w (week), y (year). If suffix isn't set, then the duration is counted in months (default 7d)
   -search.allowPartialResponse
         Whether to allow returning partial responses when some of vlstorage nodes from the -storageNode list are unavailable for querying. This flag works only for cluster setup of VictoriaLogs. See https://docs.victoriametrics.com/victorialogs/querying/#partial-responses
+  -search.logSlowQueryDuration duration
+        Log queries with execution time exceeding this value. Zero disables slow query logging (default 5s)
   -search.maxConcurrentRequests int
         The maximum number of concurrent search requests. It shouldn't be high, since a single request can saturate all the CPU cores, while many concurrently executed requests may require high amounts of memory. See also -search.maxQueueDuration (default 16)
   -search.maxQueryDuration duration

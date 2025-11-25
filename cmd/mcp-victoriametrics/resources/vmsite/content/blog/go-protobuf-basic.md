@@ -20,11 +20,11 @@ images:
 
 This article is part of the series on communication protocols:
 
-1. [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc)
-2. [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2)
+1. [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc/)
+2. [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2/)
 3. Practical Protobuf - From Basic to Best Practices (We're here)
-4. [How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf)
-5. [gRPC in Go: Streaming RPCs, Interceptors, and Metadata](/blog/go-grpc-basic-streaming-interceptor)
+4. [How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf/)
+5. [gRPC in Go: Streaming RPCs, Interceptors, and Metadata](/blog/go-grpc-basic-streaming-interceptor/)
 
 Protocol Buffers, or Protobuf for short, is Google's language-neutral data serialization format.
 
@@ -128,7 +128,7 @@ encode_sint32(-1) = [1]
 So, if you're not entirely sure about the range of values your data will cover, sticking with the `sint32` family by default is a safer bet.
 
 > [!TIP]
-> To learn more about encoding, you can read the next part of the series: [How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf).
+> To learn more about encoding, you can read the next part of the series: [How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf/).
 
 ### Enums
 
@@ -443,8 +443,8 @@ And we're Gophers, enthusiasts who love researching, experimenting, and sharing 
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)

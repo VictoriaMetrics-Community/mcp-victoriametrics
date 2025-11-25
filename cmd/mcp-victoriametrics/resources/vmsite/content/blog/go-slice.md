@@ -28,7 +28,7 @@ The link between `a` and `b` isn't all that strong, and in Go, you can't count o
 
 Experienced Go developers think of a slice as a pointer to an array, but here's the catch: that pointer can change without notice, which makes slices tricky if you don't fully understand how they work. In this discussion, we'll cover everything from the basics to how slices grow and how they're allocated in memory.
 
-> Before we get into the details, I'd suggest checking out [how arrays work](/blog/go-array) first.
+> Before we get into the details, I'd suggest checking out [how arrays work](/blog/go-array/) first.
 
 ## How Slice is Structured
 
@@ -118,7 +118,7 @@ Let's visualize this in the diagram below.
 ![Slice and its underlying array](/blog/go-slice/go-slice-start.webp)
 <figcaption style="text-align: center; font-style: italic;">Slice and its underlying array</figcaption>
 
-If you've checked out the earlier post on [arrays](/blog/go-array), you'll get how elements are stored in an array. What's really happening is that the slice is pointing directly to `array[1]`.
+If you've checked out the earlier post on [arrays](/blog/go-array/), you'll get how elements are stored in an array. What's really happening is that the slice is pointing directly to `array[1]`.
 
 The second way to prove it is by getting the pointer to the slice's underlying array using `unsafe.SliceData`:
 
@@ -504,7 +504,7 @@ However, you can use `make()` with a capacity that's known at runtime to reduce 
 
 Using `sync.Pool` is a good option, as we can reuse the underlying array of the slice for the same purpose and expect that the task will have the same size. Before putting the slice back in the pool, set the length of the slice to 0 (`slice = slice[:0]`), so next time you can use `append()` naturally.
 
-> There is an article: [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool) that you might be interested in.
+> There is an article: [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/) that you might be interested in.
 
 ## Stay Connected
 
@@ -515,13 +515,13 @@ If you spot anything that's outdated or if you have questions, don't hesitate to
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer)
-- [Go Defer: From Basic To Traps](/blog/defer-in-go)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Go Sync Mutex: Normal and Starvation Mode](/blog/go-sync-mutex)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string)
-- [Vendoring, or go mod vendor: What Is It?](/blog/vendoring-go-mod-vendor)
+- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer/)
+- [Go Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Go Sync Mutex: Normal and Starvation Mode](/blog/go-sync-mutex/)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string/)
+- [Vendoring, or go mod vendor: What Is It?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 

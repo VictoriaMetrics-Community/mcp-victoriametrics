@@ -61,7 +61,7 @@ Simple, right?
 
 Strings in Go behave a lot like slices and when you assign a string to a new variable, say from `a` to `b`, Go doesn't copy the actual value, like the string "VictoriaMetrics", but instead just copies what's called the "string header," similar to a slice header. 
 
-> For more information about slice: [Slices in Go: Grow Big or Go Home](/blog/go-slice)
+> For more information about slice: [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
 
 So both `a` and `b` end up pointing to the same underlying byte array.
 
@@ -86,7 +86,7 @@ That's where string interning comes in, it ensures that all identical strings sh
 
 But the version of string interning we showed above isn't thread-safe. You can't just throw it into a situation with multiple goroutines. Go's maps don't play well with concurrent access and modification, so if you're going concurrency, you'll need something safer.
 
-> For more on how Go maps actually work: [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
+> For more on how Go maps actually work: [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
 
 So, we tried another approach using `sync.Map` to solve the concurrency issue:
 
@@ -108,7 +108,7 @@ We could resolve this with a simple time-to-live (TTL) mechanism for each key or
 
 The Go unique package takes a different strategy, similar to sync.Pool, and it will also be discussed in this article.
 
-> [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool)
+> [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/)
 
 There's another perk, or a benefit to string interning that Michael Knyszek pointed out: faster equality checks.
 
@@ -402,7 +402,7 @@ Now, let's talk about cleanup, because if we don't have a way to tidy up the map
 
 Well, the unique package is backed by the Go team and supported by the Go runtime's garbage collector (GC). 
 
-When you call `Make()` for the first time, it registers a cleanup process with the GC. It's basically saying, _"Hey, whenever you kick off your marking phase for objects, give me a heads-up!"_ If you've ever read about [Go's sync.Pool and the Mechanics Behind It](/blog/go-sync-pool), you'll recognize a similar pattern here.
+When you call `Make()` for the first time, it registers a cleanup process with the GC. It's basically saying, _"Hey, whenever you kick off your marking phase for objects, give me a heads-up!"_ If you've ever read about [Go's sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/), you'll recognize a similar pattern here.
 
 So, when the GC starts its marking phase, it sends that notification to the global maps. 
 
@@ -421,13 +421,13 @@ If you spot anything that's outdated or if you have questions, don't hesitate to
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer)
-- [Go Sync Mutex: Normal and Starvation Mode](/blog/go-sync-mutex)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer/)
+- [Go Sync Mutex: Normal and Starvation Mode](/blog/go-sync-mutex/)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 

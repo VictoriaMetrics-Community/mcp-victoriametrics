@@ -20,7 +20,7 @@ images:
 
 When we talked about string interning earlier, we mentioned a concept that Go uses to implement its unique map feature: the "weak pointer." We kind of breezed through it back then to stay on track with the main flow of that article.
 
-If you haven't checked that piece out yet, I'd highly recommend giving it a read: [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string). It's one of those optimization tricks that makes VictoriaMetrics' products faster. You can read it before or after this one—totally up to you.
+If you haven't checked that piece out yet, I'd highly recommend giving it a read: [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string/). It's one of those optimization tricks that makes VictoriaMetrics' products faster. You can read it before or after this one—totally up to you.
 
 ## So, what's a weak pointer?
 
@@ -90,11 +90,11 @@ And here's what's happening in the code:
 
 Now, if you try this code with something other than a `string` pointer—like a `*int`, `*bool`, or some other type, you might notice different behavior, the last `strong` output may not be `nil`.
 
-This has to do with how Go handles "tiny objects" like `int`, `bool`, `float32`, `float64`, etc. These types are allocated as tiny objects, and even if they're technically unused, the garbage collector might not clean them up right away during garbage collection. To understand more about this, you can dive deeper into tiny object allocation in [Go Runtime Finalizer and Keep Alive](/blog/go-runtime-finalizer-keepalive).
+This has to do with how Go handles "tiny objects" like `int`, `bool`, `float32`, `float64`, etc. These types are allocated as tiny objects, and even if they're technically unused, the garbage collector might not clean them up right away during garbage collection. To understand more about this, you can dive deeper into tiny object allocation in [Go Runtime Finalizer and Keep Alive](/blog/go-runtime-finalizer-keepalive/).
 
 Weak pointers can be really practical for managing memory in specific scenarios. 
 
-- For example, they're great for canonicalization maps — situations where you only want to keep one copy of a piece of data around. This ties back to our earlier [discussion on string interning](/blog/go-unique-package-intern-string). 
+- For example, they're great for canonicalization maps — situations where you only want to keep one copy of a piece of data around. This ties back to our earlier [discussion on string interning](/blog/go-unique-package-intern-string/). 
 - Another case is when you want the lifespan of some memory to match the lifespan of another object, similar to how JavaScript's WeakMap works. WeakMaps allow objects to be cleaned up automatically when they're no longer in use.
 
 So, the main benefit of weak pointers is they let you tell the garbage collector, _"Hey, it's okay to get rid of this resource if no one's using it — I can always recreate it later."_ This works well for objects that take up significant memory but don't need to stick around unless they're actively being used.
@@ -160,11 +160,11 @@ If you spot anything that's outdated or if you have questions, don't hesitate to
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 
