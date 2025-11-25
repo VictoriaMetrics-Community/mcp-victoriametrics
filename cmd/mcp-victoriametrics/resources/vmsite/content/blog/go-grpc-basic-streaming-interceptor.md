@@ -22,16 +22,16 @@ images:
 
 This article is part of the ongoing gRPC communication protocol series:
 
-- [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc)
-- [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2)
-- [Practical Protobuf: From Basic to Best Practices](/blog/go-protobuf-basic)
-- [How Protobuf Works: The Art of Data Encoding](/blog/go-protobuf)
+- [From net/rpc to gRPC in Go Applications](/blog/go-net-rpc/)
+- [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2/)
+- [Practical Protobuf: From Basic to Best Practices](/blog/go-protobuf-basic/)
+- [How Protobuf Works: The Art of Data Encoding](/blog/go-protobuf/)
 - gRPC in Go: Streaming RPCs, Interceptors, and Metadata (We're here)
 
 gRPC is a high-performance RPC framework that uses protobuf for serialization and HTTP/2 for transport. This combo leads to better latency and bandwidth compared to the usual JSON-based APIs.
 
 > [!NOTE] More details:
-> Read benchmark results at [How Protobuf Works](/blog/go-protobuf)
+> Read benchmark results at [How Protobuf Works](/blog/go-protobuf/)
 
 That said, if network overhead isn't really a concern, these performance gains might not make a noticeable difference. In such cases, the real advantage of gRPC/protobuf might come from its contract-based design, maintainability, and rich ecosystem rather than raw speed.
 
@@ -42,7 +42,7 @@ Before we get deeper into gRPC, let's make sure we have the right mental model o
 
 The `protoc` tool itself is just a protobuf compiler—it doesn't generate Go code on its own. Instead, it depends on plugins that handle language-specific code generation. Each plugin takes care of a different part of that process.
 
-In [previous articles](/blog/go-protobuf-basic), we covered the first plugin, `protoc-gen-go`. Now it's time for the second one: `protoc-gen-go-grpc`.
+In [previous articles](/blog/go-protobuf-basic/), we covered the first plugin, `protoc-gen-go`. Now it's time for the second one: `protoc-gen-go-grpc`.
 
 ## Understanding gRPC Commands  
 
@@ -268,7 +268,7 @@ There are two types: headers and trailers.
 
 ### Headers  
 
-Headers are metadata sent at the start of the request or response. To see how this works, it helps to recall how HTTP/2 streams data: [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2)  
+Headers are metadata sent at the start of the request or response. To see how this works, it helps to recall how HTTP/2 streams data: [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2/)  
 
 Here's a simplified version of the flow:
 
@@ -481,7 +481,7 @@ Obviously, there are only two ways to close a stream:
 
 Once the server completes a stream successfully, gRPC sends an HTTP/2 frame with the `END_STREAM` flag, just like the client does. `END_STREAM` is how HTTP/2 signals that no more data will be sent on that stream. On the client side, the transport layer (of client) translates this into an `io.EOF` error.
 
-> _Not familiar with HTTP/2? Check out [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2)_  
+> _Not familiar with HTTP/2? Check out [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2/)_  
 
 There are five common cases to keep in mind when handling errors in gRPC:
 
@@ -648,7 +648,7 @@ And that's how bidirectional streaming works.
 
 Good news—this won't happen. The server receives messages in the exact order they were sent: 'H', 'e', 'l', 'l', 'o', and so on.
 
-This is guaranteed by the HTTP/2 protocol, which gRPC uses as its transport layer. More details are covered in [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2).
+This is guaranteed by the HTTP/2 protocol, which gRPC uses as its transport layer. More details are covered in [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2/).
 
 However, this example doesn't fully unlock the power of bidirectional streaming.
 
@@ -935,8 +935,8 @@ And we're Gophers, enthusiasts who love researching, experimenting, and sharing 
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)

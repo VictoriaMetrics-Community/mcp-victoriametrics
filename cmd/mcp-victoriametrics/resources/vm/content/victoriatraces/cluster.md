@@ -26,7 +26,7 @@ The migration path from a single-node VictoriaTraces to cluster mode is very eas
 passed via `-storageNode` command-line flag to `vtinsert` and `vtselect` components of the cluster mode. See [cluster architecture](#architecture)
 for more details about VictoriaTraces cluster components.
 
-See [quick start guide](#quick-start) on how to start working with VictoriaTraces cluster.
+See [quick start guide](https://docs.victoriametrics.com/victoriatraces/quick-start/) on how to start working with VictoriaTraces cluster.
 
 ## Architecture
 
@@ -264,8 +264,8 @@ The following guide covers the following topics for Linux host:
 Download and unpack the latest VictoriaTraces release:
 
 ```sh
-curl -L -O https://github.com/VictoriaMetrics/VictoriaTraces/releases/download/v0.4.1/victoria-traces-linux-amd64-v0.4.1.tar.gz
-tar xzf victoria-traces-linux-amd64-v0.4.1.tar.gz
+curl -L -O https://github.com/VictoriaMetrics/VictoriaTraces/releases/download/v0.5.1/victoria-traces-linux-amd64-v0.5.1.tar.gz
+tar xzf victoria-traces-linux-amd64-v0.5.1.tar.gz
 ```
 
 Start the first [`vtstorage` node](#architecture), which accepts incoming requests at the port `10491` and stores the ingested spans at `victoria-traces-data-1` directory:

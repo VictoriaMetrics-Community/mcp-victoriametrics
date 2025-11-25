@@ -1,3 +1,12 @@
+---
+weight: 1
+title: Grafana
+menu:
+  docs:
+    identifier: integrations-vl-grafana
+    parent: integrations-vl
+    weight: 1
+---
 
 
 The [VictoriaLogs Grafana plugin](https://grafana.com/grafana/plugins/victoriametrics-logs-datasource/) allows Grafana 
@@ -21,6 +30,13 @@ Try it at [VictoriaMetrics playground](https://play-grafana.victoriametrics.com/
 For detailed instructions on how to install the plugin on Grafana Cloud or locally, please checkout the [Plugin installation docs](https://grafana.com/docs/grafana/latest/plugins/installation/).
 For installation options in Docker or Kubernetes refer to [these docs](https://github.com/VictoriaMetrics/victorialogs-datasource?tab=readme-ov-file#installation).
 
+## Multitenancy configuration
+
+VictoriaLogs datasource supports [multitenancy](https://docs.victoriametrics.com/victorialogs/#multitenancy) via `multitenancyHeaders` datasource configuration option. 
+To configure it, set AccountID and ProjectID in the `multitenancyHeaders` section.
+
+<img alt="Multitenancy configuration" src="https://github.com/VictoriaMetrics/victorialogs-datasource/blob/main/src/img/multitenancy_configuration.png?raw=true">
+
 ### Manual configuration via UI
 
 Once the plugin is installed on your Grafana instance, follow [these instructions](https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/)
@@ -38,6 +54,12 @@ datasources:
     access: proxy
     url: http://victorialogs:9428
     isDefault: true
+    jsonData:
+      # Multitenancy settings, see https://docs.victoriametrics.com/victorialogs/#multitenancy
+      # to use the multitenancy, uncomment lines below: AccountID and ProjectID
+      multitenancyHeaders:
+        #AccountID: 0
+        #ProjectID: 0
 ```
 
 ## Building queries

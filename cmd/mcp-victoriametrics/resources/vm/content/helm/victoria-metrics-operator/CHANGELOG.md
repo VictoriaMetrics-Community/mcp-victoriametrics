@@ -1,6 +1,39 @@
 ## Next release
 
-- TODO
+- add support of k8s service traffic distribution. See [#2580](https://github.com/VictoriaMetrics/helm-charts/issues/2580).
+
+## 0.56.4
+
+**Release date:** 12 Nov 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.65.0](https://img.shields.io/badge/v0.65.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0650)
+
+- bump operator chart version 0.0.42 -> 0.0.45
+- use same config reloader version as operator by default
+
+## 0.56.3
+
+**Release date:** 07 Nov 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.65.0](https://img.shields.io/badge/v0.65.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0650)
+
+- set `.Values.upgrade.enabled: false` in a nested `crds` chart to fix lint helm issues
+
+## 0.56.2
+
+**Release date:** 06 Nov 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.65.0](https://img.shields.io/badge/v0.65.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0650)
+
+- revert adding common dependency to crds subchart. See [#2547](https://github.com/VictoriaMetrics/helm-charts/issues/2547).
+
+## 0.56.1
+
+**Release date:** 06 Nov 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.65.0](https://img.shields.io/badge/v0.65.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0650)
+
+- fix update job templates. See [#2535](https://github.com/VictoriaMetrics/helm-charts/issues/2535).
 
 ## 0.56.0
 

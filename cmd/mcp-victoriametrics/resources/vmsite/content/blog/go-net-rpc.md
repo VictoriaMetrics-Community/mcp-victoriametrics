@@ -23,10 +23,10 @@ images:
 This article kicks off a series on communication protocols related to gRPC:
 
 1. From net/rpc to gRPC in Go Applications (We're here)
-2. [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2)
-3. [Practical Protobuf - From Basic to Best Practices](/blog/go-protobuf-basic)
-4. [How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf)
-5. [gRPC in Go: Streaming RPCs, Interceptors, and Metadata](/blog/go-grpc-basic-streaming-interceptor)
+2. [How HTTP/2 Works and How to Enable It in Go](/blog/go-http2/)
+3. [Practical Protobuf - From Basic to Best Practices](/blog/go-protobuf-basic/)
+4. [How Protobuf Works—The Art of Data Encoding](/blog/go-protobuf/)
+5. [gRPC in Go: Streaming RPCs, Interceptors, and Metadata](/blog/go-grpc-basic-streaming-interceptor/)
 
 To start things off, we're keeping it simple: cover the basics of gRPC and Protobuf, and then build an RPC setup (not gRPC yet, gRPC is just typical way to implement RPC). We'll use Go's built-in `net/rpc` package to get a feel for how it all works under the hood and why we need gRPC.
 
@@ -252,8 +252,8 @@ And we're Gophers, enthusiasts who love researching, experimenting, and sharing 
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)

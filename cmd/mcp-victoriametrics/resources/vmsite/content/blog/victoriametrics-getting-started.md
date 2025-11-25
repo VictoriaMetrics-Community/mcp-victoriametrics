@@ -33,19 +33,19 @@ images:
 
 This article introduces the key components of VictoriaMetrics and kick off the series of articles to explain how to use these components effectively. It's an ongoing series:
 
-1. [vmagent: Key Features Explained in Under 15 Minutes](/blog/vmagent-key-features-explained)
+1. [vmagent: Key Features Explained in Under 15 Minutes](/blog/vmagent-key-features-explained/)
 
 VictoriaMetrics is a top-tier monitoring solution known for its speed and low-resource consumption. It includes components for monitoring, alerting, data visualization, querying, scraping, incremental backups, and more.
 
 For a deeper look at how VictoriaMetrics components work, check out the completed internals series here:
 
-1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works)
-2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion)
-3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication)
-4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works)
-5. [How vmstorage's IndexDB Works?](/blog/vmstorage-how-indexdb-works)
-6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
-7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
+1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works/)
+2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion/)
+3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication/)
+4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works/)
+5. [How vmstorage's IndexDB Works?](/blog/vmstorage-how-indexdb-works/)
+6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests/)
+7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works/)
 
 ## VictoriaMetrics Cluster
 

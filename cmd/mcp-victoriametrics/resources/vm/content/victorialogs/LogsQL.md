@@ -822,6 +822,7 @@ host.hostname:""
 
 See also:
 
+- [No-op filter](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter)
 - [Any value filter](https://docs.victoriametrics.com/victorialogs/logsql/#any-value-filter)
 - [Word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
 - [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
@@ -837,9 +838,27 @@ host.hostname:*
 
 See also:
 
+- [No-op filter](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter)
 - [Empty value filter](https://docs.victoriametrics.com/victorialogs/logsql/#empty-value-filter)
 - [Prefix filter](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
 - [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
+
+### No-op filter
+
+Sometimes it is needed to apply e.g. `no-op` filter to the given [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model),
+which does nothing, e.g. it matches any logs, even if they do not contain the given log field.
+
+The following options are supported for no-op flter:
+
+- `field_name:in(*)` - a special case for the [`in()` filter](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter)
+- `field_name:contains_any(*)` - a special case for the [`contains_any()` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter)
+- `field_name:contains_all(*)` - a special case for the [`contains_all()` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter)
+
+See also:
+
+- [Empty value filter](https://docs.victoriametrics.com/victorialogs/logsql/#empty-value-filter)
+- [Any value filter](https://docs.victoriametrics.com/victorialogs/logsql/#any-value-filter)
+
 
 ### Exact filter
 
@@ -959,6 +978,8 @@ log.level:in("error", "fatal")
 
 It works very fast for long lists passed to `in()`.
 
+There is a special case - `in(*)` - this filter matches all the logs. See [no-op filter docs](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter) for details.
+
 It is possible to pass arbitrary [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) inside `in(...)` filter in order to match against the results of this query.
 See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter) for details.
 
@@ -988,6 +1009,8 @@ This is equivalent to the following query:
 foo AND "bar baz"
 ```
 
+There is a special case - `contains_all(*)` - this filter matches all the logs. See [no-op filter docs](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter) for details.
+
 It is possible to pass arbitrary [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) inside `contains_all(...)` filter in order to match against the results of this query.
 See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter) for details.
 
@@ -1015,6 +1038,8 @@ This is equivalent to the following query:
 ```logsql
 foo OR "bar baz"
 ```
+
+There is a special case - `contains_any(*)` - this filter matches all the logs. See [no-op filter docs](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter) for details.
 
 It is possible to pass arbitrary [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) inside `contains_any(...)` filter in order to match against the results of this query.
 See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter) for details.
@@ -4948,6 +4973,8 @@ Internally duration values are converted into nanoseconds.
 - If the logs are stored at high-latency storage systems such as NFS or S3, then increasing the number of parallel readers can help improve query performance.
   See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#parallel_readers-query-option) for details.
 
+See also [query performance troubleshooting](https://docs.victoriametrics.com/victorialogs/logsql/#troubleshooting).
+
 ## Query options
 
 VictoriaLogs supports the following options, which can be passed in the beginning of [LogsQL query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) `<q>`
@@ -5111,7 +5138,7 @@ _time:5m "database" | count()
 
 The [`_time` filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) is the essential one - if it is missing, then VictoriaLogs literally scans all the logs stored in the database.
 The `_time` filter allows reducing the amount of logs to scan to the given time range only. Note that [Web UI for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/querying/#web-ui)
-and [Grafana plugin for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/victorialogs-datasource/) automatically set the `_time` filter to the selected time range,
+and [Grafana plugin for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/integrations/grafana/) automatically set the `_time` filter to the selected time range,
 so there is no need to specify it manually in the query.
 
 ### Test stream filters in the query
@@ -5233,7 +5260,7 @@ Drop all the [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes
 the [time range filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) like `_time:5m`.
 This query returns all the logs on the given time range. If the query is executed
 via [the built-in web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui) or
-via [the Grafana plugin for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/victorialogs-datasource/),
+via [the Grafana plugin for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/integrations/grafana/),
 then just leave `*` in the query input field, since both the web UI and Grafana plugin for VictoriaLogs automatically filter
 logs on the selected time range. Add [`| count()`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats) at the end of the query and measure the time it takes to execute.
 This is the worst-case time needed for executing the query. The query also returns the number of logs, which need to be processed

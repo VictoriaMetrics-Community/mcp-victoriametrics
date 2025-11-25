@@ -26,6 +26,7 @@ Kubernetes Deployment and Production:
 * [Kubernetes Monitoring — A Complete Solution, Part 8: Logging with VictoriaLogs](https://itnext.io/kubernetes-monitoring-a-complete-solution-part-8-logging-with-victorialogs-f17c44461034)
 * [Kubernetes Monitoring — A Complete Solution, Part 9: Talos Linux System Logs with VictoriaLogs and Vector](https://medium.com/@ryanjjacobs/kubernetes-monitoring-a-complete-solution-part-9-talos-linux-system-logs-with-victorialogs-and-65c1f1e44a23)
 * [VictoriaMetrics: migrating VMSingle and VictoriaLogs data between Kubernetes clusters](https://itnext.io/victoriametrics-migrating-vmsingle-and-victorialogs-data-between-kubernetes-clusters-23d0cba27cda)
+* [VictoriaLogs single server k8s setup gotchas](https://davidhernandez21.github.io/posts/Victorialogs-k8s-stack-gotchas/)
 
 Integration and Data Collection:
 

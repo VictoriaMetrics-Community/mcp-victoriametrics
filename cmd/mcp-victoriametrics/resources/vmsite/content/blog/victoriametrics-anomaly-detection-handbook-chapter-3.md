@@ -22,15 +22,15 @@ images:
 
 Welcome to the third chapter of the handbook on **Anomaly Detection for Time Series Data**! 
 
-This series of blog posts aims to provide an in-depth look into the fundamentals of anomaly detection and root cause analysis. It will also address the challenges posed by the [time-series characteristics of the data](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#time-series) and demystify technical jargon by breaking it down into easily understandable language.
+This series of blog posts aims to provide an in-depth look into the fundamentals of anomaly detection and root cause analysis. It will also address the challenges posed by the [time-series characteristics of the data](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#time-series) and demystify technical jargon by breaking it down into easily understandable language.
 
-In this blog post **(Chapter 3)**, we continue our exploration into anomaly detection for time series data, venturing into advanced techniques and model applications. We highlight the conceptual frameworks and methodologies (like [time series forecasting](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#time-series-forecasting), statistical proximity and more), their strengths, weaknesses and applicability based on the nature of the available data.
+In this blog post **(Chapter 3)**, we continue our exploration into anomaly detection for time series data, venturing into advanced techniques and model applications. We highlight the conceptual frameworks and methodologies (like [time series forecasting](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#time-series-forecasting), statistical proximity and more), their strengths, weaknesses and applicability based on the nature of the available data.
 
 **Blog Series Navigation**:
 <p></p>
 
-- [Chapter 1: An Introduction](/blog/victoriametrics-anomaly-detection-handbook-chapter-1)
-- [Chapter 2: Anomaly Types](/blog/victoriametrics-anomaly-detection-handbook-chapter-2)
+- [Chapter 1: An Introduction](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/)
+- [Chapter 2: Anomaly Types](/blog/victoriametrics-anomaly-detection-handbook-chapter-2/)
 - Chapter 3: Techniques and Models (you are here) 
 - Stay tuned for the next chapter on [anomaly detection](/tags/anomaly-detection/): Root Cause Analysis!
 
@@ -58,7 +58,7 @@ Within each category, we explore several key topics:
 
 ### Supervised Anomaly Detection
 
-In supervised anomaly detection, we work with datasets where instances are pre-labeled as *normal* (`is_anomaly=0`) or *abnormal* (`is_anomaly=1`), based on well-defined criteria that distinguish these two categories. This approach involves training models on these labeled datasets, enabling them to classify **unseen data instances** as either "normal" or "anomalous" by comparing them against learned data patterns. Typically, these tasks are addressed as [imbalanced](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#imbalanced-data) binary classification problems, where the output can be:
+In supervised anomaly detection, we work with datasets where instances are pre-labeled as *normal* (`is_anomaly=0`) or *abnormal* (`is_anomaly=1`), based on well-defined criteria that distinguish these two categories. This approach involves training models on these labeled datasets, enabling them to classify **unseen data instances** as either "normal" or "anomalous" by comparing them against learned data patterns. Typically, these tasks are addressed as [imbalanced](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#imbalanced-data) binary classification problems, where the output can be:
 
 <p></p>
 
@@ -77,7 +77,7 @@ Here is how labeled anomalies (`is_anomaly=1`, **black** points) look like on ex
 
 - While supervised learning **excels in handling anomalies of known types**, it may not effectively identify **entirely new behaviors** that deviate from established patterns.
 
-- Be mindful that these datasets often exhibit a [significant imbalance](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#imbalanced-data) in the distribution of normal and anomalous instances.
+- Be mindful that these datasets often exhibit a [significant imbalance](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#imbalanced-data) in the distribution of normal and anomalous instances.
 
 **Note**: The effectiveness and accuracy of these models **may diminish over time** if they are not retrained regularly. For instance, a model trained a year ago, having encountered only a few anomalies, may not perform optimally with current data trends.
 
@@ -120,7 +120,7 @@ In many cases, anomalies are not immediately apparent without deep domain knowle
 
 Semi-supervised anomaly detection techniques are predicated on having a training dataset comprising solely of instances labeled as "normal" (`is_anomaly=0`). In this setup, an unseen data instance is classified as normal if it closely aligns with the learned characteristics of the training data; deviations from these characteristics signal an anomaly.
 
-This approach is often termed as [novelty detection](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#novelty-detection).
+This approach is often termed as [novelty detection](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#novelty-detection).
 
 This illustration highlights the region of "normal" data within the transparent bounding box, where the time series exhibits expected behavior. Labeling such extended, consistent regions is generally more straightforward and less time-consuming than pinpointing numerous individual anomalies for a purely supervised learning approach we discussed earlier.
 <p></p>
@@ -134,7 +134,7 @@ This illustration highlights the region of "normal" data within the transparent 
 
 - However, the effectiveness of semi-supervised anomaly detection hinges on the accuracy of the 'normal' data labeling and **may miss anomalies that subtly blend with the normal patterns**.
 
-- For algorithms that offer both [outlier](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#outlier-detection) and [novelty detection](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#novelty-detection) modes, it is advisable to switch to the `novelty` mode in their configurations. An example is the [Local Outlier Factor (LOF) algorithm](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.LocalOutlierFactor.html) in `scikit-learn` with `novelty=True`.
+- For algorithms that offer both [outlier](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#outlier-detection) and [novelty detection](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#novelty-detection) modes, it is advisable to switch to the `novelty` mode in their configurations. An example is the [Local Outlier Factor (LOF) algorithm](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.LocalOutlierFactor.html) in `scikit-learn` with `novelty=True`.
 
 **Example Algorithms**
 <p></p>
@@ -189,9 +189,9 @@ The core assumptions of underlying methods commonly are:
 2. **Modeling the underlying process and forecasting future behavior**: By analyzing the past, these methods forecast future values of a time series and mark points that deviate significantly from these forecasts as anomalies. This approach can be simultaneously categorized as:
   <br></br>
 
-   - [Unsupervised Learning](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#unsupervised-learning): No predefined target (anomalies) are known.
-   - [Self-Supervised Learning](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#self-supervised-learning): The data itself (`y == X`) is used for learning and deriving forecasts.
-   - [Time-Series Forecasting](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#time-series-forecasting): Predicting future values of a process based on its past/present values.
+   - [Unsupervised Learning](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#unsupervised-learning): No predefined target (anomalies) are known.
+   - [Self-Supervised Learning](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#self-supervised-learning): The data itself (`y == X`) is used for learning and deriving forecasts.
+   - [Time-Series Forecasting](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#time-series-forecasting): Predicting future values of a process based on its past/present values.
 
    <p>The graph illustrates the forecasted future (expected behavior) alongside the deviations (actual behavior). The magnitude of these deviations correlates with the severity of the anomaly score; larger deviations imply higher anomaly scores.</p><p></p>
 
@@ -203,7 +203,7 @@ The core assumptions of underlying methods commonly are:
 
 - Opt for these techniques and models when a clean and/or labeled dataset is not available. This approach excels in environments where labeling is impractical, but it may struggle with **nuanced anomalies closely resembling normal data**.
 
-- Depending on your data's complexity, such as the presence of [trends](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#trend) or [seasonalities](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#seasonality), you might choose between `1. distribution-based algorithms` (like Isolation Forest) and `2. time-series forecasting` techniques. Here, anomaly scores are treated as deviations from the forecasted values, considering them as the "expected" normal behavior.
+- Depending on your data's complexity, such as the presence of [trends](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#trend) or [seasonalities](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#seasonality), you might choose between `1. distribution-based algorithms` (like Isolation Forest) and `2. time-series forecasting` techniques. Here, anomaly scores are treated as deviations from the forecasted values, considering them as the "expected" normal behavior.
 
 
 **Example Algorithms for Time Series**
@@ -243,7 +243,7 @@ Unsupervised anomaly detection is highly effective in domains where defining or 
 As we navigate the intricate world of anomaly detection, it becomes evident that **there is no universal solution, particularly in the fields of monitoring and observability**:
 <p></p>
 
-- The complexities of [time series data](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#time-series) require **a deep and nuanced understanding of the specific domain** in which we are engaged.
+- The complexities of [time series data](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#time-series) require **a deep and nuanced understanding of the specific domain** in which we are engaged.
 - Acknowledging the **limitations of our time and resources** is essential for crafting a strategy that is both practical and effective.
 - The variety of methods available — **each with its own strengths in specific tasks and domains** — equips us to confront the challenges of anomaly detection with confidence and precision.
 

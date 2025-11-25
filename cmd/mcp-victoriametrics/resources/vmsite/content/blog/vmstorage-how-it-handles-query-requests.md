@@ -26,13 +26,13 @@ images:
 
 This piece is part of our ongoing VictoriaMetrics series, where we break down how different components of the system function:
 
-1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works)
-2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion)
-3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication)
-4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works)
-5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works)
+1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works/)
+2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion/)
+3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication/)
+4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works/)
+5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works/)
 6. How **vmstorage** Handles Query Requests From vmselect (We're here)
-7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
+7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works/)
 
 > [!IMPORTANT]
 > This discussion assumes you've checked out the earlier articles, which cover how vmstorage's IndexDB works.
@@ -64,7 +64,7 @@ Let's stick to the star of the show: the `search_v7` request format:
 
 One cool thing about this is the tracing feature (`-traceEnable`), which happens to be one of my favorites. Tracing lets you locate bottlenecks during query processing — think of it as the equivalent of `EXPLAIN ANALYZE` in PostgreSQL. It shows you the exact steps a query goes through and how much time each one takes.
 
-If you're curious, there's an excellent article that dives into this feature: [How to reduce expenses on monitoring - Roman Khavronenko](/blog/reducing-costs-p2).
+If you're curious, there's an excellent article that dives into this feature: [How to reduce expenses on monitoring - Roman Khavronenko](/blog/reducing-costs-p2/).
 
 There's also a timeout on requests from `vmselect`, which is set to 30 seconds by default. We'll talk more about this timeout in the vminsert article, so let's leave it for now.  
 

@@ -31,7 +31,11 @@ The OpenTelemetry provides detailed document and examples for various programmin
 - [Rust](https://opentelemetry.io/docs/languages/rust/)
 - [Swift](https://opentelemetry.io/docs/languages/swift/)
 
-To send data to VictoriaTraces, specify the `EndpointURL` for http-exporter builder to `http://<victoria-traces>:10428/insert/opentelemetry/v1/traces`.
+You can send data to VictoriaTraces by HTTP or gRPC endpoints.
+
+### HTTP endpoint
+
+To send data by HTTP endpoint, specify the `EndpointURL` for http-exporter builder to `http://<victoria-traces>:10428/insert/opentelemetry/v1/traces`.
 
 Consider the following example for Go SDK:
 
@@ -41,10 +45,32 @@ traceExporter, err := otlptracehttp.New(ctx,
 )
 ```
 
+### gRPC endpoint
+
+To send the trace data to VictoriaTraces gRPC trace service, you need to first enable the OTLP gRPC server on VictoriaTraces by:
+
+```shell
+./victoria-traces -otlpGRPCListenAddr=:4317 -otlpGRPC.tlsCertFile=<cert_file> -otlpGRPC.tlsKeyFile=<key_file>
+```
+
+> You can also **disable TLS** for incoming gRPC requests by setting `-otlpGRPC.tls=false`. TLS is recommended for production use, and disabling it should only be done when you're testing or aware of the potential risks.
+
+After that, specify the `Endpoint` for grpc-exporter builder to `<victoria-traces>:4317`.
+
+Consider the following example for Go SDK:
+
+```go
+traceExporter, err := otlptracegrpc.New(ctx,
+    otlptracegrpc.WithEndpoint("<victoria-traces>:4317"),
+    otlptracegrpc.WithTLSCredentials(<creds>),
+    // otlptracegrpc.WithInsecure(),  // use insecure connection if TLS is disabled.
+)
+```
+
+VictoriaTraces supports other HTTP headers in both HTTP and gRPC endpoints - see [HTTP headers](https://docs.victoriametrics.com/victoriatraces/data-ingestion/#http-headers).
+
 VictoriaTraces automatically use `service.name` in **resource attributes** and `name` in **span** as [stream fields](https://docs.victoriametrics.com/victoriatraces/keyconcepts/#stream-fields).
 While the remaining data (including [resource](https://opentelemetry.io/docs/specs/otel/overview/#resources), [instrumentation scope](https://opentelemetry.io/docs/specs/otel/common/instrumentation-scope/), and fields in [span](https://opentelemetry.io/docs/specs/otel/trace/api/#span), like `trace_id`, `span_id`, span `attributes` and more) are stored as [regular fields](https://docs.victoriametrics.com/victoriatraces/keyconcepts/#data-model):
-
-VictoriaTraces supports other [HTTP headers](https://docs.victoriametrics.com/victoriatraces/data-ingestion/#http-headers).
 
 The ingested trace spans can be queried according to [these docs](https://docs.victoriametrics.com/victoriatraces/querying/).
 
@@ -56,7 +82,9 @@ VictoriaTraces supports receiving traces from the following OpenTelemetry collec
 
 ### OpenTelemetry
 
-To send the collected traces to VictoriaTraces, specify traces endpoint for [OTLP/HTTP exporter](https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/otlphttpexporter/README.md) in configuration file:
+#### HTTP exporter
+
+To send the collected traces to VictoriaTraces HTTP endpoint, specify traces endpoint for [OTLP/HTTP exporter](https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/otlphttpexporter/README.md) in configuration file:
 
 ```yaml
 exporters:
@@ -71,6 +99,47 @@ These headers can be passed to OpenTelemetry exporter config via `headers` optio
 exporters:
   otlphttp:
     traces_endpoint: http://<victoria-traces>:10428/insert/opentelemetry/v1/traces
+    headers:
+      VT-Extra-Fields: foo=bar
+```
+
+#### gRPC exporter
+
+To send the collected traces to VictoriaTraces gRPC trace service, you need to first enable the OTLP gRPC server on VictoriaTraces by:
+
+```shell
+./victoria-traces -otlpGRPCListenAddr=:4317 -otlpGRPC.tlsCertFile=<cert_file> -otlpGRPC.tlsKeyFile=<key_file>
+```
+
+> You can also **disable TLS** for incoming gRPC requests by setting `-otlpGRPC.tls=false`. TLS is recommended for production use, and disabling it should only be done when you're testing or aware of the potential risks.
+
+After that, specify endpoint for [OTLP/gRPC exporter](https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/otlpexporter/README.md):
+
+```yaml
+exporters:
+  # otlp exporter with TLS
+  otlp/with-tls:
+    endpoint: <victoria-traces>:4317
+    tls:
+      cert_file: file.cert
+      key_file: file.key
+  # otlp exporter without TLS
+  otlp/without-tls:
+    endpoint: <victoria-traces>:4317
+    tls:
+      insecure: true
+```
+
+> Optionally, you can specify the `compression` type to one of the following: `gzip` (default), `snappy`, `zstd`, and `none`.
+
+As same as HTTP endpoint, gRPC also support various HTTP headers. For example, the following configs add (or overwrites) `foo: bar` field to each trace span during data ingestion:
+
+```yaml
+exporters:
+  otlp/without-tls:
+    endpoint: <victoria-traces>:4317
+    tls:
+      insecure: true
     headers:
       VT-Extra-Fields: foo=bar
 ```

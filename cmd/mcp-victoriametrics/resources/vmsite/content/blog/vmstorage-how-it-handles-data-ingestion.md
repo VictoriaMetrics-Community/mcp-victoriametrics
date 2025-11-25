@@ -25,13 +25,13 @@ images:
 
 This piece is part of our ongoing VictoriaMetrics series, where we break down how different components of the system function:
 
-1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works)
+1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works/)
 2. How **vmstorage** Handles Data Ingestion (We're here)
-3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication)
-4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works)
-5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works)
-6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
-7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
+3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication/)
+4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works/)
+5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works/)
+6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests/)
+7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works/)
 
 **vmstorage** is the component in VictoriaMetrics that handles the long-term storage of monitoring data. It receives data from vminsert, organizes the data into efficient storage structures, and manages how long the data is retained.
 
@@ -65,7 +65,7 @@ Now, vmstorage reads one block at a time from the stream. But what does a block 
 
 Each block begins with a simple header (8 bytes) that indicates the size of the block vmstorage needs to read.
 
-This size is not supposed to exceed 100 MB. Interestingly, if you recall from the [How VictoriaMetrics Agent (vmagent) Works](/blog/vmagent-how-it-works), there's another limit of 32 MB per block at the agent level. After successfully receiving (but not yet processing) the block, vmstorage sends an `ACK` (acknowledgement) back to vminsert.
+This size is not supposed to exceed 100 MB. Interestingly, if you recall from the [How VictoriaMetrics Agent (vmagent) Works](/blog/vmagent-how-it-works/), there's another limit of 32 MB per block at the agent level. After successfully receiving (but not yet processing) the block, vmstorage sends an `ACK` (acknowledgement) back to vminsert.
 
 > [!TIP] Tip: Useful metrics
 > - The current number of active connections from vminsert to vmstorage: `vm_vminsert_conns`.
@@ -189,7 +189,7 @@ In case you need a refresher on what's happened so far:
 ![How vmstorage handles data ingestion](/blog/vmstorage-how-it-handles-data-ingestion/vmstorage-data-ingestion-big-picture-3.webp)
 <figcaption style="text-align: center; font-style: italic;">How vmstorage handles data ingestion</figcaption>
 
-Our discussion is now complete regarding how data is ingested into vmstorage and shows up in the UI or can be queried through the API. To understand how vmstorage works in the background to persist data, see [How vmstorage Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication).
+Our discussion is now complete regarding how data is ingested into vmstorage and shows up in the UI or can be queried through the API. To understand how vmstorage works in the background to persist data, see [How vmstorage Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication/).
 
 ## Who We Are
 

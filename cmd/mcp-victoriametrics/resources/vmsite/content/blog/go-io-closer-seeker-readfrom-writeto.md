@@ -20,7 +20,7 @@ images:
 
 This article is the 2nd article in the I/O series:
 
-1. [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer)
+1. [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer/)
 2. Go I/O Closer, Seeker, WriterTo, and ReaderFrom (We're here).
 
 So, we've already covered readers and writers in basic, and even touched on some standard library implementations that make our lives easier things like `bufio.Reader/Writer` and `os.File`.
@@ -169,7 +169,7 @@ Let’s break down what 'take priority' actually means in practice by looking at
 
 1. **WriterTo**: If the source (the reader) implements the `WriterTo` interface, it means the source knows how to write its data directly to the destination. So, `io.Copy()` calls the `WriteTo()` method, skipping the need for any extra buffer.
 2. **ReaderFrom**: If the destination (the writer) implements `io.ReaderFrom`, then it knows how to read data directly from the source, so `io.Copy()` calls the `ReadFrom()` method instead.
-3. **32 KB Buffer Fallback**: If neither of those is implemented, then `io.Copy()` will fall back on the usual method: reading data from the source into an internal buffer and writing it to the destination. As you may recall from the [previous article](/blog/go-io-reader-writer), the default buffer size is 32 KB.
+3. **32 KB Buffer Fallback**: If neither of those is implemented, then `io.Copy()` will fall back on the usual method: reading data from the source into an internal buffer and writing it to the destination. As you may recall from the [previous article](/blog/go-io-reader-writer/), the default buffer size is 32 KB.
 
 One more thing, these interfaces are also prioritized by `bufio.Reader` and `bufio.Writer`, which means those buffered readers and writers will look for `WriterTo` and `ReaderFrom` implementations and use them if they’re available.
 
@@ -329,11 +329,11 @@ If you spot anything that's outdated or if you have questions, don't hesitate to
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 

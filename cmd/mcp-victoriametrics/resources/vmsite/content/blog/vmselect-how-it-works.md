@@ -26,12 +26,12 @@ images:
 
 This piece is part of our ongoing VictoriaMetrics series, where we break down how different components of the system function:
 
-1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works)
-2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion)
-3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication)
-4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works)
-5. [How vmstorage's IndexDB Works?](/blog/vmstorage-how-indexdb-works)
-6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
+1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works/)
+2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion/)
+3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication/)
+4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works/)
+5. [How vmstorage's IndexDB Works?](/blog/vmstorage-how-indexdb-works/)
+6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests/)
 7. Inside vmselect: The Query Processing Engine of VictoriaMetrics
 
 ## Receive Requests
@@ -59,7 +59,7 @@ A few request settings are worth noting:
 - **Lookback delta**: is controlled by `-search.maxLookback` or can be set per request using the `max_lookback` parameter. If neither is set, vmselect automatically determines a value based on the data.  
 - **Step**: If the `step` parameter isn't provided, vmselect defaults to 5 minutes. Typically, query editors like Grafana or [vmui](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/app/vmui) handle this for you.  
 
-Not sure what _lookback delta_ or _step_ means? Check out [Instant Queries and Range Queries Explained](/blog/prometheus-monitoring-instant-range-query).  
+Not sure what _lookback delta_ or _step_ means? Check out [Instant Queries and Range Queries Explained](/blog/prometheus-monitoring-instant-range-query/).  
 
 ## Parse Query  
 

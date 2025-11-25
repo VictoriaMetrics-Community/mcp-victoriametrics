@@ -25,12 +25,12 @@ images:
 This piece is part of our ongoing VictoriaMetrics series where we break down how different components of the system do their thing:
 
 1. How VictoriaMetrics Agent (**vmagent**) Works (We're here)
-2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion)
-3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication)
-4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works)
-5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works)
-6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
-7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
+2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion/)
+3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication/)
+4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works/)
+5. [How **vmstorage**'s IndexDB Works](/blog/vmstorage-how-indexdb-works/)
+6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests/)
+7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works/)
 
 
 ## What is vmagent?
@@ -586,7 +586,7 @@ This means that with each failure, the time between retries gets progressively l
 
 The initial retry interval (`-remoteWrite.retryMinInterval`) is 1 second by default, and the maximum retry interval (`-remoteWrite.maxRetryInterval`) is 60 seconds.
 
-> [!NOTE] Read next: [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion)
+> [!NOTE] Read next: [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion/)
 
 ## Who We Are
 

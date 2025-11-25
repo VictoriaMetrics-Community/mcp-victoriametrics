@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.25.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-single%2Fchangelog%2F%230252)
+![Version](https://img.shields.io/badge/0.25.5-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-single%2Fchangelog%2F%230255)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-single)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -1019,6 +1019,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#server-service-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.targetPort</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Target port</p>
+</td>
+    </tr>
+    <tr id="server-service-trafficdistribution">
+      <td><a href="#server-service-trafficdistribution"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.trafficDistribution</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service traffic distribution. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="server-service-type">

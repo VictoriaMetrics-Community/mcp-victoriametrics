@@ -1,10 +1,10 @@
 ---
 title : "Access tokens"
-weight: 2
+weight: 4
 menu:
   docs:
     parent: "deployments"
-    weight: 2
+    weight: 4
 ---
 
 VictoriaMetrics Cloud handles data ingestion and querying in a secure way. That's why we need to
@@ -44,7 +44,7 @@ It allows to:
 - Limit the impact of overloading if limits are exceeded
 - Secure access partially in case of a leak
 
-Each Access token has a limit for concurrent requests. You may find more details about it on the [Tier Parameters and Flag Parameters Configuration](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/tiers-and-types/#tier-selection-parameters) page.
+Each Access token has a limit for concurrent requests. You may find more details about it on the [Tier Parameters and Flag Parameters Configuration](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/tiers-and-types) page.
 You can also check current concurrent requests value for each token on the "Monitoring" tab of the deployment page in the graph "Access token concurrent requests".
 
 ## How to create access tokens

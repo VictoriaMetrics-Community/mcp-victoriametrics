@@ -21,28 +21,28 @@ images:
 
 Welcome to the second chapter of the handbook on **Anomaly Detection for Time Series Data**! 
 
-This series of blog posts aims to provide an in-depth look into the fundamentals of anomaly detection and root cause analysis. It will also address the challenges posed by the [time-series characteristics of the data](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#time-series) and demystify technical jargon by breaking it down into easily understandable language.
+This series of blog posts aims to provide an in-depth look into the fundamentals of anomaly detection and root cause analysis. It will also address the challenges posed by the [time-series characteristics of the data](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#time-series) and demystify technical jargon by breaking it down into easily understandable language.
 
-This blog post **(Chapter 2)** is focused on different types of [anomalies](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#anomaly-specifics). Furthermore, we underscore the challenges involved in identifying each type of anomaly and offer insights on how to tackle them effectively for better observability.
+This blog post **(Chapter 2)** is focused on different types of [anomalies](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#anomaly-specifics). Furthermore, we underscore the challenges involved in identifying each type of anomaly and offer insights on how to tackle them effectively for better observability.
 
 **Blog Series Navigation**:
 <p></p>
 
-- [Chapter 1: An Introduction](/blog/victoriametrics-anomaly-detection-handbook-chapter-1)
+- [Chapter 1: An Introduction](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/)
 - Chapter 2: Anomaly Types (you are here)
 - Stay tuned for the next chapter on [anomaly detection](/tags/anomaly-detection/): Techniques and Models!
 
 ## The Role of Anomaly Detection in Observability Systems
 
-[Anomalies](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#anomaly-specifics), are more than just irregular data points in a dataset. Especially in time-series data, they carry significant implications for the entirety of monitoring and observability mechanisms. While **anomaly detection** is crucial, it's merely a subset of a broader observability strategy.
+[Anomalies](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#anomaly-specifics), are more than just irregular data points in a dataset. Especially in time-series data, they carry significant implications for the entirety of monitoring and observability mechanisms. While **anomaly detection** is crucial, it's merely a subset of a broader observability strategy.
 
-Understanding anomaly types, introduced by [time series nature of a data](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#time-series), is practical for streamlining real-time alerting and modeling. Each anomaly type may need a different approach, whether it's a simple [threshold-based rule](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#rule-based-alerting) or sophisticated machine learning models accounting for temporal and spatial contexts, like [trends](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#trend) or [seasonalities](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#seasonality). Responses vary too; a point anomaly in finances might call for swift human action, while a contextual anomaly in energy consumption might trigger a slower, automatic action.
+Understanding anomaly types, introduced by [time series nature of a data](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#time-series), is practical for streamlining real-time alerting and modeling. Each anomaly type may need a different approach, whether it's a simple [threshold-based rule](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#rule-based-alerting) or sophisticated machine learning models accounting for temporal and spatial contexts, like [trends](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#trend) or [seasonalities](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#seasonality). Responses vary too; a point anomaly in finances might call for swift human action, while a contextual anomaly in energy consumption might trigger a slower, automatic action.
 
-*Disclaimer:* There is no "one-size-fits-all" model in anomaly detection. The quest is not just about grasping different anomaly types but also recognizing the model class best suited for each type. Remember, anomaly detection, while vital, is just a piece in the larger puzzle of building an effective observability system. Combined with [smart alerting](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#ml-based-alerting) and [anomaly scores](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#anomaly-score), it can significantly improve the stability and the quality of your monitoring.
+*Disclaimer:* There is no "one-size-fits-all" model in anomaly detection. The quest is not just about grasping different anomaly types but also recognizing the model class best suited for each type. Remember, anomaly detection, while vital, is just a piece in the larger puzzle of building an effective observability system. Combined with [smart alerting](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#ml-based-alerting) and [anomaly scores](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#anomaly-score), it can significantly improve the stability and the quality of your monitoring.
 
 
 ## Categories of Anomalies
-While this classification is not exhaustive, in the scope of [anomaly detection](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#anomaly-specifics), anomalies generally fall into one of three primary categories:
+While this classification is not exhaustive, in the scope of [anomaly detection](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#anomaly-specifics), anomalies generally fall into one of three primary categories:
 <p></p>
 
 - Point anomalies
@@ -55,7 +55,7 @@ For each of these anomaly types, the subsequent section will provide:
 - `Example Use Cases` - A collapsible list showcasing real-world examples.
 - `Properties` - This segment delves into the distinct attributes an anomaly detection solution might need to effectively handle that specific anomaly type.
 - `Models` - This section points to Machine Learning models or model categories that are commonly deemed suitable defaults for the given anomaly type.
-- `Alerting Heuristics` - This part enhances the generated [anomaly_scores](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#anomaly-score) by integrating alerting heuristics, optimizing accuracy and minimizing the risk of alert fatigue. While not required, familiarity with [MetricsQL/PromQL](https://docs.victoriametrics.com/metricsql/) is beneficial for a more comprehensive grasp of the query templates.
+- `Alerting Heuristics` - This part enhances the generated [anomaly_scores](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#anomaly-score) by integrating alerting heuristics, optimizing accuracy and minimizing the risk of alert fatigue. While not required, familiarity with [MetricsQL/PromQL](https://docs.victoriametrics.com/metricsql/) is beneficial for a more comprehensive grasp of the query templates.
 
 ### Point Anomalies
 
@@ -80,21 +80,21 @@ It does not take *context or sequence nature of a time series* into account. A p
 - **Energy Consumption**: A sudden surge in electricity usage in a household might indicate faulty appliances or unauthorized use.
 </details>
 
-For detecting point anomalies, models that assess the fundamental statistical attributes of a distribution tend to be highly effective. Point anomalies are essentially individual data points that significantly diverge from the [mean](https://en.wikipedia.org/wiki/Mean) or [median](https://en.wikipedia.org/wiki/Median) of the distribution, which makes them relatively straightforward to identify. If the time series data exhibits a [trend](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#trend), it can generally be de-trended through a simple differencing technique. In this approach, each data value is substituted with the difference between its current and preceding value, expressed as `Yₜ = Yₜ - Yₜ₋₁`, where `t` represents a specific time point, `Y` denotes the time series and `Yₜ` denotes value of a series `Y` at particular time point `t`.
+For detecting point anomalies, models that assess the fundamental statistical attributes of a distribution tend to be highly effective. Point anomalies are essentially individual data points that significantly diverge from the [mean](https://en.wikipedia.org/wiki/Mean) or [median](https://en.wikipedia.org/wiki/Median) of the distribution, which makes them relatively straightforward to identify. If the time series data exhibits a [trend](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#trend), it can generally be de-trended through a simple differencing technique. In this approach, each data value is substituted with the difference between its current and preceding value, expressed as `Yₜ = Yₜ - Yₜ₋₁`, where `t` represents a specific time point, `Y` denotes the time series and `Yₜ` denotes value of a series `Y` at particular time point `t`.
 
-**Properties**: [Univariate](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#univariate-data) or [multivariate](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#multivariate-data) nature of the models, depending on whether you are analyzing a single time series or multiple time series at once.
+**Properties**: [Univariate](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#univariate-data) or [multivariate](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#multivariate-data) nature of the models, depending on whether you are analyzing a single time series or multiple time series at once.
 
 **Models**: [Z-Score](https://docs.victoriametrics.com/anomaly-detection/components/models/index.html#z-score) or similar simple models. 
 
 **Alerting heuristics**:
 <p></p>
 
-- When [anomaly_score](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#anomaly-score) is available, use it to detect anomalies. To detect one higher anomaly, an example alerting rule could be:
+- When [anomaly_score](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#anomaly-score) is available, use it to detect anomalies. To detect one higher anomaly, an example alerting rule could be:
   ```yaml
   - alert: YourAwesomeAlertName
     expr: avg_over_time(anomaly_score[5m]) > 1
   ```
-  This examines the average anomaly score over the last `period=5m` and triggers if it's above `thld=1`. You can use any other reasonable [alerting threshold](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#anomaly-threshold)
+  This examines the average anomaly score over the last `period=5m` and triggers if it's above `thld=1`. You can use any other reasonable [alerting threshold](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#anomaly-threshold)
 
 - To reduce the chances of alerting fatigue, use `for` to ensure persistence of the anomaly before actual alerting (following [VMAlert syntax](https://docs.victoriametrics.com/vmalert.html#alerting-rules) and [alert states](https://docs.victoriametrics.com/vmalert.html#alerts-state)):
   ```yaml
@@ -132,27 +132,27 @@ To sum up, this type of anomaly is only considered anomalous within a specific c
 
 As contextual anomalies require understanding of the data in its given context, such as seasonality or a known pattern. Therefore, models that can capture these patterns in data are usually more effective.
 
-**Properties**: Must be able to handle [trends](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#trend) and [seasonalities](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#seasonality), sometimes requiring hyperparameter tuning to capture the context properly.
+**Properties**: Must be able to handle [trends](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#trend) and [seasonalities](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#seasonality), sometimes requiring hyperparameter tuning to capture the context properly.
 
 **Models**: 
 <p></p>
 
 - [Prophet, Seasonal-Trend decomposition using LOESS (STL)](https://docs.victoriametrics.com/anomaly-detection/components/models/index.html#built-in-models).
-- Generally, [forecasting-based methods](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#time-series-forecasting) should perform reasonably well, combined with proper alerting.
+- Generally, [forecasting-based methods](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#time-series-forecasting) should perform reasonably well, combined with proper alerting.
 
 **Alerting heuristics**:
 
-The usage of abovementioned models for producing [anomaly scores](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#anomaly-score) for a single data point has already taken into account possible seasonality and trends present in your time series data.
+The usage of abovementioned models for producing [anomaly scores](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#anomaly-score) for a single data point has already taken into account possible seasonality and trends present in your time series data.
 <p></p>
 
-- As usual, prioritize the [anomaly_score](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#anomaly-score) as your primary signal for anomalies. For a basic alert to catch one peak anomaly, consider:
+- As usual, prioritize the [anomaly_score](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#anomaly-score) as your primary signal for anomalies. For a basic alert to catch one peak anomaly, consider:
   ```yaml
   - alert: YourAwesomeAlertName
     expr: avg_over_time(anomaly_score[5m]) > 1
   ```
   This examines the average anomaly score over the last `period=5m` and triggers if it's above 1.
 
-- For reducing [false positives](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#false-positive) during periods of historically high variability, you can compare the recent `anomaly_score` with its historical counterpart, aiming for *relative* alerting. For example:
+- For reducing [false positives](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#false-positive) during periods of historically high variability, you can compare the recent `anomaly_score` with its historical counterpart, aiming for *relative* alerting. For example:
   ```yaml
   - alert: YourAwesomeAlertName
   expr: avg_over_time(anomaly_score[1h]) > (1.5 * avg_over_time(anomaly_score[1h] offset 24h))
@@ -196,9 +196,9 @@ For collective anomalies, the emphasis should be on identifying patterns or sequ
 **Models**: 
 <p></p>
 
-- [Prophet, Seasonal-Trend decomposition using LOESS (STL)](https://docs.victoriametrics.com/anomaly-detection/components/models/index.html#built-in-models) 
+- [Prophet, Seasonal-Trend decomposition using LOESS (STL)](https://docs.victoriametrics.com/anomaly-detection/components/models/#built-in-models) 
 - Much more sophisticated models like [LSTM](https://en.wikipedia.org/wiki/Long_short-term_memory) or [Autoencoder-based](https://arxiv.org/abs/1802.03903) neural networks. 
-- As in [contextual anomaly case](#contextual-anomalies), [forecasting-based methods](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#time-series-forecasting) should perform reasonably well, combined with proper alerting.
+- As in [contextual anomaly case](#contextual-anomalies), [forecasting-based methods](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#time-series-forecasting) should perform reasonably well, combined with proper alerting.
 
 **Alerting heuristics**:
 <p></p>
@@ -219,11 +219,11 @@ For collective anomalies, the emphasis should be on identifying patterns or sequ
 
 ### Novelties
 
-[Novelty](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#novelty) is an unobserved pattern in the data that occurs for the first time. Unlike [outliers](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#outlier), novelties **represent changes in the underlying system that produces the data**, suggesting a new, previously unobserved state of the system.
+[Novelty](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#novelty) is an unobserved pattern in the data that occurs for the first time. Unlike [outliers](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#outlier), novelties **represent changes in the underlying system that produces the data**, suggesting a new, previously unobserved state of the system.
 
 For example, when there is a distinct switch from one regime to another, even if both regimes are individually considered normal, the transition point between them (the change point) introduces a "newness" or unexpected behavior in the data. This sudden change in behavior or structure is what makes it a novelty.
 
-In [time series analysis](/blog/victoriametrics-anomaly-detection-handbook-chapter-1#time-series-forecasting), change points often signify structural breaks, shifts in the mean, variance, or other properties of the series. The key aspect of a novelty, in this context, is that it represents a previously unobserved state or behavior of the system, even if that state or behavior itself is within normal bounds. The sudden and unexpected transition between two such states is what makes the change point a novelty.
+In [time series analysis](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#time-series-forecasting), change points often signify structural breaks, shifts in the mean, variance, or other properties of the series. The key aspect of a novelty, in this context, is that it represents a previously unobserved state or behavior of the system, even if that state or behavior itself is within normal bounds. The sudden and unexpected transition between two such states is what makes the change point a novelty.
 
 From that perspective, novelties can be seen as a special case of [collective anomaly](#collective-anomalies)
 

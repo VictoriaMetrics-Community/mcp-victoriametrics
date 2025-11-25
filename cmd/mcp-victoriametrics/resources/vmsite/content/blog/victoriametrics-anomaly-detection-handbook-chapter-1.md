@@ -27,8 +27,8 @@ This series of blog posts aims to provide an in-depth look into the fundamentals
 <p></p>
 
 - Chapter 1: An Introduction (you are here)
-- [Chapter 2: Anomaly Types](/blog/victoriametrics-anomaly-detection-handbook-chapter-2)
-- [Chapter 3: Techniques and Models](/blog/victoriametrics-anomaly-detection-handbook-chapter-3)
+- [Chapter 2: Anomaly Types](/blog/victoriametrics-anomaly-detection-handbook-chapter-2/)
+- [Chapter 3: Techniques and Models](/blog/victoriametrics-anomaly-detection-handbook-chapter-3/)
 - Stay tuned for the next chapter on [anomaly detection](/tags/anomaly-detection/): Root Cause Analysis!
 
 This blog post **(Chapter 1)** is focused on:

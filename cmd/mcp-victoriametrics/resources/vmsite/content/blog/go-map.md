@@ -398,13 +398,13 @@ If you spot anything that's outdated or if you have questions, don't hesitate to
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Sync Mutex: Normal and Starvation Mode](/blog/go-sync-mutex)
-- [Go Defer: From Basic To Traps](/blog/defer-in-go)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string)
-- [Vendoring, or go mod vendor: What Is It?](/blog/vendoring-go-mod-vendor)
+- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Sync Mutex: Normal and Starvation Mode](/blog/go-sync-mutex/)
+- [Go Defer: From Basic To Traps](/blog/defer-in-go/)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Inside Go's Unique Package: String Interning Simplified](/blog/go-unique-package-intern-string/)
+- [Vendoring, or go mod vendor: What Is It?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 

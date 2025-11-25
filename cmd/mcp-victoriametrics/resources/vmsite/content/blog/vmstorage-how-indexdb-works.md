@@ -26,13 +26,13 @@ images:
 
 This piece is part of our ongoing VictoriaMetrics series, where we break down how different components of the system function:
 
-1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works)
-2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion)
-3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication)
-4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works)
+1. [How VictoriaMetrics Agent (**vmagent**) Works](/blog/vmagent-how-it-works/)
+2. [How **vmstorage** Handles Data Ingestion](/blog/vmstorage-how-it-handles-data-ingestion/)
+3. [How **vmstorage** Processes Data: Retention, Merging, Deduplication,...](/blog/vmstorage-retention-merging-deduplication/)
+4. [When Metrics Meet **vminsert**: A Data-Delivery Story](/blog/vminsert-how-it-works/)
 5. How vmstorage's IndexDB Works? (We're here)
-6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
-7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works)
+6. [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests/)
+7. [Inside **vmselect**: The Query Processing Engine of VictoriaMetrics](/blog/vmselect-how-it-works/)
 
 > [!IMPORTANT]
 > This discussion assumes you've checked out the earlier articles, which cover how vmstorage handles data ingestion and what goes on when it processes data.
@@ -223,9 +223,9 @@ The downside is that per-day indexes use significantly more disk and memory comp
 
 If you have a timeseries that appears daily, `http_request_total{status="200"}`, the per-day `tag to metric IDs` index will generate 21 entries over 7 days (3 entries per day × 7 days). Meanwhile, the global index will only need 3 entries for the same timeseries, no matter how many days it spans.
 
-_Finally, when it comes to merging small parts, big parts, and flushing data to disk, the process works similarly to how it's done [in the main storage](/blog/vmstorage-retention-merging-deduplication). So, we'll skip that here to avoid repeating ourselves._
+_Finally, when it comes to merging small parts, big parts, and flushing data to disk, the process works similarly to how it's done [in the main storage](/blog/vmstorage-retention-merging-deduplication/). So, we'll skip that here to avoid repeating ourselves._
 
-> [!NOTE] Read next: [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests)
+> [!NOTE] Read next: [How **vmstorage** Handles Query Requests From vmselect](/blog/vmstorage-how-it-handles-query-requests/)
 
 ## Who We Are
 

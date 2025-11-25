@@ -12,6 +12,25 @@ The following `tip` changes can be tested by building VictoriaTraces components 
 
 ## tip
 
+## [v0.5.1](https://github.com/VictoriaMetrics/VictoriaTraces/releases/tag/v0.5.1)
+
+Released at 2025-11-19
+
+* SECURITY: upgrade Go builder from Go1.25.3 to Go1.25.4. See [the list of issues addressed in Go1.25.4](https://github.com/golang/go/issues?q=milestone%3AGo1.25.4%20label%3ACherryPickApproved).
+
+* FEATURE: [logstorage](https://docs.victoriametrics.com/victorialogs/): upgrade VictoriaLogs dependency from [v1.36.1 to v1.38.0](https://github.com/VictoriaMetrics/VictoriaLogs/compare/v1.36.1...v1.38.0).
+
+* BUGFIX: [Single-node VictoriaTraces](https://docs.victoriametrics.com/victoriatraces/) and vtinsert in [VictoriaTraces cluster](https://docs.victoriametrics.com/victoriatraces/cluster/): properly apply `maxDataSize` memory limits to the `snappy` and `zstd` encoded requests. It protects ingest endpoints from malicious requests.
+
+## [v0.5.0](https://github.com/VictoriaMetrics/VictoriaTraces/releases/tag/v0.5.0)
+
+Released at 2025-11-08
+
+* SECURITY: upgrade Go builder from Go1.25.2 to Go1.25.3. See [the list of issues addressed in Go1.25.3](https://github.com/golang/go/issues?q=milestone%3AGo1.25.3%20label%3ACherryPickApproved).
+
+* FEATURE: [Single-node VictoriaTraces](https://docs.victoriametrics.com/victoriatraces/) and [VictoriaTraces cluster](https://docs.victoriametrics.com/victoriatraces/cluster/): support [OTLP/gRPC](https://opentelemetry.io/docs/specs/otlp/#otlpgrpc) data ingestion. It requires `-otlpGRPCListenAddr` flag to be set on Single-node VictoriaTraces or vtinsert. See [this doc](https://docs.victoriametrics.com/victoriatraces/data-ingestion/opentelemetry) for details. Thanks to @JayiceZ for the [pull request](https://github.com/VictoriaMetrics/VictoriaTraces/pull/59).
+
+* BUGFIX: [Single-node VictoriaTraces](https://docs.victoriametrics.com/victoriatraces/) and vtselect in [VictoriaTraces cluster](https://docs.victoriametrics.com/victoriatraces/cluster/): return the correct error message and the total number when searching by trace ID yields no hits in the result. Thank @huan89983 for [the bug report](https://github.com/VictoriaMetrics/VictoriaTraces/issues/77).
 
 ## [v0.4.1](https://github.com/VictoriaMetrics/VictoriaTraces/releases/tag/v0.4.1)
 

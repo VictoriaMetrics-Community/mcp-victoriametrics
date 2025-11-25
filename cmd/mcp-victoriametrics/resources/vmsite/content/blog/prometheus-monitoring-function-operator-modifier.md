@@ -106,7 +106,7 @@ http_requests_total{service="inventory"}  650 @ 00:10
 
 Aggregation functions operate at a specific moment, not across a time range like rollup functions. Because of that, they require an instant vector (`http_requests_total`) as input.
 
-And don't forget what we covered in the [previous article](/blog/prometheus-monitoring-instant-range-query#instant-vector). When an instant vector like `http_requests_total` is evaluated, it gets internally converted to:
+And don't forget what we covered in the [previous article](/blog/prometheus-monitoring-instant-range-query/#instant-vector). When an instant vector like `http_requests_total` is evaluated, it gets internally converted to:
 
 ```go
 last_over_time(http_requests_total[lookback])

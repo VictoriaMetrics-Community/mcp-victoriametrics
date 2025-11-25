@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.26.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-agent%2Fchangelog%2F%230262)
+![Version](https://img.shields.io/badge/0.26.5-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-agent%2Fchangelog%2F%230265)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-agent)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -1228,6 +1228,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#service-trafficdistribution"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">service.trafficDistribution</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Traffic Distribution. Check <a href="https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution" target="_blank">Traffic distribution</a></p>
+</td>
+    </tr>
+    <tr id="service-trafficdistribution">
+      <td><a href="#service-trafficdistribution"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">service.trafficDistribution</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service traffic distribution. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="service-type">

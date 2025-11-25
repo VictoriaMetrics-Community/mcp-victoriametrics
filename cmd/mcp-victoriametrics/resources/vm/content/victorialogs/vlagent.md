@@ -118,6 +118,44 @@ The collected profiles may be analyzed with [go tool pprof](https://github.com/g
 
 It is safe to share the collected profiles from a security point of view, since they do not contain sensitive information.
 
+### Building from source code
+
+Follow these steps to build vlagent from source code:
+
+- Check out the VictoriaLogs source code:
+
+  ```sh
+  git clone https://github.com/VictoriaMetrics/VictoriaLogs
+  cd VictoriaLogs
+  ```
+
+- Check out a specific commit if needed:
+
+  ```sh
+  git checkout <commit-hash-here>
+  ```
+
+- Build vlagent (requires Go to be installed on your computer. See [how to install Go](https://golang.org/doc/install)):
+
+  ```sh
+  make vlagent
+  ```
+
+- Run the built binary:
+
+  ```sh
+  bin/vlagent -remoteWrite.url=...
+  ```
+
+An alternative approach is to build vlagent inside a Docker builder container. This approach doesn't require Go to be installed,
+but it does require Docker on your computer. See [how to install Docker](https://docs.docker.com/engine/install/):
+
+```sh
+make vlagent-prod
+```
+
+This will build the `victoria-logs-prod` executable inside the `bin` folder.
+
 ## Advanced usage
 
 `vlagent` can be fine-tuned with various command-line flags. Run `./vlagent -help` in order to see the full list of these flags with their descriptions and default values:

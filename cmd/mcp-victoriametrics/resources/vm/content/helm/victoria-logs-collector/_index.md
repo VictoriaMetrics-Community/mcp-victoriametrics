@@ -17,7 +17,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.0.5-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-collector%2Fchangelog%2F%23005)
+![Version](https://img.shields.io/badge/0.1.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-collector%2Fchangelog%2F%23012)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-logs-collector)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -362,6 +362,14 @@ Change the values according to the need of the environment in ``victoria-logs-co
       <td><em><code>(list)</code></em><p>Image pull secrets, that can be shared across multiple helm charts</p>
 </td>
     </tr>
+    <tr id="msgfield">
+      <td><a href="#msgfield"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">msgField</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">message</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">msg</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>List of fields to be used as <code>_msg</code> field. The first found field will be used. See <a href="https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field" target="_blank">https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field</a> for more details.</p>
+</td>
+    </tr>
     <tr id="nameoverride">
       <td><a href="#nameoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">nameOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
@@ -424,6 +432,15 @@ Change the values according to the need of the environment in ``victoria-logs-co
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Service account is needed to enrich logs with pod metadata using Kubernetes API</p>
+</td>
+    </tr>
+    <tr id="timefield">
+      <td><a href="#timefield"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">timeField</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">time</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">ts</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">timestamp</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>List of fields to be used as <code>_time</code> field. The first found field will be used. See <a href="https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field" target="_blank">https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field</a> for more details.</p>
 </td>
     </tr>
     <tr id="tolerations">

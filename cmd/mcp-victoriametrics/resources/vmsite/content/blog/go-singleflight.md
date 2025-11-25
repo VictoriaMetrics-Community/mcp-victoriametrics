@@ -21,12 +21,12 @@ images:
 
 This post is part of a series about handling concurrency in Go:
 
-- [Go sync.Mutex: Normal and Starvation Mode](/blog/go-sync-mutex)
-- [Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup)
-- [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool)
-- [Go sync.Cond, the Most Overlooked Sync Mechanism](/blog/go-sync-cond)
-- [Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map)
-- [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once)
+- [Go sync.Mutex: Normal and Starvation Mode](/blog/go-sync-mutex/)
+- [Go sync.WaitGroup and The Alignment Problem](/blog/go-sync-waitgroup/)
+- [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/)
+- [Go sync.Cond, the Most Overlooked Sync Mechanism](/blog/go-sync-cond/)
+- [Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map/)
+- [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once/)
 - Go Singleflight Melts in Your Code, Not in Your DB (We're here)
 
 
@@ -519,12 +519,12 @@ If you spot anything that's outdated or if you have questions, don't hesitate to
 Related articles:
 
 - [Golang Series at VictoriaMetrics](/categories/go-@-victoriametrics)
-- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer)
-- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array)
-- [Slices in Go: Grow Big or Go Home](/blog/go-slice)
-- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map)
-- [Golang Defer: From Basic To Traps](/blog/defer-in-go)
-- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor)
+- [Go I/O Readers, Writers, and Data in Motion.](/blog/go-io-reader-writer/)
+- [How Go Arrays Work and Get Tricky with For-Range](/blog/go-array/)
+- [Slices in Go: Grow Big or Go Home](/blog/go-slice/)
+- [Go Maps Explained: How Key-Value Pairs Are Actually Stored](/blog/go-map/)
+- [Golang Defer: From Basic To Traps](/blog/defer-in-go/)
+- [Vendoring, or go mod vendor: What is it?](/blog/vendoring-go-mod-vendor/)
 
 ## Who We Are
 
