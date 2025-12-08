@@ -3,7 +3,7 @@ module github.com/VictoriaMetrics-Community/mcp-victoriametrics
 go 1.25.4
 
 require (
-	github.com/VictoriaMetrics/VictoriaMetrics v1.130.0
+	github.com/VictoriaMetrics/VictoriaMetrics v1.131.0
 	github.com/VictoriaMetrics/metrics v1.40.2
 	github.com/VictoriaMetrics/metricsql v0.84.8
 	github.com/VictoriaMetrics/victoriametrics-cloud-api-go v0.0.4
@@ -75,10 +75,10 @@ require (
 	gitlab.com/golang-commonmark/mdurl v0.0.0-20191124015652-932350d1cb84 // indirect
 	gitlab.com/golang-commonmark/puny v0.0.0-20191124015043-9f83538fa04f // indirect
 	go.etcd.io/bbolt v1.4.3 // indirect
-	golang.org/x/net v0.46.0 // indirect
+	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/oauth2 v0.32.0 // indirect
-	golang.org/x/sys v0.37.0 // indirect
-	golang.org/x/text v0.30.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
+	golang.org/x/text v0.31.0 // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
