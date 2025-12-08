@@ -25,8 +25,8 @@ github.com/bahlo/generic-list-go v0.2.0/go.mod h1:2KvAjgMlE5NNynlg/5iLrrCCZ2+5xW
 github.com/bits-and-blooms/bitset v1.12.0/go.mod h1:7hO7Gc7Pp1vODcmWvKMRA9BNmbv6a/7QIWpPxHddWR8=
 github.com/bits-and-blooms/bitset v1.24.0 h1:H4x4TuulnokZKvHLfzVRTHJfFfnHEeSYJizujEZvmAM=
 github.com/bits-and-blooms/bitset v1.24.0/go.mod h1:7hO7Gc7Pp1vODcmWvKMRA9BNmbv6a/7QIWpPxHddWR8=
-github.com/blevesearch/bleve/v2 v2.5.5 h1:lzC89QUCco+y1qBnJxGqm4AbtsdsnlUvq0kXok8n3C8=
-github.com/blevesearch/bleve/v2 v2.5.5/go.mod h1:t5WoESS5TDteTdnjhhvpA1BpLYErOBX2IQViTMLK7wo=
+github.com/blevesearch/bleve/v2 v2.5.6 h1:YdixQmOUuZHojQRe8Te7BY2cRirbzpbcpybAFs0m2DI=
+github.com/blevesearch/bleve/v2 v2.5.6/go.mod h1:t5WoESS5TDteTdnjhhvpA1BpLYErOBX2IQViTMLK7wo=
 github.com/blevesearch/bleve_index_api v1.2.11 h1:bXQ54kVuwP8hdrXUSOnvTQfgK0KI1+f9A0ITJT8tX1s=
 github.com/blevesearch/bleve_index_api v1.2.11/go.mod h1:rKQDl4u51uwafZxFrPD1R7xFOwKnzZW7s/LSeK4lgo0=
 github.com/blevesearch/geo v0.2.4 h1:ECIGQhw+QALCZaDcogRTNSJYQXRtC8/m8IKiA706cqk=
