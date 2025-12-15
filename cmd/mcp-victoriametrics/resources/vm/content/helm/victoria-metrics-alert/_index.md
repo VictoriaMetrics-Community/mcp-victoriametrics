@@ -17,7 +17,7 @@ tags:
   - logs
 ---
 
-![Version](https://img.shields.io/badge/0.26.6-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-alert%2Fchangelog%2F%230266)
+![Version](https://img.shields.io/badge/0.28.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-alert%2Fchangelog%2F%230280)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-alert)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -520,6 +520,57 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#alertmanager-retention"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.retention</span><span class="p">:</span><span class="w"> </span><span class="l">120h</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Alertmanager retention</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-annotations">
+      <td><a href="#alertmanager-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-enabled">
+      <td><a href="#alertmanager-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for VMAlertmanager</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-extrarules">
+      <td><a href="#alertmanager-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-filters">
+      <td><a href="#alertmanager-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-hostnames">
+      <td><a href="#alertmanager-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-labels">
+      <td><a href="#alertmanager-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-matches">
+      <td><a href="#alertmanager-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">/</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="alertmanager-route-parentrefs">
+      <td><a href="#alertmanager-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
 </td>
     </tr>
     <tr id="alertmanager-securitycontext">
@@ -1111,6 +1162,57 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#server-resources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.resources</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Resource object. Details are <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="server-route-annotations">
+      <td><a href="#server-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="server-route-enabled">
+      <td><a href="#server-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for VMAlert</p>
+</td>
+    </tr>
+    <tr id="server-route-extrarules">
+      <td><a href="#server-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="server-route-filters">
+      <td><a href="#server-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="server-route-hostnames">
+      <td><a href="#server-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="server-route-labels">
+      <td><a href="#server-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="server-route-matches">
+      <td><a href="#server-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">/</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="server-route-parentrefs">
+      <td><a href="#server-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
 </td>
     </tr>
     <tr id="server-securitycontext">

@@ -170,6 +170,27 @@ VLAgent - is a tiny but brave agent, which helps you collect logs from various s
 | spec<a href="#vlagent-spec" id="vlagent-spec">#</a><br/>_[VLAgentSpec](#vlagentspec)_ | _(Required)_<br/> |
 
 
+#### VLAgentK8sCollector
+
+
+
+
+
+Appears in: [VLAgentSpec](#vlagentspec)
+
+| Field | Description |
+| --- | --- |
+| checkpointsPath<a href="#vlagentk8scollector-checkpointspath" id="vlagentk8scollector-checkpointspath">#</a><br/>_string_ | _(Required)_<br/>CheckpointsPath configures path to file where logs checkpoints are stored.<br />By default it's stored at host's /var/lib/vlagent_checkpoints/checkpoints.json. |
+| decolorizeFields<a href="#vlagentk8scollector-decolorizefields" id="vlagentk8scollector-decolorizefields">#</a><br/>_string array_ | _(Required)_<br/>DecolorizeFields defines fields to remove ANSI color codes across logs ingested from Kubernetes |
+| enabled<a href="#vlagentk8scollector-enabled" id="vlagentk8scollector-enabled">#</a><br/>_boolean_ | _(Required)_<br/>Enabled switches VLAgent to log collection mode.<br />Note, for this purpose operator uses DaemonSet, while by default VLAgent uses StatefulSet.<br />Switching this option will drop all persisted data. |
+| extraFields<a href="#vlagentk8scollector-extrafields" id="vlagentk8scollector-extrafields">#</a><br/>_string_ | _(Required)_<br/>ExtraFields defines extra fields as JSON string which should be added to each collected log line<br />Example: '\{"env":"dev","cluster":"staging"\}' |
+| ignoreFields<a href="#vlagentk8scollector-ignorefields" id="vlagentk8scollector-ignorefields">#</a><br/>_string array_ | _(Required)_<br/>IgnoreFields defines fields to ignore across logs ingested from Kubernetes |
+| logsPath<a href="#vlagentk8scollector-logspath" id="vlagentk8scollector-logspath">#</a><br/>_string_ | _(Required)_<br/>LogsPath configures root for logs path<br />By default VLAgent collects logs from /var/log/containers |
+| msgFields<a href="#vlagentk8scollector-msgfields" id="vlagentk8scollector-msgfields">#</a><br/>_string array_ | _(Required)_<br/>MsgField defines fields that may contain the _msg field |
+| tenantID<a href="#vlagentk8scollector-tenantid" id="vlagentk8scollector-tenantid">#</a><br/>_string_ | _(Required)_<br/>TenantID defines default tenant ID to use for logs collected from pods in format: <accountID>:<projectID> |
+| timeFields<a href="#vlagentk8scollector-timefields" id="vlagentk8scollector-timefields">#</a><br/>_string array_ | _(Required)_<br/>TimeFields defines fields that may contain the _time field |
+
+
 #### VLAgentRemoteWriteSettings
 
 
@@ -236,6 +257,7 @@ Appears in: [VLAgent](#vlagent)
 | image<a href="#vlagentspec-image" id="vlagentspec-image">#</a><br/>_[Image](#image)_ | _(Optional)_<br/>Image - docker image settings<br />if no specified operator uses default version from operator config |
 | imagePullSecrets<a href="#vlagentspec-imagepullsecrets" id="vlagentspec-imagepullsecrets">#</a><br/>_[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#localobjectreference-v1-core) array_ | _(Optional)_<br/>ImagePullSecrets An optional list of references to secrets in the same namespace<br />to use for pulling images from registries<br />see https://kubernetes.io/docs/concepts/containers/images/#referring-to-an-imagepullsecrets-on-a-pod |
 | initContainers<a href="#vlagentspec-initcontainers" id="vlagentspec-initcontainers">#</a><br/>_[Container](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#container-v1-core) array_ | _(Optional)_<br/>InitContainers allows adding initContainers to the pod definition.<br />Any errors during the execution of an initContainer will lead to a restart of the Pod.<br />More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/ |
+| k8sCollector<a href="#vlagentspec-k8scollector" id="vlagentspec-k8scollector">#</a><br/>_[VLAgentK8sCollector](#vlagentk8scollector)_ | _(Required)_<br/>K8sCollector configures VLAgent logs collection from K8s pods |
 | logFormat<a href="#vlagentspec-logformat" id="vlagentspec-logformat">#</a><br/>_string_ | _(Optional)_<br/>LogFormat for VLAgent to be configured with. |
 | logLevel<a href="#vlagentspec-loglevel" id="vlagentspec-loglevel">#</a><br/>_string_ | _(Optional)_<br/>LogLevel for VLAgent to be configured with.<br />INFO, WARN, ERROR, FATAL, PANIC |
 | managedMetadata<a href="#vlagentspec-managedmetadata" id="vlagentspec-managedmetadata">#</a><br/>_[ManagedObjectsMetadata](#managedobjectsmetadata)_ | _(Required)_<br/>ManagedMetadata defines metadata that will be added to the all objects<br />created by operator for the given CustomResource |
@@ -539,6 +561,7 @@ Appears in: [VLClusterSpec](#vlclusterspec)
 | hostAliases<a href="#vlstorage-hostaliases" id="vlstorage-hostaliases">#</a><br/>_[HostAlias](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#hostalias-v1-core) array_ | _(Optional)_<br/>HostAliases provides mapping for ip and hostname,<br />that would be propagated to pod,<br />cannot be used with HostNetwork. |
 | hostNetwork<a href="#vlstorage-hostnetwork" id="vlstorage-hostnetwork">#</a><br/>_boolean_ | _(Optional)_<br/>HostNetwork controls whether the pod may use the node network namespace |
 | host_aliases<a href="#vlstorage-host_aliases" id="vlstorage-host_aliases">#</a><br/>_[HostAlias](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#hostalias-v1-core) array_ | _(Optional)_<br/>HostAliasesUnderScore provides mapping for ip and hostname,<br />that would be propagated to pod,<br />cannot be used with HostNetwork.<br />Has Priority over hostAliases field |
+| hpa<a href="#vlstorage-hpa" id="vlstorage-hpa">#</a><br/>_[EmbeddedHPA](#embeddedhpa)_ | _(Optional)_<br/>Configures horizontal pod autoscaling.<br />Note, downscaling is not supported. |
 | image<a href="#vlstorage-image" id="vlstorage-image">#</a><br/>_[Image](#image)_ | _(Optional)_<br/>Image - docker image settings<br />if no specified operator uses default version from operator config |
 | imagePullSecrets<a href="#vlstorage-imagepullsecrets" id="vlstorage-imagepullsecrets">#</a><br/>_[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#localobjectreference-v1-core) array_ | _(Optional)_<br/>ImagePullSecrets An optional list of references to secrets in the same namespace<br />to use for pulling images from registries<br />see https://kubernetes.io/docs/concepts/containers/images/#referring-to-an-imagepullsecrets-on-a-pod |
 | initContainers<a href="#vlstorage-initcontainers" id="vlstorage-initcontainers">#</a><br/>_[Container](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#container-v1-core) array_ | _(Optional)_<br/>InitContainers allows adding initContainers to the pod definition.<br />Any errors during the execution of an initContainer will lead to a restart of the Pod.<br />More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/ |
@@ -1072,6 +1095,7 @@ Appears in: [VTClusterSpec](#vtclusterspec)
 | hostAliases<a href="#vtstorage-hostaliases" id="vtstorage-hostaliases">#</a><br/>_[HostAlias](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#hostalias-v1-core) array_ | _(Optional)_<br/>HostAliases provides mapping for ip and hostname,<br />that would be propagated to pod,<br />cannot be used with HostNetwork. |
 | hostNetwork<a href="#vtstorage-hostnetwork" id="vtstorage-hostnetwork">#</a><br/>_boolean_ | _(Optional)_<br/>HostNetwork controls whether the pod may use the node network namespace |
 | host_aliases<a href="#vtstorage-host_aliases" id="vtstorage-host_aliases">#</a><br/>_[HostAlias](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#hostalias-v1-core) array_ | _(Optional)_<br/>HostAliasesUnderScore provides mapping for ip and hostname,<br />that would be propagated to pod,<br />cannot be used with HostNetwork.<br />Has Priority over hostAliases field |
+| hpa<a href="#vtstorage-hpa" id="vtstorage-hpa">#</a><br/>_[EmbeddedHPA](#embeddedhpa)_ | _(Optional)_<br/>Configures horizontal pod autoscaling.<br />Note, downscaling is not supported. |
 | image<a href="#vtstorage-image" id="vtstorage-image">#</a><br/>_[Image](#image)_ | _(Optional)_<br/>Image - docker image settings<br />if no specified operator uses default version from operator config |
 | imagePullSecrets<a href="#vtstorage-imagepullsecrets" id="vtstorage-imagepullsecrets">#</a><br/>_[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#localobjectreference-v1-core) array_ | _(Optional)_<br/>ImagePullSecrets An optional list of references to secrets in the same namespace<br />to use for pulling images from registries<br />see https://kubernetes.io/docs/concepts/containers/images/#referring-to-an-imagepullsecrets-on-a-pod |
 | initContainers<a href="#vtstorage-initcontainers" id="vtstorage-initcontainers">#</a><br/>_[Container](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#container-v1-core) array_ | _(Optional)_<br/>InitContainers allows adding initContainers to the pod definition.<br />Any errors during the execution of an initContainer will lead to a restart of the Pod.<br />More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/ |
@@ -1280,6 +1304,7 @@ Appears in: [Endpoint](#endpoint), [KubernetesSDConfig](#kubernetessdconfig), [P
 
 | Field | Description |
 | --- | --- |
+| namespace<a href="#attachmetadata-namespace" id="attachmetadata-namespace">#</a><br/>_boolean_ | _(Required)_<br/>Namespace instructs vmagent to add namespace specific metadata from service discovery<br />Valid for roles: pod, service, endpoints, endpointslice, ingress. |
 | node<a href="#attachmetadata-node" id="attachmetadata-node">#</a><br/>_boolean_ | _(Optional)_<br/>Node instructs vmagent to add node specific metadata from service discovery<br />Valid for roles: pod, endpoints, endpointslice. |
 
 
@@ -1449,9 +1474,10 @@ Appears in: [VMAgentSpec](#vmagentspec), [VMAlertSpec](#vmalertspec), [VMAlertma
 | --- | --- |
 | configReloadAuthKeySecret<a href="#commonconfigreloaderparams-configreloadauthkeysecret" id="commonconfigreloaderparams-configreloadauthkeysecret">#</a><br/>_[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#secretkeyselector-v1-core)_ | _(Optional)_<br/>ConfigReloadAuthKeySecret defines optional secret reference authKey for /-/reload API requests.<br />Given secret reference will be added to the application and vm-config-reloader as volume<br />available since v0.57.0 version |
 | configReloaderExtraArgs<a href="#commonconfigreloaderparams-configreloaderextraargs" id="commonconfigreloaderparams-configreloaderextraargs">#</a><br/>_object (keys:string, values:string)_ | _(Optional)_<br/>ConfigReloaderExtraArgs that will be passed to  VMAuths config-reloader container<br />for example resyncInterval: "30s" |
-| configReloaderImageTag<a href="#commonconfigreloaderparams-configreloaderimagetag" id="commonconfigreloaderparams-configreloaderimagetag">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImageTag defines image:tag for config-reloader container |
+| configReloaderImage<a href="#commonconfigreloaderparams-configreloaderimage" id="commonconfigreloaderparams-configreloaderimage">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImage defines image:tag for config-reloader container |
+| configReloaderImageTag<a href="#commonconfigreloaderparams-configreloaderimagetag" id="commonconfigreloaderparams-configreloaderimagetag">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImageTag defines image:tag for config-reloader container<br />Deprecated: use configReloaderImage instead |
 | configReloaderResources<a href="#commonconfigreloaderparams-configreloaderresources" id="commonconfigreloaderparams-configreloaderresources">#</a><br/>_[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#resourcerequirements-v1-core)_ | _(Optional)_<br/>ConfigReloaderResources config-reloader container resource request and limits, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/<br />if not defined default resources from operator config will be used |
-| useVMConfigReloader<a href="#commonconfigreloaderparams-usevmconfigreloader" id="commonconfigreloaderparams-usevmconfigreloader">#</a><br/>_boolean_ | _(Optional)_<br/>UseVMConfigReloader replaces prometheus-like config-reloader<br />with vm one. It uses secrets watch instead of file watch<br />which greatly increases speed of config updates |
+| useVMConfigReloader<a href="#commonconfigreloaderparams-usevmconfigreloader" id="commonconfigreloaderparams-usevmconfigreloader">#</a><br/>_boolean_ | _(Optional)_<br/>UseVMConfigReloader replaces prometheus-like config-reloader<br />with vm one. It uses secrets watch instead of file watch<br />which greatly increases speed of config updates<br />Removed since v0.67.0: this property is ignored and no longer needed |
 
 
 #### CommonDefaultableParams
@@ -1695,7 +1721,7 @@ Appears in: [Receiver](#receiver)
 EmbeddedHPA embeds HorizontalPodAutoScaler spec v2.
 https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/horizontal-pod-autoscaler-v2/
 
-Appears in: [VLInsert](#vlinsert), [VLSelect](#vlselect), [VMAuthSpec](#vmauthspec), [VMInsert](#vminsert), [VMSelect](#vmselect), [VTInsert](#vtinsert), [VTSelect](#vtselect)
+Appears in: [VLInsert](#vlinsert), [VLSelect](#vlselect), [VLStorage](#vlstorage), [VMAuthSpec](#vmauthspec), [VMInsert](#vminsert), [VMSelect](#vmselect), [VMStorage](#vmstorage), [VTInsert](#vtinsert), [VTSelect](#vtselect), [VTStorage](#vtstorage)
 
 | Field | Description |
 | --- | --- |
@@ -1703,6 +1729,27 @@ Appears in: [VLInsert](#vlinsert), [VLSelect](#vlselect), [VMAuthSpec](#vmauthsp
 | maxReplicas<a href="#embeddedhpa-maxreplicas" id="embeddedhpa-maxreplicas">#</a><br/>_integer_ | _(Required)_<br/> |
 | metrics<a href="#embeddedhpa-metrics" id="embeddedhpa-metrics">#</a><br/>_[MetricSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#metricspec-v2-autoscaling) array_ | _(Required)_<br/> |
 | minReplicas<a href="#embeddedhpa-minreplicas" id="embeddedhpa-minreplicas">#</a><br/>_integer_ | _(Required)_<br/> |
+
+
+#### EmbeddedHTTPRoute
+
+
+
+EmbeddedHTTPRoute describes httproute configuration options.
+
+Requires gateway-controller CRD installed and VM_GATEWAY_API_ENABLED=true env var
+See https://gateway-api.sigs.k8s.io/guides/#installing-a-gateway-controller
+
+Appears in: [VMAuthSpec](#vmauthspec)
+
+| Field | Description |
+| --- | --- |
+| annotations<a href="#embeddedhttproute-annotations" id="embeddedhttproute-annotations">#</a><br/>_object (keys:string, values:string)_ | _(Optional)_<br/>Annotations is an unstructured key value map stored with a resource that may be<br />set by external tools to store and retrieve arbitrary metadata. They are not<br />queryable and should be preserved when modifying objects.<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations |
+| extraRules<a href="#embeddedhttproute-extrarules" id="embeddedhttproute-extrarules">#</a><br/>_[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#rawextension-runtime-pkg) array_ | _(Optional)_<br/>ExtraRules defines custom HTTPRouteRule in raw form, bypassing Gateway API CEL validations. |
+| hostnames<a href="#embeddedhttproute-hostnames" id="embeddedhttproute-hostnames">#</a><br/>_Hostname array_ | _(Optional)_<br/>Hostnames defines a set of hostnames that should match against the HTTP Host<br />header to select a HTTPRoute used to process the request. |
+| labels<a href="#embeddedhttproute-labels" id="embeddedhttproute-labels">#</a><br/>_object (keys:string, values:string)_ | _(Optional)_<br/>Labels Map of string keys and values that can be used to organize and categorize<br />(scope and select) objects. May match selectors of replication controllers<br />and services.<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels |
+| name<a href="#embeddedhttproute-name" id="embeddedhttproute-name">#</a><br/>_string_ | _(Optional)_<br/>Name must be unique within a namespace. Is required when creating resources, although<br />some resources may allow a client to request the generation of an appropriate name<br />automatically. Name is primarily intended for creation idempotence and configuration<br />definition.<br />Cannot be updated.<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names |
+| parentRefs<a href="#embeddedhttproute-parentrefs" id="embeddedhttproute-parentrefs">#</a><br/>_ParentReference array_ | _(Required)_<br/>ParentRefs references the resources (usually Gateways) that a Route wants to be attached to. |
 
 
 #### EmbeddedIngress
@@ -1722,6 +1769,7 @@ Appears in: [VMAuthSpec](#vmauthspec)
 | host<a href="#embeddedingress-host" id="embeddedingress-host">#</a><br/>_string_ | _(Optional)_<br/>Host defines ingress host parameter for default rule<br />It will be used, only if TlsHosts is empty |
 | labels<a href="#embeddedingress-labels" id="embeddedingress-labels">#</a><br/>_object (keys:string, values:string)_ | _(Optional)_<br/>Labels Map of string keys and values that can be used to organize and categorize<br />(scope and select) objects. May match selectors of replication controllers<br />and services.<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels |
 | name<a href="#embeddedingress-name" id="embeddedingress-name">#</a><br/>_string_ | _(Optional)_<br/>Name must be unique within a namespace. Is required when creating resources, although<br />some resources may allow a client to request the generation of an appropriate name<br />automatically. Name is primarily intended for creation idempotence and configuration<br />definition.<br />Cannot be updated.<br />More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names |
+| paths<a href="#embeddedingress-paths" id="embeddedingress-paths">#</a><br/>_string array_ | _(Optional)_<br/>Paths defines ingress paths parameter for default rule |
 | tlsHosts<a href="#embeddedingress-tlshosts" id="embeddedingress-tlshosts">#</a><br/>_string array_ | _(Required)_<br/>TlsHosts configures TLS access for ingress, tlsSecretName must be defined for it. |
 | tlsSecretName<a href="#embeddedingress-tlssecretname" id="embeddedingress-tlssecretname">#</a><br/>_string_ | _(Optional)_<br/>TlsSecretName defines secretname at the VMAuth namespace with cert and key<br />https://kubernetes.io/docs/concepts/services-networking/ingress/#tls |
 
@@ -1733,7 +1781,7 @@ Appears in: [VMAuthSpec](#vmauthspec)
 EmbeddedObjectMetadata contains a subset of the fields included in k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta
 Only fields which are relevant to embedded resources are included.
 
-Appears in: [AdditionalServiceSpec](#additionalservicespec), [EmbeddedIngress](#embeddedingress), [EmbeddedPersistentVolumeClaim](#embeddedpersistentvolumeclaim), [VLAgentSpec](#vlagentspec), [VLInsert](#vlinsert), [VLSelect](#vlselect), [VLSingleSpec](#vlsinglespec), [VLStorage](#vlstorage), [VLogsSpec](#vlogsspec), [VMAgentSpec](#vmagentspec), [VMAlertSpec](#vmalertspec), [VMAlertmanagerSpec](#vmalertmanagerspec), [VMAnomalySpec](#vmanomalyspec), [VMAuthLoadBalancerSpec](#vmauthloadbalancerspec), [VMAuthSpec](#vmauthspec), [VMInsert](#vminsert), [VMSelect](#vmselect), [VMSingleSpec](#vmsinglespec), [VMStorage](#vmstorage), [VTInsert](#vtinsert), [VTSelect](#vtselect), [VTSingleSpec](#vtsinglespec), [VTStorage](#vtstorage)
+Appears in: [AdditionalServiceSpec](#additionalservicespec), [EmbeddedHTTPRoute](#embeddedhttproute), [EmbeddedIngress](#embeddedingress), [EmbeddedPersistentVolumeClaim](#embeddedpersistentvolumeclaim), [VLAgentSpec](#vlagentspec), [VLInsert](#vlinsert), [VLSelect](#vlselect), [VLSingleSpec](#vlsinglespec), [VLStorage](#vlstorage), [VLogsSpec](#vlogsspec), [VMAgentSpec](#vmagentspec), [VMAlertSpec](#vmalertspec), [VMAlertmanagerSpec](#vmalertmanagerspec), [VMAnomalySpec](#vmanomalyspec), [VMAuthLoadBalancerSpec](#vmauthloadbalancerspec), [VMAuthSpec](#vmauthspec), [VMInsert](#vminsert), [VMSelect](#vmselect), [VMSingleSpec](#vmsinglespec), [VMStorage](#vmstorage), [VTInsert](#vtinsert), [VTSelect](#vtselect), [VTSingleSpec](#vtsinglespec), [VTStorage](#vtstorage)
 
 | Field | Description |
 | --- | --- |
@@ -1960,7 +2008,7 @@ Appears in: [VMAlertDatasourceSpec](#vmalertdatasourcespec), [VMAlertNotifierSpe
 HTTPConfig defines a client HTTP configuration for VMAlertmanagerConfig objects
 See https://prometheus.io/docs/alerting/latest/configuration/#http_config
 
-Appears in: [DiscordConfig](#discordconfig), [JiraConfig](#jiraconfig), [MSTeamsConfig](#msteamsconfig), [MSTeamsV2Config](#msteamsv2config), [OpsGenieConfig](#opsgenieconfig), [PagerDutyConfig](#pagerdutyconfig), [PushoverConfig](#pushoverconfig), [RocketchatConfig](#rocketchatconfig), [SlackConfig](#slackconfig), [SnsConfig](#snsconfig), [TelegramConfig](#telegramconfig), [VictorOpsConfig](#victoropsconfig), [WeChatConfig](#wechatconfig), [WebexConfig](#webexconfig), [WebhookConfig](#webhookconfig)
+Appears in: [DiscordConfig](#discordconfig), [IncidentIOConfig](#incidentioconfig), [JiraConfig](#jiraconfig), [MSTeamsConfig](#msteamsconfig), [MSTeamsV2Config](#msteamsv2config), [OpsGenieConfig](#opsgenieconfig), [PagerDutyConfig](#pagerdutyconfig), [PushoverConfig](#pushoverconfig), [RocketchatConfig](#rocketchatconfig), [SlackConfig](#slackconfig), [SnsConfig](#snsconfig), [TelegramConfig](#telegramconfig), [VictorOpsConfig](#victoropsconfig), [WeChatConfig](#wechatconfig), [WebexConfig](#webexconfig), [WebhookConfig](#webhookconfig)
 
 | Field | Description |
 | --- | --- |
@@ -2022,6 +2070,27 @@ Appears in: [PagerDutyConfig](#pagerdutyconfig)
 | alt<a href="#imageconfig-alt" id="imageconfig-alt">#</a><br/>_string_ | _(Optional)_<br/> |
 | href<a href="#imageconfig-href" id="imageconfig-href">#</a><br/>_string_ | _(Optional)_<br/> |
 | source<a href="#imageconfig-source" id="imageconfig-source">#</a><br/>_string_ | _(Required)_<br/> |
+
+
+#### IncidentIOConfig
+
+
+
+IncidentIOConfig configures notifications via incident.io.
+https://prometheus.io/docs/alerting/latest/configuration/#incidentio_config
+available from v0.66.0 operator version
+and v0.29.0 alertmanager version
+
+Appears in: [Receiver](#receiver)
+
+| Field | Description |
+| --- | --- |
+| alert_source_token<a href="#incidentioconfig-alert_source_token" id="incidentioconfig-alert_source_token">#</a><br/>_[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#secretkeyselector-v1-core)_ | _(Optional)_<br/>AlertSourceToken is used to authenticate with incident.io |
+| http_config<a href="#incidentioconfig-http_config" id="incidentioconfig-http_config">#</a><br/>_[HTTPConfig](#httpconfig)_ | _(Optional)_<br/> |
+| max_alerts<a href="#incidentioconfig-max_alerts" id="incidentioconfig-max_alerts">#</a><br/>_integer_ | _(Optional)_<br/>MaxAlerts defines maximum number of alerts to be sent per incident.io message. |
+| send_resolved<a href="#incidentioconfig-send_resolved" id="incidentioconfig-send_resolved">#</a><br/>_boolean_ | _(Optional)_<br/>SendResolved controls notify about resolved alerts. |
+| timeout<a href="#incidentioconfig-timeout" id="incidentioconfig-timeout">#</a><br/>_string_ | _(Optional)_<br/>Timeout is the maximum time allowed to invoke incident.io |
+| url<a href="#incidentioconfig-url" id="incidentioconfig-url">#</a><br/>_string_ | _(Required)_<br/>The URL to send the incident.io alert. This would typically be provided by the<br />incident.io team when setting up an alert source. |
 
 
 #### InhibitRule
@@ -2208,7 +2277,7 @@ Appears in: [Receiver](#receiver)
 
 ManagedObjectsMetadata contains Labels and Annotations
 
-Appears in: [VLAgentSpec](#vlagentspec), [VLClusterSpec](#vlclusterspec), [VLSingleSpec](#vlsinglespec), [VLogsSpec](#vlogsspec), [VMAgentSpec](#vmagentspec), [VMAlertSpec](#vmalertspec), [VMAlertmanagerSpec](#vmalertmanagerspec), [VMAnomalySpec](#vmanomalyspec), [VMAuthSpec](#vmauthspec), [VMClusterSpec](#vmclusterspec), [VMSingleSpec](#vmsinglespec), [VTClusterSpec](#vtclusterspec), [VTSingleSpec](#vtsinglespec)
+Appears in: [VLAgentSpec](#vlagentspec), [VLClusterSpec](#vlclusterspec), [VLSingleSpec](#vlsinglespec), [VLogsSpec](#vlogsspec), [VMAgentSpec](#vmagentspec), [VMAlertSpec](#vmalertspec), [VMAlertmanagerSpec](#vmalertmanagerspec), [VMAnomalySpec](#vmanomalyspec), [VMAuthSpec](#vmauthspec), [VMClusterSpec](#vmclusterspec), [VMSingleSpec](#vmsinglespec), [VMUserSpec](#vmuserspec), [VTClusterSpec](#vtclusterspec), [VTSingleSpec](#vtsinglespec)
 
 | Field | Description |
 | --- | --- |
@@ -2467,6 +2536,20 @@ Appears in: [Receiver](#receiver)
 | user_key<a href="#pushoverconfig-user_key" id="pushoverconfig-user_key">#</a><br/>_[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#secretkeyselector-v1-core)_ | _(Required)_<br/>The secret's key that contains the recipient user’s user key.<br />It must be at them same namespace as CRD |
 
 
+#### QueryArg
+
+
+
+QueryArg defines item for query arguments
+
+Appears in: [TargetRef](#targetref)
+
+| Field | Description |
+| --- | --- |
+| name<a href="#queryarg-name" id="queryarg-name">#</a><br/>_string_ | _(Required)_<br/>Name of query argument |
+| values<a href="#queryarg-values" id="queryarg-values">#</a><br/>_string array_ | _(Required)_<br/>Values of query argument |
+
+
 #### Receiver
 
 
@@ -2479,6 +2562,7 @@ Appears in: [VMAlertmanagerConfigSpec](#vmalertmanagerconfigspec)
 | --- | --- |
 | discord_configs<a href="#receiver-discord_configs" id="receiver-discord_configs">#</a><br/>_[DiscordConfig](#discordconfig) array_ | _(Optional)_<br/> |
 | email_configs<a href="#receiver-email_configs" id="receiver-email_configs">#</a><br/>_[EmailConfig](#emailconfig) array_ | _(Optional)_<br/>EmailConfigs defines email notification configurations. |
+| incidentio_configs<a href="#receiver-incidentio_configs" id="receiver-incidentio_configs">#</a><br/>_[IncidentIOConfig](#incidentioconfig) array_ | _(Optional)_<br/> |
 | jira_configs<a href="#receiver-jira_configs" id="receiver-jira_configs">#</a><br/>_[JiraConfig](#jiraconfig) array_ | _(Optional)_<br/> |
 | msteams_configs<a href="#receiver-msteams_configs" id="receiver-msteams_configs">#</a><br/>_[MSTeamsConfig](#msteamsconfig) array_ | _(Optional)_<br/> |
 | msteamsv2_configs<a href="#receiver-msteamsv2_configs" id="receiver-msteamsv2_configs">#</a><br/>_[MSTeamsV2Config](#msteamsv2config) array_ | _(Optional)_<br/> |
@@ -3098,6 +3182,7 @@ Appears in: [VMUserSpec](#vmuserspec)
 | crd<a href="#targetref-crd" id="targetref-crd">#</a><br/>_[CRDRef](#crdref)_ | _(Optional)_<br/>CRD describes exist operator's CRD object,<br />operator generates access url based on CRD params. |
 | hosts<a href="#targetref-hosts" id="targetref-hosts">#</a><br/>_string array_ | _(Required)_<br/> |
 | paths<a href="#targetref-paths" id="targetref-paths">#</a><br/>_string array_ | _(Optional)_<br/>Paths - matched path to route. |
+| query_args<a href="#targetref-query_args" id="targetref-query_args">#</a><br/>_[QueryArg](#queryarg) array_ | _(Optional)_<br/>QueryArgs appends list of query arguments to generated URL |
 | static<a href="#targetref-static" id="targetref-static">#</a><br/>_[StaticRef](#staticref)_ | _(Optional)_<br/>Static - user defined url for traffic forward,<br />for instance http://vmsingle:8428 |
 | targetRefBasicAuth<a href="#targetref-targetrefbasicauth" id="targetref-targetrefbasicauth">#</a><br/>_[TargetRefBasicAuth](#targetrefbasicauth)_ | _(Optional)_<br/>TargetRefBasicAuth allow an target endpoint to authenticate over basic authentication |
 | target_path_suffix<a href="#targetref-target_path_suffix" id="targetref-target_path_suffix">#</a><br/>_string_ | _(Optional)_<br/>TargetPathSuffix allows to add some suffix to the target path<br />It allows to hide tenant configuration from user with crd as ref.<br />it also may contain any url encoded params. |
@@ -3405,7 +3490,6 @@ Appears in: [VMAgent](#vmagent)
 
 | Field | Description |
 | --- | --- |
-| aPIServerConfig<a href="#vmagentspec-apiserverconfig" id="vmagentspec-apiserverconfig">#</a><br/>_[APIServerConfig](#apiserverconfig)_ | _(Optional)_<br/>APIServerConfig allows specifying a host and auth methods to access apiserver.<br />If left empty, VMAgent is assumed to run inside of the cluster<br />and will discover API servers automatically and use the pod's CA certificate<br />and bearer token file at /var/run/secrets/kubernetes.io/serviceaccount/.<br />aPIServerConfig is deprecated use apiServerConfig instead |
 | additionalScrapeConfigs<a href="#vmagentspec-additionalscrapeconfigs" id="vmagentspec-additionalscrapeconfigs">#</a><br/>_[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#secretkeyselector-v1-core)_ | _(Optional)_<br/>AdditionalScrapeConfigs As scrape configs are appended, the user is responsible to make sure it<br />is valid. Note that using this feature may expose the possibility to<br />break upgrades of VMAgent. It is advised to review VMAgent release<br />notes to ensure that no incompatible scrape configs are going to break<br />VMAgent after the upgrade. |
 | affinity<a href="#vmagentspec-affinity" id="vmagentspec-affinity">#</a><br/>_[Affinity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#affinity-v1-core)_ | _(Optional)_<br/>Affinity If specified, the pod's scheduling constraints. |
 | apiServerConfig<a href="#vmagentspec-apiserverconfig" id="vmagentspec-apiserverconfig">#</a><br/>_[APIServerConfig](#apiserverconfig)_ | _(Optional)_<br/>APIServerConfig allows specifying a host and auth methods to access apiserver.<br />If left empty, VMAgent is assumed to run inside of the cluster<br />and will discover API servers automatically and use the pod's CA certificate<br />and bearer token file at /var/run/secrets/kubernetes.io/serviceaccount/. |
@@ -3414,7 +3498,8 @@ Appears in: [VMAgent](#vmagent)
 | configMaps<a href="#vmagentspec-configmaps" id="vmagentspec-configmaps">#</a><br/>_string array_ | _(Optional)_<br/>ConfigMaps is a list of ConfigMaps in the same namespace as the Application<br />object, which shall be mounted into the Application container<br />at /etc/vm/configs/CONFIGMAP_NAME folder |
 | configReloadAuthKeySecret<a href="#vmagentspec-configreloadauthkeysecret" id="vmagentspec-configreloadauthkeysecret">#</a><br/>_[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#secretkeyselector-v1-core)_ | _(Optional)_<br/>ConfigReloadAuthKeySecret defines optional secret reference authKey for /-/reload API requests.<br />Given secret reference will be added to the application and vm-config-reloader as volume<br />available since v0.57.0 version |
 | configReloaderExtraArgs<a href="#vmagentspec-configreloaderextraargs" id="vmagentspec-configreloaderextraargs">#</a><br/>_object (keys:string, values:string)_ | _(Optional)_<br/>ConfigReloaderExtraArgs that will be passed to  VMAuths config-reloader container<br />for example resyncInterval: "30s" |
-| configReloaderImageTag<a href="#vmagentspec-configreloaderimagetag" id="vmagentspec-configreloaderimagetag">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImageTag defines image:tag for config-reloader container |
+| configReloaderImage<a href="#vmagentspec-configreloaderimage" id="vmagentspec-configreloaderimage">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImage defines image:tag for config-reloader container |
+| configReloaderImageTag<a href="#vmagentspec-configreloaderimagetag" id="vmagentspec-configreloaderimagetag">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImageTag defines image:tag for config-reloader container<br />Deprecated: use configReloaderImage instead |
 | configReloaderResources<a href="#vmagentspec-configreloaderresources" id="vmagentspec-configreloaderresources">#</a><br/>_[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#resourcerequirements-v1-core)_ | _(Optional)_<br/>ConfigReloaderResources config-reloader container resource request and limits, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/<br />if not defined default resources from operator config will be used |
 | containers<a href="#vmagentspec-containers" id="vmagentspec-containers">#</a><br/>_[Container](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#container-v1-core) array_ | _(Optional)_<br/>Containers property allows to inject additions sidecars or to patch existing containers.<br />It can be useful for proxies, backup, etc. |
 | daemonSetMode<a href="#vmagentspec-daemonsetmode" id="vmagentspec-daemonsetmode">#</a><br/>_boolean_ | _(Optional)_<br/>DaemonSetMode enables DaemonSet deployment mode instead of Deployment.<br />Supports only VMPodScrape<br />(available from v0.55.0).<br />Cannot be used with statefulMode |
@@ -3505,7 +3590,7 @@ Appears in: [VMAgent](#vmagent)
 | updateStrategy<a href="#vmagentspec-updatestrategy" id="vmagentspec-updatestrategy">#</a><br/>_[DeploymentStrategyType](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#deploymentstrategytype-v1-apps)_ | _(Optional)_<br/>UpdateStrategy - overrides default update strategy.<br />works only for deployments, statefulset always use OnDelete. |
 | useDefaultResources<a href="#vmagentspec-usedefaultresources" id="vmagentspec-usedefaultresources">#</a><br/>_boolean_ | _(Optional)_<br/>UseDefaultResources controls resource settings<br />By default, operator sets built-in resource requirements |
 | useStrictSecurity<a href="#vmagentspec-usestrictsecurity" id="vmagentspec-usestrictsecurity">#</a><br/>_boolean_ | _(Optional)_<br/>UseStrictSecurity enables strict security mode for component<br />it restricts disk writes access<br />uses non-root user out of the box<br />drops not needed security permissions |
-| useVMConfigReloader<a href="#vmagentspec-usevmconfigreloader" id="vmagentspec-usevmconfigreloader">#</a><br/>_boolean_ | _(Optional)_<br/>UseVMConfigReloader replaces prometheus-like config-reloader<br />with vm one. It uses secrets watch instead of file watch<br />which greatly increases speed of config updates |
+| useVMConfigReloader<a href="#vmagentspec-usevmconfigreloader" id="vmagentspec-usevmconfigreloader">#</a><br/>_boolean_ | _(Optional)_<br/>UseVMConfigReloader replaces prometheus-like config-reloader<br />with vm one. It uses secrets watch instead of file watch<br />which greatly increases speed of config updates<br />Removed since v0.67.0: this property is ignored and no longer needed |
 | vmAgentExternalLabelName<a href="#vmagentspec-vmagentexternallabelname" id="vmagentspec-vmagentexternallabelname">#</a><br/>_string_ | _(Optional)_<br/>VMAgentExternalLabelName Name of vmAgent external label used to denote vmAgent instance<br />name. Defaults to the value of `prometheus`. External label will<br />_not_ be added when value is set to empty string (`""`). |
 | volumeMounts<a href="#vmagentspec-volumemounts" id="vmagentspec-volumemounts">#</a><br/>_[VolumeMount](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#volumemount-v1-core) array_ | _(Optional)_<br/>VolumeMounts allows configuration of additional VolumeMounts on the output Deployment/StatefulSet definition.<br />VolumeMounts specified will be appended to other VolumeMounts in the Application container |
 | volumes<a href="#vmagentspec-volumes" id="vmagentspec-volumes">#</a><br/>_[Volume](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#volume-v1-core) array_ | _(Required)_<br/>Volumes allows configuration of additional volumes on the output Deployment/StatefulSet definition.<br />Volumes specified will be appended to other volumes that are generated.<br />/ +optional |
@@ -3617,7 +3702,8 @@ Appears in: [VMAlert](#vmalert)
 | configMaps<a href="#vmalertspec-configmaps" id="vmalertspec-configmaps">#</a><br/>_string array_ | _(Optional)_<br/>ConfigMaps is a list of ConfigMaps in the same namespace as the Application<br />object, which shall be mounted into the Application container<br />at /etc/vm/configs/CONFIGMAP_NAME folder |
 | configReloadAuthKeySecret<a href="#vmalertspec-configreloadauthkeysecret" id="vmalertspec-configreloadauthkeysecret">#</a><br/>_[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#secretkeyselector-v1-core)_ | _(Optional)_<br/>ConfigReloadAuthKeySecret defines optional secret reference authKey for /-/reload API requests.<br />Given secret reference will be added to the application and vm-config-reloader as volume<br />available since v0.57.0 version |
 | configReloaderExtraArgs<a href="#vmalertspec-configreloaderextraargs" id="vmalertspec-configreloaderextraargs">#</a><br/>_object (keys:string, values:string)_ | _(Optional)_<br/>ConfigReloaderExtraArgs that will be passed to  VMAuths config-reloader container<br />for example resyncInterval: "30s" |
-| configReloaderImageTag<a href="#vmalertspec-configreloaderimagetag" id="vmalertspec-configreloaderimagetag">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImageTag defines image:tag for config-reloader container |
+| configReloaderImage<a href="#vmalertspec-configreloaderimage" id="vmalertspec-configreloaderimage">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImage defines image:tag for config-reloader container |
+| configReloaderImageTag<a href="#vmalertspec-configreloaderimagetag" id="vmalertspec-configreloaderimagetag">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImageTag defines image:tag for config-reloader container<br />Deprecated: use configReloaderImage instead |
 | configReloaderResources<a href="#vmalertspec-configreloaderresources" id="vmalertspec-configreloaderresources">#</a><br/>_[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#resourcerequirements-v1-core)_ | _(Optional)_<br/>ConfigReloaderResources config-reloader container resource request and limits, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/<br />if not defined default resources from operator config will be used |
 | containers<a href="#vmalertspec-containers" id="vmalertspec-containers">#</a><br/>_[Container](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#container-v1-core) array_ | _(Optional)_<br/>Containers property allows to inject additions sidecars or to patch existing containers.<br />It can be useful for proxies, backup, etc. |
 | datasource<a href="#vmalertspec-datasource" id="vmalertspec-datasource">#</a><br/>_[VMAlertDatasourceSpec](#vmalertdatasourcespec)_ | _(Required)_<br/>Datasource Victoria Metrics or VMSelect url. Required parameter. e.g. http://127.0.0.1:8428 |
@@ -3675,7 +3761,7 @@ Appears in: [VMAlert](#vmalert)
 | updateStrategy<a href="#vmalertspec-updatestrategy" id="vmalertspec-updatestrategy">#</a><br/>_[DeploymentStrategyType](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#deploymentstrategytype-v1-apps)_ | _(Optional)_<br/>UpdateStrategy - overrides default update strategy. |
 | useDefaultResources<a href="#vmalertspec-usedefaultresources" id="vmalertspec-usedefaultresources">#</a><br/>_boolean_ | _(Optional)_<br/>UseDefaultResources controls resource settings<br />By default, operator sets built-in resource requirements |
 | useStrictSecurity<a href="#vmalertspec-usestrictsecurity" id="vmalertspec-usestrictsecurity">#</a><br/>_boolean_ | _(Optional)_<br/>UseStrictSecurity enables strict security mode for component<br />it restricts disk writes access<br />uses non-root user out of the box<br />drops not needed security permissions |
-| useVMConfigReloader<a href="#vmalertspec-usevmconfigreloader" id="vmalertspec-usevmconfigreloader">#</a><br/>_boolean_ | _(Optional)_<br/>UseVMConfigReloader replaces prometheus-like config-reloader<br />with vm one. It uses secrets watch instead of file watch<br />which greatly increases speed of config updates |
+| useVMConfigReloader<a href="#vmalertspec-usevmconfigreloader" id="vmalertspec-usevmconfigreloader">#</a><br/>_boolean_ | _(Optional)_<br/>UseVMConfigReloader replaces prometheus-like config-reloader<br />with vm one. It uses secrets watch instead of file watch<br />which greatly increases speed of config updates<br />Removed since v0.67.0: this property is ignored and no longer needed |
 | volumeMounts<a href="#vmalertspec-volumemounts" id="vmalertspec-volumemounts">#</a><br/>_[VolumeMount](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#volumemount-v1-core) array_ | _(Optional)_<br/>VolumeMounts allows configuration of additional VolumeMounts on the output Deployment/StatefulSet definition.<br />VolumeMounts specified will be appended to other VolumeMounts in the Application container |
 | volumes<a href="#vmalertspec-volumes" id="vmalertspec-volumes">#</a><br/>_[Volume](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#volume-v1-core) array_ | _(Required)_<br/>Volumes allows configuration of additional volumes on the output Deployment/StatefulSet definition.<br />Volumes specified will be appended to other volumes that are generated.<br />/ +optional |
 
@@ -3754,7 +3840,8 @@ Appears in: [VMAlertmanager](#vmalertmanager)
 | configRawYaml<a href="#vmalertmanagerspec-configrawyaml" id="vmalertmanagerspec-configrawyaml">#</a><br/>_string_ | _(Optional)_<br/>ConfigRawYaml - raw configuration for alertmanager,<br />it helps it to start without secret.<br />priority -> hardcoded ConfigRaw -> ConfigRaw, provided by user -> ConfigSecret. |
 | configReloadAuthKeySecret<a href="#vmalertmanagerspec-configreloadauthkeysecret" id="vmalertmanagerspec-configreloadauthkeysecret">#</a><br/>_[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#secretkeyselector-v1-core)_ | _(Optional)_<br/>ConfigReloadAuthKeySecret defines optional secret reference authKey for /-/reload API requests.<br />Given secret reference will be added to the application and vm-config-reloader as volume<br />available since v0.57.0 version |
 | configReloaderExtraArgs<a href="#vmalertmanagerspec-configreloaderextraargs" id="vmalertmanagerspec-configreloaderextraargs">#</a><br/>_object (keys:string, values:string)_ | _(Optional)_<br/>ConfigReloaderExtraArgs that will be passed to  VMAuths config-reloader container<br />for example resyncInterval: "30s" |
-| configReloaderImageTag<a href="#vmalertmanagerspec-configreloaderimagetag" id="vmalertmanagerspec-configreloaderimagetag">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImageTag defines image:tag for config-reloader container |
+| configReloaderImage<a href="#vmalertmanagerspec-configreloaderimage" id="vmalertmanagerspec-configreloaderimage">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImage defines image:tag for config-reloader container |
+| configReloaderImageTag<a href="#vmalertmanagerspec-configreloaderimagetag" id="vmalertmanagerspec-configreloaderimagetag">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImageTag defines image:tag for config-reloader container<br />Deprecated: use configReloaderImage instead |
 | configReloaderResources<a href="#vmalertmanagerspec-configreloaderresources" id="vmalertmanagerspec-configreloaderresources">#</a><br/>_[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#resourcerequirements-v1-core)_ | _(Optional)_<br/>ConfigReloaderResources config-reloader container resource request and limits, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/<br />if not defined default resources from operator config will be used |
 | configSecret<a href="#vmalertmanagerspec-configsecret" id="vmalertmanagerspec-configsecret">#</a><br/>_string_ | _(Optional)_<br/>ConfigSecret is the name of a Kubernetes Secret in the same namespace as the<br />VMAlertmanager object, which contains configuration for this VMAlertmanager,<br />configuration must be inside secret key: alertmanager.yaml.<br />It must be created by user.<br />instance. Defaults to 'vmalertmanager-<alertmanager-name>'<br />The secret is mounted into /etc/alertmanager/config. |
 | configSelector<a href="#vmalertmanagerspec-configselector" id="vmalertmanagerspec-configselector">#</a><br/>_[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#labelselector-v1-meta)_ | _(Optional)_<br/>ConfigSelector defines selector for VMAlertmanagerConfig, result config will be merged with with Raw or Secret config.<br />Works in combination with NamespaceSelector.<br />NamespaceSelector nil - only objects at VMAlertmanager namespace.<br />Selector nil - only objects at NamespaceSelector namespaces.<br />If both nil - behaviour controlled by selectAllByDefault |
@@ -3813,7 +3900,7 @@ Appears in: [VMAlertmanager](#vmalertmanager)
 | topologySpreadConstraints<a href="#vmalertmanagerspec-topologyspreadconstraints" id="vmalertmanagerspec-topologyspreadconstraints">#</a><br/>_[TopologySpreadConstraint](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#topologyspreadconstraint-v1-core) array_ | _(Optional)_<br/>TopologySpreadConstraints embedded kubernetes pod configuration option,<br />controls how pods are spread across your cluster among failure-domains<br />such as regions, zones, nodes, and other user-defined topology domains<br />https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/ |
 | useDefaultResources<a href="#vmalertmanagerspec-usedefaultresources" id="vmalertmanagerspec-usedefaultresources">#</a><br/>_boolean_ | _(Optional)_<br/>UseDefaultResources controls resource settings<br />By default, operator sets built-in resource requirements |
 | useStrictSecurity<a href="#vmalertmanagerspec-usestrictsecurity" id="vmalertmanagerspec-usestrictsecurity">#</a><br/>_boolean_ | _(Optional)_<br/>UseStrictSecurity enables strict security mode for component<br />it restricts disk writes access<br />uses non-root user out of the box<br />drops not needed security permissions |
-| useVMConfigReloader<a href="#vmalertmanagerspec-usevmconfigreloader" id="vmalertmanagerspec-usevmconfigreloader">#</a><br/>_boolean_ | _(Optional)_<br/>UseVMConfigReloader replaces prometheus-like config-reloader<br />with vm one. It uses secrets watch instead of file watch<br />which greatly increases speed of config updates |
+| useVMConfigReloader<a href="#vmalertmanagerspec-usevmconfigreloader" id="vmalertmanagerspec-usevmconfigreloader">#</a><br/>_boolean_ | _(Optional)_<br/>UseVMConfigReloader replaces prometheus-like config-reloader<br />with vm one. It uses secrets watch instead of file watch<br />which greatly increases speed of config updates<br />Removed since v0.67.0: this property is ignored and no longer needed |
 | volumeMounts<a href="#vmalertmanagerspec-volumemounts" id="vmalertmanagerspec-volumemounts">#</a><br/>_[VolumeMount](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#volumemount-v1-core) array_ | _(Optional)_<br/>VolumeMounts allows configuration of additional VolumeMounts on the output Deployment/StatefulSet definition.<br />VolumeMounts specified will be appended to other VolumeMounts in the Application container |
 | volumes<a href="#vmalertmanagerspec-volumes" id="vmalertmanagerspec-volumes">#</a><br/>_[Volume](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#volume-v1-core) array_ | _(Required)_<br/>Volumes allows configuration of additional volumes on the output Deployment/StatefulSet definition.<br />Volumes specified will be appended to other volumes that are generated.<br />/ +optional |
 | webConfig<a href="#vmalertmanagerspec-webconfig" id="vmalertmanagerspec-webconfig">#</a><br/>_[AlertmanagerWebConfig](#alertmanagerwebconfig)_ | _(Optional)_<br/>WebConfig defines configuration for webserver<br />https://github.com/prometheus/alertmanager/blob/main/docs/https.md |
@@ -3925,7 +4012,8 @@ Appears in: [VMAuth](#vmauth)
 | configMaps<a href="#vmauthspec-configmaps" id="vmauthspec-configmaps">#</a><br/>_string array_ | _(Optional)_<br/>ConfigMaps is a list of ConfigMaps in the same namespace as the Application<br />object, which shall be mounted into the Application container<br />at /etc/vm/configs/CONFIGMAP_NAME folder |
 | configReloadAuthKeySecret<a href="#vmauthspec-configreloadauthkeysecret" id="vmauthspec-configreloadauthkeysecret">#</a><br/>_[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#secretkeyselector-v1-core)_ | _(Optional)_<br/>ConfigReloadAuthKeySecret defines optional secret reference authKey for /-/reload API requests.<br />Given secret reference will be added to the application and vm-config-reloader as volume<br />available since v0.57.0 version |
 | configReloaderExtraArgs<a href="#vmauthspec-configreloaderextraargs" id="vmauthspec-configreloaderextraargs">#</a><br/>_object (keys:string, values:string)_ | _(Optional)_<br/>ConfigReloaderExtraArgs that will be passed to  VMAuths config-reloader container<br />for example resyncInterval: "30s" |
-| configReloaderImageTag<a href="#vmauthspec-configreloaderimagetag" id="vmauthspec-configreloaderimagetag">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImageTag defines image:tag for config-reloader container |
+| configReloaderImage<a href="#vmauthspec-configreloaderimage" id="vmauthspec-configreloaderimage">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImage defines image:tag for config-reloader container |
+| configReloaderImageTag<a href="#vmauthspec-configreloaderimagetag" id="vmauthspec-configreloaderimagetag">#</a><br/>_string_ | _(Optional)_<br/>ConfigReloaderImageTag defines image:tag for config-reloader container<br />Deprecated: use configReloaderImage instead |
 | configReloaderResources<a href="#vmauthspec-configreloaderresources" id="vmauthspec-configreloaderresources">#</a><br/>_[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#resourcerequirements-v1-core)_ | _(Optional)_<br/>ConfigReloaderResources config-reloader container resource request and limits, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/<br />if not defined default resources from operator config will be used |
 | configSecret<a href="#vmauthspec-configsecret" id="vmauthspec-configsecret">#</a><br/>_string_ | _(Required)_<br/>ConfigSecret is the name of a Kubernetes Secret in the same namespace as the<br />VMAuth object, which contains auth configuration for vmauth,<br />configuration must be inside secret key: config.yaml.<br />It must be created and managed manually.<br />If it's defined, configuration for vmauth becomes unmanaged and operator'll not create any related secrets/config-reloaders<br />Deprecated: use externalConfig.secretRef instead |
 | containers<a href="#vmauthspec-containers" id="vmauthspec-containers">#</a><br/>_[Container](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#container-v1-core) array_ | _(Optional)_<br/>Containers property allows to inject additions sidecars or to patch existing containers.<br />It can be useful for proxies, backup, etc. |
@@ -3946,6 +4034,7 @@ Appears in: [VMAuth](#vmauth)
 | hostNetwork<a href="#vmauthspec-hostnetwork" id="vmauthspec-hostnetwork">#</a><br/>_boolean_ | _(Optional)_<br/>HostNetwork controls whether the pod may use the node network namespace |
 | host_aliases<a href="#vmauthspec-host_aliases" id="vmauthspec-host_aliases">#</a><br/>_[HostAlias](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#hostalias-v1-core) array_ | _(Optional)_<br/>HostAliasesUnderScore provides mapping for ip and hostname,<br />that would be propagated to pod,<br />cannot be used with HostNetwork.<br />Has Priority over hostAliases field |
 | hpa<a href="#vmauthspec-hpa" id="vmauthspec-hpa">#</a><br/>_[EmbeddedHPA](#embeddedhpa)_ | _(Optional)_<br/>Configures horizontal pod autoscaling. |
+| httpRoute<a href="#vmauthspec-httproute" id="vmauthspec-httproute">#</a><br/>_[EmbeddedHTTPRoute](#embeddedhttproute)_ | _(Required)_<br/>HTTPRoute enables httproute configuration for VMAuth. |
 | image<a href="#vmauthspec-image" id="vmauthspec-image">#</a><br/>_[Image](#image)_ | _(Optional)_<br/>Image - docker image settings<br />if no specified operator uses default version from operator config |
 | imagePullSecrets<a href="#vmauthspec-imagepullsecrets" id="vmauthspec-imagepullsecrets">#</a><br/>_[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#localobjectreference-v1-core) array_ | _(Optional)_<br/>ImagePullSecrets An optional list of references to secrets in the same namespace<br />to use for pulling images from registries<br />see https://kubernetes.io/docs/concepts/containers/images/#referring-to-an-imagepullsecrets-on-a-pod |
 | ingress<a href="#vmauthspec-ingress" id="vmauthspec-ingress">#</a><br/>_[EmbeddedIngress](#embeddedingress)_ | _(Required)_<br/>Ingress enables ingress configuration for VMAuth. |
@@ -3990,7 +4079,7 @@ Appears in: [VMAuth](#vmauth)
 | useDefaultResources<a href="#vmauthspec-usedefaultresources" id="vmauthspec-usedefaultresources">#</a><br/>_boolean_ | _(Optional)_<br/>UseDefaultResources controls resource settings<br />By default, operator sets built-in resource requirements |
 | useProxyProtocol<a href="#vmauthspec-useproxyprotocol" id="vmauthspec-useproxyprotocol">#</a><br/>_boolean_ | _(Required)_<br/>UseProxyProtocol enables proxy protocol for vmauth<br />https://www.haproxy.org/download/2.3/doc/proxy-protocol.txt |
 | useStrictSecurity<a href="#vmauthspec-usestrictsecurity" id="vmauthspec-usestrictsecurity">#</a><br/>_boolean_ | _(Optional)_<br/>UseStrictSecurity enables strict security mode for component<br />it restricts disk writes access<br />uses non-root user out of the box<br />drops not needed security permissions |
-| useVMConfigReloader<a href="#vmauthspec-usevmconfigreloader" id="vmauthspec-usevmconfigreloader">#</a><br/>_boolean_ | _(Optional)_<br/>UseVMConfigReloader replaces prometheus-like config-reloader<br />with vm one. It uses secrets watch instead of file watch<br />which greatly increases speed of config updates |
+| useVMConfigReloader<a href="#vmauthspec-usevmconfigreloader" id="vmauthspec-usevmconfigreloader">#</a><br/>_boolean_ | _(Optional)_<br/>UseVMConfigReloader replaces prometheus-like config-reloader<br />with vm one. It uses secrets watch instead of file watch<br />which greatly increases speed of config updates<br />Removed since v0.67.0: this property is ignored and no longer needed |
 | userNamespaceSelector<a href="#vmauthspec-usernamespaceselector" id="vmauthspec-usernamespaceselector">#</a><br/>_[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#labelselector-v1-meta)_ | _(Optional)_<br/>UserNamespaceSelector Namespaces to be selected for  VMAuth discovery.<br />Works in combination with Selector.<br />NamespaceSelector nil - only objects at VMAuth namespace.<br />Selector nil - only objects at NamespaceSelector namespaces.<br />If both nil - behaviour controlled by selectAllByDefault |
 | userSelector<a href="#vmauthspec-userselector" id="vmauthspec-userselector">#</a><br/>_[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#labelselector-v1-meta)_ | _(Optional)_<br/>UserSelector defines VMUser to be selected for config file generation.<br />Works in combination with NamespaceSelector.<br />NamespaceSelector nil - only objects at VMAuth namespace.<br />If both nil - behaviour controlled by selectAllByDefault |
 | volumeMounts<a href="#vmauthspec-volumemounts" id="vmauthspec-volumemounts">#</a><br/>_[VolumeMount](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#volumemount-v1-core) array_ | _(Optional)_<br/>VolumeMounts allows configuration of additional VolumeMounts on the output Deployment/StatefulSet definition.<br />VolumeMounts specified will be appended to other VolumeMounts in the Application container |
@@ -4743,6 +4832,7 @@ Appears in: [VMClusterSpec](#vmclusterspec)
 | hostAliases<a href="#vmstorage-hostaliases" id="vmstorage-hostaliases">#</a><br/>_[HostAlias](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#hostalias-v1-core) array_ | _(Optional)_<br/>HostAliases provides mapping for ip and hostname,<br />that would be propagated to pod,<br />cannot be used with HostNetwork. |
 | hostNetwork<a href="#vmstorage-hostnetwork" id="vmstorage-hostnetwork">#</a><br/>_boolean_ | _(Optional)_<br/>HostNetwork controls whether the pod may use the node network namespace |
 | host_aliases<a href="#vmstorage-host_aliases" id="vmstorage-host_aliases">#</a><br/>_[HostAlias](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#hostalias-v1-core) array_ | _(Optional)_<br/>HostAliasesUnderScore provides mapping for ip and hostname,<br />that would be propagated to pod,<br />cannot be used with HostNetwork.<br />Has Priority over hostAliases field |
+| hpa<a href="#vmstorage-hpa" id="vmstorage-hpa">#</a><br/>_[EmbeddedHPA](#embeddedhpa)_ | _(Optional)_<br/>Configures horizontal pod autoscaling.<br />Note, downscaling is not supported. |
 | image<a href="#vmstorage-image" id="vmstorage-image">#</a><br/>_[Image](#image)_ | _(Optional)_<br/>Image - docker image settings<br />if no specified operator uses default version from operator config |
 | imagePullSecrets<a href="#vmstorage-imagepullsecrets" id="vmstorage-imagepullsecrets">#</a><br/>_[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#localobjectreference-v1-core) array_ | _(Optional)_<br/>ImagePullSecrets An optional list of references to secrets in the same namespace<br />to use for pulling images from registries<br />see https://kubernetes.io/docs/concepts/containers/images/#referring-to-an-imagepullsecrets-on-a-pod |
 | initContainers<a href="#vmstorage-initcontainers" id="vmstorage-initcontainers">#</a><br/>_[Container](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#container-v1-core) array_ | _(Optional)_<br/>InitContainers allows adding initContainers to the pod definition.<br />Any errors during the execution of an initContainer will lead to a restart of the Pod.<br />More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/ |
@@ -4858,6 +4948,7 @@ Appears in: [VMUser](#vmuser)
 | headers<a href="#vmuserspec-headers" id="vmuserspec-headers">#</a><br/>_string array_ | _(Optional)_<br/>Headers represent additional http headers, that vmauth uses<br />in form of ["header_key: header_value"]<br />multiple values for header key:<br />["header_key: value1,value2"]<br />it's available since 1.68.0 version of vmauth |
 | ip_filters<a href="#vmuserspec-ip_filters" id="vmuserspec-ip_filters">#</a><br/>_[VMUserIPFilters](#vmuseripfilters)_ | _(Optional)_<br/>IPFilters defines per target src ip filters<br />supported only with enterprise version of [vmauth](https://docs.victoriametrics.com/victoriametrics/vmauth/#ip-filters) |
 | load_balancing_policy<a href="#vmuserspec-load_balancing_policy" id="vmuserspec-load_balancing_policy">#</a><br/>_string_ | _(Optional)_<br/>LoadBalancingPolicy defines load balancing policy to use for backend urls.<br />Supported policies: least_loaded, first_available.<br />See [here](https://docs.victoriametrics.com/victoriametrics/vmauth/#load-balancing) for more details (default "least_loaded") |
+| managedMetadata<a href="#vmuserspec-managedmetadata" id="vmuserspec-managedmetadata">#</a><br/>_[ManagedObjectsMetadata](#managedobjectsmetadata)_ | _(Required)_<br/>ManagedMetadata defines metadata that will be added to the all objects<br />created by operator for the given CustomResource |
 | max_concurrent_requests<a href="#vmuserspec-max_concurrent_requests" id="vmuserspec-max_concurrent_requests">#</a><br/>_integer_ | _(Optional)_<br/>MaxConcurrentRequests defines max concurrent requests per user<br />300 is default value for vmauth |
 | metric_labels<a href="#vmuserspec-metric_labels" id="vmuserspec-metric_labels">#</a><br/>_object (keys:string, values:string)_ | _(Optional)_<br/>MetricLabels - additional labels for metrics exported by vmauth for given user. |
 | name<a href="#vmuserspec-name" id="vmuserspec-name">#</a><br/>_string_ | _(Optional)_<br/>Name of the VMUser object. |
@@ -4868,7 +4959,7 @@ Appears in: [VMUser](#vmuser)
 | targetRefs<a href="#vmuserspec-targetrefs" id="vmuserspec-targetrefs">#</a><br/>_[TargetRef](#targetref) array_ | _(Required)_<br/>TargetRefs - reference to endpoints, which user may access. |
 | tlsConfig<a href="#vmuserspec-tlsconfig" id="vmuserspec-tlsconfig">#</a><br/>_[TLSConfig](#tlsconfig)_ | _(Optional)_<br/>TLSConfig defines tls configuration for the backend connection |
 | tokenRef<a href="#vmuserspec-tokenref" id="vmuserspec-tokenref">#</a><br/>_[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#secretkeyselector-v1-core)_ | _(Optional)_<br/>TokenRef allows fetching token from user-created secrets by its name and key. |
-| username<a href="#vmuserspec-username" id="vmuserspec-username">#</a><br/>_string_ | _(Optional)_<br/>UserName basic auth user name for accessing protected endpoint,<br />will be replaced with metadata.name of VMUser if omitted. |
+| username<a href="#vmuserspec-username" id="vmuserspec-username">#</a><br/>_string_ | _(Optional)_<br/>Username basic auth user name for accessing protected endpoint,<br />will be replaced with metadata.name of VMUser if omitted. |
 
 
 

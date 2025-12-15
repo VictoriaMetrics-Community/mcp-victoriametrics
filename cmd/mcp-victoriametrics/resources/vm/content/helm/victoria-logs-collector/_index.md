@@ -362,6 +362,36 @@ Change the values according to the need of the environment in ``victoria-logs-co
       <td><em><code>(list)</code></em><p>Image pull secrets, that can be shared across multiple helm charts</p>
 </td>
     </tr>
+    <tr id="image-pullpolicy">
+      <td><a href="#image-pullpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">image.pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Image pull policy</p>
+</td>
+    </tr>
+    <tr id="image-registry">
+      <td><a href="#image-registry"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">image.registry</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Image registry</p>
+</td>
+    </tr>
+    <tr id="image-repository">
+      <td><a href="#image-repository"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">image.repository</span><span class="p">:</span><span class="w"> </span><span class="l">victoriametrics/vlagent</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Image repository</p>
+</td>
+    </tr>
+    <tr id="image-tag">
+      <td><a href="#image-tag"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">image.tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Image tag, set to <code>Chart.AppVersion</code> by default</p>
+</td>
+    </tr>
+    <tr id="image-variant">
+      <td><a href="#image-variant"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">image.variant</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Variant of the image to use. e.g. enterprise, scratch</p>
+</td>
+    </tr>
     <tr id="msgfield">
       <td><a href="#msgfield"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">msgField</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">message</span><span class="w">
@@ -374,6 +404,12 @@ Change the values according to the need of the environment in ``victoria-logs-co
       <td><a href="#nameoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">nameOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Override chart name</p>
+</td>
+    </tr>
+    <tr id="native">
+      <td><a href="#native"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">native</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable VLAgent logs collection</p>
 </td>
     </tr>
     <tr id="nodeselector">
@@ -392,6 +428,30 @@ Change the values according to the need of the environment in ``victoria-logs-co
       <td><a href="#podlabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Extra labels for Pods only</p>
+</td>
+    </tr>
+    <tr id="podmonitor-annotations">
+      <td><a href="#podmonitor-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podMonitor.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>PodMonitor annotations</p>
+</td>
+    </tr>
+    <tr id="podmonitor-enabled">
+      <td><a href="#podmonitor-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podMonitor.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable PodMonitor</p>
+</td>
+    </tr>
+    <tr id="podmonitor-extralabels">
+      <td><a href="#podmonitor-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podMonitor.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>PodMonitor labels</p>
+</td>
+    </tr>
+    <tr id="podmonitor-vm">
+      <td><a href="#podmonitor-vm"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podMonitor.vm</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Whether to use <a href="https://docs.victoriametrics.com/operator/resources/vmpodscrape/" target="_blank">VMPodScrape</a> from VM operator instead of PodMonitor</p>
 </td>
     </tr>
     <tr id="podsecuritycontext">
@@ -432,6 +492,15 @@ Change the values according to the need of the environment in ``victoria-logs-co
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Service account is needed to enrich logs with pod metadata using Kubernetes API</p>
+</td>
+    </tr>
+    <tr id="streamfield">
+      <td><a href="#streamfield"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">streamField</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">kubernetes.pod_name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">kubernetes.container_name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">kubernetes.pod_namespace</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>List of fields to be used as <code>_stream</code> field. See <a href="https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields" target="_blank">https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields</a> for more details</p>
 </td>
     </tr>
     <tr id="timefield">

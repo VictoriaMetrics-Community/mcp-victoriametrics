@@ -47,3 +47,7 @@ If there's an integration you'd like to see here but it's currently missing, fee
 
 - [Cloud Alertmanager](https://docs.victoriametrics.com/victoriametrics-cloud/integrations/cloud-alertmanager/)
 - [Custom Alertmanager](https://docs.victoriametrics.com/victoriametrics-cloud/integrations/custom-alertmanager/)
+
+## Infrastructure Management
+
+- [Terraform](https://docs.victoriametrics.com/victoriametrics-cloud/integrations/terraform/)

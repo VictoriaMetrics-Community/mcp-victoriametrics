@@ -2,6 +2,30 @@
 
 - TODO
 
+## 1.12.9
+
+**Release date:** 11 Dec 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.28.2](https://img.shields.io/badge/v1.28.2-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1282)
+
+- Upgraded ['vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.28.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1282).
+
+## 1.12.8
+
+**Release date:** 03 Dec 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.28.1](https://img.shields.io/badge/v1.28.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1281)
+
+- added ability to configure Deployment and Statefulset specific options. See [#2597](https://github.com/VictoriaMetrics/helm-charts/issues/2597).
+
+## 1.12.7
+
+**Release date:** 02 Dec 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.28.1](https://img.shields.io/badge/v1.28.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1281)
+
+- Upgraded ['vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.28.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1281).
+
 ## 1.12.6
 
 **Release date:** 18 Nov 2025

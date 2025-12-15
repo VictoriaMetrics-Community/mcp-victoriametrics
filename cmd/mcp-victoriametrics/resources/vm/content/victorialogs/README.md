@@ -60,8 +60,7 @@ to [Grafana plugin playground for VictoriaLogs](https://play-grafana.victoriamet
   The only option is increasing the limit on [the number of open files in the OS](https://medium.com/@muhammadtriwibowo/set-permanently-ulimit-n-open-files-in-ubuntu-4d61064429a).
 - The recommended filesystem is `ext4`, the recommended persistent storage is [persistent HDD-based disk on GCP](https://cloud.google.com/compute/docs/disks/#pdspecs),
   since it is protected from hardware failures via internal replication and it can be [resized on the fly](https://cloud.google.com/compute/docs/disks/add-persistent-disk#resize_pd).
-  If you plan to store more than 1TB of data on `ext4` partition or plan extending it to more than 16TB,
-  then the following options are recommended to pass to `mkfs.ext4`:
+  If you plan to store more than 1TB of data on `ext4` partition, then the following options are recommended to pass to `mkfs.ext4`:
 
   ```sh
   mkfs.ext4 ... -O 64bit,huge_file,extent -T huge
@@ -195,6 +194,11 @@ VictoriaLogs accepts logs with timestamps in the time range `[now-retentionPerio
 where `retentionPeriod` is the value for the `-retentionPeriod` command-line flag and `futureRetention` is the value for the `-futureRetention` command-line flag.
 Sometimes it is needed to reject logs older than the given age. This can be achieved by passing `-maxBackfillAge=d` command-line flag to VictoriaLogs,
 where `d` is the maximum age of logs to be accepted. Older logs are rejected and a sample of these logs is put into VictoriaLogs output logs, so they could be investigated.
+For example, the following command starts VictoriaLogs, which rejects logs older than 1 hour:
+
+```sh
+/path/to/victoria-logs -maxBackfillAge=1h
+```
 
 ## Storage
 
@@ -319,6 +323,12 @@ The following HTTP endpoints are exposed at `http://victoria-logs:9428/` in this
   The `<logsql_filter>` may contain arbitrary [LogsQL filter](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
   For example, request to `http://victoria-logs:9428/delete/run_task?filter={app=nginx}` starts a task for deleting all the logs with
   `{app="nginx"}` [log stream field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields).
+  When calling this endpoint via `curl`, make sure to URL-encode the `{...}` filter (aka [percent-encoding](https://en.wikipedia.org/wiki/Percent-encoding)), otherwise `curl` may strip the curly braces and the filter will fail to parse. For example, `{app=nginx}` becomes `%7Bapp%3Dnginx%7D`, so the full request is:
+
+  ```bash
+  curl 'http://victoria-logs:9428/delete/run_task?filter=%7Bapp%3Dnginx%7D'
+  ```
+
   This endpoint returns `{"task_id":"<id>"}` response, where `<id>` is an unique id of the deletion task, which can be used
   for tracking the status of the deletion operation and for canceling the deletion task.
   The deletion operation may take significant amounts of time when VictoriaLogs contains terabytes of logs, since the deletion operation
@@ -409,7 +419,7 @@ It is also possible to use **the disk snapshot** feature provided by the operati
 ## Multitenancy
 
 VictoriaLogs supports multitenancy. A tenant is identified by `(AccountID, ProjectID)` pair, where `AccountID` and `ProjectID` are arbitrary 32-bit unsigned integers.
-The `AccountID` and `ProjectID` fields can be set during [data ingestion](https://docs.victoriametrics.com/victorialogs/data-ingestion/)
+The `AccountID` and `ProjectID` can be set during [data ingestion](https://docs.victoriametrics.com/victorialogs/data-ingestion/)
 and [querying](https://docs.victoriametrics.com/victorialogs/querying/) via `AccountID` and `ProjectID` request headers.
 
 If `AccountID` and/or `ProjectID` request headers aren't set, then the default `0` value is used.

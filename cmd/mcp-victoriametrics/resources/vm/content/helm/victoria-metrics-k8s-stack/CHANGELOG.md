@@ -1,6 +1,48 @@
 ## Next release
 
+- TODO
+
+## 0.66.0
+
+**Release date:** 15 Dec 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.132.0](https://img.shields.io/badge/v1.132.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11320)
+
+- bump version of VM components to [v1.132.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.132.0)
+
+## 0.65.1
+
+**Release date:** 06 Dec 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.131.0](https://img.shields.io/badge/v1.131.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11310)
+
+- updates operator to [v0.66.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.66.1) version
+
+## 0.65.0
+
+**Release date:** 03 Dec 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.131.0](https://img.shields.io/badge/v1.131.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11310)
+
+- updates operator to [v0.66.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.66.0) version
+
+## 0.64.1
+
+**Release date:** 02 Dec 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.131.0](https://img.shields.io/badge/v1.131.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11310)
+
+- fix additional CR and CRB management for VMAgent, when operator dependency is disabled. See [#2595](https://github.com/VictoriaMetrics/helm-charts/issues/2595).
+
+## 0.64.0
+
+**Release date:** 02 Dec 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.131.0](https://img.shields.io/badge/v1.131.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11310)
+
 - allow override dashboards and datasources label names and values. See [#2576](https://github.com/VictoriaMetrics/helm-charts/issues/2576).
+- allow setting extra roles for VMAgent service account. See [#2586](https://github.com/VictoriaMetrics/helm-charts/issues/2586).
+- bump version of VM components to [v1.131.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.131.0)
 
 ## 0.63.6
 

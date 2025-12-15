@@ -76,8 +76,8 @@ metadata:
   name: example
 spec:
   image:
-    repository: victoriametrics/victoria-logs
-    tag: v1.36.1
+    repository: victoriametrics/vlagent
+    tag: v1.40.0
     pullPolicy: Always
 ```
 
@@ -90,8 +90,8 @@ metadata:
   name: example
 spec:
   image:
-    repository: victoriametrics/victoria-logs
-    tag: v1.36.1
+    repository: victoriametrics/vlagent
+    tag: v1.40.0
     pullPolicy: Always
   imagePullSecrets:
     - name: my-repo-secret
@@ -135,6 +135,14 @@ If you set `VM_VLAGENTDEFAULT_USEDEFAULTRESOURCES` to `false` and don't specify 
 then `VLAgent` pods will be created without resource requests and limits.
 
 Also, you can specify requests without limits - in this case default values for limits will not be used.
+
+## K8s logs collection
+
+VLAgent supports collecting logs from K8s pods. To enable it it's required to set `spec.k8sCollector.enabled: true`.
+With this setting operator:
+ - switches VLAgent to DaemonSet mode
+ - mounts host paths, where k8s logs are stored
+ - adds RBAC to be able to get pods, namespaces and nodes information using K8s API
 
 ## Storage management
 
@@ -191,7 +199,7 @@ metadata:
   name: resources-example
 spec:
   remoteWriteSettings:
-    maxDiskUsagePerURL: "1Gi"
+    maxDiskUsagePerURL: "1GiB"
 ```
 
 ## Examples

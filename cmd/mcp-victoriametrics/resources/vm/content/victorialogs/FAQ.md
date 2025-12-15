@@ -243,7 +243,37 @@ or [Grafana plugin for VictoriaLogs](https://docs.victoriametrics.com/victorialo
 then make sure the selected time range covers the last day. Otherwise, the query above returns
 results on the intersection of the last day and the selected time range.
 
-See [why the log field occupies a lot of disk space](https://docs.victoriametrics.com/victorialogs/faq/#why-the-log-field-occupies-a-lot-of-disk-space).
+See also:
+
+- [Why the log field occupies a lot of disk space](https://docs.victoriametrics.com/victorialogs/faq/#why-the-log-field-occupies-a-lot-of-disk-space).
+- [How to detect log streams, which occupy the most of disk space](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-streams-occupy-the-most-of-disk-space).
+
+## How to determine which log streams occupy the most of disk space?
+
+[Run](https://docs.victoriametrics.com/victorialogs/querying/) the following [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/) query
+based on [`block_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe):
+
+```logsql
+_time:1d
+  | block_stats
+  | stats by (_stream)
+      sum(values_bytes) as values_bytes,
+      sum(bloom_bytes) as bloom_bytes
+  | math
+      (values_bytes+bloom_bytes) as total_bytes
+  | first 10 (total_bytes desc)
+```
+
+This query returns top 10 [log streams](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields),
+which occupy the most of disk space across the logs ingested during the last day. The occupied disk space
+is returned in the `total_bytes` field.
+
+If you use [VictoriaLogs web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui)
+or [Grafana plugin for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/integrations/grafana/),
+then make sure the selected time range covers the last day. Otherwise, the query above returns
+results on the intersection of the last day and the selected time range.
+
+See also [how to detect log fields, which occupy the most of disk space](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-fields-occupy-the-most-of-disk-space).
 
 ## Why the log field occupies a lot of disk space?
 

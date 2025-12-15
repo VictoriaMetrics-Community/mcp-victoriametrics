@@ -32,7 +32,7 @@ More in detail, the following topics should be considered when selecting a deplo
 
 {{% collapse name="Reliability/SLA" %}}
 
-Both instance types are highly reliable, with SLAs of 99.5% for `Single-node` deployments and 99.9%
+Both instance types are highly reliable, with SLAs of 99.5% for `Single-node` deployments and 99.95%
 for `Cluster` deployments.
 
 {{% /collapse %}}
