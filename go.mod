@@ -1,13 +1,13 @@
 module github.com/VictoriaMetrics-Community/mcp-victoriametrics
 
-go 1.25.4
+go 1.25.5
 
 require (
-	github.com/VictoriaMetrics/VictoriaMetrics v1.131.0
+	github.com/VictoriaMetrics/VictoriaMetrics v1.132.0
 	github.com/VictoriaMetrics/metrics v1.40.2
 	github.com/VictoriaMetrics/metricsql v0.84.8
 	github.com/VictoriaMetrics/victoriametrics-cloud-api-go v0.0.4
-	github.com/blevesearch/bleve/v2 v2.5.5
+	github.com/blevesearch/bleve/v2 v2.5.6
 	github.com/mark3labs/mcp-go v0.43.2
 	github.com/tmc/langchaingo v0.1.14
 	gopkg.in/yaml.v2 v2.4.0
@@ -17,7 +17,7 @@ require (
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
 	github.com/RoaringBitmap/roaring/v2 v2.10.0 // indirect
 	github.com/VictoriaMetrics/VictoriaLogs v1.36.2-0.20251008164716-21c0fb3de84d // indirect
-	github.com/VictoriaMetrics/easyproto v0.1.4 // indirect
+	github.com/VictoriaMetrics/easyproto v1.1.3 // indirect
 	github.com/VictoriaMetrics/fastcache v1.13.2 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
@@ -61,7 +61,7 @@ require (
 	github.com/pkoukk/tiktoken-go v0.1.7 // indirect
 	github.com/spf13/cast v1.9.2 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fastjson v1.6.4 // indirect
+	github.com/valyala/fastjson v1.6.5 // indirect
 	github.com/valyala/fastrand v1.1.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/valyala/gozstd v1.24.0 // indirect
