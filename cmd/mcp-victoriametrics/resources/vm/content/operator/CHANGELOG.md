@@ -13,15 +13,56 @@ aliases:
 
 ## tip
 
-* Dependency: [vmoperator](https://docs.victoriametrics.com/operator/): Updated default versions for VM apps to [v1.130.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.130.0) version
+**Update note 1: removed 3rd-party config reloaders. Now VMAlert, VMAgent, VMAuth and VMAlertmanager are using only VM config reloader.**
+**Update note 2: removed deprecated VMAgent `spec.aPIServerConfig`
+**Update note 3: VM_CUSTOMCONFIGRELOADERIMAGE is deprecated and will be removed in next releases. Use VM_CONFIG_RELOADER_IMAGE instead.**
+**Update note 4: spec.configReloaderImageTag is deprecated and will be removed in next releases. Use spec.configReloaderImage instead.**
 
-* FEATURE: [vmoperator](https://docs.victoriametrics.com/operator/): add `VM_ENABLETCP6` variable that runs all operator CRs in IPv6 mode. See [#1581](https://github.com/VictoriaMetrics/operator/issues/1581).
+* Dependency: [vmoperator](https://docs.victoriametrics.com/operator/): Updated default versions for VM apps to [v1.132.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.132.0) version
+
+* FEATURE: [vmagent](https://docs.victoriametrics.com/operator/resources/vmagent/): support `namespace` parameter in `attach_metadata` section for all scrape configurations. See [#1654](https://github.com/VictoriaMetrics/operator/issues/1654).
+* FEATURE: [vlagent](https://docs.victoriametrics.com/operator/resources/vlagent): support logs collection. See [#1501](https://github.com/VictoriaMetrics/operator/issues/1501).
+* FEATURE: [vmoperator](https://docs.victoriametrics.com/operator/): use `operator_bad_objects_total` metric with `object_namespace` and `crd` labels to track invalid objects managed by VMAgent, VMAuth, VMAlert and VMAlertmanager. Old `operator_alertmanager_bad_objects_count` and `operator_vmalert_bad_objects_count` are deprecated and will be removed in next releases.
+* FEATURE: [vmoperator](https://docs.victoriametrics.com/operator/): added HPA support for all cluster CR storage. See [#1678](https://github.com/VictoriaMetrics/operator/issues/1678).
+
+* BUGFIX: [vmoperator](https://docs.victoriametrics.com/operator/): fixed HPA cleanup logic for all cluster resources, before it was constantly recreated. Bug introduced in [this commit](https://github.com/VictoriaMetrics/operator/commit/983d1678c37497a7d03d2f57821219fd4975deec).
+* BUGFIX: [VMCluster](https://docs.victoriametrics.com/operator/resources/vmcluster/), [VLCluster](https://docs.victoriametrics.com/operator/resources/vlcluster/) and [VTCluster](https://docs.victoriametrics.com/operator/resources/vtcluster/): prevent cluster load balancer secret from infinite reconcile.
+
+## [v0.66.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.66.1)
+
+**Release date:** 06 December 2025
+
+SECURITY: upgrade Go builder from Go1.25.4 to Go1.25.5. See [the list of issues addressed in Go1.25.5](https://github.com/golang/go/issues?q=milestone%3AGo1.25.5+label%3ACherryPickApproved).
+
+* BUGFIX: [vmoperator](https://docs.victoriametrics.com/operator/): remove orphaned ServiceAccount and RBAC resources. See [#1665](https://github.com/VictoriaMetrics/operator/issues/1665).
+* BUGFIX: [vmanomaly](https://docs.victoriametrics.com/operator/resources/vmanomaly/): properly handle configuration which is missing `reader.queries` in either `configRawYaml` or `configSecret`. Previously, it would lead to panic.
+* BUGFIX: [vmanomaly](https://docs.victoriametrics.com/operator/resources/vmanomaly/): fix configuration parsing when running in [UI mode](https://docs.victoriametrics.com/anomaly-detection/ui/). Previously, configuration required to use `preset: ui:version` instead of `preset: ui`.
+
+## [v0.66.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.66.0)
+
+**Release date:** 03 December 2025
+
+**Update note 1: `labels` and `annotations` inheritance is removed. It was deprecated in v0.51.0. Consider moving all needed labels and annotations to the `spec.managedMetadata` fields.**
+
+**Update node 2: removed VMCluster's `status.clusterStatus` and VMSingle's `status.singleStatus`, that were deprecated in v0.51.0.**
+
+* Dependency: [vmoperator](https://docs.victoriametrics.com/operator/): Updated default versions for VM apps to [v1.131.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.131.0) version
+* Dependency: [vmoperator](https://docs.victoriametrics.com/operator/): Updated default versions for VT apps to [v0.5.0](https://github.com/VictoriaMetrics/VictoriaTraces/releases/tag/v0.5.0) version.
+
 * FEATURE: [config-reloader](https://github.com/VictoriaMetrics/operator/blob/master/cmd/config-reloader/README.md): set default config reloader image version equal to current operator version. See [#2562](https://github.com/VictoriaMetrics/helm-charts/pull/2562).
 * FEATURE: [vmagent](https://docs.victoriametrics.com/operator/resources/vmagent/): do not set `promscrape.cluster.membersCount` and `promscrape.cluster.memberNum` flags in ingestOnly mode. See [#1594](https://github.com/VictoriaMetrics/operator/issues/1594).
+* FEATURE: [vmalertmanagerconfig](https://docs.victoriametrics.com/operator/resources/vmalertmanagerconfig/): support incident.io receiver. See [#1637](https://github.com/VictoriaMetrics/operator/issues/1637).
+* FEATURE: [vmauth](https://docs.victoriametrics.com/operator/resources/vmauth/): Add httproute support for vmauth. See[#1625](https://github.com/VictoriaMetrics/operator/issues/1625)
+* FEATURE: [vmauth](https://docs.victoriametrics.com/operator/resources/vmauth/): allow overriding default path for embedded ingress. See [#1617](https://github.com/VictoriaMetrics/operator/issues/1617).
+* FEATURE: [vmoperator](https://docs.victoriametrics.com/operator/): add `VM_ENABLETCP6` variable that runs all operator CRs in IPv6 mode. See [#1581](https://github.com/VictoriaMetrics/operator/issues/1581).
+* FEATURE: [vmuser](https://docs.victoriametrics.com/operator/resources/vmuser/): introduce `spec.managedMetadata` for custom labels and annotations that should be attached to a Secret.
+* FEATURE: [vmuser](https://docs.victoriametrics.com/operator/resources/vmuser/): introduce `query_args` parameter that allows to append query arguments for backend url generation
 
+* BUGFIX: [converter](https://docs.victoriametrics.com/operator/integrations/prometheus/#objects-conversion): properly convert Prometheus ScrapeConfig `scrapeInterval` into VM ScrapeConfig `scrape_interval`. Before it was ignored. See [#1645](https://github.com/VictoriaMetrics/operator/issues/1645).
 * BUGFIX: [vmalertmanager](https://docs.victoriametrics.com/operator/resources/vmalertmanager/): check `mute_time_intervals` in subroutes: See [#1618](https://github.com/VictoriaMetrics/operator/issues/1618).
+* BUGFIX: [vmoperator](https://docs.victoriametrics.com/operator/): remove incorrect key argument in structured log for when the actual PVC storage size is larger than the currently configured size and properly indicate which is the new and which is the existing size: See PR [#1636](https://github.com/VictoriaMetrics/operator/pull/1636) for details.
+* BUGFIX: [vtcluster](https://docs.victoriametrics.com/operator/resources/vtcluster/): properly print `status` replicas for `insert`, `select` and `storage` components.
 
-* Dependency: [vmoperator](https://docs.victoriametrics.com/operator/): Updated default versions for VT apps to [v0.5.0](https://github.com/VictoriaMetrics/VictoriaTraces/releases/tag/v0.5.0) version.
 
 ## [v0.65.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.65.0)
 
@@ -454,7 +495,7 @@ If you still want to upgrade, you can override the vmagent image version by sett
 ![AppVersion: v1.3.2](https://img.shields.io/badge/v1.3.2-success?label=Default%20VL%20version&logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictorialogs%2Fchangelog%2F%23v132)
 
 **Update note 1: `labels` and `annotations` inheritance is deprecated and will be remove at upcoming `v0.52.0` release. It's recommend to move all needed labels and annotations to the `spec.managedMetadata` fields.
-Operator will preserve `annotations`, but any changes to it will be ignored. `labels` inherited from `CRD.metata.labels` will be removed after upgrade to `v0.52.0`.**
+Operator will preserve `annotations`, but any changes to it will be ignored. `labels` inherited from `CRD.metadata.labels` will be removed after upgrade to `v0.52.0`.**
 
 **Update note 2: `VMAuth.spec.unauthorizedAccessConfig` is deprecated in favour of `VMAuth.spec.unauthorizedUserAccessSpec`. Operator still serves deprecated fields until `v1.0` release.**
 

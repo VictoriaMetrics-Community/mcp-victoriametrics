@@ -13,7 +13,7 @@ aliases:
   - /helm/victoriametrics-anomaly/
 ---
 
-![Version](https://img.shields.io/badge/1.12.6-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-anomaly%2Fchangelog%2F%231126)
+![Version](https://img.shields.io/badge/1.12.9-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-anomaly%2Fchangelog%2F%231129)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-anomaly)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -291,6 +291,20 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#containerworkingdir"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">containerWorkingDir</span><span class="p">:</span><span class="w"> </span><span class="l">/vmanomaly</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Container working directory</p>
+</td>
+    </tr>
+    <tr id="deployment">
+      <td><a href="#deployment"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">deployment</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank">K8s Deployment</a> specific variables</p>
+</td>
+    </tr>
+    <tr id="deployment-spec-strategy">
+      <td><a href="#deployment-spec-strategy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">deployment.spec.strategy</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VMAnomaly strategy</p>
 </td>
     </tr>
     <tr id="emptydir">
@@ -646,6 +660,20 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#shardscount"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">shardsCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span></span></span></code></pre>
 </a></td>
       <td><em><code>(int)</code></em><p>Total number of shards. Must be greater than 0. Details are <a href="https://docs.victoriametrics.com/anomaly-detection/faq/#scaling-vmanomaly" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="statefulset">
+      <td><a href="#statefulset"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">statefulSet</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">podManagementPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">OrderedReady</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/" target="_blank">K8s StatefulSet</a> specific variables</p>
+</td>
+    </tr>
+    <tr id="statefulset-spec-podmanagementpolicy">
+      <td><a href="#statefulset-spec-podmanagementpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">statefulSet.spec.podManagementPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">OrderedReady</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Deploy order policy for StatefulSet pods</p>
 </td>
     </tr>
     <tr id="tolerations">

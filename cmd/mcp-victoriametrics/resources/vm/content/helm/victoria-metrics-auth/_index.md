@@ -17,7 +17,7 @@ tags:
   - logs
 ---
 
-![Version](https://img.shields.io/badge/0.19.10-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-auth%2Fchangelog%2F%2301910)
+![Version](https://img.shields.io/badge/0.21.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-auth%2Fchangelog%2F%230210)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-auth)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -557,6 +557,57 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#resources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>We usually recommend not to specify default resources and to leave this as a conscious choice for the user. This also increases chances charts run on environments with little resources, such as Minikube. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after <code>resources:</code>.</p>
+</td>
+    </tr>
+    <tr id="route-annotations">
+      <td><a href="#route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="route-enabled">
+      <td><a href="#route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for VMAuth</p>
+</td>
+    </tr>
+    <tr id="route-extrarules">
+      <td><a href="#route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="route-filters">
+      <td><a href="#route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="route-hostnames">
+      <td><a href="#route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="route-labels">
+      <td><a href="#route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="route-matches">
+      <td><a href="#route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">/</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="route-parentrefs">
+      <td><a href="#route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
 </td>
     </tr>
     <tr id="secretname">

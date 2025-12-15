@@ -133,6 +133,11 @@ Feel free to contact [support](mailto:support-cloud@victoriametrics.com) should 
 Apart from these recommendations, VictoriaMetrics Cloud also enforces hard limits in order to
 ensure operations. Users can expect receiving alerts when these thresholds are surpassed, and new
 metrics eventually being rejected.
+
+Each capacity tier has its own limits, including limits on ingestion rate, concurrent requests,
+and the number of access tokens that can be created per deployment.
+
+To request higher limits, contact support through the [Contact Support](https://console.victoriametrics.cloud/contact_support) button in the Cloud UI.
 More information about limits may be found [here](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/limits/).
 
 ## Advanced Parameters: Flags

@@ -1666,7 +1666,8 @@ LogsQL supports the following pipes:
 
 ### block_stats pipe
 
-`<q> | block_stats` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) returns the following stats for each block processed by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax):
+`<q> | block_stats` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) returns the following stats for each field in every data block
+processed by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax):
 
 - `field` - [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) name
 - `rows` - the number of rows at the given `field`
@@ -1675,9 +1676,12 @@ LogsQL supports the following pipes:
 - `bloom_bytes` - on-disk size of bloom filter data for the given `field`
 - `dict_bytes` - on-disk size of the dictionary data for the given `field`
 - `dict_items` - the number of unique values in the dictionary for the given `field`
-- `part_path` - the path to the data part where the block is stored
+- `_stream` - the [log stream](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) for the given `field`
+- `part_path` - the path to the data part where the field data is stored
 
 The `block_stats` pipe is needed mostly for debugging purposes.
+See, for example, [how to detect which log field occupies the most of the disk space](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-fields-occupy-the-most-of-disk-space),
+or [how to detect which log stream occupies the most of the disk space](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-streams-occupy-the-most-of-disk-space).
 
 See also:
 
@@ -4532,6 +4536,11 @@ over logs for the last 5 minutes:
 _time:5m | stats max(duration) max_duration
 ```
 
+The `max(some_field)` function works with string values for the `some_field`, so it returns an empty string value if `some_field`
+is missing in some of the processed logs according to [VictoriaLogs data model](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Use `max(some_field) if (some_field:*) as min_value_without_empty_string` syntax for filtering out empty string values.
+See [conditional stats docs](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters) for more details.
+
 It is possible to calculate the maximum value across all the fields with common prefix via `max(prefix*)` syntax.
 
 [`row_max`](https://docs.victoriametrics.com/victorialogs/logsql/#row_max-stats) function can be used for obtaining other fields with the maximum duration.
@@ -4555,6 +4564,11 @@ over logs for the last 5 minutes:
 _time:5m | stats median(duration) median_duration
 ```
 
+The `median(some_field)` function works with string values for the `some_field`, so it returns an empty string value if `some_field`
+is missing in some of the processed logs according to [VictoriaLogs data model](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Use `median(some_field) if (some_field:*) as min_value_without_empty_string` syntax for filtering out empty string values.
+See [conditional stats docs](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters) for more details.
+
 It is possible to calculate the median across all the fields with common prefix via `median(prefix*)` syntax.
 
 See also:
@@ -4573,6 +4587,11 @@ over logs for the last 5 minutes:
 ```logsql
 _time:5m | stats min(duration) min_duration
 ```
+
+The `min(some_field)` function works with string values for the `some_field`, so it returns an empty string value if `some_field`
+is missing in some of the processed logs according to [VictoriaLogs data model](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Use `min(some_field) if (some_field:*) as min_value_without_empty_string` syntax for filtering out empty string values.
+See [conditional stats docs](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters) for more details.
 
 It is possible to find the minimum across all the fields with common prefix via `min(prefix*)` syntax.
 
@@ -4600,6 +4619,11 @@ _time:5m | stats
   quantile(0.9, request_duration_seconds) p90,
   quantile(0.99, request_duration_seconds) p99
 ```
+
+The `quantile(phi, some_field)` function works with string values for the `some_field`, so it returns an empty string value if `some_field`
+is missing in some of the processed logs according to [VictoriaLogs data model](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Use `quantile(phi, some_field) if (some_field:*) as min_value_without_empty_string` syntax for filtering out empty string values.
+See [conditional stats docs](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters) for more details.
 
 It is possible to calculate the quantile across all the fields with common prefix via `quantile(phi, prefix*)` syntax.
 

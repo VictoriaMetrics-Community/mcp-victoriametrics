@@ -16,14 +16,14 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.0.18-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-cluster%2Fchangelog%2F%230018)
+![Version](https://img.shields.io/badge/0.0.19-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-cluster%2Fchangelog%2F%230019)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-logs-cluster)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
 ![X](https://img.shields.io/twitter/follow/VictoriaMetrics?style=flat&label=Follow&color=black&logo=x&labelColor=black&link=https%3A%2F%2Fx.com%2FVictoriaMetrics)
 ![Reddit](https://img.shields.io/reddit/subreddit-subscribers/VictoriaMetrics?style=flat&label=Join&labelColor=red&logoColor=white&logo=reddit&link=https%3A%2F%2Fwww.reddit.com%2Fr%2FVictoriaMetrics)
 
-The VictoriaLogs cluster Helm chart deploys VictoriaLogs cluster database in Kubernetes. It optionally includes log collector for automatic collection of logs from Kubernetes containers and forwarding them to the deployed VictoriaLogs database.
+The VictoriaLogs cluster Helm chart deploys VictoriaLogs cluster database in Kubernetes.
 
 ## Prerequisites
 
@@ -109,6 +109,8 @@ For finer control and easier maintenance, it is recommended to set these
 values in a separate `values` file and use it during installation.
 See [how to install victoria-logs-single](https://docs.victoriametrics.com/helm/victoria-logs-single/#install-victoria-logs-single-chart) for an example.
 You can do this later if you want to configure more settings than shown in the default example.
+
+See also [victoria-logs-single](https://docs.victoriametrics.com/helm/victoria-logs-single/) and [victoria-logs-multilevel](https://docs.victoriametrics.com/helm/victoria-logs-multilevel/) charts.
 
 ## Chart configuration
 

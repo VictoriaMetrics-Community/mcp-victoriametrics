@@ -16,7 +16,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.63.6-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230636)
+![Version](https://img.shields.io/badge/0.66.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230660)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-k8s-stack)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -2045,6 +2045,30 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#vmagent-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>VMAgent labels</p>
+</td>
+    </tr>
+    <tr id="vmagent-rbac-annotations">
+      <td><a href="#vmagent-rbac-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.rbac.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Role/RoleBinding annotations</p>
+</td>
+    </tr>
+    <tr id="vmagent-rbac-extralabels">
+      <td><a href="#vmagent-rbac-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.rbac.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Role/RoleBinding labels</p>
+</td>
+    </tr>
+    <tr id="vmagent-rbac-namespaced">
+      <td><a href="#vmagent-rbac-namespaced"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.rbac.namespaced</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Defines if ClusterRole or Role with respective bindings should be created</p>
+</td>
+    </tr>
+    <tr id="vmagent-rbac-rules">
+      <td><a href="#vmagent-rbac-rules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.rbac.rules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>additional rules for a role</p>
 </td>
     </tr>
     <tr id="vmagent-route">
