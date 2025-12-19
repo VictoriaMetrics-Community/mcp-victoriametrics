@@ -2,7 +2,6 @@
 
 [![Latest Release](https://img.shields.io/github/v/release/VictoriaMetrics-Community/mcp-victoriametrics?sort=semver&label=&filter=!*-victorialogs&logo=github&labelColor=gray&color=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics-Community%2Fmcp-victoriametrics%2Freleases%2Flatest)](https://github.com/VictoriaMetrics-Community/mcp-victoriametrics/releases)
 [![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/VictoriaMetrics-Community/mcp-victoriametrics)](https://archestra.ai/mcp-catalog/victoriametrics-community__mcp-victoriametrics)
-[![smithery badge](https://smithery.ai/badge/@VictoriaMetrics-Community/mcp-victoriametrics)](https://smithery.ai/server/@VictoriaMetrics-Community/mcp-victoriametrics)
 ![License](https://img.shields.io/github/license/VictoriaMetrics-Community/mcp-victoriametrics?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics-Community%2Fmcp-victoriametrics%2Fblob%2Fmain%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
 ![X](https://img.shields.io/twitter/follow/VictoriaMetrics?style=flat&label=Follow&color=black&logo=x&labelColor=black&link=https%3A%2F%2Fx.com%2FVictoriaMetrics)
@@ -124,31 +123,6 @@ For building binary from source code you can use the following approach:
   docker build -t mcp-victoriametrics .
   # after that you can use docker image mcp-victoriametrics for running or pushing
   ```
-
-### Smithery
-
-To install VictoriaMetrics MCP Server for your client automatically via Smithery, yo can use the following commands:
-
-```bash
-# Get the list of supported MCP clients
-npx -y @smithery/cli list clients
-#Available clients:
-#  claude
-#  cline
-#  windsurf
-#  roocode
-#  witsy
-#  enconvo
-#  cursor
-#  vscode
-#  vscode-insiders
-#  boltai
-#  amazon-bedrock
-
-# Install VictoriaMetrics MCP server for your client
-npx -y @smithery/cli install @VictoriaMetrics-Community/mcp-victoriametrics --client <YOUR-CLIENT-NAME>
-# and follow the instructions
-```
 
 ## Configuration
 
