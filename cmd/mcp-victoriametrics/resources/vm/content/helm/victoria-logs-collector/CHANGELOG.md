@@ -1,6 +1,22 @@
 ## Next release
 
-- support VLAgent logs collection when `.Values.native: true`
+- TODO
+
+## 0.1.4
+
+**Release date:** 20 Dec 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- do not ignore imagePullSecrets
+
+## 0.1.3
+
+**Release date:** 20 Dec 2025
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- update common chart dependency: 0.0.42 -> 0.0.45
 
 ## 0.1.2
 

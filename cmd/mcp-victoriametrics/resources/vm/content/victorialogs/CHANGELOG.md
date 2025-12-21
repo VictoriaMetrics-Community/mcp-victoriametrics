@@ -21,6 +21,27 @@ according to the following docs:
 
 ## tip
 
+## [v1.42.0](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.42.0)
+
+Released at 2025-12-20
+
+* FEATURE: [HTTP querying API](https://docs.victoriametrics.com/victorialogs/querying/#http-api): convert [`histogram` stats](https://docs.victoriametrics.com/victorialogs/logsql/#histogram-stats) results to [VictoriaMetrics histogram buckets](https://valyala.medium.com/improving-histogram-usability-for-prometheus-and-grafana-bc7e5df0e350) in responses from [`/select/logsql/stats_query`](https://docs.victoriametrics.com/victorialogs/querying/#querying-log-stats) and [`/select/logsql/stats_query_range`](https://docs.victoriametrics.com/victorialogs/querying/#querying-log-range-stats) functions. This allows using `histogram()` stats in [recording rules for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/vmalert/#recording-rules). See [#10184 at VictoriaMetrics](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/10184), [#86](https://github.com/VictoriaMetrics/VictoriaLogs/issues/86) and [#62 at VictoriaLogs plugin for Grafana](https://github.com/VictoriaMetrics/victorialogs-datasource/issues/62).
+* FEATURE: [Kubernetes Collector](https://docs.victoriametrics.com/victorialogs/vlagent/#collect-kubernetes-pod-logs): add support for metadata-based filtering for Kubernetes logs via `-kubernetesCollector.excludeFilter` command-line flag. The flag accepts any [LogsQL filter](https://docs.victoriametrics.com/victorialogs/logsql/#filters) which is applied to Pod labels, namespaces, and other metadata before reading the log files. This enables early exclusion of unwanted log records, reducing CPU usage and I/O overhead. See [#923](https://github.com/VictoriaMetrics/VictoriaLogs/issues/923) and [these docs](https://docs.victoriametrics.com/victorialogs/vlagent/#filtering-kubernetes-logs) for details.
+* FEATURE: [Kubernetes Collector](https://docs.victoriametrics.com/victorialogs/vlagent/#collect-kubernetes-pod-logs): automatically parse [Kubernetes system logs](https://kubernetes.io/docs/concepts/cluster-administration/system-logs/) as structured data. Previously, vlagent wrote these logs as unstructured text.
+* FEATURE: [vlagent](https://docs.victoriametrics.com/victorialogs/vlagent/): add `-tmpDataPath` command-line flag, that defines default root path for all vlagent data, that requires persistance: remote write persistent queue, collector checkpoints path.
+* FEATURE: [vlinsert](https://docs.victoriametrics.com/victorialogs/querying/#web-ui): implement `/insert/native` endpoint for public access to the internal VictoriaLogs ingestion protocol. See [#38](https://github.com/VictoriaMetrics/VictoriaLogs/issues/38) and [these docs](https://docs.victoriametrics.com/victorialogs/vlagent/#multitenancy).
+* FEATURE: [web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui): add `localStorage` availability checks with error reporting. See [#843](https://github.com/VictoriaMetrics/VictoriaLogs/issues/843).
+* FEATURE: [web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui): add `VLUI:`-prefixed `localStorage` keys and legacy key migration.
+
+* BUGFIX: [web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui): fix incorrect y-axis scaling in stats charts when displaying negative values. See [#905](https://github.com/VictoriaMetrics/VictoriaLogs/issues/905).
+
+## [v1.41.1](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.41.1)
+
+Released at 2025-12-17
+
+* BUGFIX: [data ingestion](https://docs.victoriametrics.com/victorialogs/data-ingestion/): accept timestamps with timezone offsets in `±HHMM` format (e.g. `2025-12-15T02:12:34.977+0100`) in addition to `±HH:MM` (RFC3339) format. See [#902](https://github.com/VictoriaMetrics/VictoriaLogs/issues/902).
+* BUGFIX: [OpenTelemetry data ingestion](https://docs.victoriametrics.com/victorialogs/data-ingestion/opentelemetry/): fix a memory leak during ingestion of logs with complex attributes. See [this comment at #869](https://github.com/VictoriaMetrics/VictoriaLogs/issues/869#issuecomment-3656714711).
+
 ## [v1.41.0](https://github.com/VictoriaMetrics/VictoriaLogs/releases/tag/v1.41.0)
 
 Released at 2025-12-13

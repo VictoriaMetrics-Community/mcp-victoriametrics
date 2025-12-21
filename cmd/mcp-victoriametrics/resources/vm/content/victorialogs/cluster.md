@@ -235,8 +235,7 @@ must be used in front of `vlinsert` and `vlselect` for authorizing access to the
 See [Security and Load balancing docs](https://docs.victoriametrics.com/victorialogs/security-and-lb/).
 
 It is possible to disallow access to `/internal/insert` and `/internal/select/*` endpoints at a single-node VictoriaLogs instance
-by running it with `-internalinsert.disable` and `-internalselect.disable` command-line flags. Note that [`vlagent`](https://docs.victoriametrics.com/victorialogs/vlagent/)
-sends the collected logs to the `/internal/insert` endpoint, so it should be available for data ingestion if you use `vlagent`.
+by running it with `-internalinsert.disable` and `-internalselect.disable` command-line flags.
 
 ### TLS
 
@@ -352,8 +351,8 @@ If you want running VictoriaLogs cluster in Kubernetes, then please read [these 
 Download and unpack the latest VictoriaLogs release:
 
 ```sh
-curl -L -O https://github.com/VictoriaMetrics/VictoriaLogs/releases/download/v1.41.0/victoria-logs-linux-amd64-v1.41.0.tar.gz
-tar xzf victoria-logs-linux-amd64-v1.41.0.tar.gz
+curl -L -O https://github.com/VictoriaMetrics/VictoriaLogs/releases/download/v1.42.0/victoria-logs-linux-amd64-v1.42.0.tar.gz
+tar xzf victoria-logs-linux-amd64-v1.42.0.tar.gz
 ```
 
 Start the first [`vlstorage` node](https://docs.victoriametrics.com/victorialogs/cluster/#architecture), which accepts incoming requests at the port `9491` and stores the ingested logs in the `victoria-logs-data-1` directory:

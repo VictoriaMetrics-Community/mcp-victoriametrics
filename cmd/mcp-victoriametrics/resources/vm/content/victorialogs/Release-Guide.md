@@ -109,9 +109,7 @@ The operator repository [https://github.com/VictoriaMetrics/operator/](https://g
 
 ### Bump the version of images
 
-- Bump the VictoriaLogs version in [file `internal/config/config.go`](https://github.com/VictoriaMetrics/operator/blob/master/internal/config/config.go) with new release version for:
-  - `VM_LOGS_VERSION` key in `defaultEnvs` map,
-  - `BaseOperatorConf.LogsVersion` default value.
+- Bump the VictoriaLogs version in [file `internal/config/config.go`](https://github.com/VictoriaMetrics/operator/blob/master/internal/config/config.go) with new release version.
 - Run `make docs`.
 - Add the dependency to the new release to the tip section in `docs/CHANGELOG.md` ([example](https://github.com/VictoriaMetrics/operator/pull/1355/commits/1d7f4439c359b371b05a06e93f615dbcfb266cf5)).
 - Commit and send a PR for review.
