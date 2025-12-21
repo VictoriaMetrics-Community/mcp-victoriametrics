@@ -374,9 +374,9 @@ It is recommended to use [vlagent](https://docs.victoriametrics.com/victorialogs
 
 Here are the working examples of HA configuration for VictoriaLogs using Docker Compose:
 
-- [Fluent Bit + VictoriaLogs Single-Node + vmauth](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/docker/victorialogs/fluentbit/jsonline-ha)
-- [Logstash + VictoriaLogs Single-Node + vmauth](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/docker/victorialogs/logstash/jsonline-ha)
-- [Vector + VictoriaLogs Single-Node + vmauth](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/docker/victorialogs/vector/jsonline-ha)
+- [Fluent Bit](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/docker/victorialogs/fluentbit/)
+- [Logstash](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/docker/victorialogs/logstash/)
+- [Vector](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/docker/victorialogs/vector/)
 
 ## Backup and restore
 
@@ -561,14 +561,14 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -datadog.ignoreFields array
         Comma-separated list of fields to ignore for logs ingested via DataDog protocol. See https://docs.victoriametrics.com/victorialogs/data-ingestion/datadog-agent/#dropping-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -datadog.maxRequestSize size
         The maximum size in bytes of a single DataDog request
         Supports the following optional suffixes for size values: KB, MB, GB, TB, KiB, MiB, GiB, TiB (default 67108864)
   -datadog.streamFields array
         Comma-separated list of fields to use as log stream fields for logs ingested via DataDog protocol. See https://docs.victoriametrics.com/victorialogs/data-ingestion/datadog-agent/#stream-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -defaultMsgValue string
         Default value for _msg field if the ingested log entry doesn't contain it; see https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field (default "missing _msg field; see https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field")
   -defaultParallelReaders int
@@ -637,7 +637,7 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -httpListenAddr array
         TCP address to listen for incoming http requests. See also -httpListenAddr.useProxyProtocol
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -httpListenAddr.useProxyProtocol array
         Whether to use proxy protocol for connections accepted at the given -httpListenAddr . See https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt . With enabled proxy protocol http server cannot serve regular /metrics endpoint. Use -pushmetrics.url for metrics pushing
         Supports array of values separated by comma or specified via multiple flags.
@@ -677,13 +677,13 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -journald.ignoreFields array
         Comma-separated list of fields to ignore for logs ingested over journald protocol. See https://docs.victoriametrics.com/victorialogs/data-ingestion/journald/#dropping-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -journald.includeEntryMetadata
         Include Journald fields with double underscore prefixes
   -journald.streamFields array
         Comma-separated list of fields to use as log stream fields for logs ingested over journald protocol. See https://docs.victoriametrics.com/victorialogs/data-ingestion/journald/#stream-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -journald.tenantID string
         TenantID for logs ingested via the Journald endpoint. See https://docs.victoriametrics.com/victorialogs/data-ingestion/journald/#multitenancy (default "0:0")
   -journald.timeField string
@@ -750,7 +750,10 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -mtlsCAFile array
         Optional path to TLS Root CA for verifying client certificates at the corresponding -httpListenAddr when -mtls is enabled. By default the host system TLS Root CA is used for client certificate verification. This flag is available only in Enterprise binaries. See https://docs.victoriametrics.com/victoriametrics/enterprise/
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+  -nativeinsert.maxRequestSize size
+        The maximum size in bytes of a single request, which can be accepted at /insert/native HTTP endpoint
+        Supports the following optional suffixes for size values: KB, MB, GB, TB, KiB, MiB, GiB, TiB (default 67108864)
   -opentelemetry.maxRequestSize size
         The maximum size in bytes of a single OpenTelemetry request
         Supports the following optional suffixes for size values: KB, MB, GB, TB, KiB, MiB, GiB, TiB (default 67108864)
@@ -767,17 +770,17 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -pushmetrics.extraLabel array
         Optional labels to add to metrics pushed to every -pushmetrics.url . For example, -pushmetrics.extraLabel='instance="foo"' adds instance="foo" label to all the metrics pushed to every -pushmetrics.url
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -pushmetrics.header array
         Optional HTTP request header to send to every -pushmetrics.url . For example, -pushmetrics.header='Authorization: Basic foobar' adds 'Authorization: Basic foobar' header to every request to every -pushmetrics.url
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -pushmetrics.interval duration
         Interval for pushing metrics to every -pushmetrics.url (default 10s)
   -pushmetrics.url array
         Optional URL to push metrics exposed at /metrics page. See https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#push-metrics . By default, metrics exposed at /metrics page aren't pushed to any remote storage
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -retention.maxDiskSpaceUsageBytes size
         The maximum disk space usage at -storageDataPath before older per-day partitions are automatically dropped; see https://docs.victoriametrics.com/victorialogs/#retention-by-disk-space-usage ; see also -retentionPeriod
         Supports the following optional suffixes for size values: KB, MB, GB, TB, KiB, MiB, GiB, TiB (default 0)
@@ -802,7 +805,7 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -secret.flags array
         Comma-separated list of flag names with secret values. Values for these flags are hidden in logs and on /metrics page
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -select.disable
         Whether to disable /select/* HTTP endpoints
   -select.disableCompression
@@ -815,23 +818,23 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -storageNode array
         Comma-separated list of TCP addresses for storage nodes to route the ingested logs to and to send select queries to. If the list is empty, then the ingested logs are stored and queried locally from -storageDataPath
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.bearerToken array
         Optional bearer auth token to use for the corresponding -storageNode
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.bearerTokenFile array
         Optional path to bearer token file to use for the corresponding -storageNode. The token is re-read from the file every second
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.password array
         Optional basic auth password to use for the corresponding -storageNode
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.passwordFile array
         Optional path to basic auth password to use for the corresponding -storageNode. The file is re-read every second
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.tls array
         Whether to use TLS (HTTPS) protocol for communicating with the corresponding -storageNode. By default communication is performed via HTTP
         Supports array of values separated by comma or specified via multiple flags.
@@ -839,11 +842,11 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -storageNode.tlsCAFile array
         Optional path to TLS CA file to use for verifying connections to the corresponding -storageNode. By default, system CA is used
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.tlsCertFile array
         Optional path to client-side TLS certificate file to use when connecting to the corresponding -storageNode
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.tlsInsecureSkipVerify array
         Whether to skip tls verification when connecting to the corresponding -storageNode
         Supports array of values separated by comma or specified via multiple flags.
@@ -851,79 +854,79 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -storageNode.tlsKeyFile array
         Optional path to client-side TLS certificate key to use when connecting to the corresponding -storageNode
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.tlsServerName array
         Optional TLS server name to use for connections to the corresponding -storageNode. By default, the server name from -storageNode is used
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.username array
         Optional basic auth username to use for the corresponding -storageNode
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -storageNode.usernameFile array
         Optional path to basic auth username to use for the corresponding -storageNode. The file is re-read every second
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.compressMethod.tcp array
         Compression method for syslog messages received at the corresponding -syslog.listenAddr.tcp. Supported values: none, gzip, deflate. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#compression
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.compressMethod.udp array
         Compression method for syslog messages received at the corresponding -syslog.listenAddr.udp. Supported values: none, gzip, deflate. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#compression
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.compressMethod.unix array
         Compression method for syslog messages received at the corresponding -syslog.listenAddr.unix. Supported values: none, gzip, deflate. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#compression
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.decolorizeFields.tcp array
         Fields to remove ANSI color codes across logs ingested via the corresponding -syslog.listenAddr.tcp. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#decolorizing-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.decolorizeFields.udp array
         Fields to remove ANSI color codes across logs ingested via the corresponding -syslog.listenAddr.udp. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#decolorizing-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.decolorizeFields.unix array
         Fields to remove ANSI color codes across logs ingested via the corresponding -syslog.listenAddr.unix. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#decolorizing-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.extraFields.tcp array
         Fields to add to logs ingested via the corresponding -syslog.listenAddr.tcp. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#adding-extra-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.extraFields.udp array
         Fields to add to logs ingested via the corresponding -syslog.listenAddr.udp. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#adding-extra-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.extraFields.unix array
         Fields to add to logs ingested via the corresponding -syslog.listenAddr.unix. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#adding-extra-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.ignoreFields.tcp array
         Fields to ignore at logs ingested via the corresponding -syslog.listenAddr.tcp. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#dropping-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.ignoreFields.udp array
         Fields to ignore at logs ingested via the corresponding -syslog.listenAddr.udp. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#dropping-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.ignoreFields.unix array
         Fields to ignore at logs ingested via the corresponding -syslog.listenAddr.unix. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#dropping-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.listenAddr.tcp array
         Comma-separated list of TCP addresses to listen to for Syslog messages. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.listenAddr.udp array
         Comma-separated list of UDP addresses to listen to for Syslog messages. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.listenAddr.unix array
         Comma-separated list of Unix socket filepaths to listen to for Syslog messages. Filepaths may be prepended with 'unixgram:'  for listening for SOCK_DGRAM sockets. By default SOCK_STREAM sockets are used. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.mtls array
         Whether to require valid client certificate for https requests to the corresponding -syslog.listenAddr.tcp. This flag works only if -syslog.tls flag is set for the corresponding -syslog.listenAddr.tcp. See also -syslog.mtlsCAFile. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#mtls . This flag is available only in Enterprise binaries. See https://docs.victoriametrics.com/victoriametrics/enterprise/
         Supports array of values separated by comma or specified via multiple flags.
@@ -931,31 +934,31 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -syslog.mtlsCAFile array
         Optional path to TLS Root CA for verifying client certificates at the corresponding -syslog.listenAddr.tcp when the corresponding -syslog.mtls is enabled. By default the host system TLS Root CA is used for client certificate verification. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#mtls . This flag is available only in Enterprise binaries. See https://docs.victoriametrics.com/victoriametrics/enterprise/
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.streamFields.tcp array
         Fields to use as log stream labels for logs ingested via the corresponding -syslog.listenAddr.tcp. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#stream-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.streamFields.udp array
         Fields to use as log stream labels for logs ingested via the corresponding -syslog.listenAddr.udp. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#stream-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.streamFields.unix array
         Fields to use as log stream labels for logs ingested via the corresponding -syslog.listenAddr.unix. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#stream-fields
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.tenantID.tcp array
         TenantID for logs ingested via the corresponding -syslog.listenAddr.tcp. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#multitenancy
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.tenantID.udp array
         TenantID for logs ingested via the corresponding -syslog.listenAddr.udp. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#multitenancy
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.tenantID.unix array
         TenantID for logs ingested via the corresponding -syslog.listenAddr.unix. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#multitenancy
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.timezone string
         Timezone to use when parsing timestamps in RFC3164 syslog messages. Timezone must be a valid IANA Time Zone. For example: America/New_York, Europe/Berlin, Etc/GMT+3 . See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/ (default "Local")
   -syslog.tls array
@@ -965,15 +968,15 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -syslog.tlsCertFile array
         Path to file with TLS certificate for the corresponding -syslog.listenAddr.tcp if the corresponding -syslog.tls is set. Prefer ECDSA certs instead of RSA certs as RSA certs are slower. The provided certificate file is automatically re-read every second, so it can be dynamically updated. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#security
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.tlsCipherSuites array
         Optional list of TLS cipher suites for -syslog.listenAddr.tcp if -syslog.tls is set. See the list of supported cipher suites at https://pkg.go.dev/crypto/tls#pkg-constants . See also https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#security
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.tlsKeyFile array
         Path to file with TLS key for the corresponding -syslog.listenAddr.tcp if the corresponding -syslog.tls is set. The provided key file is automatically re-read every second, so it can be dynamically updated. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#security
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -syslog.tlsMinVersion string
         The minimum TLS version to use for -syslog.listenAddr.tcp if -syslog.tls is set. Supported values: TLS10, TLS11, TLS12, TLS13. See https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/#security (default "TLS13")
   -syslog.useLocalTimestamp.tcp array
@@ -1011,23 +1014,23 @@ Pass `-help` to VictoriaLogs in order to see the list of supported command-line 
   -tlsAutocertHosts array
         Optional hostnames for automatic issuing of Let's Encrypt TLS certificates. These hostnames must be reachable at -httpListenAddr . The -httpListenAddr must listen tcp port 443 . The -tlsAutocertHosts overrides -tlsCertFile and -tlsKeyFile . See also -tlsAutocertEmail and -tlsAutocertCacheDir . This flag is available only in Enterprise binaries. See https://docs.victoriametrics.com/victoriametrics/enterprise/
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -tlsCertFile array
         Path to file with TLS certificate for the corresponding -httpListenAddr if -tls is set. Prefer ECDSA certs instead of RSA certs as RSA certs are slower. The provided certificate file is automatically re-read every second, so it can be dynamically updated. See also -tlsAutocertHosts
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -tlsCipherSuites array
         Optional list of TLS cipher suites for incoming requests over HTTPS if -tls is set. See the list of supported cipher suites at https://pkg.go.dev/crypto/tls#pkg-constants
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -tlsKeyFile array
         Path to file with TLS key for the corresponding -httpListenAddr if -tls is set. The provided key file is automatically re-read every second, so it can be dynamically updated. See also -tlsAutocertHosts
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -tlsMinVersion array
         Optional minimum TLS version to use for the corresponding -httpListenAddr if -tls is set. Supported values: TLS10, TLS11, TLS12, TLS13
         Supports an array of values separated by comma or specified via multiple flags.
-        Value can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
+        Each array item can contain comma inside single-quoted or double-quoted string, {}, [] and () braces.
   -version
         Show VictoriaMetrics version
 ```

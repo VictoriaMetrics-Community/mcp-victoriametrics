@@ -17,7 +17,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.1.2-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-collector%2Fchangelog%2F%23012)
+![Version](https://img.shields.io/badge/0.1.4-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-logs-collector%2Fchangelog%2F%23014)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-logs-collector)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -362,36 +362,6 @@ Change the values according to the need of the environment in ``victoria-logs-co
       <td><em><code>(list)</code></em><p>Image pull secrets, that can be shared across multiple helm charts</p>
 </td>
     </tr>
-    <tr id="image-pullpolicy">
-      <td><a href="#image-pullpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">image.pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>Image pull policy</p>
-</td>
-    </tr>
-    <tr id="image-registry">
-      <td><a href="#image-registry"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">image.registry</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>Image registry</p>
-</td>
-    </tr>
-    <tr id="image-repository">
-      <td><a href="#image-repository"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">image.repository</span><span class="p">:</span><span class="w"> </span><span class="l">victoriametrics/vlagent</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>Image repository</p>
-</td>
-    </tr>
-    <tr id="image-tag">
-      <td><a href="#image-tag"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">image.tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>Image tag, set to <code>Chart.AppVersion</code> by default</p>
-</td>
-    </tr>
-    <tr id="image-variant">
-      <td><a href="#image-variant"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">image.variant</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>Variant of the image to use. e.g. enterprise, scratch</p>
-</td>
-    </tr>
     <tr id="msgfield">
       <td><a href="#msgfield"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">msgField</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">message</span><span class="w">
@@ -404,12 +374,6 @@ Change the values according to the need of the environment in ``victoria-logs-co
       <td><a href="#nameoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">nameOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Override chart name</p>
-</td>
-    </tr>
-    <tr id="native">
-      <td><a href="#native"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">native</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(bool)</code></em><p>Enable VLAgent logs collection</p>
 </td>
     </tr>
     <tr id="nodeselector">
@@ -492,15 +456,6 @@ Change the values according to the need of the environment in ``victoria-logs-co
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Service account is needed to enrich logs with pod metadata using Kubernetes API</p>
-</td>
-    </tr>
-    <tr id="streamfield">
-      <td><a href="#streamfield"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">streamField</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">kubernetes.pod_name</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">kubernetes.container_name</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">kubernetes.pod_namespace</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(list)</code></em><p>List of fields to be used as <code>_stream</code> field. See <a href="https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields" target="_blank">https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields</a> for more details</p>
 </td>
     </tr>
     <tr id="timefield">
