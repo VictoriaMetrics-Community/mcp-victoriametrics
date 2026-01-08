@@ -65,3 +65,39 @@ func New(ms *metrics.Set) *server.Hooks {
 
 	return hooks
 }
+
+func Merge(hooksList ...*server.Hooks) *server.Hooks {
+	combined := &server.Hooks{}
+	for _, h := range hooksList {
+		if h == nil {
+			continue
+		}
+		combined.OnRegisterSession = append(combined.OnRegisterSession, h.OnRegisterSession...)
+		combined.OnUnregisterSession = append(combined.OnUnregisterSession, h.OnUnregisterSession...)
+		combined.OnBeforeAny = append(combined.OnBeforeAny, h.OnBeforeAny...)
+		combined.OnSuccess = append(combined.OnSuccess, h.OnSuccess...)
+		combined.OnError = append(combined.OnError, h.OnError...)
+		combined.OnRequestInitialization = append(combined.OnRequestInitialization, h.OnRequestInitialization...)
+		combined.OnBeforeInitialize = append(combined.OnBeforeInitialize, h.OnBeforeInitialize...)
+		combined.OnAfterInitialize = append(combined.OnAfterInitialize, h.OnAfterInitialize...)
+		combined.OnBeforePing = append(combined.OnBeforePing, h.OnBeforePing...)
+		combined.OnAfterPing = append(combined.OnAfterPing, h.OnAfterPing...)
+		combined.OnBeforeSetLevel = append(combined.OnBeforeSetLevel, h.OnBeforeSetLevel...)
+		combined.OnAfterSetLevel = append(combined.OnAfterSetLevel, h.OnAfterSetLevel...)
+		combined.OnBeforeListResources = append(combined.OnBeforeListResources, h.OnBeforeListResources...)
+		combined.OnAfterListResources = append(combined.OnAfterListResources, h.OnAfterListResources...)
+		combined.OnBeforeListResourceTemplates = append(combined.OnBeforeListResourceTemplates, h.OnBeforeListResourceTemplates...)
+		combined.OnAfterListResourceTemplates = append(combined.OnAfterListResourceTemplates, h.OnAfterListResourceTemplates...)
+		combined.OnBeforeReadResource = append(combined.OnBeforeReadResource, h.OnBeforeReadResource...)
+		combined.OnAfterReadResource = append(combined.OnAfterReadResource, h.OnAfterReadResource...)
+		combined.OnBeforeListPrompts = append(combined.OnBeforeListPrompts, h.OnBeforeListPrompts...)
+		combined.OnAfterListPrompts = append(combined.OnAfterListPrompts, h.OnAfterListPrompts...)
+		combined.OnBeforeGetPrompt = append(combined.OnBeforeGetPrompt, h.OnBeforeGetPrompt...)
+		combined.OnAfterGetPrompt = append(combined.OnAfterGetPrompt, h.OnAfterGetPrompt...)
+		combined.OnBeforeListTools = append(combined.OnBeforeListTools, h.OnBeforeListTools...)
+		combined.OnAfterListTools = append(combined.OnAfterListTools, h.OnAfterListTools...)
+		combined.OnBeforeCallTool = append(combined.OnBeforeCallTool, h.OnBeforeCallTool...)
+		combined.OnAfterCallTool = append(combined.OnAfterCallTool, h.OnAfterCallTool...)
+	}
+	return combined
+}

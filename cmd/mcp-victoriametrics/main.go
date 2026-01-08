@@ -19,6 +19,7 @@ import (
 
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/hooks"
+	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/logging"
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/prompts"
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/resources"
 	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/tools"
@@ -42,11 +43,35 @@ func main() {
 		return
 	}
 
-	if !c.IsStdio() {
+	logger, err := logging.New(logging.Config{
+		Enabled: c.LogEnabled(),
+		Format:  c.LogFormat(),
+		Level:   c.LogLevel(),
+		File:    c.LogFile(),
+	})
+
+	if err != nil {
+		log.Fatalf("Failed to initialize logger: %v", err)
+	}
+
+	if logger.IsEnabled() {
+		logger.Info("Starting mcp-victoriametrics",
+			"version", version,
+			"date", date,
+			"mode", c.ServerMode(),
+			"addr", c.ListenAddr(),
+		)
+	} else if !c.IsStdio() {
 		log.Printf("Starting mcp-victoriametrics version %s (date: %s)", version, date)
 	}
 
 	ms := metrics.NewSet()
+
+	// Combine metrics and logging hooks
+	metricsHooks := hooks.New(ms)
+	loggingHooks := logger.NewHooks()
+	combinedHooks := hooks.Merge(metricsHooks, loggingHooks)
+
 	s := server.NewMCPServer(
 		"VictoriaMetrics",
 		fmt.Sprintf("v%s (date: %s)", version, date),
@@ -55,7 +80,7 @@ func main() {
 		server.WithToolCapabilities(false),
 		server.WithResourceCapabilities(false, false),
 		server.WithPromptCapabilities(false),
-		server.WithHooks(hooks.New(ms)),
+		server.WithHooks(combinedHooks),
 		server.WithInstructions(`
 You are Virtual Assistant, a tool for interacting with VictoriaMetrics API and documentation in different tasks related to monitoring and observability.
 
@@ -146,23 +171,38 @@ Try not to second guess information - if you don't know something or lack inform
 
 	switch c.ServerMode() {
 	case "sse":
-		log.Printf("Starting server in SSE mode on %s", c.ListenAddr())
+		if logger.IsEnabled() {
+			logger.Info("Starting server in SSE mode", "addr", c.ListenAddr())
+		} else {
+			log.Printf("Starting server in SSE mode on %s", c.ListenAddr())
+		}
 		srv := server.NewSSEServer(s)
 		mux.Handle(srv.CompleteSsePath(), srv.SSEHandler())
 		mux.Handle(srv.CompleteMessagePath(), srv.MessageHandler())
 	case "http":
-		log.Printf("Starting server in HTTP mode on %s", c.ListenAddr())
+		if logger.IsEnabled() {
+			logger.Info("Starting server in HTTP mode", "addr", c.ListenAddr())
+		} else {
+			log.Printf("Starting server in HTTP mode on %s", c.ListenAddr())
+		}
 		heartBeatOption := server.WithHeartbeatInterval(c.HeartbeatInterval())
-		srv := server.NewStreamableHTTPServer(s, heartBeatOption)
+		loggerOption := server.WithLogger(logging.NewMCPAdapter(logger))
+		srv := server.NewStreamableHTTPServer(s, heartBeatOption, loggerOption)
 		mux.Handle("/mcp", srv)
 	default:
 		log.Fatalf("Unknown server mode: %s", c.ServerMode())
 	}
 
+	// Apply logging middleware if enabled
+	var handler http.Handler = mux
+	if logger.IsEnabled() {
+		handler = logger.Middleware(mux)
+	}
+
 	ongoingCtx, stopOngoingGracefully := context.WithCancel(context.Background())
 	hs := &http.Server{
 		Addr:    c.ListenAddr(),
-		Handler: mux,
+		Handler: handler,
 		BaseContext: func(_ net.Listener) context.Context {
 			return ongoingCtx
 		},
