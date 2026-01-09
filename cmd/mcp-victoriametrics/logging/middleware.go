@@ -25,6 +25,13 @@ func (rw *responseWriter) Write(b []byte) (int, error) {
 	return size, err
 }
 
+// Flush implements http.Flusher interface for SSE support
+func (rw *responseWriter) Flush() {
+	if flusher, ok := rw.ResponseWriter.(http.Flusher); ok {
+		flusher.Flush()
+	}
+}
+
 // Middleware creates HTTP logging middleware
 func (l *Logger) Middleware(next http.Handler) http.Handler {
 	if !l.enabled {
@@ -38,6 +45,7 @@ func (l *Logger) Middleware(next http.Handler) http.Handler {
 		requestID := generateRequestID()
 
 		// Extract session ID from header or query param
+		// session id can be empty if not provided
 		sessionID := r.Header.Get("Mcp-Session-Id")
 		if sessionID == "" {
 			sessionID = r.URL.Query().Get("sessionId")

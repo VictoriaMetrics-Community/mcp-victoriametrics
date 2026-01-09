@@ -39,7 +39,7 @@ const (
 func main() {
 	c, err := config.InitConfig()
 	if err != nil {
-		fmt.Printf("Error initializing config: %v\n", err)
+		log.Fatalf("Error initializing config: %v", err)
 		return
 	}
 
@@ -186,7 +186,7 @@ Try not to second guess information - if you don't know something or lack inform
 			log.Printf("Starting server in HTTP mode on %s", c.ListenAddr())
 		}
 		heartBeatOption := server.WithHeartbeatInterval(c.HeartbeatInterval())
-		loggerOption := server.WithLogger(logging.NewMCPAdapter(logger))
+		loggerOption := server.WithLogger(logging.NewMCPLoggerAdapter(logger))
 		srv := server.NewStreamableHTTPServer(s, heartBeatOption, loggerOption)
 		mux.Handle("/mcp", srv)
 	default:

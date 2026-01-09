@@ -14,8 +14,8 @@ type MCPLoggerAdapter struct {
 	logger *Logger
 }
 
-// NewMCPAdapter creates a new adapter for mcp-go util.Logger interface
-func NewMCPAdapter(l *Logger) *MCPLoggerAdapter {
+// NewMCPLoggerAdapter creates a new adapter for mcp-go util.Logger interface
+func NewMCPLoggerAdapter(l *Logger) *MCPLoggerAdapter {
 	return &MCPLoggerAdapter{logger: l}
 }
 

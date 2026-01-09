@@ -2,6 +2,7 @@ package logging
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -33,7 +34,7 @@ func (l *Logger) NewHooks() *server.Hooks {
 			"request_id", id,
 			"session_id", sessionID,
 			"method", string(method),
-			"message", message,
+			"message", toJSON(message),
 		)
 	})
 
@@ -43,8 +44,8 @@ func (l *Logger) NewHooks() *server.Hooks {
 			"request_id", id,
 			"session_id", sessionID,
 			"method", string(method),
-			"message", message,
-			"result", result,
+			"message", toJSON(message),
+			"result", toJSON(result),
 		)
 	})
 
@@ -54,7 +55,7 @@ func (l *Logger) NewHooks() *server.Hooks {
 			"request_id", id,
 			"session_id", sessionID,
 			"method", string(method),
-			"message", message,
+			"message", toJSON(message),
 			"error", err.Error(),
 		)
 	})
@@ -86,4 +87,16 @@ func extractSessionID(ctx context.Context) string {
 		return session.SessionID()
 	}
 	return ""
+}
+
+// toJSON converts any value to JSON string for logging
+func toJSON(v any) string {
+	if v == nil {
+		return ""
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		return ""
+	}
+	return string(b)
 }
