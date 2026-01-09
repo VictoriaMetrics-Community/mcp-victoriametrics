@@ -180,14 +180,10 @@ Try not to second guess information - if you don't know something or lack inform
 		os.Exit(1)
 	}
 
-	var handler http.Handler = mux
-	// Apply logging middleware
-	handler = logger.Middleware(mux)
-
 	ongoingCtx, stopOngoingGracefully := context.WithCancel(context.Background())
 	hs := &http.Server{
 		Addr:    c.ListenAddr(),
-		Handler: handler,
+		Handler: logger.Middleware(mux),
 		BaseContext: func(_ net.Listener) context.Context {
 			return ongoingCtx
 		},
