@@ -1,6 +1,7 @@
 package logging
 
 import (
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
@@ -70,6 +71,33 @@ func (l *Logger) Close() error {
 // IsEnabled returns true if logging is enabled
 func (l *Logger) IsEnabled() bool {
 	return l.enabled
+}
+
+// Fatal logs an error message and exits the program.
+// Always outputs to stderr even when logging is disabled.
+func (l *Logger) Fatal(msg string, args ...any) {
+	if l.enabled {
+		l.Error(msg, args...)
+	} else {
+		_, _ = fmt.Fprint(os.Stderr, "FATAL: "+msg)
+		for i := 0; i < len(args); i += 2 {
+			if i+1 < len(args) {
+				_, _ = fmt.Fprintf(os.Stderr, " %v=%v", args[i], args[i+1])
+			}
+		}
+		_, _ = fmt.Fprintln(os.Stderr)
+	}
+	os.Exit(1)
+}
+
+// InfoOrPrint logs with structured format if enabled, otherwise prints plain message to stderr.
+// Use this for important messages that should always be visible (like startup info).
+func (l *Logger) InfoOrPrint(msg string, args ...any) {
+	if l.enabled {
+		l.Info(msg, args...)
+	} else {
+		_, _ = fmt.Fprintln(os.Stderr, msg)
+	}
 }
 
 // parseLevel converts string level to slog.Level

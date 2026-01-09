@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"net"
 	"net/http"
 	"os"
@@ -39,8 +38,8 @@ const (
 func main() {
 	c, err := config.InitConfig()
 	if err != nil {
-		log.Fatalf("Error initializing config: %v", err)
-		return
+		_, _ = fmt.Fprintf(os.Stderr, "FATAL: Error initializing config: %v\n", err)
+		os.Exit(1)
 	}
 
 	logger, err := logging.New(logging.Config{
@@ -49,20 +48,18 @@ func main() {
 		Level:   c.LogLevel(),
 		File:    c.LogFile(),
 	})
-
 	if err != nil {
-		log.Fatalf("Failed to initialize logger: %v", err)
+		_, _ = fmt.Fprintf(os.Stderr, "FATAL: Failed to initialize logger: %v\n", err)
+		os.Exit(1)
 	}
 
-	if logger.IsEnabled() {
-		logger.Info("Starting mcp-victoriametrics",
+	if !c.IsStdio() || logger.IsEnabled() {
+		logger.InfoOrPrint("Starting mcp-victoriametrics",
 			"version", version,
 			"date", date,
 			"mode", c.ServerMode(),
 			"addr", c.ListenAddr(),
 		)
-	} else if !c.IsStdio() {
-		log.Printf("Starting mcp-victoriametrics version %s (date: %s)", version, date)
 	}
 
 	ms := metrics.NewSet()
@@ -138,7 +135,7 @@ Try not to second guess information - if you don't know something or lack inform
 
 	if c.IsStdio() {
 		if err := server.ServeStdio(s); err != nil {
-			log.Fatalf("failed to start server in stdio mode on %s: %v", c.ListenAddr(), err)
+			logger.Fatal("failed to start server in stdio mode", "addr", c.ListenAddr(), "error", err)
 		}
 		return
 	}
@@ -171,26 +168,18 @@ Try not to second guess information - if you don't know something or lack inform
 
 	switch c.ServerMode() {
 	case "sse":
-		if logger.IsEnabled() {
-			logger.Info("Starting server in SSE mode", "addr", c.ListenAddr())
-		} else {
-			log.Printf("Starting server in SSE mode on %s", c.ListenAddr())
-		}
+		logger.InfoOrPrint("Starting server in SSE mode", "addr", c.ListenAddr())
 		srv := server.NewSSEServer(s)
 		mux.Handle(srv.CompleteSsePath(), srv.SSEHandler())
 		mux.Handle(srv.CompleteMessagePath(), srv.MessageHandler())
 	case "http":
-		if logger.IsEnabled() {
-			logger.Info("Starting server in HTTP mode", "addr", c.ListenAddr())
-		} else {
-			log.Printf("Starting server in HTTP mode on %s", c.ListenAddr())
-		}
+		logger.InfoOrPrint("Starting server in HTTP mode", "addr", c.ListenAddr())
 		heartBeatOption := server.WithHeartbeatInterval(c.HeartbeatInterval())
 		loggerOption := server.WithLogger(logging.NewMCPLoggerAdapter(logger))
 		srv := server.NewStreamableHTTPServer(s, heartBeatOption, loggerOption)
 		mux.Handle("/mcp", srv)
 	default:
-		log.Fatalf("Unknown server mode: %s", c.ServerMode())
+		logger.Fatal("Unknown server mode", "mode", c.ServerMode())
 	}
 
 	// Apply logging middleware if enabled
@@ -210,13 +199,13 @@ Try not to second guess information - if you don't know something or lack inform
 
 	listener, err := net.Listen("tcp", c.ListenAddr())
 	if err != nil {
-		log.Fatalf("Failed to listen on %s: %v", c.ListenAddr(), err)
+		logger.Fatal("Failed to listen", "addr", c.ListenAddr(), "error", err)
 	}
-	log.Printf("Server is listening on %s", c.ListenAddr())
+	logger.InfoOrPrint("Server is listening", "addr", c.ListenAddr())
 
 	go func() {
 		if err := hs.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("Failed to start server: %v", err)
+			logger.Fatal("Failed to start server", "error", err)
 		}
 	}()
 
@@ -224,20 +213,20 @@ Try not to second guess information - if you don't know something or lack inform
 	<-rootCtx.Done()
 	stop()
 	isReady.Store(false)
-	log.Println("Received shutdown signal, shutting down.")
+	logger.InfoOrPrint("Received shutdown signal, shutting down.")
 
 	// Give time for readiness check to propagate
 	time.Sleep(_readinessDrainDelay)
-	log.Println("Readiness check propagated, now waiting for ongoing requests to finish.")
+	logger.InfoOrPrint("Readiness check propagated, now waiting for ongoing requests to finish.")
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), _shutdownPeriod)
 	defer cancel()
 	err = hs.Shutdown(shutdownCtx)
 	stopOngoingGracefully()
 	if err != nil {
-		log.Println("Failed to wait for ongoing requests to finish, waiting for forced cancellation.")
+		logger.InfoOrPrint("Failed to wait for ongoing requests to finish, waiting for forced cancellation.")
 		time.Sleep(_shutdownHardPeriod)
 	}
 
-	log.Println("Server stopped.")
+	logger.InfoOrPrint("Server stopped.")
 }
