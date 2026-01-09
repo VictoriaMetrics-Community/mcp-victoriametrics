@@ -70,6 +70,7 @@ func main() {
 		"VictoriaMetrics",
 		fmt.Sprintf("v%s (date: %s)", version, date),
 		server.WithRecovery(),
+		server.WithLogging(),
 		server.WithToolCapabilities(false),
 		server.WithResourceCapabilities(false, false),
 		server.WithPromptCapabilities(false),
