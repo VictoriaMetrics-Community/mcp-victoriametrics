@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"net"
 	"net/http"
 	"os"
@@ -38,8 +39,8 @@ const (
 func main() {
 	c, err := config.InitConfig()
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "FATAL: Error initializing config: %v\n", err)
-		os.Exit(1)
+		log.Fatalf("FATAL: Error initializing config: %v\n", err)
+		return
 	}
 
 	logger, err := logging.New(logging.Config{
@@ -49,8 +50,8 @@ func main() {
 		File:    c.LogFile(),
 	})
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "FATAL: Failed to initialize logger: %v\n", err)
-		os.Exit(1)
+		log.Fatalf("FATAL: Failed to initialize logger: %v\n", err)
+		return
 	}
 
 	if !c.IsStdio() || logger.IsEnabled() {
