@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"log/slog"
 	"net"
 	"net/http"
 	"os"
@@ -43,19 +44,14 @@ func main() {
 		return
 	}
 
-	logger, err := logging.New(logging.Config{
-		Enabled: c.LogEnabled(),
-		Format:  c.LogFormat(),
-		Level:   c.LogLevel(),
-		File:    c.LogFile(),
-	})
+	logger, err := logging.New(c)
 	if err != nil {
 		log.Fatalf("FATAL: Failed to initialize logger: %v\n", err)
 		return
 	}
 
-	if !c.IsStdio() || logger.IsEnabled() {
-		logger.InfoOrPrint("Starting mcp-victoriametrics",
+	if !c.IsStdio() {
+		slog.Info("Starting mcp-victoriametrics",
 			"version", version,
 			"date", date,
 			"mode", c.ServerMode(),
@@ -67,14 +63,13 @@ func main() {
 
 	// Combine metrics and logging hooks
 	metricsHooks := hooks.New(ms)
-	loggingHooks := logger.NewHooks()
+	loggingHooks := hooks.NewLoggerHooks()
 	combinedHooks := hooks.Merge(metricsHooks, loggingHooks)
 
 	s := server.NewMCPServer(
 		"VictoriaMetrics",
 		fmt.Sprintf("v%s (date: %s)", version, date),
 		server.WithRecovery(),
-		server.WithLogging(),
 		server.WithToolCapabilities(false),
 		server.WithResourceCapabilities(false, false),
 		server.WithPromptCapabilities(false),
@@ -135,8 +130,9 @@ Try not to second guess information - if you don't know something or lack inform
 	prompts.RegisterPromptRarelyUsedCardinalMetrics(s, c)
 
 	if c.IsStdio() {
-		if err := server.ServeStdio(s); err != nil {
-			logger.Fatal("failed to start server in stdio mode", "addr", c.ListenAddr(), "error", err)
+		if err := server.ServeStdio(s, server.WithErrorLogger(logger.Logger)); err != nil {
+			slog.Error("failed to start server in stdio mode", "addr", c.ListenAddr(), "error", err)
+			os.Exit(1)
 		}
 		return
 	}
@@ -169,25 +165,24 @@ Try not to second guess information - if you don't know something or lack inform
 
 	switch c.ServerMode() {
 	case "sse":
-		logger.InfoOrPrint("Starting server in SSE mode", "addr", c.ListenAddr())
+		slog.Info("Starting server in SSE mode", "addr", c.ListenAddr())
 		srv := server.NewSSEServer(s)
 		mux.Handle(srv.CompleteSsePath(), srv.SSEHandler())
 		mux.Handle(srv.CompleteMessagePath(), srv.MessageHandler())
 	case "http":
-		logger.InfoOrPrint("Starting server in HTTP mode", "addr", c.ListenAddr())
+		slog.Info("Starting server in HTTP mode", "addr", c.ListenAddr())
 		heartBeatOption := server.WithHeartbeatInterval(c.HeartbeatInterval())
-		loggerOption := server.WithLogger(logging.NewMCPLoggerAdapter(logger))
+		loggerOption := server.WithLogger(logger)
 		srv := server.NewStreamableHTTPServer(s, heartBeatOption, loggerOption)
 		mux.Handle("/mcp", srv)
 	default:
-		logger.Fatal("Unknown server mode", "mode", c.ServerMode())
+		slog.Error("Unknown server mode", "mode", c.ServerMode())
+		os.Exit(1)
 	}
 
-	// Apply logging middleware if enabled
 	var handler http.Handler = mux
-	if logger.IsEnabled() {
-		handler = logger.Middleware(mux)
-	}
+	// Apply logging middleware
+	handler = logger.Middleware(mux)
 
 	ongoingCtx, stopOngoingGracefully := context.WithCancel(context.Background())
 	hs := &http.Server{
@@ -200,13 +195,15 @@ Try not to second guess information - if you don't know something or lack inform
 
 	listener, err := net.Listen("tcp", c.ListenAddr())
 	if err != nil {
-		logger.Fatal("Failed to listen", "addr", c.ListenAddr(), "error", err)
+		slog.Error("Failed to listen", "addr", c.ListenAddr(), "error", err)
+		os.Exit(1)
 	}
-	logger.InfoOrPrint("Server is listening", "addr", c.ListenAddr())
+	slog.Info("Server is listening", "addr", c.ListenAddr())
 
 	go func() {
 		if err := hs.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			logger.Fatal("Failed to start server", "error", err)
+			slog.Error("Failed to start server", "error", err)
+			os.Exit(1)
 		}
 	}()
 
@@ -214,20 +211,20 @@ Try not to second guess information - if you don't know something or lack inform
 	<-rootCtx.Done()
 	stop()
 	isReady.Store(false)
-	logger.InfoOrPrint("Received shutdown signal, shutting down.")
+	slog.Info("Received shutdown signal, shutting down.")
 
 	// Give time for readiness check to propagate
 	time.Sleep(_readinessDrainDelay)
-	logger.InfoOrPrint("Readiness check propagated, now waiting for ongoing requests to finish.")
+	slog.Info("Readiness check propagated, now waiting for ongoing requests to finish.")
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), _shutdownPeriod)
 	defer cancel()
 	err = hs.Shutdown(shutdownCtx)
 	stopOngoingGracefully()
 	if err != nil {
-		logger.InfoOrPrint("Failed to wait for ongoing requests to finish, waiting for forced cancellation.")
+		slog.Warn("Failed to wait for ongoing requests to finish, waiting for forced cancellation.")
 		time.Sleep(_shutdownHardPeriod)
 	}
 
-	logger.InfoOrPrint("Server stopped.")
+	slog.Info("Server stopped.")
 }

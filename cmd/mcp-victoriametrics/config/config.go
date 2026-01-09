@@ -28,10 +28,8 @@ type Config struct {
 	customHeaders     map[string]string
 
 	// Logging configuration
-	logEnabled bool
-	logFormat  string
-	logLevel   string
-	logFile    string
+	logFormat string
+	logLevel  string
 
 	entryPointURL *url.URL
 	vmc           *vmcloud.VMCloudAPIClient
@@ -93,16 +91,6 @@ func InitConfig() (*Config, error) {
 		}
 	}
 
-	logEnabled := false
-	logEnabledStr := os.Getenv("MCP_LOG_ENABLED")
-	if logEnabledStr != "" {
-		var err error
-		logEnabled, err = strconv.ParseBool(logEnabledStr)
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse MCP_LOG_ENABLED: %w", err)
-		}
-	}
-
 	logFormat := strings.ToLower(os.Getenv("MCP_LOG_FORMAT"))
 	if logFormat == "" {
 		logFormat = "text"
@@ -118,9 +106,6 @@ func InitConfig() (*Config, error) {
 	if logLevel != "debug" && logLevel != "info" && logLevel != "warn" && logLevel != "error" {
 		return nil, fmt.Errorf("MCP_LOG_LEVEL must be 'debug', 'info', 'warn' or 'error'")
 	}
-
-	logFile := os.Getenv("MCP_LOG_FILE")
-
 	result := &Config{
 		serverMode:        strings.ToLower(os.Getenv("MCP_SERVER_MODE")),
 		listenAddr:        os.Getenv("MCP_LISTEN_ADDR"),
@@ -132,10 +117,8 @@ func InitConfig() (*Config, error) {
 		heartbeatInterval: heartbeatInterval,
 		disableResources:  disableResources,
 		customHeaders:     customHeadersMap,
-		logEnabled:        logEnabled,
 		logFormat:         logFormat,
 		logLevel:          logLevel,
-		logFile:           logFile,
 	}
 	// Left for backward compatibility
 	if result.listenAddr == "" {
@@ -240,18 +223,10 @@ func (c *Config) CustomHeaders() map[string]string {
 	return c.customHeaders
 }
 
-func (c *Config) LogEnabled() bool {
-	return c.logEnabled
-}
-
 func (c *Config) LogFormat() string {
 	return c.logFormat
 }
 
 func (c *Config) LogLevel() string {
 	return c.logLevel
-}
-
-func (c *Config) LogFile() string {
-	return c.logFile
 }

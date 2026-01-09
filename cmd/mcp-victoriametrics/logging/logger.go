@@ -2,102 +2,50 @@ package logging
 
 import (
 	"fmt"
-	"io"
+	"log"
 	"log/slog"
 	"os"
+
+	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 )
 
-// Logger wraps slog.Logger with enabled flag for conditional logging
+// Logger wraps log.Logger and implements util.Logger interface
 type Logger struct {
-	*slog.Logger
-	enabled bool
-	file    *os.File
-}
-
-// Config holds logging configuration
-type Config struct {
-	Enabled bool
-	Format  string // "text" or "json"
-	Level   string // "debug", "info", "warn", "error"
-	File    string // path to log file (empty = stderr)
+	*log.Logger
 }
 
 // New creates a new Logger based on the provided configuration
-func New(cfg Config) (*Logger, error) {
-	if !cfg.Enabled {
-		return &Logger{
-			Logger:  slog.New(slog.NewTextHandler(io.Discard, nil)),
-			enabled: false,
-		}, nil
+func New(cfg *config.Config) (*Logger, error) {
+	level := &slog.LevelVar{}
+	level.Set(parseLevel(cfg.LogLevel()))
+	logWriter := os.Stderr
+	log.SetOutput(logWriter)
+
+	var logHandler slog.Handler
+	switch cfg.LogFormat() {
+	case "text":
+		logHandler = slog.NewTextHandler(logWriter, &slog.HandlerOptions{Level: level})
+	case "json":
+		logHandler = slog.NewJSONHandler(logWriter, &slog.HandlerOptions{Level: level})
+	default:
+		return nil, fmt.Errorf("unknown log format: %s", cfg.LogFormat())
 	}
 
-	var output io.Writer = os.Stderr
-	var file *os.File
+	slogger := slog.New(logHandler)
+	logger := slog.NewLogLogger(logHandler, level.Level())
+	slog.SetDefault(slogger)
 
-	if cfg.File != "" {
-		f, err := os.OpenFile(cfg.File, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
-		if err != nil {
-			return nil, err
-		}
-		output = f
-		file = f
-	}
-
-	level := parseLevel(cfg.Level)
-	opts := &slog.HandlerOptions{Level: level}
-
-	var handler slog.Handler
-	if cfg.Format == "json" {
-		handler = slog.NewJSONHandler(output, opts)
-	} else {
-		handler = slog.NewTextHandler(output, opts)
-	}
-
-	return &Logger{
-		Logger:  slog.New(handler),
-		enabled: true,
-		file:    file,
-	}, nil
+	return &Logger{Logger: logger}, nil
 }
 
-// Close closes the log file if it was opened
-func (l *Logger) Close() error {
-	if l.file != nil {
-		return l.file.Close()
-	}
-	return nil
+// Infof implements util.Logger interface
+func (l *Logger) Infof(format string, v ...any) {
+	slog.Info(fmt.Sprintf(format, v...))
 }
 
-// IsEnabled returns true if logging is enabled
-func (l *Logger) IsEnabled() bool {
-	return l.enabled
-}
-
-// Fatal logs an error message and exits the program.
-// Always outputs to stderr even when logging is disabled.
-func (l *Logger) Fatal(msg string, args ...any) {
-	if l.enabled {
-		l.Error(msg, args...)
-	} else {
-		_, _ = fmt.Fprint(os.Stderr, "FATAL: "+msg)
-		for i := 0; i < len(args); i += 2 {
-			if i+1 < len(args) {
-				_, _ = fmt.Fprintf(os.Stderr, " %v=%v", args[i], args[i+1])
-			}
-		}
-		_, _ = fmt.Fprintln(os.Stderr)
-	}
-	os.Exit(1)
-}
-
-// InfoOrPrint logs with structured format if enabled, otherwise prints plain message to stderr.
-// Use this for important messages that should always be visible (like startup info).
-func (l *Logger) InfoOrPrint(msg string, args ...any) {
-	if l.enabled {
-		l.Info(msg, args...)
-	} else {
-		_, _ = fmt.Fprintln(os.Stderr, msg)
-	}
+// Errorf implements util.Logger interface
+func (l *Logger) Errorf(format string, v ...any) {
+	slog.Error(fmt.Sprintf(format, v...))
 }
 
 // parseLevel converts string level to slog.Level

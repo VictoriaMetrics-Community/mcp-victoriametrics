@@ -1,10 +1,12 @@
 package logging
 
 import (
-	"crypto/rand"
-	"encoding/hex"
+	"log/slog"
 	"net/http"
+	"strings"
 	"time"
+
+	"github.com/mark3labs/mcp-go/server"
 )
 
 // responseWriter wraps http.ResponseWriter to capture status code and size
@@ -34,26 +36,25 @@ func (rw *responseWriter) Flush() {
 
 // Middleware creates HTTP logging middleware
 func (l *Logger) Middleware(next http.Handler) http.Handler {
-	if !l.enabled {
-		return next
-	}
-
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
+		// Skip noisy endpoints
+		if strings.HasPrefix(r.URL.Path, "/health") || r.URL.Path == "/metrics" {
+			next.ServeHTTP(w, r)
+			return
+		}
 
-		// Generate request ID
-		requestID := generateRequestID()
+		start := time.Now()
 
 		// Extract session ID from header or query param
 		// session id can be empty if not provided
-		sessionID := r.Header.Get("Mcp-Session-Id")
-		if sessionID == "" {
-			sessionID = r.URL.Query().Get("sessionId")
+		var sessionID string
+		clientSession := server.ClientSessionFromContext(r.Context())
+		if clientSession != nil {
+			sessionID = clientSession.SessionID()
 		}
 
 		// Log request start
-		l.Info("HTTP request started",
-			"request_id", requestID,
+		slog.Info("HTTP request started",
 			"session_id", sessionID,
 			"method", r.Method,
 			"path", r.URL.Path,
@@ -71,8 +72,7 @@ func (l *Logger) Middleware(next http.Handler) http.Handler {
 
 		// Log request completion
 		duration := time.Since(start)
-		l.Info("HTTP request completed",
-			"request_id", requestID,
+		slog.Info("HTTP request completed",
 			"session_id", sessionID,
 			"method", r.Method,
 			"path", r.URL.Path,
@@ -81,11 +81,4 @@ func (l *Logger) Middleware(next http.Handler) http.Handler {
 			"duration_ms", duration.Milliseconds(),
 		)
 	})
-}
-
-// generateRequestID generates a random request ID
-func generateRequestID() string {
-	b := make([]byte, 8)
-	_, _ = rand.Read(b)
-	return hex.EncodeToString(b)
 }
