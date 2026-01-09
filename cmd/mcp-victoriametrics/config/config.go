@@ -27,6 +27,10 @@ type Config struct {
 	disableResources  bool
 	customHeaders     map[string]string
 
+	// Logging configuration
+	logFormat string
+	logLevel  string
+
 	entryPointURL *url.URL
 	vmc           *vmcloud.VMCloudAPIClient
 }
@@ -87,6 +91,21 @@ func InitConfig() (*Config, error) {
 		}
 	}
 
+	logFormat := strings.ToLower(os.Getenv("MCP_LOG_FORMAT"))
+	if logFormat == "" {
+		logFormat = "text"
+	}
+	if logFormat != "text" && logFormat != "json" {
+		return nil, fmt.Errorf("MCP_LOG_FORMAT must be 'text' or 'json'")
+	}
+
+	logLevel := strings.ToLower(os.Getenv("MCP_LOG_LEVEL"))
+	if logLevel == "" {
+		logLevel = "info"
+	}
+	if logLevel != "debug" && logLevel != "info" && logLevel != "warn" && logLevel != "error" {
+		return nil, fmt.Errorf("MCP_LOG_LEVEL must be 'debug', 'info', 'warn' or 'error'")
+	}
 	result := &Config{
 		serverMode:        strings.ToLower(os.Getenv("MCP_SERVER_MODE")),
 		listenAddr:        os.Getenv("MCP_LISTEN_ADDR"),
@@ -98,6 +117,8 @@ func InitConfig() (*Config, error) {
 		heartbeatInterval: heartbeatInterval,
 		disableResources:  disableResources,
 		customHeaders:     customHeadersMap,
+		logFormat:         logFormat,
+		logLevel:          logLevel,
 	}
 	// Left for backward compatibility
 	if result.listenAddr == "" {
@@ -200,4 +221,12 @@ func (c *Config) HeartbeatInterval() time.Duration {
 
 func (c *Config) CustomHeaders() map[string]string {
 	return c.customHeaders
+}
+
+func (c *Config) LogFormat() string {
+	return c.logFormat
+}
+
+func (c *Config) LogLevel() string {
+	return c.logLevel
 }
