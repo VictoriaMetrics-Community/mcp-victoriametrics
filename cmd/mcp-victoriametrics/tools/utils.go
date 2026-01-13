@@ -210,7 +210,7 @@ func getSelectURL(ctx context.Context, cfg *config.Config, tcr mcp.CallToolReque
 		return "", fmt.Errorf("failed to get tenant parameter: %v", err)
 	}
 	if tenant == "" {
-		tenant = "0"
+		tenant = cfg.DefaultTenantID()
 	}
 	args := []string{"select", tenant, "prometheus"}
 	return entrypointURL.JoinPath(append(args, path...)...).String(), nil

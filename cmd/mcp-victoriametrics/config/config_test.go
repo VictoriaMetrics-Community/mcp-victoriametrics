@@ -307,4 +307,36 @@ func TestInitConfig(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("Default tenant ID in cluster mode", func(t *testing.T) {
+		os.Setenv("VM_INSTANCE_ENTRYPOINT", "http://example.com")
+		os.Setenv("VM_INSTANCE_TYPE", "cluster")
+		os.Setenv("VM_DEFAULT_TENANT_ID", "100:200")
+
+		cfg, err := InitConfig()
+
+		if err != nil {
+			t.Fatalf("Expected no error, got: %v", err)
+		}
+
+		if cfg.DefaultTenantID() != "100:200" {
+			t.Errorf("Expected default tenant ID '100:200', got: %s", cfg.DefaultTenantID())
+		}
+	})
+
+	t.Run("Empty default tenant ID (used default 0)", func(t *testing.T) {
+		os.Setenv("VM_INSTANCE_ENTRYPOINT", "http://example.com")
+		os.Setenv("VM_INSTANCE_TYPE", "cluster")
+		os.Setenv("VM_DEFAULT_TENANT_ID", "")
+
+		cfg, err := InitConfig()
+
+		if err != nil {
+			t.Fatalf("Expected no error, got: %v", err)
+		}
+
+		if cfg.DefaultTenantID() == "" {
+			t.Errorf("Expected no default tenant ID, got: %s", cfg.DefaultTenantID())
+		}
+	})
 }

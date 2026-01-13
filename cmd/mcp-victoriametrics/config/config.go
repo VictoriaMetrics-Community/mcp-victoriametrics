@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/VictoriaMetrics/VictoriaMetrics/lib/auth"
 	vmcloud "github.com/VictoriaMetrics/victoriametrics-cloud-api-go/v1"
 )
 
@@ -26,6 +27,7 @@ type Config struct {
 	heartbeatInterval time.Duration
 	disableResources  bool
 	customHeaders     map[string]string
+	defaultTenantID   string
 
 	// Logging configuration
 	logFormat string
@@ -119,6 +121,7 @@ func InitConfig() (*Config, error) {
 		customHeaders:     customHeadersMap,
 		logFormat:         logFormat,
 		logLevel:          logLevel,
+		defaultTenantID:   "0",
 	}
 	// Left for backward compatibility
 	if result.listenAddr == "" {
@@ -158,6 +161,15 @@ func InitConfig() (*Config, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to create VMCloud API client: %w", err)
 		}
+	}
+
+	defaultTenantID := strings.ToLower(os.Getenv("VM_DEFAULT_TENANT_ID"))
+	if defaultTenantID != "" {
+		tenantID, err := auth.NewToken(defaultTenantID)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse VM_DEFAULT_TENANT_ID %q: %w", defaultTenantID, err)
+		}
+		result.defaultTenantID = tenantID.String()
 	}
 
 	return result, nil
@@ -229,4 +241,8 @@ func (c *Config) LogFormat() string {
 
 func (c *Config) LogLevel() string {
 	return c.logLevel
+}
+
+func (c *Config) DefaultTenantID() string {
+	return c.defaultTenantID
 }
