@@ -8,9 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/VictoriaMetrics/VictoriaMetrics/lib/auth"
 	vmcloud "github.com/VictoriaMetrics/victoriametrics-cloud-api-go/v1"
-
-	"github.com/VictoriaMetrics-Community/mcp-victoriametrics/cmd/mcp-victoriametrics/tenant"
 )
 
 const (
@@ -166,7 +165,7 @@ func InitConfig() (*Config, error) {
 
 	defaultTenantID := strings.ToLower(os.Getenv("VM_DEFAULT_TENANT_ID"))
 	if defaultTenantID != "" {
-		tenantID, err := tenant.New(defaultTenantID)
+		tenantID, err := auth.NewToken(defaultTenantID)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse VM_DEFAULT_TENANT_ID %q: %w", defaultTenantID, err)
 		}
