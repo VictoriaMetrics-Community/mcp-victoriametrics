@@ -136,7 +136,8 @@ MCP Server for VictoriaMetrics is configured via environment variables:
 | `VM_INSTANCE_BEARER_TOKEN`               | Authentication token for VictoriaMetrics API                                                                                                                                                                                                                        | No                                     | -                                                                                                 | -                      |
 | `VM_INSTANCE_HEADERS`                    | Custom HTTP headers to send with requests (comma-separated key=value pairs)                                                                                                                                                                                         | No       | -                                                                                                 | -                      |
 | `MCP_PASSTHROUGH_HEADERS`                | HTTP header names to forward from incoming MCP requests to VictoriaMetrics (comma-separated list). Overrides `VM_INSTANCE_HEADERS` on collision. Only applies in `sse`/`http` modes.                                                                                | No | - | - |
-| `VM_DEFAULT_TENANT_ID`                   | Default tenant ID for cluster mode. Format: `accountID` or `accountID:projectID` (32-bit integers). See [VictoriaMetrics cluster docs](https://docs.victoriametrics.com/cluster-victoriametrics/#multitenancy)                                                      | No                                     | `0`                                                                                               | -                      |
+| `VM_DEFAULT_TENANT_ID`                   | Default tenant ID for cluster mode. Format: `accountID` or `accountID:projectID` (32-bit integers) or tenant alias from `VM_TENANTS_FILE`. See [VictoriaMetrics cluster docs](https://docs.victoriametrics.com/cluster-victoriametrics/#multitenancy)            | No                                     | `0`                                                                                               | -                      |
+| `VM_TENANTS_FILE`                        | Path to YAML file with aliases and descriptions of tenants for cluster mode. See [Tenant aliases and descriptions](#tenant-aliases-and-descriptions)                                                                                                               | No                                     | -                                                                                                 | -                      |
 | `VMC_API_KEY`                            | [API key from VictoriaMetrics Cloud Console](https://docs.victoriametrics.com/victoriametrics-cloud/api/)                                                                                                                                                           | No                                     | -                                                                                                 | -                      |
 | `MCP_SERVER_MODE`                        | Server operation mode. See [Modes](#modes) for details.                                                                                                                                                                                                             | No                                     | `stdio`                                                                                           | `stdio`, `sse`, `http` |
 | `MCP_LISTEN_ADDR`                        | Address for SSE or HTTP server to listen on                                                                                                                                                                                                                         | No                                     | `localhost:8080`                                                                                  | -                      |
@@ -188,6 +189,52 @@ export MCP_LISTEN_ADDR="0.0.0.0:8080"
 # Custom headers for authentication (e.g., behind a reverse proxy)
 # Expected syntax is key=value separated by commas
 export VM_INSTANCE_HEADERS="<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+```
+
+### Tenant aliases and descriptions
+
+By default AI assistant sees tenants of the cluster only as IDs like `1:0` and doesn't know what data each of them contains.
+You can describe tenants in a YAML file and pass its path via `VM_TENANTS_FILE` environment variable (cluster mode only):
+
+```yaml
+tenants:
+  - id: "1:0"        # tenant ID in accountID[:projectID] format (required)
+    alias: prod      # short name, which can be used instead of the tenant ID (optional)
+    description: |   # free-form description for AI assistant (optional)
+      Production environment.
+      Label `cluster` contains the name of k8s cluster.
+  - id: "2:0"
+    alias: stage
+    description: Staging environment
+```
+
+With this file:
+
+- descriptions of tenants are added to the MCP server instructions;
+- `tenant` parameter of the tools accepts aliases along with tenant IDs (e.g. `tenant: "stage"`);
+- `tenants` tool returns descriptions of tenants along with the response of `/admin/tenants` API (even if this API isn't available);
+- `VM_DEFAULT_TENANT_ID` can be set to the tenant alias.
+
+Aliases must start with a lowercase letter and contain only lowercase letters, digits, `_` and `-`.
+The file is read at startup, so the server should be restarted to apply changes.
+The file doesn't restrict access: tenants, which aren't described in the file, still can be queried by their IDs.
+
+If tenants are stored in different clusters, you can put [vmauth](https://docs.victoriametrics.com/victoriametrics/vmauth/) in front of them
+and route requests by tenant ID in the request path (`/select/<tenant>/...`).
+
+In Kubernetes the file can be mounted from ConfigMap, for example with the [Helm chart](https://docs.victoriametrics.com/helm/victoria-metrics-mcp/) values:
+
+```yaml
+env:
+  - name: VM_TENANTS_FILE
+    value: /etc/mcp/tenants.yaml
+volumes:
+  - name: tenants
+    configMap:
+      name: mcp-tenants  # ConfigMap with tenants.yaml key
+volumeMounts:
+  - name: tenants
+    mountPath: /etc/mcp
 ```
 
 ## Endpoints
