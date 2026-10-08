@@ -4,17 +4,31 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/VictoriaMetrics/VictoriaMetrics/lib/auth"
 	vmcloud "github.com/VictoriaMetrics/victoriametrics-cloud-api-go/v1"
+	"gopkg.in/yaml.v2"
 )
 
 const (
 	toolsDisabledByDefault = "export,flags,metric_relabel_debug,downsampling_filters_debug,retention_filters_debug,test_rules"
 )
+
+var tenantAliasRegexp = regexp.MustCompile(`^[a-z][a-z0-9_-]*$`)
+
+// Tenant describes the tenant of VictoriaMetrics cluster in VM_TENANTS_FILE
+type Tenant struct {
+	// ID is the tenant ID in accountID:projectID format
+	ID string `yaml:"id"`
+	// Alias is the short name of the tenant (e.g. environment name), which can be used in tools instead of the tenant ID
+	Alias string `yaml:"alias,omitempty"`
+	// Description is the free-form description of the tenant, which helps AI assistant to choose the right tenant
+	Description string `yaml:"description,omitempty"`
+}
 
 type Config struct {
 	serverMode         string
@@ -30,6 +44,7 @@ type Config struct {
 	customHeaders      map[string]string
 	passthroughHeaders []string
 	defaultTenantID    string
+	tenants            []Tenant
 
 	// Logging configuration
 	logFormat string
@@ -182,8 +197,21 @@ func InitConfig() (*Config, error) {
 		}
 	}
 
+	tenantsFile := os.Getenv("VM_TENANTS_FILE")
+	if tenantsFile != "" {
+		if !result.IsCluster() {
+			return nil, fmt.Errorf("VM_TENANTS_FILE can be used only with VM_INSTANCE_TYPE=cluster")
+		}
+		result.tenants, err = loadTenants(tenantsFile)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	defaultTenantID := strings.ToLower(os.Getenv("VM_DEFAULT_TENANT_ID"))
-	if defaultTenantID != "" {
+	if t, ok := result.TenantByAlias(defaultTenantID); ok {
+		result.defaultTenantID = t.ID
+	} else if defaultTenantID != "" {
 		tenantID, err := auth.NewToken(defaultTenantID)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse VM_DEFAULT_TENANT_ID %q: %w", defaultTenantID, err)
@@ -192,6 +220,61 @@ func InitConfig() (*Config, error) {
 	}
 
 	return result, nil
+}
+
+func loadTenants(path string) ([]Tenant, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read VM_TENANTS_FILE: %w", err)
+	}
+	var file struct {
+		Tenants []Tenant `yaml:"tenants"`
+	}
+	if err := yaml.UnmarshalStrict(data, &file); err != nil {
+		return nil, fmt.Errorf("failed to parse VM_TENANTS_FILE %q: %w", path, err)
+	}
+	if len(file.Tenants) == 0 {
+		return nil, fmt.Errorf("VM_TENANTS_FILE %q doesn't contain any tenants", path)
+	}
+
+	ids := make(map[string]bool)
+	aliases := make(map[string]bool)
+	for i := range file.Tenants {
+		t := &file.Tenants[i]
+		if t.ID == "" {
+			return nil, fmt.Errorf("tenant #%d in VM_TENANTS_FILE has no id", i+1)
+		}
+		id, err := CanonicalTenantID(t.ID)
+		if err != nil {
+			return nil, fmt.Errorf("invalid tenant ID %q in VM_TENANTS_FILE: %w", t.ID, err)
+		}
+		if ids[id] {
+			return nil, fmt.Errorf("duplicate tenant ID %q in VM_TENANTS_FILE", id)
+		}
+		ids[id] = true
+		t.ID = id
+
+		if t.Alias != "" {
+			if !tenantAliasRegexp.MatchString(t.Alias) {
+				return nil, fmt.Errorf("invalid alias %q of tenant %q in VM_TENANTS_FILE: it must start with a lowercase letter and contain only lowercase letters, digits, '_' and '-'", t.Alias, id)
+			}
+			if aliases[t.Alias] {
+				return nil, fmt.Errorf("duplicate tenant alias %q in VM_TENANTS_FILE", t.Alias)
+			}
+			aliases[t.Alias] = true
+		}
+		t.Description = strings.TrimSpace(t.Description)
+	}
+	return file.Tenants, nil
+}
+
+// CanonicalTenantID returns the given tenant ID in accountID:projectID format (the same as /admin/tenants API returns)
+func CanonicalTenantID(id string) (string, error) {
+	t, err := auth.NewToken(id)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%d:%d", t.AccountID, t.ProjectID), nil
 }
 
 func (c *Config) IsCluster() bool {
@@ -272,4 +355,20 @@ func (c *Config) LogLevel() string {
 
 func (c *Config) DefaultTenantID() string {
 	return c.defaultTenantID
+}
+
+// Tenants returns the tenants described in VM_TENANTS_FILE
+func (c *Config) Tenants() []Tenant {
+	return c.tenants
+}
+
+// TenantByAlias returns the tenant from VM_TENANTS_FILE with the given alias (case-insensitive)
+func (c *Config) TenantByAlias(alias string) (Tenant, bool) {
+	alias = strings.ToLower(alias)
+	for _, t := range c.tenants {
+		if t.Alias != "" && t.Alias == alias {
+			return t, true
+		}
+	}
+	return Tenant{}, false
 }

@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"sync"
 
 	"github.com/mark3labs/mcp-go/mcp"
@@ -239,8 +240,36 @@ func getSelectURL(ctx context.Context, cfg *config.Config, tcr mcp.CallToolReque
 	if tenant == "" {
 		tenant = cfg.DefaultTenantID()
 	}
+	tenant, err = resolveTenant(cfg, tenant)
+	if err != nil {
+		return "", err
+	}
 	args := []string{"select", tenant, "prometheus"}
 	return entrypointURL.JoinPath(append(args, path...)...).String(), nil
+}
+
+// resolveTenant returns the tenant ID for the given tenant ID or tenant alias from VM_TENANTS_FILE
+func resolveTenant(cfg *config.Config, tenant string) (string, error) {
+	if t, ok := cfg.TenantByAlias(tenant); ok {
+		return t.ID, nil
+	}
+	if hint := tenantAliasesHint(cfg); hint != "" {
+		if _, err := config.CanonicalTenantID(tenant); err != nil {
+			return "", fmt.Errorf("unknown tenant %q: use tenant ID in accountID[:projectID] format or one of the aliases: %s", tenant, hint)
+		}
+	}
+	return tenant, nil
+}
+
+// tenantAliasesHint returns the list of tenant aliases from VM_TENANTS_FILE in "alias (ID)" format
+func tenantAliasesHint(cfg *config.Config) string {
+	var items []string
+	for _, t := range cfg.Tenants() {
+		if t.Alias != "" {
+			items = append(items, fmt.Sprintf("%s (%s)", t.Alias, t.ID))
+		}
+	}
+	return strings.Join(items, ", ")
 }
 
 func GetTextBodyForRequest(req *http.Request, _ *config.Config, f ...func(s string) (string, error)) *mcp.CallToolResult {

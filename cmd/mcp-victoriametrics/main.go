@@ -85,7 +85,7 @@ Use Documentation tool to get the most relevant documents for your task every ti
 You have many tools to get data from VictoriaMetrics, but try to specify the query as accurately as possible, reducing the resulting sample, as some queries can be query heavy.
 
 Try not to second guess information - if you don't know something or lack information, it's better to ask.
-	`),
+	`+tools.TenantsInstructions(c)),
 	)
 
 	// Registering common tools

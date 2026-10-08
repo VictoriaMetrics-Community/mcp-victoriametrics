@@ -3,6 +3,9 @@ package config
 import (
 	"net/url"
 	"os"
+	"path/filepath"
+	"reflect"
+	"strings"
 	"testing"
 	"time"
 )
@@ -403,6 +406,121 @@ func TestInitConfig(t *testing.T) {
 			if h != expected[i] {
 				t.Errorf("Expected header %q at index %d, got %q", expected[i], i, h)
 			}
+		}
+	})
+}
+
+func writeTenantsFile(t *testing.T, content string) string {
+	t.Helper()
+	path := filepath.Join(t.TempDir(), "tenants.yaml")
+	if err := os.WriteFile(path, []byte(content), 0o600); err != nil {
+		t.Fatalf("failed to write tenants file: %v", err)
+	}
+	return path
+}
+
+func TestInitConfigTenantsFile(t *testing.T) {
+	setEnv := func(t *testing.T, instanceType, tenantsFile, defaultTenantID string) {
+		t.Setenv("VM_INSTANCE_ENTRYPOINT", "http://example.com")
+		t.Setenv("VM_INSTANCE_TYPE", instanceType)
+		t.Setenv("VMC_API_KEY", "")
+		t.Setenv("VM_TENANTS_FILE", tenantsFile)
+		t.Setenv("VM_DEFAULT_TENANT_ID", defaultTenantID)
+	}
+
+	t.Run("Valid tenants file", func(t *testing.T) {
+		setEnv(t, "cluster", writeTenantsFile(t, `
+tenants:
+  - id: 0
+    alias: prod
+    description: |
+      Production environment.
+      Label cluster contains the name of k8s cluster.
+  - id: "1:0"
+    alias: stage
+  - id: 2:5
+    description: Load testing
+`), "")
+
+		cfg, err := InitConfig()
+		if err != nil {
+			t.Fatalf("Expected no error, got: %v", err)
+		}
+		expected := []Tenant{
+			{ID: "0:0", Alias: "prod", Description: "Production environment.\nLabel cluster contains the name of k8s cluster."},
+			{ID: "1:0", Alias: "stage"},
+			{ID: "2:5", Description: "Load testing"},
+		}
+		if !reflect.DeepEqual(cfg.Tenants(), expected) {
+			t.Errorf("Expected tenants %+v, got: %+v", expected, cfg.Tenants())
+		}
+		if cfg.DefaultTenantID() != "0" {
+			t.Errorf("Expected default tenant ID '0', got: %s", cfg.DefaultTenantID())
+		}
+		if tenant, ok := cfg.TenantByAlias("STAGE"); !ok || tenant.ID != "1:0" {
+			t.Errorf("Expected tenant 1:0 for alias STAGE, got: %+v, %v", tenant, ok)
+		}
+		if _, ok := cfg.TenantByAlias("qa"); ok {
+			t.Error("Expected no tenant for unknown alias")
+		}
+	})
+
+	t.Run("Default tenant set by alias", func(t *testing.T) {
+		setEnv(t, "cluster", writeTenantsFile(t, "tenants: [{id: '1', alias: prod}]"), "Prod")
+
+		cfg, err := InitConfig()
+		if err != nil {
+			t.Fatalf("Expected no error, got: %v", err)
+		}
+		if cfg.DefaultTenantID() != "1:0" {
+			t.Errorf("Expected default tenant ID '1:0', got: %s", cfg.DefaultTenantID())
+		}
+	})
+
+	t.Run("No tenants file", func(t *testing.T) {
+		setEnv(t, "cluster", "", "")
+
+		cfg, err := InitConfig()
+		if err != nil {
+			t.Fatalf("Expected no error, got: %v", err)
+		}
+		if len(cfg.Tenants()) != 0 {
+			t.Errorf("Expected no tenants, got: %+v", cfg.Tenants())
+		}
+	})
+
+	errorCases := []struct {
+		name         string
+		instanceType string
+		content      string
+		errContains  string
+	}{
+		{"Single instance", "single", "tenants: [{id: '0', alias: prod}]", "VM_INSTANCE_TYPE=cluster"},
+		{"Unknown field", "cluster", "tenants: [{id: '0', env: prod}]", "field env not found"},
+		{"No tenants", "cluster", "tenants: []", "doesn't contain any tenants"},
+		{"Missing id", "cluster", "tenants: [{alias: prod}]", "has no id"},
+		{"Invalid id", "cluster", "tenants: [{id: prod}]", "invalid tenant ID"},
+		{"Duplicate id", "cluster", "tenants: [{id: '1'}, {id: '1:0'}]", "duplicate tenant ID"},
+		{"Duplicate alias", "cluster", "tenants: [{id: '1', alias: prod}, {id: '2', alias: prod}]", "duplicate tenant alias"},
+		{"Uppercase alias", "cluster", "tenants: [{id: '1', alias: Prod}]", "invalid alias"},
+		{"Alias starts with digit", "cluster", "tenants: [{id: '1', alias: 1prod}]", "invalid alias"},
+	}
+	for _, tc := range errorCases {
+		t.Run(tc.name, func(t *testing.T) {
+			setEnv(t, tc.instanceType, writeTenantsFile(t, tc.content), "")
+
+			_, err := InitConfig()
+			if err == nil || !strings.Contains(err.Error(), tc.errContains) {
+				t.Errorf("Expected error containing %q, got: %v", tc.errContains, err)
+			}
+		})
+	}
+
+	t.Run("Missing tenants file", func(t *testing.T) {
+		setEnv(t, "cluster", filepath.Join(t.TempDir(), "missing.yaml"), "")
+
+		if _, err := InitConfig(); err == nil {
+			t.Error("Expected error for missing tenants file")
 		}
 	})
 }
