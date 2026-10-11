@@ -9,7 +9,7 @@ require (
 	github.com/VictoriaMetrics/victoriametrics-cloud-api-go v0.2.0
 	github.com/blevesearch/bleve/v2 v2.6.0
 	github.com/mark3labs/mcp-go v1.1.1
-	github.com/tmc/langchaingo v0.1.14
+	github.com/tmc/langchaingo v0.1.15
 	gopkg.in/yaml.v2 v2.4.0
 )
 
