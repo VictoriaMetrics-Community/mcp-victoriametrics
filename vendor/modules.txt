@@ -390,7 +390,7 @@ github.com/santhosh-tekuri/jsonschema/v6/kind
 ## explicit; go 1.21.0
 github.com/spf13/cast
 github.com/spf13/cast/internal
-# github.com/tmc/langchaingo v0.1.14
+# github.com/tmc/langchaingo v0.1.15
 ## explicit; go 1.24.4
 github.com/tmc/langchaingo/llms
 github.com/tmc/langchaingo/schema
