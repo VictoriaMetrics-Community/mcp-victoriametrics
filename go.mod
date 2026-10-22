@@ -1,6 +1,6 @@
 module github.com/VictoriaMetrics/mcp-victoriametrics
 
-go 1.27.2
+go 1.27.3
 
 require (
 	github.com/VictoriaMetrics/VictoriaMetrics v1.154.0
