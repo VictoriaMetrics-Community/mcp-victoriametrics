@@ -1,13 +1,15 @@
 ---
-weight: 3
+weight: 4
 title: "Single or Cluster?"
 menu:
   docs:
     parent: "deployments"
-    weight: 3
+    weight: 4
     name: "Single or Cluster?"
 tags:
   - metrics
+  - logs
+  - traces
   - cloud
   - enterprise
 ---
@@ -17,14 +19,13 @@ VictoriaMetrics databases offer two different deployment types: **single-node** 
 At the moment, the following `Deployment types` are available in VictoriaMetrics Cloud:
 - `VictoriaMetrics` single-node and cluster
 - `VictoriaLogs` single-node
-- **Coming soon**: `VictoriaTraces`
-
+- `VictoriaTraces` single-node
 
 All deployments in VictoriaMetrics Cloud are based on the VictoriaMetrics [Open Source projects](https://github.com/VictoriaMetrics/VictoriaMetrics/),
 and managed by the VictoriaMetrics team.
 
 > [!TIP]
-> VictoriaLogs single-node instances support multitenancy
+> VictoriaLogs and VictoriaTraces single-node instances support multitenancy
 
 ## VictoriaMetrics single-node vs cluster versions
 

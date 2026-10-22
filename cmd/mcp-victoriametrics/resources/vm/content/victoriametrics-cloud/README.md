@@ -12,9 +12,10 @@ InfluxDB, OpenTSDB, DataDog, Syslog, Filebeat, Fluenbit or Vector among many oth
 
 - Find more about importing time series data into VictoriaMetrics [here](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#how-to-import-time-series-data)
 - Learn how to ingest logs in various formats into VictoriaLogs [here](https://docs.victoriametrics.com/victorialogs/data-ingestion/#)
+- Learn how to ingest trace spans into VictoriaTraces [here](https://docs.victoriametrics.com/victoriatraces/data-ingestion/)
 
 > [!NOTE]
-> Currently, VictoriaMetrics and VictoriaLogs deployments are supported in Cloud. VictoriaTraces will come very soon!
+> VictoriaMetrics, VictoriaLogs and VictoriaTraces deployments are supported in Cloud.
 
 <br>
 
@@ -27,11 +28,12 @@ InfluxDB, OpenTSDB, DataDog, Syslog, Filebeat, Fluenbit or Vector among many oth
 
 
 ## Use cases
-VictoriaMetrics Cloud is designed for teams and organizations that handle any volume of metrics and logs. The most common use cases for VictoriaMetrics Cloud are:
+VictoriaMetrics Cloud is designed for teams and organizations that handle any volume of metrics, logs and traces. The most common use cases for VictoriaMetrics Cloud are:
 * **Long-term metrics remote storage** for Prometheus, OpenTelemetry and any other standardized metrics.
 * **Fast and long-term remote storage for logs** and [wide-events](https://docs.victoriametrics.com/victorialogs/faq/#how-many-fields-a-single-log-entry-may-contain).
+* **Distributed tracing storage** for OpenTelemetry trace spans, queryable through the Tempo and Jaeger APIs.
 * Reliable and efficient **drop-in replacement** for Prometheus and Graphite.
-* **Easy and cost-saving enterprise managed** alternative solution for Metrics: (Prometheus, Thanos, Mimir or Cortex) and Logs: (ElasticSearch, Loki or ClickHouse).
+* **Easy and cost-saving enterprise managed** alternative solution for Metrics: (Prometheus, Thanos, Mimir or Cortex), Logs: (ElasticSearch, Loki or ClickHouse) and Traces: (Jaeger, Grafana Tempo or ElasticSearch).
 * Managed database for Observability data in all formats.
 * **Efficient replacement** for InfluxDB, OpenTSDB or ElasticSearch by consuming lower amounts of RAM, CPU and disk.
 * **Cost-efficient alternative** for other Observability services like DataDog or Grafana Cloud.

@@ -3,6 +3,7 @@
 ---
 weight: 6
 title: VictoriaMetrics Alert
+description: "Deploy vmalert on Kubernetes."
 menu:
   docs:
     parent: helm
@@ -17,7 +18,7 @@ tags:
   - logs
 ---
 
-![Version](https://img.shields.io/badge/0.37.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-alert%2Fchangelog%2F%230370)
+![Version](https://img.shields.io/badge/0.51.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-alert%2Fchangelog%2F%23v0510)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-alert)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -85,13 +86,13 @@ Test the installation with command:
   - For HTTPS repository
 
     ```console
-    helm install vma vm/victoria-metrics-alert -f values.yaml -n NAMESPACE --debug
+    helm install vma vm/victoria-metrics-alert -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
   - For OCI repository
 
     ```console
-    helm install vma oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-alert -f values.yaml -n NAMESPACE --debug
+    helm install vma oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-alert -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
 Install chart with command:
@@ -139,6 +140,40 @@ Remove application with command.
 
 ```console
 helm uninstall vma -n NAMESPACE
+```
+
+### HTTP listen address
+
+The chart configures the VMAlert HTTP listen address via `.Values.server.http` list.
+Each entry in the list configures a separate HTTP listener.
+The primary listener (marked with `primary: true`) is used for Pod health checks and Service port generation.
+
+To enable TLS on the HTTP listener:
+
+```yaml
+server:
+  http:
+    - name: https
+      primary: true
+      value: :8880
+      tls: true
+      tlsCertFile: /path/to/tls.crt
+      tlsKeyFile: /path/to/tls.key
+```
+
+To expose an additional listener on a different port:
+
+```yaml
+server:
+  http:
+    - name: http
+      primary: true
+      value: :8880
+    - name: https
+      value: :8881
+      tls: true
+      tlsCertFile: /path/to/tls.crt
+      tlsKeyFile: /path/to/tls.key
 ```
 
 ## Parameters
@@ -206,6 +241,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Cluster settle timeout</p>
 </td>
     </tr>
+    <tr id="alertmanager-command">
+      <td><a href="#alertmanager-command"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.command</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Override default container command. Use when the alertmanager binary is available at a custom path</p>
+</td>
+    </tr>
     <tr id="alertmanager-config">
       <td><a href="#alertmanager-config"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.config</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">global</span><span class="p">:</span><span class="w">
@@ -226,7 +267,13 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="alertmanager-configmap">
       <td><a href="#alertmanager-configmap"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.configMap</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Use existing configmap if specified otherwise .config values will be used</p>
+      <td><em><code>(string)</code></em><p>Deprecated: use <code>configSecret</code> instead, since alertmanager config usually contains credentials. Use existing ConfigMap with <code>alertmanager.yaml</code> if specified, otherwise a Secret is generated from <code>.config</code> values</p>
+</td>
+    </tr>
+    <tr id="alertmanager-configsecret">
+      <td><a href="#alertmanager-configsecret"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.configSecret</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Use existing Secret with <code>alertmanager.yaml</code> if specified, otherwise a Secret is generated from <code>.config</code> values</p>
 </td>
     </tr>
     <tr id="alertmanager-deployment">
@@ -236,6 +283,12 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">Recreate</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank">K8s Deployment</a> specific variables</p>
+</td>
+    </tr>
+    <tr id="alertmanager-dnsconfig">
+      <td><a href="#alertmanager-dnsconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.dnsConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Custom DNS config for pod. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-config" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="alertmanager-emptydir">
@@ -296,7 +349,7 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#alertmanager-image"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.image</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">registry</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">prom/alertmanager</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="l">v0.32.0</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="l">v0.34.1</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Alertmanager image configuration</p>
 </td>
@@ -329,10 +382,9 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#alertmanager-ingress-hosts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.ingress.hosts</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">alertmanager.local</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">/</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">web</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">/</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Array of host objects</p>
+      <td><em><code>(list)</code></em><p>Array of host objects. When <code>port</code> is unset, the Alertmanager Service HTTP port is used</p>
 </td>
     </tr>
     <tr id="alertmanager-ingress-ingressclassname">
@@ -370,6 +422,31 @@ Change the values according to the need of the environment in ``victoria-metrics
 </a></td>
       <td><em><code>(string)</code></em><p>Alertmanager mode: deployment, statefulSet</p>
 </td>
+    </tr>
+    <tr id="alertmanager-networkpolicy-annotations">
+      <td><a href="#alertmanager-networkpolicy-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.networkPolicy.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em></td>
+    </tr>
+    <tr id="alertmanager-networkpolicy-egress">
+      <td><a href="#alertmanager-networkpolicy-egress"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.networkPolicy.egress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em></td>
+    </tr>
+    <tr id="alertmanager-networkpolicy-enabled">
+      <td><a href="#alertmanager-networkpolicy-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.networkPolicy.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em></td>
+    </tr>
+    <tr id="alertmanager-networkpolicy-ingress">
+      <td><a href="#alertmanager-networkpolicy-ingress"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.networkPolicy.ingress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em></td>
+    </tr>
+    <tr id="alertmanager-networkpolicy-labels">
+      <td><a href="#alertmanager-networkpolicy-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.networkPolicy.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em></td>
     </tr>
     <tr id="alertmanager-nodeselector">
       <td><a href="#alertmanager-nodeselector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.nodeSelector</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
@@ -441,7 +518,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="alertmanager-persistentvolume-volumeattributesclassname">
       <td><a href="#alertmanager-persistentvolume-volumeattributesclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.persistentVolume.volumeAttributesClassName</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>VolumeClassAttribute to user for persistent volume</p>
+      <td><em><code>(string)</code></em><p>VolumeAttributesClass to use for persistent volume</p>
 </td>
     </tr>
     <tr id="alertmanager-podannotations">
@@ -565,6 +642,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
 </td>
     </tr>
+    <tr id="alertmanager-runtimeclassname">
+      <td><a href="#alertmanager-runtimeclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.runtimeClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Name of the <a href="https://kubernetes.io/docs/concepts/containers/runtime-class/" target="_blank">RuntimeClass</a> used to run the pod, e.g. &ldquo;gvisor&rdquo;</p>
+</td>
+    </tr>
     <tr id="alertmanager-securitycontext">
       <td><a href="#alertmanager-securitycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.securityContext</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
@@ -579,9 +662,9 @@ Change the values according to the need of the environment in ``victoria-metrics
 </td>
     </tr>
     <tr id="alertmanager-service-clusterip">
-      <td><a href="#alertmanager-service-clusterip"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.service.clusterIP</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+      <td><a href="#alertmanager-service-clusterip"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.service.clusterIP</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Service ClusterIP</p>
+      <td><em><code>(string)</code></em><p>Service ClusterIP. When unset, the Service is headless (<code>None</code>) with <code>useLegacyNaming: false</code>, as in the VictoriaMetrics operator, and a regular ClusterIP Service otherwise. Set it to an empty string to always get a regular Service</p>
 </td>
     </tr>
     <tr id="alertmanager-service-externalips">
@@ -630,6 +713,24 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#alertmanager-service-loadbalancersourceranges"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.service.loadBalancerSourceRanges</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>Load balancer source range</p>
+</td>
+    </tr>
+    <tr id="alertmanager-service-nodeport">
+      <td><a href="#alertmanager-service-nodeport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.service.nodePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service node port</p>
+</td>
+    </tr>
+    <tr id="alertmanager-service-portoverrides">
+      <td><a href="#alertmanager-service-portoverrides"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.service.portOverrides</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Per-port Service overrides, keyed by port name. Each entry may override port, protocol, targetPort, nodePort and/or appProtocol. Valid keys: <code>http</code> (<code>web</code> with legacy naming), <code>tcp-mesh</code>, <code>udp-mesh</code> (mesh ports only render when <code>replicaCount</code> &gt; 1)</p>
+</td>
+    </tr>
+    <tr id="alertmanager-service-publishnotreadyaddresses">
+      <td><a href="#alertmanager-service-publishnotreadyaddresses"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.service.publishNotReadyAddresses</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Publish not-ready addresses. It is always enabled for the default headless Service</p>
 </td>
     </tr>
     <tr id="alertmanager-service-serviceport">
@@ -692,7 +793,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="alertmanager-webconfig">
       <td><a href="#alertmanager-webconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.webConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Alertmanager web configuration</p>
+      <td><em><code>(object)</code></em><p>Alertmanager <a href="https://prometheus.io/docs/alerting/latest/https/" target="_blank">web configuration</a>. It is stored in the generated Secret as <code>webconfig.yaml</code> and passed via <code>--web.config.file</code>. An existing ConfigMap or Secret must provide this key itself</p>
 </td>
     </tr>
     <tr id="extraobjects">
@@ -713,6 +814,18 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">adaptSecurityContext</span><span class="p">:</span><span class="w"> </span><span class="l">auto</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Openshift security context compatibility configuration</p>
+</td>
+    </tr>
+    <tr id="global-extraannotations">
+      <td><a href="#global-extraannotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraAnnotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Annotations added to all resources</p>
+</td>
+    </tr>
+    <tr id="global-extralabels">
+      <td><a href="#global-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Labels added to all resources</p>
 </td>
     </tr>
     <tr id="global-image-registry">
@@ -781,6 +894,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Annotations to be added to the deployment</p>
 </td>
     </tr>
+    <tr id="server-command">
+      <td><a href="#server-command"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.command</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Override default container command. Use when the VictoriaMetrics binary is available at a custom path</p>
+</td>
+    </tr>
     <tr id="server-config">
       <td><a href="#server-config"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.config</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">alerts</span><span class="p">:</span><span class="w">
@@ -837,6 +956,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>HTTP headers for remote write</p>
 </td>
     </tr>
+    <tr id="server-dnsconfig">
+      <td><a href="#server-dnsconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.dnsConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Custom DNS config for pod. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-config" target="_blank">here</a></p>
+</td>
+    </tr>
     <tr id="server-env">
       <td><a href="#server-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
@@ -853,7 +978,6 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#server-extraargs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.extraArgs</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.enable</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.prefix</span><span class="p">:</span><span class="w"> </span><span class="l">VM_</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">httpListenAddr</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8880</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">loggerFormat</span><span class="p">:</span><span class="w"> </span><span class="l">json</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">rule</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">/config/alert-rules.yaml</span></span></span></code></pre>
@@ -889,6 +1013,15 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#server-fullnameoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.fullnameOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Override vmalert resources fullname</p>
+</td>
+    </tr>
+    <tr id="server-http">
+      <td><a href="#server-http"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.http</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTP listen address configuration. See <a href="https://docs.victoriametrics.com/helm/victoria-metrics-alert/#http-listen-address" target="_blank">https://docs.victoriametrics.com/helm/victoria-metrics-alert/#http-listen-address</a> for details. When <code>value</code> is unset, vmalert listens on <code>:8880</code> with legacy naming and on <code>:8080</code>, as in the VictoriaMetrics operator, with operator naming.</p>
 </td>
     </tr>
     <tr id="server-image">
@@ -977,6 +1110,31 @@ Change the values according to the need of the environment in ``victoria-metrics
 </a></td>
       <td><em><code>(string)</code></em><p>Override default <code>app</code> label name</p>
 </td>
+    </tr>
+    <tr id="server-networkpolicy-annotations">
+      <td><a href="#server-networkpolicy-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.networkPolicy.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em></td>
+    </tr>
+    <tr id="server-networkpolicy-egress">
+      <td><a href="#server-networkpolicy-egress"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.networkPolicy.egress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em></td>
+    </tr>
+    <tr id="server-networkpolicy-enabled">
+      <td><a href="#server-networkpolicy-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.networkPolicy.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em></td>
+    </tr>
+    <tr id="server-networkpolicy-ingress">
+      <td><a href="#server-networkpolicy-ingress"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.networkPolicy.ingress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em></td>
+    </tr>
+    <tr id="server-networkpolicy-labels">
+      <td><a href="#server-networkpolicy-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.networkPolicy.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em></td>
     </tr>
     <tr id="server-nodeselector">
       <td><a href="#server-nodeselector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.nodeSelector</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
@@ -1153,6 +1311,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
 </td>
     </tr>
+    <tr id="server-runtimeclassname">
+      <td><a href="#server-runtimeclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.runtimeClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Name of the <a href="https://kubernetes.io/docs/concepts/containers/runtime-class/" target="_blank">RuntimeClass</a> used to run the pod, e.g. &ldquo;gvisor&rdquo;</p>
+</td>
+    </tr>
     <tr id="server-securitycontext">
       <td><a href="#server-securitycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.securityContext</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
@@ -1167,9 +1331,9 @@ Change the values according to the need of the environment in ``victoria-metrics
 </td>
     </tr>
     <tr id="server-service-clusterip">
-      <td><a href="#server-service-clusterip"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.clusterIP</span><span class="p">:</span><span class="w"> </span><span class="l">None</span></span></span></code></pre>
+      <td><a href="#server-service-clusterip"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.clusterIP</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Service ClusterIP</p>
+      <td><em><code>(string)</code></em><p>Service ClusterIP. When unset, the Service is headless (<code>None</code>) with legacy naming and a regular ClusterIP Service with operator naming</p>
 </td>
     </tr>
     <tr id="server-service-externalips">
@@ -1220,10 +1384,22 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Load balancer source range</p>
 </td>
     </tr>
-    <tr id="server-service-serviceport">
-      <td><a href="#server-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="m">8880</span></span></span></code></pre>
+    <tr id="server-service-nodeport">
+      <td><a href="#server-service-nodeport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.nodePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(int)</code></em><p>Service port</p>
+      <td><em><code>(string)</code></em><p>Service node port</p>
+</td>
+    </tr>
+    <tr id="server-service-portoverrides">
+      <td><a href="#server-service-portoverrides"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.portOverrides</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Per-port Service overrides, keyed by port name. Each entry may override port, protocol, targetPort, nodePort and/or appProtocol</p>
+</td>
+    </tr>
+    <tr id="server-service-serviceport">
+      <td><a href="#server-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service port</p>
 </td>
     </tr>
     <tr id="server-service-trafficdistribution">

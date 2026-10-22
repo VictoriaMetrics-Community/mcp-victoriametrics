@@ -3,6 +3,7 @@
 ---
 weight: 14
 title: VictoriaMetrics Operator CRDs
+description: "Install Operator CRDs without the full Operator."
 menu:
   docs:
     parent: helm
@@ -16,7 +17,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.8.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-operator-crds%2Fchangelog%2F%23080)
+![Version](https://img.shields.io/badge/0.15.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-operator-crds%2Fchangelog%2F%23v0151)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-operator-crds)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -74,13 +75,13 @@ Test the installation with command:
   - For HTTPS repository
 
     ```console
-    helm install vmoc vm/victoria-metrics-operator-crds -f values.yaml -n NAMESPACE --debug
+    helm install vmoc vm/victoria-metrics-operator-crds -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
   - For OCI repository
 
     ```console
-    helm install vmoc oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-operator-crds -f values.yaml -n NAMESPACE --debug
+    helm install vmoc oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-operator-crds -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
 Install chart with command:
@@ -135,8 +136,9 @@ Change the values according to the need of the environment in ``victoria-metrics
     <th class="helm-vars-description">Description</th>
   </thead>
   <tbody>
-    <tr id="annotations">
-      <td><a href="#annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+    <tr id="crds">
+      <td><a href="#crds"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>VM operator CRD annotations</p>
 </td>

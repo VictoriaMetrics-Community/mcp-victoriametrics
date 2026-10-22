@@ -9,8 +9,8 @@ sitemap:
 
 VictoriaMetrics Cloud is a DBaaS (Database as a Service) product for VictoriaMetrics.
 This means that you need to [create a deployment](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#creating-deployments) before sending data to it.
-It is a fully managed service that allows you to deploy and manage your own instances of VictoriaMetrics and VictoriaLogs
-in the cloud.
+It is a fully managed service that allows you to deploy and manage your own instances of VictoriaMetrics,
+VictoriaLogs and VictoriaTraces in the cloud.
 
 > [!TIP]
 > Regular use cases of VictoriaMetrics Cloud are monitoring applications, infrastructure, or services,
@@ -21,7 +21,7 @@ At the moment, the following `Deployment types` are available in VictoriaMetrics
 
 - `VictoriaMetrics` single-node and cluster instances
 - `VictoriaLogs` single-node instances
-- **Coming soon**: `VictoriaTraces` instances
+- `VictoriaTraces` single-node instances
 
 ## Capacity Tiers
 When deploying a new VictoriaMetrics Cloud instance, users need to choose from a set of configurations,
@@ -39,6 +39,9 @@ each use case, to ensure cost savings and performance.
 - [VictoriaLogs Capacity Tiers](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victorialogs-tiers/)
 for `single-node` instances are presented in a simpler way, based on CPU and RAM capacities. The
 `Cluster` version is not available at the moment.
+- [VictoriaTraces Capacity Tiers](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victoriatraces-tiers/)
+follow the same approach as VictoriaLogs, based on CPU and RAM capacities. The `Cluster` version is
+not available at the moment.
 
 You can also read more about the [differences between single and cluster instances](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/single-or-cluster/).
 
@@ -49,8 +52,9 @@ menu of your deployment.
 
 ## Limits
 Apart from the capacities per tier described in the corresponding pages for
-[VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victoriametrics-tiers/)
-and [VictoriaLogs](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victorialogs-tiers/),
+[VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victoriametrics-tiers/),
+[VictoriaLogs](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victorialogs-tiers/)
+and [VictoriaTraces](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victoriatraces-tiers/),
 VictoriaMetrics Cloud also enforces hard limits in order to ensure operations. Users can expect
 receiving alerts when these thresholds are surpassed, and new data eventually being rejected.
 The majority of these limits are available under the `Monitor` tab of the

@@ -27,12 +27,4 @@ To set up agentless AWS monitoring using Firehose, visit the
 or follow this interactive guide:
 
 
-<iframe 
-    width="100%"
-    height="7000" 
-    name="iframe" 
-    id="integration" 
-    frameborder="0"
-    src="https://console.victoriametrics.cloud/public/integrations/cloudwatch" 
-    style="background: white;" >
-</iframe>
+{{< cloud-console-iframe "cloudwatch" >}}

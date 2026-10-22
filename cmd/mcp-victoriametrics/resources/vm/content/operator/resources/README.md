@@ -30,6 +30,7 @@ Metrics Operator introduces.
 - [VLCluster](https://docs.victoriametrics.com/operator/resources/vlcluster/)
 - [VTSingle](https://docs.victoriametrics.com/operator/resources/vtsingle/)
 - [VTCluster](https://docs.victoriametrics.com/operator/resources/vtcluster/)
+- [VTAgent](https://docs.victoriametrics.com/operator/resources/vtagent/)
 
 Here is the scheme of relations between the custom resources:
 
@@ -46,24 +47,29 @@ you can use `extraArgs` field for passing additional arguments to the applicatio
 
 Field `extraArgs` is supported for the following custom resources:
 
-- [VMAgent spec](https://docs.victoriametrics.com/operator/api/#vmagentspec)
-- [VMAlert spec](https://docs.victoriametrics.com/operator/api/#vmalertspec)
-- [VMAlertManager spec](https://docs.victoriametrics.com/operator/api/#vmalertmanagerspec)
-- [VMAuth spec](https://docs.victoriametrics.com/operator/api/#vmauthspec)
-- [VMCluster/vmselect spec](https://docs.victoriametrics.com/operator/api/#vmselect)
-- [VMCluster/vminsert spec](https://docs.victoriametrics.com/operator/api/#vminsert)
-- [VMCluster/vmstorage spec](https://docs.victoriametrics.com/operator/api/#vmstorage)
-- [VMSingle spec](https://docs.victoriametrics.com/operator/api/#vmsinglespec)
-- [VLAgent spec](https://docs.victoriametrics.com/operator/api/#vlagentspec)
+- [VMAgent spec](https://docs.victoriametrics.com/operator/api/#v1beta1-vmagentspec)
+- [VMAlert spec](https://docs.victoriametrics.com/operator/api/#v1beta1-vmalertspec)
+- [VMAlertManager spec](https://docs.victoriametrics.com/operator/api/#v1beta1-vmalertmanagerspec)
+- [VMAuth spec](https://docs.victoriametrics.com/operator/api/#v1beta1-vmauthspec)
+- [VMCluster/vmselect spec](https://docs.victoriametrics.com/operator/api/#v1beta1-vmselect)
+- [VMCluster/vminsert spec](https://docs.victoriametrics.com/operator/api/#v1beta1-vminsert)
+- [VMCluster/vmstorage spec](https://docs.victoriametrics.com/operator/api/#v1beta1-vmstorage)
+- [VMSingle spec](https://docs.victoriametrics.com/operator/api/#v1beta1-vmsinglespec)
+- [VLAgent spec](https://docs.victoriametrics.com/operator/api/#v1-vlagentspec)
+- [VTSingle spec](https://docs.victoriametrics.com/operator/api/#v1-vtsinglespec)
+- [VTCluster spec](https://docs.victoriametrics.com/operator/api/#v1-vtclusterspec)
+- [VTAgent spec](https://docs.victoriametrics.com/operator/api/#v1-vtagentspec)
 
 Supported flags for each application can be found the in the corresponding documentation:
 
-- [VMAgent](https://docs.victoriametrics.com/operator/resources/vmagent/#advanced-usage)
-- [VMAlert](https://docs.victoriametrics.com/operator/resources/vmalert/#configuration)
-- [VMAuth](https://docs.victoriametrics.com/operator/resources/vmauth/#advanced-usage)
+- [VMAgent](https://docs.victoriametrics.com/victoriametrics/vmagent/#advanced-usage)
+- [VMAlert](https://docs.victoriametrics.com/victoriametrics/vmalert/#configuration)
+- [VMAuth](https://docs.victoriametrics.com/victoriametrics/vmauth/#advanced-usage)
 - [VMCluster](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#list-of-command-line-flags)
 - [VMSingle](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#list-of-command-line-flags)
 - [VLAgent](https://docs.victoriametrics.com/victorialogs/vlagent/#advanced-usage)
+- [VTSingle/VTCluster](https://docs.victoriametrics.com/victoriatraces/#list-of-command-line-flags)
+- [VTAgent](https://docs.victoriametrics.com/victoriatraces/vtagent/#advanced-usage)
 
 Usage example:
 
@@ -126,6 +132,17 @@ Page for every custom resource contains examples section:
 
 In addition, you can find examples of the custom resources for VictoriaMetrics operator in
 the **[examples directory](https://github.com/VictoriaMetrics/operator/tree/master/config/examples) of operator repository**.
+
+## Operator upgrade policy
+
+Operator supports upgrades from the two latest minor releases and the two latest LTS releases.
+
+Current upgrade coverage:
+
+- Latest minor releases: `v0.74.1` and `v0.73.0`.
+- Latest LTS releases: `v0.68.7` and `v0.68.6`.
+
+Older releases are not covered by upgrade tests but can be included in supported upgrade paths on request.
 
 ## Managing versions of VM
 
@@ -199,7 +216,7 @@ Operator supports following [Enterprise features for VictoriaMetrics components]
     - [IP Filters](https://docs.victoriametrics.com/operator/resources/vmuser/#ip-filters)
 
 More information about enterprise features you can read
-on [VictoriaMetrics Enterprise page](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise).
+on [VictoriaMetrics Enterprise page](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise-features).
 
 ## Configuration synchronization
 

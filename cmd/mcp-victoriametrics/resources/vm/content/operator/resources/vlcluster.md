@@ -24,12 +24,79 @@ For each `VLCluster` resource components, the Operator adds `Service` and `VMSer
 
 ## Specification
 
-You can see the full actual specification of the `VLCluster` resource in the **[API docs -> VLCluster](https://docs.victoriametrics.com/operator/api/#vlcluster)**.
+You can see the full actual specification of the `VLCluster` resource in the **[API docs -> VLCluster](https://docs.victoriametrics.com/operator/api/#v1-vlcluster)**.
 
 If you can't find necessary field in the specification of the custom resource,
 see [Extra arguments section](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
 
 Also, you can check out the [examples](https://docs.victoriametrics.com/operator/resources/vlcluster/#examples) section.
+
+## Services and URLs
+
+For a `VLCluster` named `<name>` in namespace `<namespace>`, the Operator creates the following Kubernetes services:
+
+| Service name | Type | Port | Purpose |
+|---|---|---|---|
+| `vlinsert-<name>` | ClusterIP | 9481 | Log ingestion (write path) |
+| `vlselect-<name>` | Headless | 9471 | Log querying (read path) |
+| `vlstorage-<name>` | Headless | 9491 | vlstorage admin HTTP API (not for direct user access) |
+
+Common internal cluster URLs (replace `<name>` and `<namespace>` with your values):
+
+| Use case | URL |
+|---|---|
+| VLAgent remoteWrite | `http://vlinsert-<name>.<namespace>.svc:9481/internal/insert` |
+| LogsQL query API | `http://vlselect-<name>.<namespace>.svc:9471/select/logsql/query` |
+| Grafana datasource URL | `http://vlselect-<name>.<namespace>.svc:9471/select` |
+| VMUI (built-in web UI) | `http://vlselect-<name>.<namespace>.svc:9471/select/vmui/` |
+
+`vlinsert` also accepts logs from all [data ingestion protocols](https://docs.victoriametrics.com/victorialogs/data-ingestion/) supported by VictoriaLogs
+(Elasticsearch, Loki, OpenTelemetry, Syslog, etc.) directly at port `9481`.
+
+### Configuring VLAgent to write to VLCluster
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VLAgent
+metadata:
+  name: example
+  namespace: default
+spec:
+  remoteWrite:
+    - url: "http://vlinsert-<name>.default.svc:9481/internal/insert"
+```
+
+### Customizing service type or port
+
+By default each component service is created with the type and port shown in the table above.
+Use `serviceSpec` on each component to change these settings.
+Setting `useAsDefault: true` applies the changes to the main service rather than creating an additional one:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VLCluster
+metadata:
+  name: example
+spec:
+  vlinsert:
+    replicaCount: 2
+    serviceSpec:
+      useAsDefault: true
+      spec:
+        type: LoadBalancer
+  vlselect:
+    replicaCount: 2
+    serviceSpec:
+      useAsDefault: true
+      spec:
+        type: LoadBalancer
+```
+
+> **Note**: changing `vlselect` or `vlstorage` from headless to a ClusterIP/LoadBalancer type
+> may break internal pod-to-pod communication between cluster components.
+
+To expose VLCluster components outside the cluster via an ingress with authentication,
+see [Authorization and exposing components — VLCluster](https://docs.victoriametrics.com/operator/auth/#vlcluster).
 
 ## Version management
 
@@ -63,6 +130,116 @@ spec:
     - name: my-repo-secret
 # ...
 ```
+
+## Update strategy
+
+The Operator provides fine-grained control over how `VLCluster` nodes are restarted when their spec changes (image tag, flags, etc.).
+
+### vlstorage
+
+`vlstorage` nodes are restarted one by one by default.
+The `rollingUpdateStrategy` field controls this behavior:
+
+| Value | Behavior |
+|---|---|
+| `OnDelete` (default) | Operator restarts nodes one by one and waits for each to become ready before continuing |
+| `RollingUpdate` | Kubernetes restarts nodes natively; the Operator only waits for the rollout to complete |
+
+Use `rollingUpdateStrategyBehavior.maxUnavailable` to control how many nodes are restarted simultaneously (default is `1`):
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VLCluster
+metadata:
+  name: example
+spec:
+  vlstorage:
+    replicaCount: 6
+    rollingUpdateStrategy: OnDelete
+    rollingUpdateStrategyBehavior:
+      maxUnavailable: 2        # restart 2 nodes at a time
+```
+
+Setting `maxUnavailable: "100%"` restarts all `vlstorage` nodes in parallel, minimizing total upgrade time
+at the cost of temporary unavailability.
+
+The timeout for each node to become ready is controlled by the Operator environment variable
+`VM_PODWAITREADYTIMEOUT` (default `80s`). The poll interval is `VM_PODWAITREADYINTERVALCHECK` (default `5s`).
+
+### vlinsert and vlselect
+
+`vlinsert` and `vlselect` nodes support standard Deployment update parameters:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VLCluster
+metadata:
+  name: example
+spec:
+  vlinsert:
+    replicaCount: 2
+    updateStrategy: RollingUpdate   # default; set to Recreate to stop all nodes before starting new ones
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  vlselect:
+    replicaCount: 2
+    updateStrategy: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+```
+
+## Storage node maintenance mode
+
+`vlstorage.maintenanceInsertNodeIDs` and `vlstorage.maintenanceSelectNodeIDs` exclude the listed `vlstorage` pods from `vlinsert` and `vlselect` routing.
+Each ID is a pod ordinal, the numeric suffix of the pod name, e.g. `2` for the pod ending with `-2`.
+Use them when a `vlstorage` pod is expected to be unavailable for a while,
+for example when its Kubernetes node is under maintenance and the pod can't move, since its volume is bound to that node.
+
+Excluding a pod from routing affects the cluster:
+
+- with the pod in `maintenanceSelectNodeIDs`, logs stored on this pod are missing from query responses,
+  and `vlselect` doesn't mark them as partial, since it doesn't know about the pod;
+- with the pod in `maintenanceInsertNodeIDs`, `vlinsert` spreads incoming logs across the remaining pods,
+  so they take over the excluded pod's share of writes.
+
+### Pods excluded from all routing
+
+A pod listed in both `vlstorage.maintenanceInsertNodeIDs` and `vlstorage.maintenanceSelectNodeIDs` fields receives no reads and no writes.
+Starting from [v0.75.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.75.1),
+with the default `rollingUpdateStrategy: OnDelete`, where the Operator updates `vlstorage` pods itself, the Operator leaves such a pod alone during reconciliation:
+
+- it doesn't wait for the pod to become ready, so a pod stuck `Pending` or `Terminating` no longer blocks
+  reconciliation of `vlinsert` and `vlselect`;
+- it doesn't apply `vlstorage` spec changes to the pod or its volumes, e.g. a new image or a bigger volume size.
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VLCluster
+metadata:
+  name: example
+spec:
+  vlstorage:
+    replicaCount: 3
+    maintenanceInsertNodeIDs: [2]
+    maintenanceSelectNodeIDs: [2]   # the pod with ordinal 2 gets no traffic and is left alone by the Operator
+```
+
+When the pod is ready to get back, remove the ID from both fields before making other changes.
+The Operator then applies the `vlstorage` changes deferred during maintenance to the pod,
+and waits for it to become ready before adding it back to `vlinsert` and `vlselect`, so an unhealthy pod never receives traffic.
+
+**Limitations:**
+
+- The pod is left alone only with the default `rollingUpdateStrategy: OnDelete` and without `minReadySeconds`,
+  where the StatefulSet uses `Parallel` pod management.
+  Setting `rollingUpdateStrategy: RollingUpdate` or `minReadySeconds` switches the StatefulSet to `OrderedReady` pod management,
+  where Kubernetes handles pods one by one in ordinal order: while the pod under maintenance isn't ready,
+  it doesn't roll out updates, scale the StatefulSet or recreate pods with a higher ordinal.
+  So reconciliation that changes `vlstorage` pods can block until the pod is ready.
+- With `vlstorage.podDisruptionBudget.maxUnavailable: 1`, a pod under maintenance that isn't ready uses up the disruption budget,
+  so the Operator can't evict other `vlstorage` pods, and changes that require restarting them fail until the pod is ready again.
 
 ## Resource management
 
@@ -110,7 +287,7 @@ Also, you can specify requests without limits - in this case default values for 
 
  Operator provides enhanced load-balancing mechanism for `vlinsert` and `vlselect` clients. By default, operator uses built-in Kubernetes [service](https://kubernetes.io/docs/concepts/services-networking/service/) with `clusterIP` type for clients connection. It's good solution for short lived connections. But it acts poorly with long-lived TCP sessions and leads to the uneven resources utilization for `vlselect` and `vlinsert` components.
 
- Operator allows to tweak Kubernetes TCP-based load-balancing with enabled [requestsLoadBalancer](https://docs.victoriametrics.com/operator/api/#vmclusterspec-requestsloadbalancer):
+ Operator allows to tweak Kubernetes TCP-based load-balancing with enabled [requestsLoadBalancer](https://docs.victoriametrics.com/operator/api/#v1-vlclusterspec-requestsloadbalancer):
 
 ```yaml
 apiVersion: operator.victoriametrics.com/v1
@@ -144,6 +321,53 @@ If you need more control over load balancing behavior,
 or want to combine request routing with authentication or (m)TLS,
 consider deploying a standalone [VMAuth](https://docs.victoriametrics.com/operator/resources/vmauth/) resource instead of enabling `requestsLoadBalancer`.
 
+## Syslog ingestion
+
+`vlinsert` can accept logs over [syslog](https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/) via
+TCP and/or UDP listeners, set via `spec.vlinsert.syslogSpec.tcpListeners` and `spec.vlinsert.syslogSpec.udpListeners`:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VLCluster
+metadata:
+  name: example
+spec:
+  vlinsert:
+    syslogSpec:
+      tcpListeners:
+        - listenPort: 8094
+          tenantID: "0:0"
+      udpListeners:
+        - listenPort: 8095
+          tenantID: "0:0"
+```
+
+TLS is supported for TCP listeners only. Set `tlsConfig` with a certificate and key, either referencing a `Secret`
+or a file already mounted into the pod; `minVersion` and `cipherSuites` further restrict which TLS versions and
+cipher suites clients may use:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VLCluster
+metadata:
+  name: example
+spec:
+  vlinsert:
+    syslogSpec:
+      tcpListeners:
+        - listenPort: 8094
+          tenantID: "0:0"
+          tlsConfig:
+            certSecret:
+              name: vlinsert-syslog-tls
+              key: tls.crt
+            keySecret:
+              name: vlinsert-syslog-tls
+              key: tls.key
+            minVersion: TLS12
+            cipherSuites:
+              - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+```
 
 ## Examples
 

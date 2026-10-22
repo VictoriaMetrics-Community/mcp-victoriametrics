@@ -21,7 +21,7 @@ The `VMAlert` CRD declaratively defines a desired [VMAlert](https://docs.victori
 setup to run in a Kubernetes cluster.
 
 It has few required config options - `datasource` and `notifier` are required, for other config parameters
-check [doc](https://docs.victoriametrics.com/operator/api/#vmalert).
+check [doc](https://docs.victoriametrics.com/operator/api/#v1beta1-vmalert).
 
 For each `VMAlert` resource, the Operator deploys a properly configured `Deployment` in the same namespace.
 The VMAlert `Pod`s are configured to mount a list of `Configmaps` prefixed with `<VMAlert-name>-number` containing
@@ -32,7 +32,7 @@ name `<VMAlert-name>`.
 
 ## Specification
 
-You can see the full actual specification of the `VMAlert` resource in the **[API docs -> VMAlert](https://docs.victoriametrics.com/operator/api/#vmalert)**.
+You can see the full actual specification of the `VMAlert` resource in the **[API docs -> VMAlert](https://docs.victoriametrics.com/operator/api/#v1beta1-vmalert)**.
 
 If you can't find necessary field in the specification of the custom resource,
 see [Extra arguments section](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
@@ -63,22 +63,26 @@ In addition to the above selectors, the filtering of objects in a cluster is aff
 
 Following rules are applied:
 
-- If `ruleNamespaceSelector` and `ruleSelector` both undefined, then by default select nothing. With option set - `spec.selectAllByDefault: true`, select all vmrules.
-- If `ruleNamespaceSelector` defined, `ruleSelector` undefined, then all vmrules are matching at namespaces for given `ruleNamespaceSelector`.
-- If `ruleNamespaceSelector` undefined, `ruleSelector` defined, then all vmrules at `VMAlert`'s namespaces are matching for given `ruleSelector`.
-- If `ruleNamespaceSelector` and `ruleSelector` both defined, then only vmrules at namespaces matched `ruleNamespaceSelector` for given `ruleSelector` are matching.
+- If `ruleNamespaceSelector` and `ruleSelector` are both undefined, nothing is selected. Setting `spec.selectAllByDefault: true` selects all VMRules.
+- If `ruleNamespaceSelector` is defined and `ruleSelector` is undefined, all VMRules in the namespaces matched by `ruleNamespaceSelector` are selected.
+- If `ruleNamespaceSelector` is undefined and `ruleSelector` is defined, VMRules matching `ruleSelector` in the `VMAlert` namespace are selected.
+- If `ruleNamespaceSelector` and `ruleSelector` are both defined, VMRules matching `ruleSelector` in the namespaces matched by `ruleNamespaceSelector` are selected.
+- `selectAllByDefault` has an effect only when both `ruleNamespaceSelector` and `ruleSelector` are undefined.
+- An empty `ruleNamespaceSelector` (`{}`) matches all namespaces. If `ruleNamespaceSelector` matches no namespaces, nothing is selected.
+- If the operator's `WATCH_NAMESPACE` is set, `ruleNamespaceSelector` is ignored and VMRules are selected from all watched namespaces, not only from the `VMAlert` namespace. This also applies when only `ruleSelector` is defined.
 
-Here's a more visual and more detailed view:
+Below is a more visual and detailed view:
 
-| `ruleNamespaceSelector` | `ruleSelector` | `selectAllByDefault` | `WATCH_NAMESPACE` | Selected rules                                                                                       |
-|-------------------------|----------------|----------------------|-------------------|------------------------------------------------------------------------------------------------------|
-| undefined               | undefined      | false                | undefined         | nothing                                                                                              |
-| undefined               | undefined      | **true**             | undefined         | all vmrules in the cluster                                                                           |
-| **defined**             | undefined      | *any*                | undefined         | all vmrules are matching at namespaces for given `ruleNamespaceSelector`                             |
-| undefined               | **defined**    | *any*                | undefined         | all vmrules only at `VMAlert`'s namespace are matching for given `ruleSelector`                      |
-| **defined**             | **defined**    | *any*                | undefined         | all vmrules only at namespaces matched `ruleNamespaceSelector` for given `ruleSelector` are matching |
-| *any*                   | undefined      | *any*                | **defined**       | all vmrules only at `VMAlert`'s namespace                                                            |
-| *any*                   | **defined**    | *any*                | **defined**       | all vmrules only at `VMAlert`'s namespace for given `ruleSelector` are matching                      |
+| `ruleNamespaceSelector` | `ruleSelector` | `selectAllByDefault` | `WATCH_NAMESPACE` | Selected objects                                                                     |
+|-------------------------|----------------|----------------------|-------------------|--------------------------------------------------------------------------------------|
+| undefined               | undefined      | false                | *any*             | nothing                                                                              |
+| undefined               | undefined      | **true**             | undefined         | all VMRules in the cluster                                                           |
+| **defined**             | undefined      | *any*                | undefined         | all VMRules in the namespaces matched by `ruleNamespaceSelector`                     |
+| undefined               | **defined**    | *any*                | undefined         | VMRules matching `ruleSelector` in the `VMAlert` namespace                           |
+| **defined**             | **defined**    | *any*                | undefined         | VMRules matching `ruleSelector` in the namespaces matched by `ruleNamespaceSelector` |
+| undefined               | undefined      | **true**             | **defined**       | all VMRules in the watched namespaces                                                |
+| **defined**             | undefined      | *any*                | **defined**       | all VMRules in the watched namespaces                                                |
+| *any*                   | **defined**    | *any*                | **defined**       | VMRules matching `ruleSelector` in the watched namespaces                            |
 
 More details about `WATCH_NAMESPACE` variable you can read in [this doc](https://docs.victoriametrics.com/operator/configuration/#namespaced-mode).
 
@@ -302,10 +306,10 @@ Also, you can specify requests without limits - in this case default values for 
 
 VMAlert supports features [Reading rules from object storage](https://docs.victoriametrics.com/victoriametrics/vmalert/#reading-rules-from-object-storage)
 and [Multitenancy](https://docs.victoriametrics.com/victoriametrics/vmalert/#multitenancy)
-from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise).
+from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise-features).
 
 For using Enterprise version of [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/) you need to
- - specify license at [`spec.license.key`](https://docs.victoriametrics.com/operator/api/#license-key) or at [`spec.license.keyRef`](https://docs.victoriametrics.com/operator/api/#license-keyref).
+ - specify license at [`spec.license.key`](https://docs.victoriametrics.com/operator/api/#v1beta1-license-key) or at [`spec.license.keyRef`](https://docs.victoriametrics.com/operator/api/#v1beta1-license-keyref).
  - change version of `vmalert` to version with `-enterprise` suffix using [Version management](https://docs.victoriametrics.com/operator/resources/vmalert/#version-management).
 
 ### Reading rules from object storage
@@ -362,8 +366,8 @@ spec:
   image:
     tag: v1.110.13-enterprise
   extraArgs:
-    # using enterprise features: Multitenancy
-    # more details about multitenancy you can read on https://docs.victoriametrics.com/victoriametrics/vmalert/#multitenancy
+    # using enterprise features: multitenancy,
+    # read more in https://docs.victoriametrics.com/victoriametrics/vmalert/#multitenancy
     clusterMode: true 
 
   # ...other fields...
@@ -377,11 +381,11 @@ metadata:
 spec:
   groups:
     - name: vmalert-1
+    # using enterprise features: multitenancy,
+    # read more in https://docs.victoriametrics.com/victoriametrics/vmalert/#multitenancy
+      tenant: 1
       rules:
-        # using enterprise features: Multitenancy
-        # more details about multitenancy you can read on https://docs.victoriametrics.com/victoriametrics/vmalert/#multitenancy
-        - tenant: 1
-          alert: vmalert config reload error
+        - alert: vmalert config reload error
           expr: delta(vmalert_config_last_reload_errors_total[5m]) > 0
           for: 10s
           labels:

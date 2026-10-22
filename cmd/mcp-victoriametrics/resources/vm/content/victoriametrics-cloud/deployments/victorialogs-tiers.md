@@ -74,6 +74,14 @@ allocated per tier.
 VictoriaLogs tiers in VictoriaMetrics Cloud were suited to, at least, handle the load in tests done
 under the following conditions:
 
+> [!TIP]
+> The numbers in both tables below were measured **while ingesting and querying at the same time**.
+> If your workload is ingestion-heavy but queries infrequently (or against small time ranges), your
+> deployment may comfortably handle a higher ingestion rate than the table suggests, since it isn't
+> competing with querying for CPU and memory. See
+> [What happens if a parameter in a Capacity Tier is surpassed?](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victorialogs-tiers/#what-happens-if-a-parameter-in-a-capacity-tier-is-surpassed)
+> below.
+
 #### Ingestion
 
 | CPUs | RAM (GB) | Log Ingestion Rate (logs/s) | Data Ingestion Rate (MB/s) | New Streams over 24h |

@@ -43,7 +43,7 @@ sections:
         text: "Preview: Our new database designed for storing and querying distributed tracing data."
         links:
           - label: "Quick Start"
-            url: "/victoriatraces/#quick-start"
+            url: "/victoriatraces/quick-start/"
           - label: "Key concepts"
             url: "/victoriatraces/keyconcepts/"
           - label: "Playground"

@@ -1,7 +1,7 @@
 ---
 weight: 13
 title: VictoriaMetrics Cloud FAQ
-disableToc: true
+disableToc: false
 menu:
   docs:
     parent: "cloud"
@@ -9,66 +9,73 @@ menu:
     name: FAQ
 tags:
   - metrics
+  - logs
+  - traces
   - cloud
   - enterprise
 ---
 
-# Authentication, Authorization and Networking
+This section contains answers to several Frequently Asked Questions (FAQs), that may help you to
+clarify common doubts. Feel free to contact [VictoriaMetrics Cloud Support](https://docs.victoriametrics.com/victoriametrics-cloud/support/#how-to-reach-support)
+if you need further assistance.
 
-## What authentication and authorization mechanisms does VictoriaMetrics Cloud support?
+## Authentication, Authorization and Networking
+
+### What authentication and authorization mechanisms does VictoriaMetrics Cloud support?
 
 * Console (UI) login options can be found in the [Registration and trial](https://docs.victoriametrics.com/victoriametrics-cloud/account-management/registration-and-trial/) section.
 * To interact programmatically with VictoriaMetrics Cloud deployments (sending or querying data), [bearer tokens](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens/) are used. See an example in [Quick start](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#vmagent) or tailored examples under the [Integrations](https://cloud.victoriametrics.com/integrations) section.
 * To perform console API operations (automated actions with deployments, [access tokens](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens/), alerting/recording rules), [API Keys](https://docs.victoriametrics.com/victoriametrics-cloud/api/) are used.
 
-Our roadmap is always evolving, so feel free to let us know any requirements you may have at support-cloud@victoriametrics.com
+Our roadmap is always evolving, so feel free to let us know any requirements you may have via
+[VictoriaMetrics Cloud Support](https://docs.victoriametrics.com/victoriametrics-cloud/support/#how-to-reach-support).
 
-## What permissions does VictoriaMetrics Cloud require on my AWS resources?
+### What permissions does VictoriaMetrics Cloud require on my AWS resources?
 VictoriaMetrics Cloud doesn’t require any permissions. Victoria Metrics Cloud instances are not deployed in your environment, but in a separate one. Interactions are made via https.
 
-## How does VictoriaMetrics Cloud handle data encryption?
+### How does VictoriaMetrics Cloud handle data encryption?
 Information exchange is secured with TLS.
 
-## Does VictoriaMetrics Cloud require public internet access to AWS services, or can it integrate via AWS Private Link or VPC peering?
+### Does VictoriaMetrics Cloud require public internet access to AWS services, or can it integrate via AWS Private Link or VPC peering?
 Victoria Metrics Cloud doesn’t require access to AWS services, quite the opposite: your services need access to VictoriaMetrics Cloud for writing and querying metrics or logs. The only scenario where a call from the platform to your services can occur is when sending notifications about alerts (if you configure the notifications service to be running in your environment).
 
 It's not mandatory to use public internet access, the option to use AWS Private Link is available, at an extra cost derived from direct AWS cost of the service.
 
-## What networking requirements does VictoriaMetrics Cloud have (IP whitelisting, VPN, Direct Connect, etc.)?
+### What networking requirements does VictoriaMetrics Cloud have (IP whitelisting, VPN, Direct Connect, etc.)?
 None.
 
-## Does VictoriaMetrics Cloud support VPC endpoints for secure communication?
+### Does VictoriaMetrics Cloud support VPC endpoints for secure communication?
 A [VPC endpoint](https://docs.aws.amazon.com/whitepapers/latest/aws-privatelink/what-are-vpc-endpoints.html)
 enables users to privately connect to supported AWS services and VPC endpoint services powered by AWS PrivateLink.
 In summary, PrivateLink can be set up manually on an individual basis, upon request. It also implies extra cost, because there is a cost associated with it in AWS, and it’s not included in the VictoriaMetrics Cloud offering.
 
 In any case, it’s important to note that connecting via public access is always secured via TLS with all endpoints.
 
-# Pricing & Billing
+## Pricing & Billing
 
-## What are the pricing models for VictoriaMetrics Cloud (subscription, usage-based, etc.)?
+### What are the pricing models for VictoriaMetrics Cloud (subscription, usage-based, etc.)?
 VictoriaMetrics Cloud pricing is based on tiers. Tiers are configured based on a handful of parameters.
 See the [Deployments](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/) section for more information.
 Detailed and updated tier pricing can be checked in the console when [creating deployments](https://cloud.victoriametrics.com/deployments/create).
 
 
 
-## Are there data transfer costs associated with VictoriaMetrics Cloud integrations?
+### Are there data transfer costs associated with VictoriaMetrics Cloud integrations?
 Yes. We charge $0.09 per GB for egress traffic, which matches AWS’ rate. Estimated traffic costs
 typically range from $1 to $30 per month, depending on deployment size and regular usage (such as
 data visualization, evaluation recording, and alerting rules and other integrations).
 
-## Are there additional costs for API calls or storage?
+### Are there additional costs for API calls or storage?
 VictoriaMetrics Cloud does not charge extra for API calls.
 Regarding storage, the price is $0.511 per Gb per Month. Since VictoriaMetrics Cloud is easy to
 scale, we recommend users to expand storage resources with consumption, instead of allocating all storage space from the beginning.
 We also offer deduplication and [cardinality explorer](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#cardinality-explorer) mechanisms
 to help reducing costs.
 
-## Can VictoriaMetrics Cloud expenses be consolidated into my AWS bill?
+### Can VictoriaMetrics Cloud expenses be consolidated into my AWS bill?
 Yes. You can subscribe via AWS marketplace (see payment methods [documentation](https://docs.victoriametrics.com/victoriametrics-cloud/billing/#aws-marketplace)).
 
-## How does billing work?
+### How does billing work?
 See details in the [billing documentation and dedicated FAQ](https://docs.victoriametrics.com/victoriametrics-cloud/billing/).
 
 ### What billing options does VictoriaMetrics Cloud support?
@@ -76,7 +83,7 @@ See details in the [billing documentation and dedicated FAQ](https://docs.victor
 * Monthly Billing: Pay-as-you-go.
 * Annual/Multi-Year Contracts: Available via AWS or ACH transfers.
 
-For more information, contact sales@victoriametrics.com.
+For more information, [contact us](https://victoriametrics.com/contact-us/).
 
 ### How is deployment usage metered?
 
@@ -88,48 +95,62 @@ No, backups are provided at no additional cost.
 
 ### How long is the billing cycle?
 
-Although usage is metered hourly, billing is conducted monthly. The billing date corresponds to the registration date. For example, if you registered on December 5, you will be billed on the 5th of each subsequent month.
+Although usage is metered hourly, billing is conducted monthly. The billing period begins on the day your payment method was added to your account, and charges are invoiced at the end of that period. For example, if you added your payment method on the 5th, you will be billed on the 5th of each subsequent month. Learn more in our [billing documentation](https://docs.victoriametrics.com/victoriametrics-cloud/billing/).
 
 ### Can you help reduce my costs?
 We recommend using Enterprise features such as [downsampling](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling) and [retention filters](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention-filters) for cost optimization. Contact [VictoriaMetrics Cloud Support](https://docs.victoriametrics.com/victoriametrics-cloud/support/) for assistance.
 
-### I want to extend my trial or get more credits. What should I do?
+### What are account credits and how are they applied?
 
-Contact [VictoriaMetrics Cloud Support](https://docs.victoriametrics.com/victoriametrics-cloud/support/) , and we’ll help extend your trial or provide additional credits.
+Account credits are a prepaid balance VictoriaMetrics Cloud may add to your account, for example for trial
+periods, yearly contracts, or SLA breaches. Charges are deducted from available credits first, and only
+billed to your payment method once credits are depleted or expired. See the
+[Credits section](https://docs.victoriametrics.com/victoriametrics-cloud/billing/#credits) of the billing
+documentation for details, including transaction types and how to check your balance.
+
+### Do credits expire, and how do I check my balance?
+
+Yes, credits have an expiration date. You can check your balance, average daily usage, and estimated
+depletion date on the [Credits Page](https://console.victoriametrics.cloud/organization/billing/credits) of
+your account.
+
+### I want to extend my trial, get more credits, or discuss a yearly commitment. What should I do?
+
+Contact [VictoriaMetrics Cloud Support](https://docs.victoriametrics.com/victoriametrics-cloud/support/), and we’ll help extend your trial, provide additional credits, or discuss yearly commitments and volume discounts.
 
 ### How do you charge for spikes in load?
 
 We don’t charge for spikes. Each deployment has predefined configurations and limits. If a deployment cannot handle a spike, you will receive an alert, allowing you to take proactive measures.
 
-# Deployments and Operations
+## Deployments and Operations
 
-## How does VictoriaMetrics Cloud ensure data integrity and consistency?
+### How does VictoriaMetrics Cloud ensure data integrity and consistency?
 We use the VictoriaMetrics Open Source project. To learn more, visit the [Open Source documentation](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#architecture-overview).
 
-## How does VictoriaMetrics Cloud handle scalability within AWS resources?
+### How does VictoriaMetrics Cloud handle scalability within AWS resources?
 VictoriaMetrics Cloud deployments run in isolated environments, so scaling can be done freely. We have processes that ensure zero-downtime in cluster setups and very low downtime for single setups.
 
-## Are there latency or performance considerations when integrating?
+### Are there latency or performance considerations when integrating?
 * VictoriaMetrics Cloud deployments run in isolated environments, so there’s no interference between users and deployments are expected to run at high performance when compared, for example, with heavy-loaded on-prem setups.
 * Users can choose between different AWS regions, and selecting one that is closer helps.
 * The latency induced from running in the cloud is not noticeable for querying in dashboards or ingestion operation.
 
-Should you need a different region, contact us at support-cloud@victoriametrics.com.
+Should you need a different region, [contact support](https://docs.victoriametrics.com/victoriametrics-cloud/support/#how-to-reach-support).
 
-## Are there any other considerations to take into account when selecting a region?
+### Are there any other considerations to take into account when selecting a region?
 At the moment, VictoriaMetrics Cloud does not support AWS PrivateLink cross-region connectivity.
 In order to send data via AWS PrivateLink, deploying VictoriaMetrics Cloud instances in the same
 region as your workloads is required. You may also [contact support](https://docs.victoriametrics.com/victoriametrics-cloud/support/#how-to-reach-support)
 if this is an impediment for you.
 
-## Does the VictoriaMetrics Cloud provide logging and monitoring capabilities?
+### Does the VictoriaMetrics Cloud provide logging and monitoring capabilities?
 Yes, logs and some of the metrics for your instances are available in the Victoria Metrics Console, we also provide alert notifications about issues with your instances.
 
-## Can VictoriaMetrics Cloud integrate with AWS monitoring services like CloudWatch, X-Ray, or AWS Config?
+### Can VictoriaMetrics Cloud integrate with AWS monitoring services like CloudWatch, X-Ray, or AWS Config?
 We have integration with CloudWatch, you can find it in Console -> Integrations: https://console.victoriametrics.cloud/integrations/cloudwatch
-Let us know if you need more integrations at support-cloud@victoriametrics.com.
+Let us know if you need more integrations via [VictoriaMetrics Cloud Support](https://docs.victoriametrics.com/victoriametrics-cloud/support/#how-to-reach-support).
 
-## What troubleshooting mechanisms are in place for debugging issues?
+### What troubleshooting mechanisms are in place for debugging issues?
 In case of deployment issues, users are notified with alerts, which have recommendations for possible fixes. Instance logs are also available under the Logs tab (log messages also usually contains recommendations) and for instance metrics available in the Monitoring tab of each deployment.
 
 Apart from that, there are other mechanisms:
@@ -139,19 +160,26 @@ Apart from that, there are other mechanisms:
 * Active queries: https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#active-queries
 * And other tools (https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#vmui) like Metric relabel debugger, Downsampling filters debugger, Retention filters debugger, Raw query view, etc…
 
-Also, in case of problems, support is always available to help you at support-cloud@victoriametrics.com.
+Also, in case of problems, [support is always available to help you](https://docs.victoriametrics.com/victoriametrics-cloud/support/#how-to-reach-support).
 
-# Service
+### Which versions do VictoriaMetrics Cloud deployments use?
 
-## What SLAs does VictoriaMetrics Cloud offer for availability and performance?
+The VictoriaMetrics Cloud team aims to run the latest [LTS](https://docs.victoriametrics.com/victoriametrics/lts-releases/)
+[Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/) versions available for
+all deployment types. The release cadence is decided taking into account many factors such as
+avoiding frequent disruptions, validations and the nature of changes included in new versions.
+
+## Service
+
+### What SLAs does VictoriaMetrics Cloud offer for availability and performance?
 SLA are available on our web site: https://victoriametrics.com/legal/cloud/terms-of-service/#service-levels
 
-## Where can I check the status of VictoriaMetrics Cloud?
+### Where can I check the status of VictoriaMetrics Cloud?
 We expose the status of the VictoriaMetrics Cloud service in https://status.victoriametrics.com/
 
-## What's the Privacy Policy of VictoriaMetrics Cloud?
+### What's the Privacy Policy of VictoriaMetrics Cloud?
 VictoriaMetrics Cloud Privacy Policy is available [here](https://cloud.victoriametrics.com/static/pdf/privacy_policy.pdf).
 
-## Which are VictoriaMetrics Cloud Terms of Service?
+### Which are VictoriaMetrics Cloud Terms of Service?
 VictoriaMetrics Cloud Terms of Service are publicly available [here](https://victoriametrics.com/legal/cloud/terms-of-service/), including [SLAs](https://victoriametrics.com/legal/cloud/terms-of-service/#service-levels).
 

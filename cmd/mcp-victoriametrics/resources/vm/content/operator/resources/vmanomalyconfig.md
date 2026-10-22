@@ -1,0 +1,153 @@
+---
+weight: 23
+title: VMAnomalyConfig
+menu:
+  docs:
+    identifier: operator-cr-vmanomalyconfig
+    parent: operator-cr
+    weight: 8
+aliases:
+  - /operator/resources/vmanomalyconfig/
+  - /operator/resources/vmanomalyconfig/index.html
+tags:
+  - kubernetes
+  - metrics
+  - anomaly
+---
+The `VMAnomalyConfig` CRD allows declaratively defining anomaly detection [models](https://docs.victoriametrics.com/anomaly-detection/components/models/), [schedulers](https://docs.victoriametrics.com/anomaly-detection/components/scheduler/), and [queries](https://docs.victoriametrics.com/anomaly-detection/components/reader/#per-query-parameters).
+
+`VMAnomalyConfig` object updates `models`, `schedulers` and `reader.queries` sections of [VMAnomaly](https://docs.victoriametrics.com/anomaly-detection/)
+configuration by adding items with `{metadata.namespace}-{metadata.name}` key prefix. If at least one generated item collides with an existing key, only the colliding item is skipped, while other valid items from the same `VMAnomalyConfig` are still added to the resulting configuration. Check the `VMAnomalyConfig` status and related events to identify skipped items caused by collisions.
+
+Starting with vmanomaly v1.31.0, the experimental `peer_outlier` model compares members of each query's peer population. Use `groupby` to split a query into independent populations; retain entity labels such as `instance` in the query result, but do not include them in `groupby`. Both `peer_outlier` and `model.online.PeerOutlierModel` are accepted. The following model fragment requires a query named `cpu`, for example `100 * (1 - avg by (service, instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])))`, defined in the same `VMAnomalyConfig`. Each service needs at least five reporting instances with the default minimum peer count:
+
+```yaml
+models:
+  cpu_peers:
+    class: peer_outlier
+    queries: [cpu]
+    groupby: [service]
+    min_peer_count: 5
+    data_range: [0, 100]
+    clip_predictions: true
+```
+
+To retune a peer model during fitting, use `class: auto`, `tuned_class_name: peer_outlier`, and put grouping labels in `optimization_params.frozen_params.groupby`. Set the required `optimization_params.anomaly_percentage` to your expected upper bound for anomalous observations, for example `0.02` for 2%; see [AutoTuned configuration](https://docs.victoriametrics.com/anomaly-detection/components/models/#autotuned). Each query remains an independent population. Shared server-side tuning can instead return a concrete model configuration to deploy without an `auto` wrapper; deployment-sizing estimates exclude optimization-search costs.
+
+With given `VMAnomaly` CR:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VMAnomaly
+metadata:
+  name: example
+  namespace: test
+spec:
+  replicaCount: 2
+  license:
+    key: "xx"
+  configSelector:
+    matchExpressions:
+    - key: app
+      operator: In
+      values: [test]
+  configRawYaml: |
+    reader:
+      queries:
+        ingestion_rate:
+          expr: 'sum(rate(vm_rows_inserted_total[5m])) by (type) > 0'
+          step: '1m'
+    schedulers:
+      scheduler_periodic_1m:
+        class: "periodic"
+        # or class: "scheduler.periodic.PeriodicScheduler" until v1.13.0 with class alias support
+        infer_every: "1m"
+        fit_every: "1000d" # bootstrap-only; online models update from every inference
+        fit_window: "3h"
+    models:
+      zscore:
+        class: 'zscore_online'
+        z_threshold: 2.5
+        decay: 0.99 # forgetting factor; lower values adapt faster to recent data
+  reader:
+    datasourceURL: http://vmsingle-read-example:8428
+    samplingPeriod: 10s
+  writer:
+    datasourceURL: http://vmsingle-write-example:8428
+  monitoring:
+    push:
+      url: http://vmsingle-monitoring-example:8428
+```
+
+and `VMAnomalyConfig` CR
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VMAnomalyConfig
+metadata:
+  name: example
+  namespace: test
+  labels:
+    app: test
+spec:
+  models:
+    zscore:
+      class: zscore_online
+      z_threshold: 3.0
+      decay: 0.99 # forgetting factor; lower values adapt faster to recent data
+  schedulers:
+    periodic:
+      class: "periodic"
+      # or class: "scheduler.periodic.PeriodicScheduler" until v1.13.0 with class alias support
+      infer_every: "1m"
+      fit_every: "1000d" # bootstrap-only; online models update from every inference
+      fit_window: "3h"
+  queries:
+    delete-rate:
+      expr: 'sum(rate(vm_rows_deleted_total[5m])) by (type) > 0'
+      step: '1m'
+      data_range: [0, 'inf']
+      detection_direction: above_expected
+      min_rel_dev_from_expected: [0, 15]
+```
+
+The result anomaly detection configuration is:
+
+```yaml
+schedulers:
+  test-example-periodic:
+    class: "periodic"
+    infer_every: "1m"
+    fit_every: "1000d"
+    fit_window: "3h"
+  scheduler_periodic_1m:
+    class: "periodic"
+    infer_every: "1m"
+    fit_every: "1000d"
+    fit_window: "3h"
+models:
+  test-example-zscore:
+    class: 'zscore_online'
+    z_threshold: 3.0
+    decay: 0.99
+reader:
+  datasourceURL: http://vmsingle-read-example:8428
+  samplingPeriod: 10s
+  queries:
+    ingestion_rate:
+      expr: 'sum(rate(vm_rows_inserted_total[5m])) by (type) > 0'
+      step: '1m'
+    test-example-delete-rate:
+      expr: 'sum(rate(vm_rows_deleted_total[5m])) by (type) > 0'
+      step: '1m'
+      data_range: [0, 'inf']
+      detection_direction: above_expected
+      min_rel_dev_from_expected: [0, 15]
+writer:
+  datasourceURL: http://vmsingle-write-example:8428
+```
+
+## Specification
+
+You can see the full actual specification of the `VMAnomalyConfig` resource in
+the **[API docs -> VMAnomalyConfig](https://docs.victoriametrics.com/operator/api/#v1-vmanomalyconfig)**.

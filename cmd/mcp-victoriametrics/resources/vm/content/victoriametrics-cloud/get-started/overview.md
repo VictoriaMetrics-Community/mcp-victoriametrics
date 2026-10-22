@@ -8,6 +8,8 @@ menu:
     name: Overview
 tags:
   - metrics
+  - logs
+  - traces
   - cloud
   - enterprise
 aliases:

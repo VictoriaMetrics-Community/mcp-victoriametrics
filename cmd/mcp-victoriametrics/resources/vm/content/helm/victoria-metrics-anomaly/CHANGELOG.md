@@ -1,10 +1,94 @@
 ## Next release
 
-**Update node 1**: due to change in label name pods will be restarted. Please delete old StatefulSet with `--cascade=orphan`.
+- TODO
 
-- replace custom app label with app.kubernetes.io/component. See [#2785](https://github.com/VictoriaMetrics/helm-charts/issues/2785).
+## v1.12.20
 
-## 1.12.11
+**Release date:** 15 Oct 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.31.1](https://img.shields.io/badge/v1.31.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1311)
+
+- upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.31.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1311), fixing data fetching for peer-group models in periodic deployments.
+
+## v1.12.19
+
+**Release date:** 12 Oct 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.31.0](https://img.shields.io/badge/v1.31.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1310)
+
+- upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.31.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1310)
+- rename the container from `model` to `vmanomaly`, matching the VictoriaMetrics operator. Pods are restarted once on upgrade.
+- fix `persistentVolume.name` in StatefulSet mode: the container mounted the default volume name instead of the overridden claim template name, which produced an invalid pod spec.
+- add the `monitoring-http` container port when `config.monitoring.pull` is enabled, matching the VictoriaMetrics operator.
+- fix `PodMonitor` scraping a non-existent `metrics` port: it now targets `monitoring-http`.
+
+## v1.12.18
+
+**Release date:** 20 Sep 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.30.6](https://img.shields.io/badge/v1.30.6-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1306)
+
+- upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.30.6](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1306)
+
+- experimental hardened image can be selected with `image.variant: dhi` when enterprise licensing is configured and `image.tag` is empty; the resulting tag is `v1.30.6-enterprise-dhi`. The default image retains its existing base.
+
+## v1.12.17
+
+**Release date:** 31 Aug 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.30.4](https://img.shields.io/badge/v1.30.4-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1304)
+
+- add `dnsConfig` option to set a custom DNS config for the pod. See [#3174](https://github.com/VictoriaMetrics/helm-charts/issues/3174)
+- upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.30.4](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1304)
+
+## v1.12.16
+
+**Release date:** 17 Aug 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.30.2](https://img.shields.io/badge/v1.30.2-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1302)
+
+- upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.30.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1302)
+
+## v1.12.15
+
+**Release date:** 27 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.30.0](https://img.shields.io/badge/v1.30.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1300)
+
+- upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.30.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1300)
+- added `global.extraLabels` and `global.extraAnnotations` to apply common labels and annotations to all workload resources and pod templates
+- added network policy configuration support. See [#2977](https://github.com/VictoriaMetrics/helm-charts/issues/2977)
+
+## v1.12.14
+
+**Release date:** 29 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.29.7](https://img.shields.io/badge/v1.29.7-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1297)
+
+- upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.29.7](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1297)
+
+## v1.12.13
+
+**Release date:** 23 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.29.6](https://img.shields.io/badge/v1.29.6-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1296)
+
+- fix VMPodMonitor relabelling configuration rendering. See [#2917](https://github.com/VictoriaMetrics/helm-charts/issues/2917).
+- add ability to override container command.
+- removed potential confusion around targetPort in values by setting the containers port name always to be http and removing targetPort from values.yaml
+- upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.29.6](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1296)
+
+## v1.12.12
+
+**Release date:** 18 May 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.29.4](https://img.shields.io/badge/v1.29.4-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1294)
+
+**Update node 1**: due to change in label name pods will be restarted.
+
+- added `app.kubernetes.io/component` with value from custom `app` label. See [#2785](https://github.com/VictoriaMetrics/helm-charts/issues/2785).
+
+## v1.12.11
 
 **Release date:** 11 Mar 2026
 
@@ -14,7 +98,7 @@
 - support ingress and httproute. See [#2705](https://github.com/VictoriaMetrics/helm-charts/issues/2705).
 - support unhealthyPodEvictionPolicy for PodDisruptionBudget. See [#2747](https://github.com/VictoriaMetrics/helm-charts/issues/2747).
 
-## 1.12.10
+## v1.12.10
 
 **Release date:** 16 Feb 2026
 
@@ -23,7 +107,7 @@
 - bump common chart version 0.0.45 -> 0.0.46
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.28.7](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1287)
 
-## 1.12.9
+## v1.12.9
 
 **Release date:** 11 Dec 2025
 
@@ -31,7 +115,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.28.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1282).
 
-## 1.12.8
+## v1.12.8
 
 **Release date:** 03 Dec 2025
 
@@ -39,7 +123,7 @@
 
 - added ability to configure Deployment and Statefulset specific options. See [#2597](https://github.com/VictoriaMetrics/helm-charts/issues/2597).
 
-## 1.12.7
+## v1.12.7
 
 **Release date:** 02 Dec 2025
 
@@ -47,7 +131,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.28.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1281).
 
-## 1.12.6
+## v1.12.6
 
 **Release date:** 18 Nov 2025
 
@@ -56,7 +140,7 @@
 - bump operator chart version 0.0.42 -> 0.0.45
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.28.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1280).
 
-## 1.12.5
+## v1.12.5
 
 **Release date:** 06 Nov 2025
 
@@ -64,7 +148,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.27.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1271).
 
-## 1.12.4
+## v1.12.4
 
 **Release date:** 04 Nov 2025
 
@@ -72,7 +156,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.27.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1270).
 
-## 1.12.3
+## v1.12.3
 
 **Release date:** 09 Oct 2025
 
@@ -80,7 +164,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.26.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1262).
 
-## 1.12.2
+## v1.12.2
 
 **Release date:** 08 Oct 2025
 
@@ -88,7 +172,7 @@
 
 - do not merge .Values.persistentVolume.extraLabels with default chart labels. See [#2460](https://github.com/VictoriaMetrics/helm-charts/issues/2460).
 
-## 1.12.1
+## v1.12.1
 
 **Release date:** 08 Oct 2025
 
@@ -98,7 +182,7 @@
 - add .Values.persistentVolume.extraLabels for PVC specific labels
 - add ability to customize data path using .Values.persistentVolume.mountPath
 
-## 1.12.0
+## v1.12.0
 
 **Release date:** 02 Oct 2025
 
@@ -106,7 +190,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.26.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1260).
 
-## 1.11.3
+## v1.11.3
 
 **Release date:** 19 Aug 2025
 
@@ -114,7 +198,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.25.3](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1253).
 
-## 1.11.2
+## v1.11.2
 
 **Release date:** 30 Jul 2025
 
@@ -122,7 +206,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.25.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1252).
 
-## 1.11.1
+## v1.11.1
 
 **Release date:** 24 Jul 2025
 
@@ -130,7 +214,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.25.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1251).
 
-## 1.11.0
+## v1.11.0
 
 **Release date:** 17 Jul 2025
 
@@ -139,7 +223,7 @@
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.25.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1250).
 - Remove config has from pod annotations, when anomaly detection version is <1.25.0 to support hot-reload
 
-## 1.10.2
+## v1.10.2
 
 **Release date:** 07 Jul 2025
 
@@ -148,7 +232,7 @@
 - Support `.Values.topologySpreadConstraints` property. See [#2219](https://github.com/VictoriaMetrics/helm-charts/issues/2219)
 - Add support of using [`VMPodScrape`](https://docs.victoriametrics.com/operator/resources/vmpodscrape/) for monitoring configuration. See `.Values.podMonitor.vm`. 
 
-## 1.10.1
+## v1.10.1
 
 **Release date:** 20 Jun 2025
 
@@ -156,7 +240,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.24.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1241). Upgrading from [1.23.0] - [1.24.0] **is recommended to a critical bug fixed**, see [v1.23.0 note](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1230) for details.
 
-## 1.10.0
+## v1.10.0
 
 **Release date:** 19 Jun 2025
 
@@ -165,7 +249,7 @@
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.24.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1240).
 - Automatically enable [restoring state](http://docs.victoriametrics.com/anomaly-detection/components/settings/#state-restoration) when persistence is enabled via `.Values.persistentVolume.enabled`.
 
-## 1.9.6
+## v1.9.6
 
 **Release date:** 13 Jun 2025
 
@@ -174,7 +258,7 @@
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.23.3](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1233).
 
 
-## 1.9.5
+## v1.9.5
 
 **Release date:** 09 Jun 2025
 
@@ -182,7 +266,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.23.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1232).
 
-## 1.9.4
+## v1.9.4
 
 **Release date:** 09 Jun 2025
 
@@ -190,7 +274,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.23.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1231).
 
-## 1.9.3
+## v1.9.3
 
 **Release date:** 05 Jun 2025
 
@@ -198,7 +282,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.23.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1230).
 
-## 1.9.2
+## v1.9.2
 
 **Release date:** 11 May 2025
 
@@ -206,15 +290,15 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.22.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1221).
 
-## 1.9.1
+## v1.9.1
 
 **Release date:** 18 Apr 2025
 
-![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.22.0-experimental](https://img.shields.io/badge/v1.22.0--experimental-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1220)
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.22.0-experimental](https://img.shields.io/badge/v1.22.0--experimental-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fanomaly-detection%2Fchangelog%2F%23v1220-experimental)
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.22.0-experimental](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1220-experimental).
 
-## 1.9.0
+## v1.9.0
 
 **Release date:** 19 Mar 2025
 
@@ -224,7 +308,7 @@
 - Add support of sharding and replication via `.Values.shardsCount` and `.Values.replicationFactor`. See [these docs](https://docs.victoriametrics.com/anomaly-detection/faq/#scaling-vmanomaly) for the details
 - updated common dependency 0.0.39 -> 0.0.42
 
-## 1.8.1
+## v1.8.1
 
 **Release date:** 16 Mar 2025
 
@@ -232,7 +316,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.20.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1201).
 
-## 1.8.0
+## v1.8.0
 
 **Release date:** 04 Mar 2025
 
@@ -241,7 +325,7 @@
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.20.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1200).
 - updated common dependency 0.0.37 -> 0.0.39
 
-## 1.7.2
+## v1.7.2
 
 **Release date:** 27 Jan 2025
 
@@ -249,7 +333,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.19.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1192).
 
-## 1.7.1
+## v1.7.1
 
 **Release date:** 21 Jan 2025
 
@@ -257,7 +341,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.19.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1191).
 
-## 1.7.0
+## v1.7.0
 
 **Release date:** 21 Jan 2025
 
@@ -268,7 +352,7 @@
 - Exclude markdown files from package
 - support templating in `.Values.extraObjects`
 
-## 1.6.11
+## v1.6.11
 
 **Release date:** 2024-12-03
 
@@ -277,7 +361,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.18.8](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1188).
 
-## 1.6.10
+## v1.6.10
 
 **Release date:** 2024-12-02
 
@@ -286,7 +370,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.18.7](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1187).
 
-## 1.6.9
+## v1.6.9
 
 **Release date:** 2024-12-01
 
@@ -296,7 +380,7 @@
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.18.6](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1186).
 - updated common dependency 0.0.32 -> 0.0.33
 
-## 1.6.8
+## v1.6.8
 
 **Release date:** 2024-11-27
 
@@ -307,7 +391,7 @@
 - updated common dependency 0.0.28 -> 0.0.32
 - fixed app.kubernetes.io/version tag override if custom tag is set. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1766).
 
-## 1.6.7
+## v1.6.7
 
 **Release date:** 2024-11-18
 
@@ -317,7 +401,7 @@
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.18.4](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1184).
 - updated common dependency 0.0.23 -> 0.0.28
 
-## 1.6.6
+## v1.6.6
 
 **Release date:** 2024-11-14
 
@@ -327,7 +411,7 @@
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.18.3](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1183). This is a patch release that fixes a service crash during parallelized data processing with [VmReader](https://docs.victoriametrics.com/anomaly-detection/components/reader/#vm-reader).
 
 
-## 1.6.5
+## v1.6.5
 
 **Release date:** 2024-11-13
 
@@ -336,7 +420,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.18.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1182)
 
-## 1.6.4
+## v1.6.4
 
 **Release date:** 2024-11-12
 
@@ -349,7 +433,7 @@
 - added podLabels and podAnnotations to add extra pod labels and annotations
 - updated common dependency 0.0.19 -> 0.0.23
 
-## 1.6.3
+## v1.6.3
 
 **Release date:** 2024-10-28
 
@@ -358,7 +442,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.18.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1180)
 
-## 1.6.2
+## v1.6.2
 
 **Release date:** 2024-10-22
 
@@ -367,7 +451,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.17.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1172)
 
-## 1.6.1
+## v1.6.1
 
 **Release date:** 2024-10-18
 
@@ -376,7 +460,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.17.1](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1171)
 
-## 1.6.0
+## v1.6.0
 
 **Release date:** 2024-10-17
 
@@ -385,7 +469,7 @@
 
 - Upgraded [`vmanomaly`](https://docs.victoriametrics.com/anomaly-detection/) to [1.17.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1170)
 
-## 1.5.2
+## v1.5.2
 
 **Release date:** 2024-10-11
 
@@ -394,7 +478,7 @@
 
 - Human-readable error about Helm version requirement
 
-## 1.5.1
+## v1.5.1
 
 **Release date:** 2024-10-04
 
@@ -403,7 +487,7 @@
 
 - Upgraded common chart dependency
 
-## 1.5.0
+## v1.5.0
 
 **Release date:** 2024-10-03
 
@@ -415,7 +499,7 @@
 - Fix default `podSecurityContext` configuration to ensure fs group matches container user.
 - Fix passing empty `tenant_id` in case tenant is not defined in values.
 
-## 1.4.6
+## v1.4.6
 
 **Release date:** 2024-09-16
 
@@ -425,7 +509,7 @@
 - Added the ability to add annotations to the configMap using `values.configMapAnnotations`
 - Fixed license file flag name
 
-## 1.4.5
+## v1.4.5
 
 **Release date:** 2024-09-12
 
@@ -435,7 +519,7 @@
 - Added ability to override deployment namespace using `namespaceOverride` and `global.namespaceOverride` variables
 - Removed vmanomaly not existing `loggerFormat` extra arg. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1476)
 
-## 1.4.4
+## v1.4.4
 
 **Release date:** 2024-09-03
 
@@ -444,7 +528,7 @@
 
 - Fixed PVC in StatefulSet
 
-## 1.4.3
+## v1.4.3
 
 **Release date:** 2024-08-27
 
@@ -456,7 +540,7 @@
 - Upgraded application version to 1.15.9
 - Fixed default podDisruptionBudget configuration
 
-## 1.4.2
+## v1.4.2
 
 **Release date:** 2024-08-26
 
@@ -471,7 +555,7 @@
 - Removed necessity to set `.Values.persistentVolume.existingClaim` when it should be created by chart. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/189)
 - Added PDB, PodMonitor, extra volumes and extra volumeMounts
 
-## 1.4.1
+## v1.4.1
 
 **Release date:** 2024-08-15
 
@@ -480,7 +564,7 @@
 
 - Update vmanomaly to [v1.15.4](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1154).
 
-## 1.4.0
+## v1.4.0
 
 **Release date:** 2024-08-14
 
@@ -490,7 +574,7 @@
 - Update vmanomaly to [v1.15.3](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1153).
 - Update configuration example format to match the latest version of vmanomaly.
 
-## 1.3.4
+## v1.3.4
 
 **Release date:** 2024-07-19
 
@@ -499,7 +583,7 @@
 
 - leave empty `schedulers` and `models` section to fix aliases error
 
-## 1.3.3
+## v1.3.3
 
 **Release date:** 2024-07-17
 
@@ -508,7 +592,7 @@
 
 - fix default value for `.Values.config.schedulers.class`.
 
-## 1.3.2
+## v1.3.2
 
 **Release date:** 2024-07-17
 
@@ -517,7 +601,7 @@
 
 - changes made for vmanomaly [v1.13.2](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1132)
 
-## 1.3.1
+## v1.3.1
 
 **Release date:** 2024-07-08
 
@@ -526,7 +610,7 @@
 
 - add missing API version and kind for volumeClaimTemplates, see [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1092).
 
-## 1.3.0
+## v1.3.0
 
 **Release date:** 2024-06-11
 
@@ -537,7 +621,7 @@
 - Fix `.Values.podSecurityContext` not being applied to the pod.
 - Update vmanomaly to [v1.13.0](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1130).
 
-## 1.2.4
+## v1.2.4
 
 **Release date:** 2024-05-16
 
@@ -546,7 +630,7 @@
 
 - fix lost customized securityContext when introduced new default behavior for securityContext in [pull request](https://github.com/VictoriaMetrics/helm-charts/pull/995).
 
-## 1.2.3
+## v1.2.3
 
 **Release date:** 2024-05-10
 
@@ -555,7 +639,7 @@
 
 - support disabling default securityContext to keep compatible with platform like openshift, see this [pull request](https://github.com/VictoriaMetrics/helm-charts/pull/995) by @Baboulinet-33 for details.
 
-## 1.2.2
+## v1.2.2
 
 **Release date:** 2024-04-02
 
@@ -564,7 +648,7 @@
 
 - apply [v1.12](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1120) as a default (no config changes).
 
-## 1.2.1
+## v1.2.1
 
 **Release date:** 2024-03-20
 
@@ -573,7 +657,7 @@
 
 - Add support of passing preset configuration.
 
-## 1.2.0
+## v1.2.0
 
 **Release date:** 2024-02-26
 
@@ -583,7 +667,7 @@
 - apply [v1.11](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1110) change in [schedulers section](https://docs.victoriametrics.com/anomaly-detection/components/scheduler/): add configuration for using multiple schedulers at once via `schedulers`. Old `scheduler` field is deprecated and will be automatically converted to `schedulers` definition starting from [v1.11](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1110).
 - docs fixes
 
-## 1.1.1
+## v1.1.1
 
 **Release date:** 2024-02-20
 
@@ -592,7 +676,7 @@
 
 - Fix passing path to license file location when using `license.secret` mount.
 
-## 1.1.0
+## v1.1.0
 
 **Release date:** 2024-02-19
 
@@ -602,7 +686,7 @@
 - apply [v1.10](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1100) change in [models section](https://docs.victoriametrics.com/anomaly-detection/components/models/): add configuration for using multiple models at once via `models`. Old `model` field is deprecated and will be automatically converted to `models` definition starting from [v1.10](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1100).
 - docs fixes
 
-## 1.0.0
+## v1.0.0
 
 **Release date:** 2024-02-05
 
@@ -612,7 +696,7 @@
 - Breaking change: passing [full vmanomaly config](https://docs.victoriametrics.com/anomaly-detection/components/) via `config` parameter.
 - vmanomaly image moving to DockerHub
 
-## 0.5.0
+## v0.5.0
 
 **Release date:** 2023-10-31
 
@@ -623,7 +707,7 @@
 - Add `verify_tls` option to bypass TLS verification for reader and writer.
 - Add `extra_filters` option to supply additional filters to enforce for reader queries.
 
-## 0.4.1
+## v0.4.1
 
 **Release date:** 2023-10-10
 
@@ -632,7 +716,7 @@
 
 - Add an options to override default `metric_format` for remote write configuration of vmanomaly.
 
-## 0.4.0
+## v0.4.0
 
 **Release date:** 2023-08-21
 
@@ -641,7 +725,7 @@
 
 * add ability to provide license key
 
-## 0.3.5
+## v0.3.5
 
 **Release date:** 2023-06-22
 
@@ -651,7 +735,7 @@
 * bump version of vmanomaly
 * charts/victoria-metrics-anomaly: fix monitoring config indentation (#567)
 
-## 0.3.4
+## v0.3.4
 
 **Release date:** 2023-06-22
 
@@ -661,7 +745,7 @@
 * bump vmanomaly remove tricky make command
 * charts/victoria-metrics-anomaly: make monitoring config more configurable (#562)
 
-## 0.3.3
+## v0.3.3
 
 **Release date:** 2023-06-07
 
@@ -670,7 +754,7 @@
 
 * bump anomaly chart, make package make merge
 
-## 0.3.2
+## v0.3.2
 
 **Release date:** 2023-06-06
 
@@ -681,7 +765,7 @@
 * charts/operator: update version to 0.30.4 adds extraArgs and serviceMonitor options for operator
 * vmanomaly re-release
 
-## 0.3.1
+## v0.3.1
 
 **Release date:** 2023-01-26
 
@@ -690,7 +774,7 @@
 
 * vmanomaly: fix monitoring part of config (#457)
 
-## 0.3.0
+## v0.3.0
 
 **Release date:** 2023-01-24
 

@@ -10,6 +10,8 @@ menu:
     pageRef: /victoriametrics-cloud/get-started/
 tags:
   - metrics
+  - logs
+  - traces
   - cloud
   - enterprise
   - guide

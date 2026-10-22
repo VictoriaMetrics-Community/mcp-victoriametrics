@@ -3,6 +3,7 @@
 ---
 weight: 10
 title: VictoriaMetrics Distributed
+description: "Deploy distributed VictoriaMetrics components on Kubernetes with Helm."
 menu:
   docs:
     parent: helm
@@ -16,12 +17,15 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.35.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-distributed%2Fchangelog%2F%230350)
+![Version](https://img.shields.io/badge/0.48.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-distributed%2Fchangelog%2F%23v0481)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-distributed)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
 ![X](https://img.shields.io/twitter/follow/VictoriaMetrics?style=flat&label=Follow&color=black&logo=x&labelColor=black&link=https%3A%2F%2Fx.com%2FVictoriaMetrics)
 ![Reddit](https://img.shields.io/reddit/subreddit-subscribers/VictoriaMetrics?style=flat&label=Join&labelColor=red&logoColor=white&logo=reddit&link=https%3A%2F%2Fwww.reddit.com%2Fr%2FVictoriaMetrics)
+
+> [!CAUTION]
+> **This Helm Chart is deprecated!** Use [VMDistributed](https://docs.victoriametrics.com/operator/resources/vmdistributed/) — a Kubernetes operator resource that manages multi-zone VictoriaMetrics deployments natively, with automatic rolling upgrades per zone. Enable it in the [VictoriaMetrics K8s stack chart](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/) by setting `vmdistributed.enabled: true`. See the [migration guide](#migration-to-k8s-stack-chart) below.
 
 A Helm chart for Running VMCluster on Multiple Availability Zones
 
@@ -144,7 +148,7 @@ Example command using vmagent:
 
 ## Migration to k8s-stack chart
 
-Starting with [v0.73.0](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/changelog/#id-0730), the k8s-stack chart supports [VMDistributed CR](https://docs.victoriametrics.com/operator/resources/vmdistributed/), an evolution of the distributed chart. It provides an automatic upgrade procedure that sequentially rolls out new changes to each zone.
+Starting with [v0.73.0](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/changelog/#v0730), the k8s-stack chart supports [VMDistributed CR](https://docs.victoriametrics.com/operator/resources/vmdistributed/), an evolution of the distributed chart. It provides an automatic upgrade procedure that sequentially rolls out new changes to each zone.
 
 ### Limitations
 
@@ -253,6 +257,12 @@ vmagent:
 vmdistributed:
   enabled: true
   spec:
+    vmauth:
+      spec:
+        unauthorizedUserAccessSpec:
+          targetRefs:
+            - name: read
+            - name: write
     zoneCommon:
       vmagent:
         name: "vmagent-%ZONE%"
@@ -387,7 +397,7 @@ When using ArgoCD for chart management, follow these steps to migrate from the d
 
 1. Perform a non-cascading deletion of the ArgoCD Application for the distributed chart.
 
-2. Create a new application for k8s-stack using values from the [preparation step](http://#preparation).
+2. Create a new application for k8s-stack using values from the [preparation step](#preparation).
 
 ## How to install
 
@@ -432,13 +442,13 @@ Test the installation with command:
   - For HTTPS repository
 
     ```console
-    helm install vmd vm/victoria-metrics-distributed -f values.yaml -n NAMESPACE --debug
+    helm install vmd vm/victoria-metrics-distributed -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
   - For OCI repository
 
     ```console
-    helm install vmd oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-distributed -f values.yaml -n NAMESPACE --debug
+    helm install vmd oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-distributed -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
 Install chart with command:
@@ -637,7 +647,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="enablemultitenancy">
       <td><a href="#enablemultitenancy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">enableMultitenancy</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(bool)</code></em><p>Enable multitenancy mode see <a href="https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-distributed#how-to-use-multitenancy" target="_blank">here</a></p>
+      <td><em><code>(bool)</code></em><p>Enable multitenancy mode see <a href="https://docs.victoriametrics.com/helm/victoria-metrics-distributed/#how-to-use-multitenancy" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="extra">
@@ -660,7 +670,9 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="global">
       <td><a href="#global"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">cluster</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">dnsDomain</span><span class="p">:</span><span class="w"> </span><span class="l">cluster.local.</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">dnsDomain</span><span class="p">:</span><span class="w"> </span><span class="l">cluster.local.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraAnnotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Global chart properties</p>
 </td>
@@ -669,6 +681,18 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#global-cluster-dnsdomain"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.cluster.dnsDomain</span><span class="p">:</span><span class="w"> </span><span class="l">cluster.local.</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>K8s cluster domain suffix, uses for building storage pods&rsquo; FQDN. Details are <a href="https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="global-extraannotations">
+      <td><a href="#global-extraannotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraAnnotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Annotations added to all resources</p>
+</td>
+    </tr>
+    <tr id="global-extralabels">
+      <td><a href="#global-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Labels added to all resources</p>
 </td>
     </tr>
     <tr id="nameoverride">

@@ -58,7 +58,7 @@ As a `remoteWrite` target, VLAgent supports all VictoriaLogs components:
 
 ## Specification
 
-You can see the full actual specification of the `VLAgent` resource in the **[API docs -> VLAgent](https://docs.victoriametrics.com/operator/api/#vlagent)**.
+You can see the full actual specification of the `VLAgent` resource in the **[API docs -> VLAgent](https://docs.victoriametrics.com/operator/api/#v1-vlagent)**.
 
 If you can't find necessary field in the specification of the custom resource,
 see [extra arguments section](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
@@ -77,7 +77,7 @@ metadata:
 spec:
   image:
     repository: victoriametrics/vlagent
-    tag: v1.50.0
+    tag: v1.53.0
     pullPolicy: Always
 ```
 
@@ -91,7 +91,7 @@ metadata:
 spec:
   image:
     repository: victoriametrics/vlagent
-    tag: v1.50.0
+    tag: v1.53.0
     pullPolicy: Always
   imagePullSecrets:
     - name: my-repo-secret
@@ -201,6 +201,52 @@ metadata:
 spec:
   remoteWriteSettings:
     maxDiskUsagePerURL: "1GiB"
+```
+
+## Syslog ingestion
+
+`VLAgent` can accept logs over [syslog](https://docs.victoriametrics.com/victorialogs/data-ingestion/syslog/) via
+TCP and/or UDP listeners, set via `spec.syslogSpec.tcpListeners` and `spec.syslogSpec.udpListeners`:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VLAgent
+metadata:
+  name: example
+spec:
+  syslogSpec:
+    tcpListeners:
+      - listenPort: 8094
+        tenantID: "0:0"
+    udpListeners:
+      - listenPort: 8095
+        tenantID: "0:0"
+```
+
+TLS is supported for TCP listeners only. Set `tlsConfig` with a certificate and key, either referencing a `Secret`
+or a file already mounted into the pod; `minVersion` and `cipherSuites` further restrict which TLS versions and
+cipher suites clients may use:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: VLAgent
+metadata:
+  name: example
+spec:
+  syslogSpec:
+    tcpListeners:
+      - listenPort: 8094
+        tenantID: "0:0"
+        tlsConfig:
+          certSecret:
+            name: vlagent-syslog-tls
+            key: tls.crt
+          keySecret:
+            name: vlagent-syslog-tls
+            key: tls.key
+          minVersion: TLS12
+          cipherSuites:
+            - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 ```
 
 ## Examples

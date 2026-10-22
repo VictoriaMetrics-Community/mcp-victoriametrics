@@ -17,12 +17,4 @@ route them to your preferred notification channels, such as email, PagerDuty, Sl
 To configure alerting rules and notifications using the hosted Alertmanager, simply follow this guide:
 
 
-<iframe 
-    width="100%"
-    height="950" 
-    name="iframe" 
-    id="integration" 
-    frameborder="0"
-    src="https://console.victoriametrics.cloud/public/integrations/cloud-alertmanager" 
-    style="background: white;" >
-</iframe>
+{{< cloud-console-iframe "cloud-alertmanager" >}}

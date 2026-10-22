@@ -26,7 +26,7 @@ For each `VMSingle` resource, the Operator adds `Service` and `VMServiceScrape` 
 
 ## Specification
 
-You can see the full actual specification of the `VMSingle` resource in the **[API docs -> VMSingle](https://docs.victoriametrics.com/operator/api/#vmsingle)**.
+You can see the full actual specification of the `VMSingle` resource in the **[API docs -> VMSingle](https://docs.victoriametrics.com/operator/api/#v1beta1-vmsingle)**.
 
 If you can't find necessary field in the specification of the custom resource,
 see [Extra arguments section](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
@@ -44,7 +44,7 @@ Also, you can check out the [examples](https://docs.victoriametrics.com/operator
 - [VMProbe](https://docs.victoriametrics.com/operator/resources/vmprobe/)
 - [VMScrapeConfig](https://docs.victoriametrics.com/operator/resources/vmscrapeconfig/)
 
-These objects specify which targets VMSingle should scrape and how to collect metrics, and generate part of [VMSingle](https://docs.victoriametrics.com/victoriametrics/vmsingle/) scrape configuration.
+These objects specify which targets VMSingle should scrape and how to collect metrics, and generate part of [VMSingle](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) scrape configuration.
 
 To enable scraping on VMSingle, set `spec.ingestOnlyMode` to `false`.
 
@@ -58,28 +58,33 @@ To enable scraping on VMSingle, set `spec.ingestOnlyMode` to `false`.
 - `scrapeConfigNamespaceSelector` and `scrapeConfigSelector` for [VMScrapeConfig](https://docs.victoriametrics.com/operator/resources/vmscrapeconfig/) objects.
 
 This enables access control configuration for objects across namespaces.
-See [this doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#labelselector-v1-meta/) for selector specifications.
+See [this doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#labelselector-v1-meta) for selector specifications.
 
 In addition to these selectors, object filtering in a cluster can be done by the `selectAllByDefault` VMSingle spec field and the operator's `WATCH_NAMESPACE` environment variable.
 
 Following rules are applied:
 
-- If both `...NamespaceSelector` and `...Selector` are undefined, no objects are selected by default. Setting `spec.selectAllByDefault: true` selects all objects of the given type.
-- If `...NamespaceSelector` is defined and `...Selector` is undefined, all objects in the namespaces matched by ...NamespaceSelector are selected.
-- If `...NamespaceSelector` is undefined and `...Selector` is defined, all objects in VMSingle’s namespaces matching ...Selector are selected.
-- If `...NamespaceSelector` and `...Selector` both are defined, then only objects in the namespaces matched by...NamespaceSelector for the given ...Selector are matching.
+- If `...NamespaceSelector` and `...Selector` are both undefined, nothing is selected. Setting `spec.selectAllByDefault: true` selects all objects of the given type.
+- If `...NamespaceSelector` is defined and `...Selector` is undefined, all objects of the given type in the namespaces matched by `...NamespaceSelector` are selected.
+- If `...NamespaceSelector` is undefined and `...Selector` is defined, objects of the given type matching `...Selector` in the `VMSingle` namespace are selected.
+- If `...NamespaceSelector` and `...Selector` are both defined, objects of the given type matching `...Selector` in the namespaces matched by `...NamespaceSelector` are selected.
+- `selectAllByDefault` has an effect only when both `...NamespaceSelector` and `...Selector` are undefined.
+- An empty `...NamespaceSelector` (`{}`) matches all namespaces. If `...NamespaceSelector` matches no namespaces, nothing is selected.
+- If the operator's `WATCH_NAMESPACE` is set, `...NamespaceSelector` is ignored and objects of the given type are selected from all watched namespaces, not only from the `VMSingle` namespace. This also applies when only `...Selector` is defined.
+- If the operator's `WATCH_NAMESPACE` is set and `VMSingle` uses the operator-managed ServiceAccount, VMNodeScrape objects are not selected, because node discovery requires cluster-wide access.
 
 Below is a more visual and detailed view:
 
-| `...NamespaceSelector` | `...Selector` | `selectAllByDefault` | `WATCH_NAMESPACE` | Selected objects                                                                                            |
-|------------------------|---------------|----------------------|-------------------|-------------------------------------------------------------------------------------------------------------|
-| undefined              | undefined     | false                | undefined         | nothing                                                                                                     |
-| undefined              | undefined     | **true**             | undefined         | all objects of given type (`...`) in the cluster                                                            |
-| **defined**            | undefined     | *any*                | undefined         | all objects of given type (`...`) at namespaces for given `...NamespaceSelector`                            |
-| undefined              | **defined**   | *any*                | undefined         | all objects of given type (`...`) only at `VMSingle`'s namespace are matching for given `Selector`          |
-| **defined**            | **defined**   | *any*                | undefined         | all objects of given type (`...`) only at namespaces matched `...NamespaceSelector` for given `...Selector` |
-| *any*                  | undefined     | *any*                | **defined**       | all objects of given type (`...`) only at `VMSingle`'s namespace                                            |
-| *any*                  | **defined**   | *any*                | **defined**       | all objects of given type (`...`) only at `VMSingle`'s namespace for given `...Selector`                    |
+| `...NamespaceSelector` | `...Selector` | `selectAllByDefault` | `WATCH_NAMESPACE` | Selected objects                                                                                     |
+|------------------------|---------------|----------------------|-------------------|------------------------------------------------------------------------------------------------------|
+| undefined              | undefined     | false                | *any*             | nothing                                                                                              |
+| undefined              | undefined     | **true**             | undefined         | all objects of the given type in the cluster                                                         |
+| **defined**            | undefined     | *any*                | undefined         | all objects of the given type in the namespaces matched by `...NamespaceSelector`                    |
+| undefined              | **defined**   | *any*                | undefined         | objects of the given type matching `...Selector` in the `VMSingle` namespace                         |
+| **defined**            | **defined**   | *any*                | undefined         | objects of the given type matching `...Selector` in the namespaces matched by `...NamespaceSelector` |
+| undefined              | undefined     | **true**             | **defined**       | all objects of the given type in the watched namespaces                                              |
+| **defined**            | undefined     | *any*                | **defined**       | all objects of the given type in the watched namespaces                                              |
+| *any*                  | **defined**   | *any*                | **defined**       | objects of the given type matching `...Selector` in the watched namespaces                           |
 
 For more details about the `WATCH_NAMESPACE` variable, see [this doc](https://docs.victoriametrics.com/operator/configuration/#namespaced-mode).
 
@@ -206,22 +211,22 @@ Also, you can specify requests without limits - in this case default values for 
 
 ## Enterprise features
 
-VMSingle supports features from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise):
+VMSingle supports features from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise-features):
 
 - [Downsampling](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling)
 - [Multiple retentions / Retention filters](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention-filters)
 - [Backup automation](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/)
 
 For using Enterprise version of [vmsingle](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) you need to:
- - specify license at [`spec.license.key`](https://docs.victoriametrics.com/operator/api/#license-key) or at [`spec.license.keyRef`](https://docs.victoriametrics.com/operator/api/#license-keyref).
+ - specify license at [`spec.license.key`](https://docs.victoriametrics.com/operator/api/#v1beta1-license-key) or at [`spec.license.keyRef`](https://docs.victoriametrics.com/operator/api/#v1beta1-license-keyref).
  - change version of `vmsingle` to version with `-enterprise` suffix using [Version management](https://docs.victoriametrics.com/operator/resources/vmsingle/#version-management).
 
 ### Downsampling
 
-After that you can pass [Downsampling](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling)
-flag to `VMSingle` with [extraArgs](https://docs.victoriametrics.com/operator/resources/#extra-arguments) too.
-
-Here are complete example for [Downsampling](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling):
+Use `spec.downsampling` to configure [Downsampling](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling).
+Each rule requires `offset` (how far back to downsample) and `interval` (target resolution).
+An optional `filter` restricts the rule to matching time series.
+The optional `dedupInterval` sets `-dedup.minScrapeInterval` for the instance.
 
 ```yaml
 apiVersion: operator.victoriametrics.com/v1beta1
@@ -229,24 +234,39 @@ kind: VMSingle
 metadata:
   name: ent-example
 spec:
-  # enabling enterprise features
   license:
     keyRef:
       name: k8s-secret-that-contains-license
       key: key-in-a-secret-that-contains-license
   image:
     tag: v1.110.13-enterprise
-  extraArgs:
-    # using enterprise features: Downsampling
-    # more details about downsampling you can read on https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling
-    downsampling.period: 30d:5m,180d:1h,1y:6h,2y:1d
+  downsampling:
+    dedupInterval: 1m
+    rules:
+      - periods:
+          - offset: 30d
+            interval: 5m
+          - offset: 180d
+            interval: 1h
+          - offset: 1y
+            interval: 6h
+      - filter: '{env="prod"}'
+        periods:
+          - offset: 30d
+            interval: 1m
+          - offset: 180d
+            interval: 10m
 
   # ...other fields...
 ```
+
+You can read more about downsampling configuration on the [VictoriaMetrics downsampling page](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#downsampling).
 
 ### Retention filters
 
-The same method is used to enable retention filters - here are complete example for [Retention filters](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention-filters).
+Use `spec.retentionFilters` to configure [Retention filters](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention-filters).
+Each entry requires a MetricsQL label `filter` and a `retention` duration.
+The global `spec.retentionPeriod` applies to all series that don't match any filter.
 
 ```yaml
 apiVersion: operator.victoriametrics.com/v1beta1
@@ -254,20 +274,23 @@ kind: VMSingle
 metadata:
   name: ent-example
 spec:
-  # enabling enterprise features
   license:
     keyRef:
       name: k8s-secret-that-contains-license
       key: key-in-a-secret-that-contains-license
   image:
     tag: v1.110.13-enterprise
-  extraArgs:
-    # using enterprise features: Retention filters
-    # more details about retention filters you can read on https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention-filters
-    retentionFilter: '{team="juniors"}:3d,{env=~"dev|staging"}:30d'
+  retentionPeriod: "12"
+  retentionFilters:
+    - filter: '{team="juniors"}'
+      retention: 3d
+    - filter: '{env=~"dev|staging"}'
+      retention: 30d
 
   # ...other fields...
 ```
+
+You can read more about retention filters configuration on the [VictoriaMetrics retention filters page](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention-filters).
 
 ### Backup automation
 
@@ -318,7 +341,7 @@ stringData:
 
 You can read more about backup configuration options and mechanics [here](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/)
 
-Possible configuration options for backup crd can be found at [link](https://docs.victoriametrics.com/operator/api/#vmbackup)
+Possible configuration options for backup crd can be found at [link](https://docs.victoriametrics.com/operator/api/#v1beta1-vmbackup)
 
 #### Restoring backups
 
@@ -397,7 +420,12 @@ Advantages of using `VMBackupmanager` include:
 
 ## Examples
 
+`removePvcAfterDelete: true` makes the operator keep an owner reference on the `PersistentVolumeClaim`, so it's
+garbage-collected by Kubernetes when the `VMSingle` object is deleted. By default (`false`) the owner reference is
+stripped and the PVC is kept to preserve existing data.
+
 ```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMSingle
 metadata:
   name: example

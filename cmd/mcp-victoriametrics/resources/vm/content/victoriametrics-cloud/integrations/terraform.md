@@ -30,12 +30,4 @@ To set up the Terraform provider for VictoriaMetrics Cloud, visit the
 [Terraform integration](https://console.victoriametrics.cloud/integrations/terraform) in the Cloud Console
 or follow this interactive guide:
 
-<iframe
-    width="100%"
-    height="2800"
-    name="iframe"
-    id="integration"
-    frameborder="0"
-    src="https://console.victoriametrics.cloud/public/integrations/terraform"
-    style="background: white;" >
-</iframe>
+{{< cloud-console-iframe "terraform" >}}

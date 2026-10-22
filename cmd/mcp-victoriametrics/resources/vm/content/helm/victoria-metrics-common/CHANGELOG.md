@@ -4,7 +4,188 @@
 
 - TODO
 
-## 0.2.0
+## v0.4.3
+
+**Release date:** 02 Oct 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- with `useLegacyNaming: false` and a known component kind (`kindOverride` or a `vm`/`vl`/`vt`-prefixed `appKey`), `vm.selectorLabels`, `vm.commonLabels`, `vm.podLabels` and `vm.labels` now render the labels used by the VictoriaMetrics operator: `app.kubernetes.io/name: <kind>`, `app.kubernetes.io/instance: <release>` and `app.kubernetes.io/component: monitoring`. Ownership labels such as `app.kubernetes.io/managed-by` are not changed. Labels are unchanged with legacy naming or when the kind is unknown. Callers must pass the same context to every label helper of a component, since selectors now depend on the kind.
+
+## v0.4.2
+
+**Release date:** 31 Aug 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- `vm.cr.fullname` now fails when `useLegacyNaming: true` is set, since CR names must stay stable regardless of naming style; consuming charts no longer need their own validation for this.
+
+## v0.4.1
+
+**Release date:** 30 Aug 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- fixed `vm.plain.fullname` with `useLegacyNaming: false` silently ignoring a chart-wide or `global.fullnameOverride`: a call without `appKey` now uses the override as-is, and a call with `appKey` (no matching component-scoped override) now uses it as the base, prefixed by the operator kind — matching the behavior already used for legacy naming.
+
+## v0.4.0
+
+**Release date:** 30 Aug 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- **breaking (chart-internal API)**: `vm.operator.kind` no longer guesses a default resource-name prefix for an appKey that isn't already `vm`/`vl`/`vt`-prefixed; it now requires an explicit `kindOverride` and fails otherwise. `vm.managed.fullname` delegates to `vm.operator.kind` instead of duplicating its own prefix logic, so it gains the same `kindOverride` support and fail-fast behavior. All consuming charts have been updated to pass `kindOverride` where needed.
+
+## v0.3.16
+
+**Release date:** 28 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- updated `vm.namespace` to resolve per-component namespace override: when `appKey` is set in the template context, the first key is used to look up `<component>.namespaceOverride` in chart values. Component-level namespace takes precedence over chart-wide `namespaceOverride` and `global.namespaceOverride`. Enables `victoria-metrics-k8s-stack` to deploy individual CRs into separate namespaces. See [#3113](https://github.com/VictoriaMetrics/helm-charts/issues/3113)
+
+## v0.3.15
+
+**Release date:** 02 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- added `vm.openshift.serviceCA.volume` and `vm.openshift.serviceCA.volumeMount` helpers to conditionally mount the OpenShift service signing CA (`openshift-service-ca.crt` ConfigMap)
+
+## v0.3.14
+
+**Release date:** 02 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- sort `vm.keyValue` template items for consistency
+
+## v0.3.13
+
+**Release date:** 01 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- extended `vm.podLabels` helper to include `global.extraLabels` in pod template labels
+- added `vm.annotations` helper to merge `global.extraAnnotations` with per-resource annotations
+- added `vm.keyValue` helper to serialize a label/annotation map to `key=value,...` format
+
+## v0.3.12
+
+**Release date:** 24 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- added `vm.useLegacyNaming` helper that resolves the effective `useLegacyNaming` setting by traversing the `appKey` path in Values, allowing per-component overrides to take precedence over the chart-level setting
+- added `useLegacyNaming` support to `vm.plain.fullname`: when set to `false`, names use `<operator-kind>-<release>` convention matching the VictoriaMetrics operator; `fullnameOverride` now always takes precedence regardless of `useLegacyNaming`
+- added `useLegacyNaming` support to `vm.managed.fullname`: when set to `true`, managed resource names use suffix style (`<fullname>-<kind>`, matching the operator's `UseLegacyNaming` convention); when `false` or unset, the existing prefix style is preserved
+
+## v0.3.11
+
+**Release date:** 24 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- added `useLegacyNaming` support to `vm.plain.fullname`: when set to `false`, names use `<operator-kind>-<release>` convention matching the VictoriaMetrics operator
+
+## v0.3.10
+
+**Release date:** 19 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- extend `vm.managed.fullname` to preserve the `vt` prefix for VictoriaTraces components, consistent with existing `vm` and `vl` prefix handling
+
+## v0.3.9
+
+**Release date:** 13 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- `vm.probe`: fix TLS probe misconfiguration — when a TLS primary listener was configured and the probe used an explicit `httpGet` (e.g. `scheme: HTTPS`), the probe was silently replaced with `tcpSocket: null`, causing Kubernetes to reject the resource. An explicit `httpGet` is now always preserved; only an empty `httpGet: {}` triggers the automatic fallback to `tcpSocket`.
+
+## v0.3.8
+
+**Release date:** 01 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- added `vm.args.positional` template: builds positional CLI arg lists from a flat list of items with boolean tracking, boolean trailing padding, and all-false key dropping.
+- added `vl.syslog.args` template moved from victoria-logs charts; uses `vm.args.positional` internally.
+- `vm.http.args` refactored to use `vm.args.positional`.
+
+## v0.3.7
+
+**Release date:** 01 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- `vm.http.args` absent boolean fields at earlier indices are now gap-filled with `false` instead of empty string; keys where all values are falsy are dropped entirely to avoid passing disabled-feature flags (e.g. `--mtls=false` for enterprise-only features).
+
+## v0.3.6
+
+**Release date:** 01 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- `vm.probe` and `vm.url` now detect TLS from the primary http list item's `tls` field when `httpListenAddr` is not set in `extraArgs`; `extraArgs.tls` is used as fallback in all other cases.
+- `vm.http.args` now correctly includes boolean `false` values (e.g. `tls: false`, `mtls: false`); absent boolean fields at earlier indices are gap-filled with `false` instead of empty string.
+
+## v0.3.5
+
+**Release date:** 30 May 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- `vm.probe` switches from `httpGet` to `tcpSocket` when TLS is enabled on the primary HTTP listener.
+
+## v0.3.4
+
+**Release date:** 30 May 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- `vm.http.args` now requires each item to have not empty `name` property.
+- `vm.probe` and `vm.url` now detect TLS from the primary http list item's `tls` field when `httpListenAddr` is not set in `extraArgs`; `extraArgs.tls` is used as a fallback in all other cases.
+- fixed nil panic in `vm.probe` when `app.probe` is not set.
+- removed unused `vm.sa.name` template.
+- removed `vm.service` template; its style dispatch is now inlined into `vm.fqdn`.
+- removed `vm.host` template; inlined into `vm.url`, eliminating duplicate values resolution.
+- removed `vm.probe.http.path`, `vm.probe.http.scheme`, and `vm.probe.port` templates; inlined into `vm.probe`.
+
+## v0.3.3
+
+**Release date:** 28 May 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- removed vl.check.extraArgs and vm.check.extraArgs
+
+## v0.3.2
+
+**Release date:** 27 May 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- support vl.check.extraArgs template, that validates extra args for VictoriaLogs components.
+
+## v0.3.1
+
+**Release date:** 21 May 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- support vm.addr.primary template, that extracts item from `http` list with `primary: true`
+
+## v0.3.0
+
+**Release date:** 16 Apr 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
+
+- reverted usage of `app` label in `vm.selectorLabels`
+
+## v0.2.0
 
 **Release date:** 14 Apr 2026
 
@@ -12,7 +193,7 @@
 
 - remove chart name prefix from app.kubernetes.io/component label value
 
-## 0.1.0
+## v0.1.0
 
 **Release date:** 12 Apr 2026
 
@@ -20,7 +201,7 @@
 
 - replace custom `app` label with a well known `app.kubernetes.io/component`
 
-## 0.0.46
+## v0.0.46
 
 **Release date:** 23 Dec 2025
 
@@ -28,7 +209,7 @@
 
 - allow setting global labels for each resource using `.Values.global.extraLabels`. See [#2607](https://github.com/VictoriaMetrics/helm-charts/issues/2607).
 
-## 0.0.45
+## v0.0.45
 
 **Release date:** 10 Nov 2025
 
@@ -36,7 +217,7 @@
 
 - follow-up for previous release
 
-## 0.0.44
+## v0.0.44
 
 **Release date:** 10 Nov 2025
 
@@ -44,7 +225,7 @@
 
 - copy image section to prevent original image section modification
 
-## 0.0.43
+## v0.0.43
 
 **Release date:** 10 Nov 2025
 
@@ -52,7 +233,7 @@
 
 - fix setting global registry, when no image section is set
 
-## 0.0.42
+## v0.0.42
 
 **Release date:** 19 Mar 2025
 
@@ -60,7 +241,7 @@
 
 - Support custom case for list empty argument.
 
-## 0.0.41
+## v0.0.41
 
 **Release date:** 02 Mar 2025
 
@@ -68,7 +249,7 @@
 
 - add noEnterprise flag to disable `-enterprise` image suffix
 
-## 0.0.40
+## v0.0.40
 
 **Release date:** 02 Mar 2025
 
@@ -76,7 +257,7 @@
 
 - Support managed components license path for proper enterprise images rendering
 
-## 0.0.39
+## v0.0.39
 
 **Release date:** 05 Feb 2025
 
@@ -84,7 +265,7 @@
 
 - Fix overwrite per service empty registry
 
-## 0.0.38
+## v0.0.38
 
 **Release date:** 04 Feb 2025
 
@@ -92,7 +273,7 @@
 
 - Fixed minor securityContext template typo
 
-## 0.0.37
+## v0.0.37
 
 **Release date:** 06 Jan 2025
 
@@ -100,7 +281,7 @@
 
 - quote collection values in arguments
 
-## 0.0.36
+## v0.0.36
 
 **Release date:** 24 Dec 2024
 
@@ -109,7 +290,7 @@
 - Exclude markdown files from package
 - Unset empty registry in `vm.image` template to fix global registry propagation
 
-## 0.0.35
+## v0.0.35
 
 **Release date:** 2024-12-17
 
@@ -117,7 +298,7 @@
 
 - fixed tls in common templates. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1874)
 
-## 0.0.34
+## v0.0.34
 
 **Release date:** 2024-12-11
 
@@ -125,7 +306,7 @@
 
 - moved helm chart requirement to a common template
 
-## 0.0.33
+## v0.0.33
 
 **Release date:** 2024-11-28
 
@@ -134,7 +315,7 @@
 - use container port instead of service one in `vm.host` template, while appIdx is defined
 - expect tls extraArg parameter as boolean value
 
-## 0.0.32
+## v0.0.32
 
 **Release date:** 2024-11-25
 
@@ -142,7 +323,7 @@
 
 - removed suffix, that starts with `@sha` from app version label. see [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1801).
 
-## 0.0.31
+## v0.0.31
 
 **Release date:** 2024-11-21
 
@@ -150,7 +331,7 @@
 
 - fixed minor typo in vm.labels
 
-## 0.0.30
+## v0.0.30
 
 **Release date:** 2024-11-21
 
@@ -158,7 +339,7 @@
 
 - support template rendering in `vm.app.name` template
 
-## 0.0.29
+## v0.0.29
 
 **Release date:** 2024-11-19
 
@@ -166,7 +347,7 @@
 
 - Allow lookup in context root for `vm.url`, `vm.host` templates
 
-## 0.0.28
+## v0.0.28
 
 **Release date:** 2024-11-14
 
@@ -174,7 +355,7 @@
 
 - Allow lookup in context root for `vm.url`, `vm.host` templates
 
-## 0.0.27
+## v0.0.27
 
 **Release date:** 2024-11-14
 
@@ -183,7 +364,7 @@
 - fail fullname templates if data for appKey is not found
 - find by appKey in Values and context root
 
-## 0.0.26
+## v0.0.26
 
 **Release date:** 2024-11-14
 
@@ -191,7 +372,7 @@
 
 - do not append key only if it's passed to a template
 
-## 0.0.25
+## v0.0.25
 
 **Release date:** 2024-11-12
 
@@ -199,7 +380,7 @@
 
 - fixed adding suffix for `vm.plain.fullname`
 
-## 0.0.24
+## v0.0.24
 
 **Release date:** 2024-11-12
 
@@ -208,7 +389,7 @@
 - Disabled impact of `<component>.name` on resource name to avoid confusion
 - Fixed `vm.app.name` template for appCtx that contains slice
 
-## 0.0.23
+## v0.0.23
 
 **Release date:** 2024-11-08
 
@@ -216,7 +397,7 @@
 
 - fix: context cleanup
 
-## 0.0.22
+## v0.0.22
 
 **Release date:** 2024-11-08
 
@@ -224,7 +405,7 @@
 
 - Removed unused cases from `vm.fullname`
 
-## 0.0.21
+## v0.0.21
 
 **Release date:** 2024-11-07
 
@@ -233,7 +414,7 @@
 - Added ability to disable name truncation
 - Truncate `/` from `vm.url` output
 
-## 0.0.20
+## v0.0.20
 
 **Release date:** 2024-11-06
 
@@ -241,15 +422,15 @@
 
 - Fixed boolean args rendering
 
-## 0.0.19
+## v0.0.19
 
 **Release date:** 2024-11-04
 
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-- TODO
+- added `useLegacyNaming` support to `vm.plain.fullname`: when set to `false`, names use `<operator-kind>-<release>` convention matching the VictoriaMetrics operator
 
-## 0.0.18
+## v0.0.18
 
 **Release date:** 2024-10-29
 
@@ -257,7 +438,7 @@
 
 - vm.managed.fullname template modify prefixes
 
-## 0.0.17
+## v0.0.17
 
 **Release date:** 2024-10-25
 
@@ -266,7 +447,7 @@
 - Added vm.podLabels template
 - Do no append default `<component>` prefix/suffix when `<component>.fullnameOverride` set
 
-## 0.0.16
+## v0.0.16
 
 **Release date:** 2024-10-15
 
@@ -274,7 +455,7 @@
 
 - Allow extract name prefix from app level fullnameOverride property
 
-## 0.0.15
+## v0.0.15
 
 **Release date:** 2024-10-11
 
@@ -282,7 +463,7 @@
 
 - Display compatibility error message
 
-## 0.0.14
+## v0.0.14
 
 **Release date:** 2024-10-04
 
@@ -290,7 +471,7 @@
 
 - Fixed openshift compatibility templates
 
-## 0.0.13
+## v0.0.13
 
 **Release date:** 2024-09-16
 
@@ -299,7 +480,7 @@
 - Do not use image variant if custom image tag is set in `vm.image` template
 - Support multiple license flag styles, which are different for vmanomaly and other services
 
-## 0.0.12
+## v0.0.12
 
 **Release date:** 2024-09-16
 
@@ -309,7 +490,7 @@
 - Added `vm.enterprise.disabled` template to check if enterprise license is disabled
 - Use `service.servicePort` as a port source if flag is not set in `vm.url`
 
-## 0.0.11
+## v0.0.11
 
 **Release date:** 2024-09-11
 
@@ -317,7 +498,7 @@
 
 - Added ability to pass extra prefix for `vm.managed.fullname`
 
-## 0.0.10
+## v0.0.10
 
 **Release date:** 2024-09-10
 
@@ -328,7 +509,7 @@
 - use appkey as `app` label by default
 - support multiple service naming styles for `vm.service`
 
-## 0.0.9
+## v0.0.9
 
 **Release date:** 2024-09-02
 
@@ -339,7 +520,7 @@
 - Added `vm.managed.fullname`, which returns default fullname prefixed by `appKey`
 - Added `vm.plain.fullname`, which returns default fullname suffixed by `appKey`
 
-## 0.0.8
+## v0.0.8
 
 **Release date:** 2024-08-29
 
@@ -355,7 +536,7 @@
 - Added `vm.release` for release name
 - Added `vm.selectorLabels` for common selector labels
 
-## 0.0.7
+## v0.0.7
 
 **Release date:** 2024-08-27
 
@@ -364,7 +545,7 @@
 - Support short and long args flags in `vm.args`
 - Updated `vm.enterprise.only` error message
 
-## 0.0.6
+## v0.0.6
 
 **Release date:** 2024-08-27
 
@@ -373,7 +554,7 @@
 - Changed structure of `vm.args` template output
 - Removed `eula` support
 
-## 0.0.5
+## v0.0.5
 
 **Release date:** 2024-08-26
 
@@ -382,7 +563,7 @@
 - Fixed `vm.enterprise.only` template to check if at least one of both global.licence.eula and .Values.license.eula are defined
 - Convert `vm.args` bool `true` values to flags without values
 
-## 0.0.4
+## v0.0.4
 
 **Release date:** 2024-08-26
 
@@ -391,7 +572,7 @@
 - Updated `vm.probe.*` templates to remove Helm 3.14 restriction.
 - Added `vm.args` template for cmd args generation
 
-## 0.0.3
+## v0.0.3
 
 **Release date:** 2024-08-25
 
@@ -401,7 +582,7 @@
 - Moved `vm.compatibility.renderSecurityContext` template
 - Fixed a case, when null is passed to a `.Values.global`. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1296)
 
-## 0.0.2
+## v0.0.2
 
 **Release date:** 2024-08-23
 
@@ -409,7 +590,7 @@
 
 - Added `vm.port.from.flag` template to extract port from cmd flag listen address.
 
-## 0.0.1
+## v0.0.1
 
 **Release date:** 2024-08-15
 

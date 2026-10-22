@@ -1,21 +1,24 @@
 ---
-weight: 4
+weight: 5
 title: "Limits"
 menu:
   docs:
     parent: "deployments"
-    weight: 4
+    weight: 5
     name: "Limits"
 tags:
   - metrics
+  - logs
+  - traces
   - cloud
   - enterprise
 ---
 
 > [!WARNING]
 > Hard limits described in this section only apply to the [VictoriaMetrics Capacity Tiers](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victoriametrics-tiers/).
-> In [VictoriaLogs Capacity Tiers](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victorialogs-tiers/)
-> only Access Token limits are enforced at the moment.
+> In [VictoriaLogs](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victorialogs-tiers/)
+> and [VictoriaTraces](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victoriatraces-tiers/)
+> Capacity Tiers only Access Token limits are enforced at the moment.
 
 Apart from the capacities per tier described in the [corresponding page](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/victoriametrics-tiers/),
 VictoriaMetrics Cloud also enforces hard limits in order to ensure operations. Users can expect
@@ -80,6 +83,16 @@ Each deployment has a limit on the number of Access tokens that can be created, 
 <div>
 
 **VictoriaLogs deployments:**
+
+| Tier (CPUs) | Access token limit |
+|-------------|-------------------|
+| 1           | 20                |
+| 2           | 40                |
+| 3           | 60                |
+| 4           | 80                |
+| 5           | 100               |
+
+**VictoriaTraces deployments:**
 
 | Tier (CPUs) | Access token limit |
 |-------------|-------------------|

@@ -57,6 +57,67 @@ datasources:
     isDefault: false
 ```
 
+## Authentication
+
+The datasource supports the authentication methods provided by Grafana's standard HTTP settings
+(Basic auth, TLS client certificates, custom HTTP headers), plus forwarding the OAuth identity
+of the signed-in Grafana user.
+
+### Forward OAuth Identity
+
+If Grafana itself authenticates users via OAuth/OIDC (for example, [generic OAuth](https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/generic-oauth/)
+with Keycloak, Okta, Auth0 or another provider), the datasource can reuse the access token of the logged-in user.
+With **Forward OAuth Identity** enabled, Grafana adds the user's `Authorization: Bearer <access token>` header
+(and `X-Id-Token`, when available) to every request the plugin sends to the configured URL:
+data queries, health check ("Save & test") and autocomplete/resource requests.
+
+To enable it in the UI, turn on the **Forward OAuth Identity** toggle in the Auth section of the datasource settings.
+To enable it via provisioning, set `jsonData.oauthPassThru: true`:
+
+```yaml
+apiVersion: 1
+datasources:
+  - name: VictoriaMetrics
+    type: victoriametrics-metrics-datasource
+    access: proxy
+    # vmauth validates the forwarded JWT and routes the request to VictoriaMetrics
+    url: http://vmauth:8427
+    jsonData:
+      oauthPassThru: true
+```
+
+This pairs naturally with [vmauth](https://docs.victoriametrics.com/victoriametrics/vmauth/) in front of VictoriaMetrics:
+vmauth can verify the forwarded JWT via [OIDC discovery](https://docs.victoriametrics.com/victoriametrics/vmauth/#oidc-discovery)
+and authorize/route requests based on token claims via [JWT claim matching](https://docs.victoriametrics.com/victoriametrics/vmauth/#jwt-claim-matching):
+
+```yaml
+# vmauth -auth.config
+users:
+  - jwt:
+      oidc:
+        issuer: "https://sso.example.com/realms/main"
+      match_claims:
+        # authorize and route requests based on any JWT claims
+        team: "observability"
+      # Required for tokens issued by general-purpose identity providers
+      # (Keycloak, Okta, Auth0, ...) which don't embed the VictoriaMetrics-specific
+      # `vm_access` claim, see the note below.
+      default_vm_access_claim: {}
+    url_prefix: "http://victoriametrics:8428/"
+```
+
+**Note about the `vm_access` claim:** since vmauth `v1.147.0`, a JWT token without the `vm_access` claim
+falls through to `unauthorized_user` and is rejected unless `default_vm_access_claim` is configured
+in the `jwt` section. Tokens issued by general-purpose identity providers normally don't contain `vm_access`,
+so either set `default_vm_access_claim` (as in the example above) or configure your identity provider
+to embed the [`vm_access` claim](https://docs.victoriametrics.com/victoriametrics/vmauth/#jwt-claim-based-request-templating).
+The rejection is silent by default — run vmauth with `-logInvalidAuthTokens` to see the reason.
+
+**Limitations:** the forwarded token exists only within the session of a signed-in user.
+Features that run without a user context — alerting and recording rules, public dashboards, reporting —
+send requests without the token and will be rejected by the auth proxy.
+For those, use a service credential (for example, Basic auth or a bearer token on a separate datasource).
+
 ## Building queries
 
 VictoriaMetrics query language is [MetricsQL](https://docs.victoriametrics.com/victoriametrics/metricsql/) - query language inspired by PromQL. 

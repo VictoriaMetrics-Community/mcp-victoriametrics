@@ -24,12 +24,4 @@ in the [Access Tokens documentation](https://docs.victoriametrics.com/victoriame
 To configure Prometheus to remote write to VictoriaMetrics Cloud, visit the [cloud console](https://console.victoriametrics.cloud/integrations/prometheus),
 or follow this interactive guide:
 
-<iframe 
-    width="100%"
-    height="1200" 
-    name="iframe" 
-    id="integration" 
-    frameborder="0"
-    src="https://console.victoriametrics.cloud/public/integrations/prometheus" 
-    style="background: white;" >
-</iframe>
+{{< cloud-console-iframe "prometheus" >}}

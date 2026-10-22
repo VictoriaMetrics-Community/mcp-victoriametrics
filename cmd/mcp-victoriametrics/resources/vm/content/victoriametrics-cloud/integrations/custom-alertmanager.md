@@ -17,12 +17,4 @@ Alertmanager setup and want to connect it to VictoriaMetrics Cloud’s alerting 
 To configure alerting rules and route notifications to your self-hosted Alertmanager, simply follow
 this guide:
 
-<iframe 
-    width="100%"
-    height="900" 
-    name="iframe" 
-    id="integration" 
-    frameborder="0"
-    src="https://console.victoriametrics.cloud/public/integrations/custom-alertmanager" 
-    style="background: white;" >
-</iframe>
+{{< cloud-console-iframe "custom-alertmanager" >}}

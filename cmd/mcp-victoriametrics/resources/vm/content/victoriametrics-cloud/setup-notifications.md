@@ -81,3 +81,28 @@ webhook.
 {{% /collapse %}}
 
 <br>
+
+## Setup Webhook notifications
+
+Webhook notifications allow you to send alerts to any HTTP endpoint that accepts POST requests.
+This is useful for integrating with custom alert handlers or third-party services such as
+[Grafana Alerting](https://grafana.com/docs/grafana/latest/alerting/configure-notifications/manage-contact-points/integrations/webhook-notifier/).
+
+### Authentication
+
+Choose one of the following authentication methods:
+
+- **Basic Auth** – Enter a username and password.
+- **Bearer Token** – Enter a bearer token to be sent in the `Authorization` header.
+- **No Authentication** – Leave authentication fields empty if your endpoint does not require it.
+
+### Configuration
+
+1. Enter the destination URL of your HTTP endpoint.
+1. Select the desired authentication method and fill in the required credentials.
+1. Press **Save** to store your settings, or **Save and Test** to save and immediately send a test notification to the configured endpoint.
+
+> For a list of services that support Alertmanager webhook receiver integrations,
+> see [Alertmanager Webhook Receiver Integrations](https://prometheus.io/docs/operating/integrations/#alertmanager-webhook-receiver).
+
+<br>

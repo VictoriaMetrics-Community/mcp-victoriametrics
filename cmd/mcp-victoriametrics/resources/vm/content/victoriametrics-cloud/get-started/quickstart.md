@@ -7,6 +7,8 @@ menu:
     weight: 3
 tags:
   - metrics
+  - logs
+  - traces
   - cloud
   - enterprise
   - guide
@@ -37,7 +39,7 @@ VictoriaMetrics Cloud supports registration via Sign up with Google Auth service
 {{% collapse name="How to restore your password" %}}
 
 > If you forgot your password, it can always be restored by clicking the `Forgot password?` link on the [Sign In](https://console.victoriametrics.cloud/signIn?utm_source=website&utm_campaign=docs_quickstart) page.
-If you need assistance or have any questions, don't hesitate to contact our support team at support-cloud@victoriametrics.com.
+If you need assistance or have any questions, don't hesitate to contact our [support team](https://docs.victoriametrics.com/victoriametrics-cloud/support/#how-to-reach-support).
 
 {{% /collapse %}}
 
@@ -45,8 +47,8 @@ If you need assistance or have any questions, don't hesitate to contact our supp
 
 Creating VictoriaMetrics Cloud deployments is straightforward. Simply navigate
 to the [Deployments](https://console.victoriametrics.cloud/deployments?utm_source=website&utm_campaign=docs_quickstart) page,
-click on `Create`, pick a [Capacity Tier](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/#capacity-tiers),
-and your VictoriaMetrics or VictoriaLogs instance will be up & running in a few seconds.
+click to create a `Metrics`, `Logs` or `Traces` deployment, pick a [Capacity Tier](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/#capacity-tiers),
+and your VictoriaMetrics, VictoriaLogs or VictoriaTraces instance will be up & running in a few seconds.
 
 > [!TIP] Quick Start!
 > To create your first deployment, click on `Start using VictoriaMetrics Cloud`.
@@ -57,14 +59,14 @@ When creating a deployment, the following options are available:
 
 | **Option**           | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 |------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <nobr>**`Deployment type`**</nobr>    | Allows you to choose between [VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) and [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/) deployments.                                                                                                                                                                                                                                                                                                                                                                                     |
+| <nobr>**`Deployment type`**</nobr>    | Allows you to choose between [VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/), [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/) and [VictoriaTraces](https://docs.victoriametrics.com/victoriatraces/) deployments.                                                                                                                                                                                                                                                                                                                                                                                     |
 | <nobr>**`Deployment name`**</nobr>    | A unique name for your deployment that will help you identify it.                                                                                                                                                                                                                                                                                                                                                                                     |
 | **`Single-node`**        | For affordable, performant deployments.                                                                                                                                                                                                                                                                                                                                                                                                               |
 | **`Cluster`**            | For highly available and multi-tenant deployments at scale.                                                                                                                                                                                                                                                                                                                                                                                           |
 | **`Region`**             | The cloud provider region where your deployment runs. For optimal performance and reduced traffic costs, select a region close to your application.                                                                                                                                                                                                                                                                                                   |
 | **`Capacity Tier`**      | VictoriaMetrics Cloud offers a predefined set of instance sizes (or [tiers](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/#capacity-tiers)) that cover most use cases. In this way, we can keep fixed pricing without surprises. Read [this guide](https://docs.victoriametrics.com/guides/understand-your-setup-size/) to understand your setup size. Keep in mind that deployments may be [modified](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#modifying-an-existing-deployment)! |
-| **`Retention`**          | The time, in months or days, you want to keep your data. Once set, VictoriaMetrics Cloud recommends an estimated storage size for metrics instances. See this [note](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#about-storage) for more information.                                                                                                                                                                                                                                                                |
-| **`Storage`**          | Disk size for data storage. You always can expand disk size later. See this [note](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#about-storage) for more information.                                                                                                                                                                                                                                                                                                                              |
+| **`Retention`**          | The time, in months or days, you want to keep your data. Once set, VictoriaMetrics Cloud recommends an estimated storage size for metrics instances. See this [note](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#about-storage-in-victoriametrics-instances) for more information.                                                                                                                                                                                                                                                                |
+| **`Storage`**          | Disk size for data storage. You always can expand disk size later. See this [note](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/quickstart/#about-storage-in-victoriametrics-instances) for more information.                                                                                                                                                                                                                                                                                                                              |
 | **`Deduplication`** | Deduplication handles redundant data in high-availability (HA) setups to retain only one sample per interval. For best results, set deduplication to match the collect metrics interval. If you have multiple intervals, set it to the shortest one.                                                                                                                                                                                                  |
 | <nobr>**`Maintenance Window`**</nobr> | We use this value as the preferred window for us to perform maintenance operations, such as upgrades, when needed.                                                                                                                                                                                                                                                                                                                                    |
 
@@ -90,7 +92,7 @@ You'll also be notified via email once your deployment is ready to use.
 
 
 >[!Warning]
-> VictoriaLogs instances does not provide storage capacity recommendations at the moment.
+> VictoriaLogs and VictoriaTraces instances do not provide storage capacity recommendations at the moment.
 
 {{% /collapse %}}
 
@@ -166,14 +168,14 @@ Additional configuration options may be found under `Advanced Settings`  where t
 
 VictoriaMetrics Cloud supports different payment options. You can found more information under the [Billing](https://docs.victoriametrics.com/victoriametrics-cloud/billing/) section.
 
-To add your payment method, navigate to the VictoriaMetrics Cloud [Billing](https://console.victoriametrics.cloud/billing?utm_source=website&utm_campaign=docs_quickstart)
+To add your payment method, navigate to the VictoriaMetrics Cloud [Billing](https://console.victoriametrics.cloud/organization/billing?utm_source=website&utm_campaign=docs_quickstart)
 page, and go to the `Payment methods` tab. There, you'll be able to add a payment method by:
 
 1. **Bank card**: fill required fields
-2. **AWS Marketplace**: link your AWS billing account via AWS Marketplace. This option will redirect you to the [AWS VictoriaMetrics Cloud product page](https://aws.amazon.com/marketplace/pp/prodview-atfvt3b73m2z4), where you can easily `Subscribe` to VictoriaMetrics Cloud. You'll be redirected back to VictoriaMetrics Cloud [Billing page](https://console.victoriametrics.cloud/billing?utm_source=website&utm_campaign=docs_quickstart) by clicking on `Set up your account`.
+2. **AWS Marketplace**: link your AWS billing account via AWS Marketplace. This option will redirect you to the [AWS VictoriaMetrics Cloud product page](https://aws.amazon.com/marketplace/pp/prodview-atfvt3b73m2z4), where you can easily `Subscribe` to VictoriaMetrics Cloud. You'll be redirected back to VictoriaMetrics Cloud [Billing page](https://console.victoriametrics.cloud/organization/billing?utm_source=website&utm_campaign=docs_quickstart) by clicking on `Set up your account`.
 
 If you add both payment methods, you can easily switch between them by selecting your preferred option.
 
 > [!NOTE] What happens if a payment method is not configured?
 > After the trial period expires, deployments will be stopped and deleted if no payment methods are found for your account.
-> If you need assistance or have any questions, don't hesitate to contact our support team at support-cloud@victoriametrics.com.
+> If you need assistance or have any questions, don't hesitate to contact our [support team](https://docs.victoriametrics.com/victoriametrics-cloud/support/#how-to-reach-support).

@@ -25,13 +25,4 @@ To generate your access token (for write access in this case), follow the steps 
 To integrate VMAgent with VictoriaMetrics Cloud, visit the [cloud console](https://console.victoriametrics.cloud/integrations/vmagent),
 or simply follow this interactive guide:
 
-<iframe 
-    width="100%"
-    height="1900" 
-    name="iframe" 
-    id="integration" 
-    frameborder="0"
-    src="https://console.victoriametrics.cloud/public/integrations/vmagent"
-    style="background: white;"
-    >
-</iframe>
+{{< cloud-console-iframe "vmagent" >}}

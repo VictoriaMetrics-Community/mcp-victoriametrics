@@ -26,7 +26,7 @@ For each `VTSingle` resource, the Operator adds `Service` and `VMServiceScrape` 
 
 ## Specification
 
-You can see the full actual specification of the `VTSingle` resource in the **[API docs -> VTSingle](https://docs.victoriametrics.com/operator/api/#vtsingle)**.
+You can see the full actual specification of the `VTSingle` resource in the **[API docs -> VTSingle](https://docs.victoriametrics.com/operator/api/#v1-vtsingle)**.
 
 If you can't find necessary field in the specification of the custom resource,
 see [Extra arguments section](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
@@ -36,6 +36,41 @@ Also, you can check out the [examples](https://docs.victoriametrics.com/operator
 ## High availability
 
 `VTSingle` doesn't support high availability. Consider using [`VTCluster`](https://docs.victoriametrics.com/operator/resources/vtcluster/) or multiple `VTSingle` resources.
+
+## gRPC ingestion
+
+In addition to OTLP/HTTP on the default port, `VTSingle` can accept trace spans over OTLP/gRPC. Set
+`spec.grpcSpec.listenPort` to enable a gRPC listener alongside the default HTTP one:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: "VTSingle"
+metadata:
+  name: example
+spec:
+  grpcSpec:
+    listenPort: 4317
+```
+
+TLS for the gRPC listener is disabled by default. To enable it, set `spec.grpcSpec.tlsConfig` with a certificate and
+key, either referencing a `Secret` or a file already mounted into the pod:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1
+kind: "VTSingle"
+metadata:
+  name: example
+spec:
+  grpcSpec:
+    listenPort: 4317
+    tlsConfig:
+      certSecret:
+        name: vtsingle-grpc-tls
+        key: tls.crt
+      keySecret:
+        name: vtsingle-grpc-tls
+        key: tls.key
+```
 
 ## Version management
 
@@ -117,6 +152,10 @@ Also, you can specify requests without limits - in this case default values for 
 
 ### VTSingle with resources set
 
+`removePvcAfterDelete: true` makes the operator keep an owner reference on the `PersistentVolumeClaim`, so it's
+garbage-collected by Kubernetes when the `VTSingle` object is deleted. By default (`false`) the owner reference is
+stripped and the PVC is kept to preserve existing data.
+
 ```yaml
 apiVersion: operator.victoriametrics.com/v1
 kind: VTSingle
@@ -124,6 +163,7 @@ metadata:
   name: example
 spec:
   retentionPeriod: "12"
+  removePvcAfterDelete: true
   storage:
     resources:
       requests:

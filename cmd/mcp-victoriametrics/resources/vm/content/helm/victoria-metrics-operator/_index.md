@@ -3,6 +3,7 @@
 ---
 weight: 13
 title: VictoriaMetrics Operator
+description: "Deploy the Operator itself on Kubernetes."
 menu:
   docs:
     parent: helm
@@ -16,7 +17,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.60.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-operator%2Fchangelog%2F%230600)
+![Version](https://img.shields.io/badge/0.68.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-operator%2Fchangelog%2F%23v0681)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-operator)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -150,13 +151,13 @@ Test the installation with command:
   - For HTTPS repository
 
     ```console
-    helm install vmo vm/victoria-metrics-operator -f values.yaml -n NAMESPACE --debug
+    helm install vmo vm/victoria-metrics-operator -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
   - For OCI repository
 
     ```console
-    helm install vmo oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-operator -f values.yaml -n NAMESPACE --debug
+    helm install vmo oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-operator -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
 Install chart with command:
@@ -381,10 +382,21 @@ Change the values according to the need of the environment in ``victoria-metrics
 </a></td>
       <td><em><code>(string)</code></em></td>
     </tr>
+    <tr id="allowedmetricsendpoints[2]">
+      <td><a href="#allowedmetricsendpoints[2]"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">allowedMetricsEndpoints[2]</span><span class="p">:</span><span class="w"> </span><span class="l">/metrics/slis</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
     <tr id="annotations">
       <td><a href="#annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Annotations to be added to the all resources</p>
+</td>
+    </tr>
+    <tr id="command">
+      <td><a href="#command"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Override default container command. Use when the VictoriaMetrics binary is available at a custom path</p>
 </td>
     </tr>
     <tr id="configreloader-image">
@@ -407,7 +419,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="crds-cleanup-image">
       <td><a href="#crds-cleanup-image"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.cleanup.image</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">rancher/kubectl</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">registry.k8s.io/kubectl</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Image configuration for CRD cleanup Job</p>
@@ -500,7 +512,7 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em></td>
     </tr>
     <tr id="crds-upgrade-kubectl-image-repository">
-      <td><a href="#crds-upgrade-kubectl-image-repository"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.kubectl.image.repository</span><span class="p">:</span><span class="w"> </span><span class="l">rancher/kubectl</span></span></span></code></pre>
+      <td><a href="#crds-upgrade-kubectl-image-repository"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">crds.upgrade.kubectl.image.repository</span><span class="p">:</span><span class="w"> </span><span class="l">registry.k8s.io/kubectl</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em></td>
     </tr>
@@ -586,6 +598,18 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Upgrade job Pod Topology Spread Constraints. Spec is <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/" target="_blank">here</a></p>
 </td>
     </tr>
+    <tr id="dnsconfig">
+      <td><a href="#dnsconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">dnsConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Custom DNS config for pod. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-config" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="dnspolicy">
+      <td><a href="#dnspolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">dnsPolicy</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&#34;&#34;&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>DNS policy for operator pod. If not set and hostNetwork is enabled, defaults to ClusterFirstWithHostNet.</p>
+</td>
+    </tr>
     <tr id="env">
       <td><a href="#env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
@@ -660,6 +684,18 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Openshift security context compatibility configuration</p>
 </td>
     </tr>
+    <tr id="global-extraannotations">
+      <td><a href="#global-extraannotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraAnnotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Annotations added to all resources</p>
+</td>
+    </tr>
+    <tr id="global-extralabels">
+      <td><a href="#global-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Labels added to all resources</p>
+</td>
+    </tr>
     <tr id="global-image-registry">
       <td><a href="#global-image-registry"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.image.registry</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
@@ -670,6 +706,17 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#global-imagepullsecrets"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.imagePullSecrets</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>Image pull secrets, that can be shared across multiple helm charts</p>
+</td>
+    </tr>
+    <tr id="global-versions">
+      <td><a href="#global-versions"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.versions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">alertmanager</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">anomaly</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">logs</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">metrics</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">traces</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Default component versions, populate VM_METRICS_VERSION/VM_LOGS_VERSION/VM_TRACES_VERSION/VM_ANOMALY_VERSION/VM_VMALERTMANAGER_ALERTMANAGERVERSION env vars unless already set via <code>env</code>, or an empty string to leave the operator&rsquo;s own built-in default in effect</p>
 </td>
     </tr>
     <tr id="hostnetwork">
@@ -755,10 +802,28 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(bool)</code></em><p>Enables ownership reference for converted prometheus-operator objects, it will remove corresponding victoria-metrics objects in case of deletion prometheus one.</p>
 </td>
     </tr>
+    <tr id="operator-gateway-support">
+      <td><a href="#operator-gateway-support"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">operator.gateway_support</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable Gateway API support</p>
+</td>
+    </tr>
+    <tr id="operator-openshift-compatibility">
+      <td><a href="#operator-openshift-compatibility"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">operator.openshift_compatibility</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enables OpenShift compatibility mode for the operator (supported since v0.73.0). When enabled, operator automatically adjusts security contexts and permissions for OpenShift clusters.</p>
+</td>
+    </tr>
     <tr id="operator-prometheus-converter-add-argocd-ignore-annotations">
       <td><a href="#operator-prometheus-converter-add-argocd-ignore-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">operator.prometheus_converter_add_argocd_ignore_annotations</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>Compare-options and sync-options for prometheus objects converted by operator for properly use with ArgoCD</p>
+</td>
+    </tr>
+    <tr id="operator-vpa-support">
+      <td><a href="#operator-vpa-support"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">operator.vpa_support</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable VPA support</p>
 </td>
     </tr>
     <tr id="poddisruptionbudget">
@@ -882,6 +947,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Resource object</p>
 </td>
     </tr>
+    <tr id="runtimeclassname">
+      <td><a href="#runtimeclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">runtimeClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Name of the <a href="https://kubernetes.io/docs/concepts/containers/runtime-class/" target="_blank">RuntimeClass</a> used to run the pod, e.g. &ldquo;gvisor&rdquo;</p>
+</td>
+    </tr>
     <tr id="securitycontext">
       <td><a href="#securitycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">securityContext</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
@@ -952,6 +1023,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#service-loadbalancersourceranges"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">service.loadBalancerSourceRanges</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>Load balancer source range</p>
+</td>
+    </tr>
+    <tr id="service-nodeport">
+      <td><a href="#service-nodeport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">service.nodePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service node port</p>
 </td>
     </tr>
     <tr id="service-serviceport">

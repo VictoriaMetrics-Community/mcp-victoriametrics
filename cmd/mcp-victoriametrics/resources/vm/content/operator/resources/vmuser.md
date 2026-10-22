@@ -91,6 +91,7 @@ Operator supports following kinds in `kind` field:
 - `VLCluster/vmselect`, `VLCluster/vlinsert` and `VLCluster/vlstorage` for [VLCluster](https://docs.victoriametrics.com/operator/resources/vlcluster/)
 - `VTCluster/vtselect`, `VTCluster/vtinsert` and `VTCluster/vtstorage` for [VTCluster](https://docs.victoriametrics.com/operator/resources/vtcluster/)
 - `VLAgent` for [VLAgent](https://docs.victoriametrics.com/operator/resources/vlagent/)
+- `VTAgent` for [VTAgent](https://docs.victoriametrics.com/operator/resources/vtagent/)
 
 Also, you can check out the [examples](https://docs.victoriametrics.com/operator/resources/vmuser/#examples) section.
 
@@ -99,12 +100,12 @@ Additional fields like `path` and `scheme` can be added to `CRDRef` config.
 ## Enterprise features
 
 Custom resource `VMUser` supports feature [IP filters](https://docs.victoriametrics.com/victoriametrics/vmauth/#ip-filters)
-from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise).
+from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise-features).
 
 ### IP Filters
 
 For using [IP filters](https://docs.victoriametrics.com/victoriametrics/vmauth/#ip-filters)
-you need to **[enable VMAuth Enterprise](https://docs.victoriametrics.com/victoriametrics/vmauth/#enterprise-features)**.
+you need to **[enable VMAuth Enterprise](https://docs.victoriametrics.com/operator/resources/vmauth/#enterprise-features)**.
 
 After that you can add `ip_filters` field to `VMUser`:
 

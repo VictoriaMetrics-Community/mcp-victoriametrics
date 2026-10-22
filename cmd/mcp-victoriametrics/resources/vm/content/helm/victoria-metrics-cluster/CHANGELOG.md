@@ -1,10 +1,184 @@
 ## Next release
 
-**Update node 1**: due to change in label name pods will be restarted. Please delete old StatefulSet with `--cascade=orphan`.
+- bump version of VM components to [v1.154.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.154.1), which fixes delayed requests in vmauth when a request with an `Authorization` header is matched to `unauthorized_user`. See [VictoriaMetrics#11774](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/11774).
+- add `vmselect`/`vminsert`/`vmstorage`/`vmauth`'s `service.portOverrides`, a map keyed by Service port name to override `port`, `protocol`, `targetPort`, `nodePort` and/or `appProtocol`. It applies to every rendered Service port, including `http[]`, `extraPorts[]` and protocol-specific ports (e.g. `clusternative`, `graphite-tcp`, `influx-tcp`). See [#3223](https://github.com/VictoriaMetrics/helm-charts/issues/3223).
+- fix the default `vmauth` route map: `src_paths` were rendered as `/select/*` and `/insert/*`, which vmauth anchors as regexes and therefore never matched request paths such as `/select/0/prometheus/api/v1/query`. They are now `/select/.*` and `/insert/.*`, and `/admin/tenants` is routed to vmselect so the vmui tenant selector works through vmauth.
 
-- replace custom app label with app.kubernetes.io/component. See [#2785](https://github.com/VictoriaMetrics/helm-charts/issues/2785).
+## v0.53.0
 
-## 0.39.0
+**Release date:** 12 Oct 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.154.0](https://img.shields.io/badge/v1.154.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11540)
+
+- bump version of VM components to [v1.154.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.154.0)
+- fix `vmselect.persistentVolume.volumeAttributesClassName` and `vmstorage.persistentVolume.volumeAttributesClassName` being ignored because of a typo in the template.
+- fix pod label selector in the chart notes: repeated `-l` flags were replaced with a single comma-separated selector, since `kubectl` only honours the last `-l`.
+- fix `vmselect.persistentVolume.name` in StatefulSet mode: the container mounted the default volume name instead of the overridden claim template name, which produced an invalid pod spec.
+- rename the cluster native port of `vmselect` and `vminsert` from `cluster-tcp` to `clusternative`, in both the containers and the Services, matching the VictoriaMetrics operator. It is only rendered when `extraArgs.clusternativeListenAddr` is set.
+
+## v0.52.0
+
+**Release date:** 28 Sep 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.153.0](https://img.shields.io/badge/v1.153.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11530)
+
+- bump version of VM components to [v1.153.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.153.0)
+
+## v0.51.0
+
+**Release date:** 20 Sep 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.152.0](https://img.shields.io/badge/v1.152.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11520)
+
+- bump version of VM components to [v1.152.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.152.0)
+
+## v0.50.0
+
+**Release date:** 07 Sep 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.151.0](https://img.shields.io/badge/v1.151.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11510)
+
+- bump version of VM components to [v1.151.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.151.0)
+- add `dnsConfig` option to set a custom DNS config for the pod. See [#3174](https://github.com/VictoriaMetrics/helm-charts/issues/3174)
+
+## v0.49.0
+
+**Release date:** 17 Aug 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.150.0](https://img.shields.io/badge/v1.150.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11500)
+
+- bump version of VM components to [v1.150.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.150.0)
+
+## v0.48.0
+
+**Release date:** 05 Aug 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.149.0](https://img.shields.io/badge/v1.149.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11490)
+
+- bump version of VM components to [v1.149.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.149.0)
+- added network policy configuration support. See [#2977](https://github.com/VictoriaMetrics/helm-charts/issues/2977)
+
+## v0.47.0
+
+**Release date:** 20 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.148.0](https://img.shields.io/badge/v1.148.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11480)
+
+- bump version of VM components to [v1.148.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.148.0)
+
+## v0.46.0
+
+**Release date:** 08 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.147.0](https://img.shields.io/badge/v1.147.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11470)
+
+- bump version of VM components to [v1.147.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.147.0)
+- added `global.extraLabels` and `global.extraAnnotations` to apply common labels and annotations to all workload resources and pod templates
+- disable readiness probe for vmbackupmanager by default. See [#3078](https://github.com/VictoriaMetrics/helm-charts/issues/3078).
+- added publishNotReadyAddresses property support for services. See [#3078](https://github.com/VictoriaMetrics/helm-charts/issues/3077).
+
+## v0.45.0
+
+**Release date:** 23 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.146.0](https://img.shields.io/badge/v1.146.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11460)
+
+- added `runtimeClassName` option to the pod spec
+- bump version of VM components to [v1.146.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.146.0)
+- added extraVolumeMounts to vmbackupmanager sidecar container and vmbackupmanager init restore container
+
+## v0.44.2
+
+**Release date:** 16 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.145.0](https://img.shields.io/badge/v1.145.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11450)
+
+- add `nodePort` support for `Service` resources
+
+## v0.44.2
+
+**Release date:** 16 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.145.0](https://img.shields.io/badge/v1.145.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11450)
+
+- add `nodePort` support for `Service` resources
+
+## v0.44.1
+
+**Release date:** 13 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.145.0](https://img.shields.io/badge/v1.145.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11450)
+
+- fixed default image tag for vmbackupmanager. See [#2978](https://github.com/VictoriaMetrics/helm-charts/issues/2978).
+- bump common chart version 0.3.8 -> 0.3.9
+
+## v0.44.0
+
+**Release date:** 08 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.145.0](https://img.shields.io/badge/v1.145.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11450)
+
+**Update note 1**: `.Values.{vminsert,vmselect,vmstorage,vmauth}.extraArgs.httpListenAddr` was replaced by `.Values.{vminsert,vmselect,vmstorage,vmauth}.http` list for HTTP listen address configuration. See [HTTP listen address](https://docs.victoriametrics.com/helm/victoria-metrics-cluster/#http-listen-address) for details.
+
+- bump version of VM components to [v1.145.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.145.0)
+- `serviceMonitor` port for each component now defaults to the primary `http` list item name; added explicit `port` field to override it without using `targetPort`.
+- fixed HTTPRoute backend `port` field being rendered on the same line as `name` due to incorrect whitespace trimming in the route template.
+
+- added `.Values.{vminsert,vmselect,vmstorage,vmauth}.http` list of objects, where each item configures an HTTP listen address with optional TLS settings. Items are used for Pod ports, command line arguments and Service port generation. Has higher priority than `extraArgs`.
+- add ability to override container command.
+
+## v0.43.0
+
+**Release date:** 25 May 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.144.0](https://img.shields.io/badge/v1.144.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11440)
+
+- bump version of VM components to [v1.144.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.144.0)
+
+## v0.42.0
+
+**Release date:** 11 May 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.143.0](https://img.shields.io/badge/v1.143.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11430)
+
+- bump version of VM components to [v1.143.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.143.0)
+
+## v0.41.2
+
+**Release date:** 30 Apr 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.142.0](https://img.shields.io/badge/v1.142.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11420)
+
+- properly render topologySpreadConstraints for vlinsert pods. See [#2861](https://github.com/VictoriaMetrics/helm-charts/issues/2861).
+
+## v0.41.1
+
+**Release date:** 30 Apr 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.142.0](https://img.shields.io/badge/v1.142.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11420)
+
+- properly render topologySpreadConstraints for vminsert pods. See [#2861](https://github.com/VictoriaMetrics/helm-charts/issues/2861).
+
+## v0.41.0
+
+**Release date:** 28 Apr 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.142.0](https://img.shields.io/badge/v1.142.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11420)
+
+- bump version of VM components to [v1.142.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.142.0)
+
+## v0.40.0
+
+**Release date:** 28 Apr 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.141.0](https://img.shields.io/badge/v1.141.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fvictoriametrics%2Fchangelog%2F%23v11410)
+
+**Update node 1**: due to change in label name pods will be restarted.
+
+- bump version of VM components to [v1.141.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.141.0)
+- added `app.kubernetes.io/component` with value from custom `app` label. See [#2785](https://github.com/VictoriaMetrics/helm-charts/issues/2785).
+
+## v0.39.0
 
 **Release date:** 13 Apr 2026
 
@@ -12,7 +186,7 @@
 
 - bump version of VM components to [v1.140.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.140.0)
 
-## 0.38.0
+## v0.38.0
 
 **Release date:** 02 Apr 2026
 
@@ -23,7 +197,7 @@
 - feat: add `timeouts` support for HTTPRoute in vmselect, vminsert, and vmauth components
 - support volumeAttributesClassName PVC attribute. See [#2782](https://github.com/VictoriaMetrics/helm-charts/issues/2782).
 
-## 0.37.0
+## v0.37.0
 
 **Release date:** 16 Mar 2026
 
@@ -33,7 +207,7 @@
 - removed quotes from url_prefix values in VMAuth configuration. See [#2753](https://github.com/VictoriaMetrics/helm-charts/issues/2753).
 - bump version of VM components to [v1.138.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.138.0)
 
-## 0.36.0
+## v0.36.0
 
 **Release date:** 03 Mar 2026
 
@@ -42,7 +216,7 @@
 - bump version of VM components to [v1.137.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.137.0)
 - support vertical pod autoscaler
 
-## 0.35.0
+## v0.35.0
 
 **Release date:** 16 Feb 2026
 
@@ -50,7 +224,7 @@
 
 - bump version of VM components to [v1.136.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.136.0)
 
-## 0.34.0
+## v0.34.0
 
 **Release date:** 03 Feb 2026
 
@@ -58,7 +232,7 @@
 
 - bump version of VM components to [v1.135.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.135.0)
 
-## 0.33.0
+## v0.33.0
 
 **Release date:** 19 Jan 2026
 
@@ -66,7 +240,7 @@
 
 - bump version of VM components to [v1.134.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.134.0)
 
-## 0.32.0
+## v0.32.0
 
 **Release date:** 05 Jan 2026
 
@@ -75,7 +249,7 @@
 - bump common chart version 0.0.45 -> 0.0.46
 - bump version of VM components to [v1.133.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.133.0)
 
-## 0.31.0
+## v0.31.0
 
 **Release date:** 15 Dec 2025
 
@@ -83,7 +257,7 @@
 
 - bump version of VM components to [v1.132.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.132.0)
 
-## 0.30.1
+## v0.30.1
 
 **Release date:** 02 Dec 2025
 
@@ -91,7 +265,7 @@
 
 - removed duplicated traffic distribution definitions
 
-## 0.30.0
+## v0.30.0
 
 **Release date:** 02 Dec 2025
 
@@ -100,7 +274,7 @@
 - add support of k8s service traffic distribution. See [#2580](https://github.com/VictoriaMetrics/helm-charts/issues/2580).
 - bump version of VM components to [v1.131.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.131.0)
 
-## 0.29.5
+## v0.29.5
 
 **Release date:** 18 Nov 2025
 
@@ -109,7 +283,7 @@
 - bump operator chart version 0.0.42 -> 0.0.45
 - bump version of VM components to [v1.130.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.130.0)
 
-## 0.29.4
+## v0.29.4
 
 **Release date:** 04 Nov 2025
 
@@ -117,7 +291,7 @@
 
 - bump version of VM components to [v1.129.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.129.1)
 
-## 0.29.3
+## v0.29.3
 
 **Release date:** 03 Nov 2025
 
@@ -125,7 +299,7 @@
 
 - bump version of VM components to [v1.129.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.129.0)
 
-## 0.29.2
+## v0.29.2
 
 **Release date:** 21 Oct 2025
 
@@ -134,7 +308,7 @@
 - support HTTPRoute for chart components, where ingress is available. See [#2492](https://github.com/VictoriaMetrics/helm-charts/issues/2492).
 - bump version of VM components to [v1.128.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.128.0)
 
-## 0.29.1
+## v0.29.1
 
 **Release date:** 08 Oct 2025
 
@@ -142,7 +316,7 @@
 
 - do not merge .Values.vmstorage.persistentVolume.extraLabels and .Values.vmselect.persistentVolume.extraLabels with default chart labels. See [#2460](https://github.com/VictoriaMetrics/helm-charts/issues/2460).
 
-## 0.29.0
+## v0.29.0
 
 **Release date:** 08 Oct 2025
 
@@ -152,7 +326,7 @@
 - replaced .Values.vmselect.persistentVolume.labels with .Values.vmselect.persistentVolume.extraLabels
 - bump version of VM components to [v1.127.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.127.0)
 
-## 0.28.4
+## v0.28.4
 
 **Release date:** 15 Sep 2025
 
@@ -160,7 +334,7 @@
 
 - bump version of VM components to [v1.126.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.126.0)
 
-## 0.28.3
+## v0.28.3
 
 **Release date:** 03 Sep 2025
 
@@ -168,7 +342,7 @@
 
 - bump version of VM components to [v1.125.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.125.1)
 
-## 0.28.2
+## v0.28.2
 
 **Release date:** 01 Sep 2025
 
@@ -176,7 +350,7 @@
 
 - bump version of VM components to [v1.125.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.125.0)
 
-## 0.28.1
+## v0.28.1
 
 **Release date:** 25 Aug 2025
 
@@ -184,7 +358,7 @@
 
 - fixed pvc template for vmselect
 
-## 0.28.0
+## v0.28.0
 
 **Release date:** 25 Aug 2025
 
@@ -192,7 +366,7 @@
 
 - Support PVC for vmselect in deployment mode with persistence enabled
 
-## 0.27.2
+## v0.27.2
 
 **Release date:** 18 Aug 2025
 
@@ -200,7 +374,7 @@
 
 - bump version of VM components to [v1.124.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.124.0)
 
-## 0.27.1
+## v0.27.1
 
 **Release date:** 05 Aug 2025
 
@@ -208,7 +382,7 @@
 
 - bump version of VM components to [v1.123.0](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/docs/victoriametrics/changelog/CHANGELOG.md#v11230)
 
-## 0.27.0
+## v0.27.0
 
 **Release date:** 21 Jul 2025
 
@@ -216,7 +390,7 @@
 
 - bump version of VM components to [v1.122.0](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/docs/victoriametrics/changelog/CHANGELOG.md#v11220)
 
-## 0.26.0
+## v0.26.0
 
 **Release date:** 07 Jul 2025
 
@@ -225,7 +399,7 @@
 - Add default label selector to all `.Values.*.topologySpreadConstraints` properties. See [#2219](https://github.com/VictoriaMetrics/helm-charts/issues/2219)
 - bump version of VM components to [v1.121.0](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/docs/victoriametrics/changelog/CHANGELOG.md#v11210)- - bump version of VM components to [v1.121.0](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/docs/victoriametrics/changelog/CHANGELOG.md#v11210)
 
-## 0.25.0
+## v0.25.0
 
 **Release date:** 23 Jun 2025
 
@@ -233,14 +407,14 @@
 
 - bump version of VM components to [v1.120.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.120.0)
 
-## 0.24.1
+## v0.24.1
 
 **Release date:** 19 Jun 2025
 
 ![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v1.119.0](https://img.shields.io/badge/v1.119.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fchangelog%2F%23v11190)
 
 
-## 0.24.0
+## v0.24.0
 
 **Release date:** 10 Jun 2025
 
@@ -248,7 +422,7 @@
 
 - bump version of VM components to [v1.119.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.119.0)
 
-## 0.23.0
+## v0.23.0
 
 **Release date:** 26 May 2025
 
@@ -256,7 +430,7 @@
 
 - bump version of VM components to [v1.118.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.118.0)
 
-## 0.22.1
+## v0.22.1
 
 **Release date:** 16 May 2025
 
@@ -264,7 +438,7 @@
 
 - bump version of VM components to [v1.117.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.117.1)
 
-## 0.22.0
+## v0.22.0
 
 **Release date:** 12 May 2025
 
@@ -272,7 +446,7 @@
 
 - bump version of VM components to [v1.117.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.117.0)
 
-## 0.21.0
+## v0.21.0
 
 **Release date:** 29 Apr 2025
 
@@ -280,7 +454,7 @@
 
 - bump version of VM components to [v1.116.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.116.0)
 
-## 0.20.1
+## v0.20.1
 
 **Release date:** 18 Apr 2025
 
@@ -288,7 +462,7 @@
 
 - Support wildcard in ingress hostname. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/2134).
 
-## 0.20.0
+## v0.20.0
 
 **Release date:** 07 Apr 2025
 
@@ -296,7 +470,7 @@
 
 - bump version of VM components to [v1.115.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.115.0)
 
-## 0.19.4
+## v0.19.4
 
 **Release date:** 25 Mar 2025
 
@@ -304,7 +478,7 @@
 
 - bump version of VM components to [v1.114.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.114.0)
 
-## 0.19.3
+## v0.19.3
 
 **Release date:** 24 Mar 2025
 
@@ -313,7 +487,7 @@
 - updated common dependency 0.0.39 -> 0.0.42
 - add `.vminsert.terminationGracePeriodSeconds` to support changing the terminationGracePeriodSeconds for vminsert deployment
 
-## 0.19.2
+## v0.19.2
 
 **Release date:** 18 Mar 2025
 
@@ -323,7 +497,7 @@
 - introduced `{{ .vm.read }}` and `{{ .vm.write }}` parsed urls for vmauth config templating.
 - fixed vmauth config template bug. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/2063).
 
-## 0.19.1
+## v0.19.1
 
 **Release date:** 14 Mar 2025
 
@@ -331,7 +505,7 @@
 
 - fixed usage of existingClaim in statefulSet mode. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/2056).
 
-## 0.19.0
+## v0.19.0
 
 **Release date:** 13 Mar 2025
 
@@ -339,7 +513,7 @@
 
 - bump version of VM components to [v1.113.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.113.0)
 
-## 0.18.2
+## v0.18.2
 
 **Release date:** 12 Mar 2025
 
@@ -347,7 +521,7 @@
 
 - Add vminsert relabel configuration support
 
-## 0.18.1
+## v0.18.1
 
 **Release date:** 27 Feb 2025
 
@@ -355,7 +529,7 @@
 
 - Reverted serviceName removal for vmselect in statefulset mode, which was done in 0.18.0 release
 
-## 0.18.0
+## v0.18.0
 
 **Release date:** 24 Feb 2025
 
@@ -368,7 +542,7 @@
 
 - bump version of VM components to [v1.112.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.112.0)
 
-## 0.17.7
+## v0.17.7
 
 **Release date:** 10 Feb 2025
 
@@ -376,7 +550,7 @@
 
 - bump version of VM components to [v1.111.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.111.0)
 
-## 0.17.6
+## v0.17.6
 
 **Release date:** 06 Feb 2025
 
@@ -384,7 +558,7 @@
 
 - Reverted enabling headless service for vmselect by default.
 
-## 0.17.5
+## v0.17.5
 
 **Release date:** 06 Feb 2025
 
@@ -394,7 +568,7 @@
 - added `.Values.common.image.tag` to set the same tag for all cluster components.
 - updated common dependency 0.0.37 -> 0.0.39
 
-## 0.17.4
+## v0.17.4
 
 **Release date:** 04 Feb 2025
 
@@ -402,7 +576,7 @@
 
 - fixed service templates ports rendering when opentsdbListenAddr flag is set. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1961) for details.
 
-## 0.17.3
+## v0.17.3
 
 **Release date:** 27 Jan 2025
 
@@ -410,7 +584,7 @@
 
 - bump version of VM components to [v1.110.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.110.0)
 
-## 0.17.2
+## v0.17.2
 
 **Release date:** 17 Jan 2025
 
@@ -418,7 +592,7 @@
 
 - bump version of VM components to [v1.109.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.109.1)
 
-## 0.17.1
+## v0.17.1
 
 **Release date:** 14 Jan 2025
 
@@ -426,7 +600,7 @@
 
 - bump version of VM components to [v1.109.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.109.0)
 
-## 0.17.0
+## v0.17.0
 
 **Release date:** 09 Jan 2025
 
@@ -439,7 +613,7 @@
 - Reduce the default readiness probe interval to 5s (was 15s) and the failure threshold to 10 (was 3).
 - Add a default minReadySeconds for vmstorage, to help stabilizing service during rollout.
 
-## 0.16.2
+## v0.16.2
 
 **Release date:** 06 Jan 2025
 
@@ -449,7 +623,7 @@
 - updated common dependency 0.0.35 -> 0.0.37
 - support templating in `.Values.extraObjects`
 
-## 0.16.1
+## v0.16.1
 
 **Release date:** 19 Dec 2024
 
@@ -458,7 +632,7 @@
 - updated common dependency 0.0.34 -> 0.0.35
 - bump version of VM components to [v1.108.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.108.1)
 
-## 0.16.0
+## v0.16.0
 
 **Release date:** 2024-12-16
 
@@ -468,7 +642,7 @@
 - do not set clusterIP value, when service type is not ClusterIP. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1838)
 - bump version of VM components to [v1.108.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.108.0)
 
-## 0.15.0
+## v0.15.0
 
 **Release date:** 2024-12-02
 
@@ -477,7 +651,7 @@
 
 - bump version of VM components to [v1.107.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.107.0)
 
-## 0.14.13
+## v0.14.13
 
 **Release date:** 2024-11-28
 
@@ -488,7 +662,7 @@
 - updated common dependency 0.0.28 -> 0.0.33
 - fixed app.kubernetes.io/version tag override if custom tag is set. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1766).
 
-## 0.14.12
+## v0.14.12
 
 **Release date:** 2024-11-18
 
@@ -498,7 +672,7 @@
 - updated common dependency 0.0.25 -> 0.0.28
 - bump version of VM components to [v1.106.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.106.1)
 
-## 0.14.11
+## v0.14.11
 
 **Release date:** 2024-11-14
 
@@ -508,7 +682,7 @@
 - updated context for serviceaccount name
 - updated common dependency 0.0.23 -> 0.0.25
 
-## 0.14.10
+## v0.14.10
 
 **Release date:** 2024-11-08
 
@@ -517,7 +691,7 @@
 
 - updated common dependency 0.0.20 -> 0.0.23
 
-## 0.14.9
+## v0.14.9
 
 **Release date:** 2024-11-06
 
@@ -527,7 +701,7 @@
 - set default DNS domain to `cluster.local.`
 - updated common dependency 0.0.19 -> 0.0.20
 
-## 0.14.8
+## v0.14.8
 
 **Release date:** 2024-11-05
 
@@ -536,7 +710,7 @@
 
 - Fix Deployment/StatefulSets when `serviceAccount.name` is empty and `serviceAccount.create: false`. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1683).
 
-## 0.14.7
+## v0.14.7
 
 **Release date:** 2024-11-05
 
@@ -547,7 +721,7 @@
 - support HPA for vmselect statefulset
 - bump version of VM components to [v1.106.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.106.0)
 
-## 0.14.6
+## v0.14.6
 
 **Release date:** 2024-10-21
 
@@ -556,7 +730,7 @@
 
 - bump version of VM components to [v1.105.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.105.0)
 
-## 0.14.5
+## v0.14.5
 
 **Release date:** 2024-10-18
 
@@ -565,7 +739,7 @@
 
 - Fixed vmbackupmanager args
 
-## 0.14.4
+## v0.14.4
 
 **Release date:** 2024-10-18
 
@@ -574,7 +748,7 @@
 
 - Fixed annotations in service account template
 
-## 0.14.3
+## v0.14.3
 
 **Release date:** 2024-10-18
 
@@ -583,7 +757,7 @@
 
 - Fixed HPA template name
 
-## 0.14.2
+## v0.14.2
 
 **Release date:** 2024-10-11
 
@@ -592,7 +766,7 @@
 
 - Human-readable error about Helm version requirement
 
-## 0.14.1
+## v0.14.1
 
 **Release date:** 2024-10-04
 
@@ -605,7 +779,7 @@
 - Allow excluding vmstorage nodes from vminsert. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1549)
 - Upgraded common chart dependency
 
-## 0.14.0
+## v0.14.0
 
 **Release date:** 2024-10-02
 
@@ -614,7 +788,7 @@
 
 - bump version of VM components to [v1.104.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.104.0)
 
-## 0.13.7
+## v0.13.7
 
 **Release date:** 2024-09-12
 
@@ -623,7 +797,7 @@
 
 - Fixed security context for vmstorage statefulset
 
-## 0.13.6
+## v0.13.6
 
 **Release date:** 2024-09-11
 
@@ -632,7 +806,7 @@
 
 - fixed cluster native address port rendering on vmselect statefulset. Thanks to @Red-M
 
-## 0.13.5
+## v0.13.5
 
 **Release date:** 2024-09-05
 
@@ -641,7 +815,7 @@
 
 - fixed priority class name templating for vmselect deployment
 
-## 0.13.4
+## v0.13.4
 
 **Release date:** 2024-09-05
 
@@ -651,7 +825,7 @@
 - Removed deprecated autoscaling v2beta2 API support
 - Added podLabels support
 
-## 0.13.3
+## v0.13.3
 
 **Release date:** 2024-09-04
 
@@ -660,7 +834,7 @@
 
 - fixed vmstorage resources templating
 
-## 0.13.2
+## v0.13.2
 
 **Release date:** 2024-09-04
 
@@ -670,7 +844,7 @@
 - Added ability to override deployment namespace using `namespaceOverride` and `global.namespaceOverride` variables
 - Fixed vmstorage restore cmd args template
 
-## 0.13.1
+## v0.13.1
 
 **Release date:** 2024-09-03
 
@@ -680,7 +854,7 @@
 - Deprecated `vmstorage.vmbackupmanager.enable` in a favour of `vmstorage.vmbackupmanager.enabled`. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/940).
 - Fixed PVC in StatefulSet
 
-## 0.13.0
+## v0.13.0
 
 **Release date:** 2024-08-29
 
@@ -693,7 +867,7 @@
 - Removed necessity to set `.Values.vmstorage.persistentVolume.existintClaim` when it should be created by chart. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/189)
 - Removed `eula` support
 
-## 0.12.1
+## v0.12.1
 
 **Release date:** 2024-08-22
 
@@ -703,7 +877,7 @@
 - Added ability to configure container port
 - Fixed volume template. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1280)
 
-## 0.12.0
+## v0.12.0
 
 **Release date:** 2024-08-21
 
@@ -739,7 +913,7 @@
 - Added `.Values.vmselect.service.ipFamilies` and `.Values.vmselect.service.ipFamilyPolicy` for service IP family management
 - Added `.Values.vminsert.service.ipFamilies` and `.Values.vminsert.service.ipFamilyPolicy` for service IP family management
 
-## 0.11.23
+## v0.11.23
 
 **Release date:** 2024-08-01
 
@@ -748,7 +922,7 @@
 
 - bump version of VM components to [v1.102.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.102.1)
 
-## 0.11.22
+## v0.11.22
 
 **Release date:** 2024-07-31
 
@@ -757,7 +931,7 @@
 
 - fix mount name for `vmstorage` when using `.Values.vmstorage.persistentVolume.name` to override PVC name. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1181) for the details. Thanks to @srinusanduri for [the pull request](https://github.com/VictoriaMetrics/helm-charts/pull/1182).
 
-## 0.11.21
+## v0.11.21
 
 **Release date:** 2024-07-23
 
@@ -766,7 +940,7 @@
 
 - bump version of VM components to [v1.102.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.102.0)
 
-## 0.11.20
+## v0.11.20
 
 **Release date:** 2024-07-08
 
@@ -775,7 +949,7 @@
 
 - add missing API version and kind for volumeClaimTemplates, see [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1092).
 
-## 0.11.19
+## v0.11.19
 
 **Release date:** 2024-06-14
 
@@ -787,7 +961,7 @@
 - fix workload's readinessProbe and livenessProbe when using custom port name. Thanks to @hanumanhuda for [the pull request](https://github.com/VictoriaMetrics/helm-charts/pull/1061).
 - support specifying image tag suffix like "-enterprise" for VictoriaMetrics components using `.Values.<component>.image.variant`.
 
-## 0.11.18
+## v0.11.18
 
 **Release date:** 2024-05-16
 
@@ -796,7 +970,7 @@
 
 - fix lost customized securityContext when introduced new default behavior for securityContext in [pull request](https://github.com/VictoriaMetrics/helm-charts/pull/995).
 
-## 0.11.17
+## v0.11.17
 
 **Release date:** 2024-05-10
 
@@ -805,7 +979,7 @@
 
 - support disabling default securityContext to keep compatible with platform like openshift, see this [pull request](https://github.com/VictoriaMetrics/helm-charts/pull/995) by @Baboulinet-33 for details.
 
-## 0.11.16
+## v0.11.16
 
 **Release date:** 2024-04-26
 
@@ -816,7 +990,7 @@
 - enable templating for `port name` so users can replace the default with custom values in use cases such as outlined in [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/972) and has been addressed in [this PR](https://github.com/VictoriaMetrics/helm-charts/pull/975).
 - bump version of VM components to [v1.101.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.101.0)
 
-## 0.11.15
+## v0.11.15
 
 **Release date:** 2024-04-16
 
@@ -825,7 +999,7 @@
 
 - bump version of VM components to [v1.100.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.100.1)
 
-## 0.11.14
+## v0.11.14
 
 **Release date:** 2024-03-28
 
@@ -835,7 +1009,7 @@
 - added ability to use slice variables in extraArgs (#944)
 - support adding `metricRelabelings` for server serviceMonitor (#946)
 
-## 0.11.13
+## v0.11.13
 
 **Release date:** 2024-03-05
 
@@ -844,7 +1018,7 @@
 
 - bump version of VM components to [v1.99.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.99.0)
 
-## 0.11.12
+## v0.11.12
 
 **Release date:** 2024-02-09
 
@@ -853,7 +1027,7 @@
 
 - Remove unsupported `scheme` field under `livenessProbe.tcpSocket`. See [#844](https://github.com/VictoriaMetrics/helm-charts/pull/844) by @MisguidedEmails.
 
-## 0.11.11
+## v0.11.11
 
 **Release date:** 2024-02-01
 
@@ -863,7 +1037,7 @@
 - bump version of VM components to [v1.97.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.97.1)
 - Switch probes scheme to `HTTPS` if vminsert and vmselect enabled tls in extraArgs.
 
-## 0.11.10
+## v0.11.10
 
 **Release date:** 2023-12-19
 
@@ -872,7 +1046,7 @@
 
 - Fix templating `podManagementPolicy` value in StatefulSet configuration of vmselect. See [#807](https://github.com/VictoriaMetrics/helm-charts/pull/807) by @MemberIT.
 
-## 0.11.9
+## v0.11.9
 
 **Release date:** 2023-12-13
 
@@ -881,7 +1055,7 @@
 
 - Fix configuration of volume mount for license key referenced by using secret.
 
-## 0.11.8
+## v0.11.8
 
 **Release date:** 2023-12-12
 
@@ -890,7 +1064,7 @@
 
 - bump version of VM components to [v1.96.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.96.0)
 
-## 0.11.7
+## v0.11.7
 
 **Release date:** 2023-12-08
 
@@ -899,7 +1073,7 @@
 
 - Fix `vminsert` configuration for volumes when using `extraVolumes`.
 
-## 0.11.6
+## v0.11.6
 
 **Release date:** 2023-11-16
 
@@ -908,7 +1082,7 @@
 
 - bump version of VM components to [v1.95.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.95.1)
 
-## 0.11.5
+## v0.11.5
 
 **Release date:** 2023-11-15
 
@@ -917,7 +1091,7 @@
 
 - bump version of VM components to [v1.95.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.95.0)
 
-## 0.11.4
+## v0.11.4
 
 **Release date:** 2023-10-25
 
@@ -926,7 +1100,7 @@
 
 - Fix deployment `volumeMounts` when providing enterprise license key for VictoriaMetrics enterprise. See [this pr](https://github.com/VictoriaMetrics/helm-charts/pull/734) for details.
 
-## 0.11.3
+## v0.11.3
 
 **Release date:** 2023-10-12
 
@@ -935,7 +1109,7 @@
 
 - Add license enforcement for vmbackupmanager in order to avoid running it without enterprise license key. See [these docs](https://docs.victoriametrics.com/victoriametrics/enterprise/) for details.
 
-## 0.11.2
+## v0.11.2
 
 **Release date:** 2023-10-04
 
@@ -945,7 +1119,7 @@
 - bump version of VM components to [v1.94.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.94.0)
 - Add support of providing enterprise license key for VictoriaMetrics enterprise. See [these docs](https://docs.victoriametrics.com/victoriametrics/enterprise/) for details.
 
-## 0.11.1
+## v0.11.1
 
 **Release date:** 2023-10-04
 
@@ -954,7 +1128,7 @@
 
 - From pod labels removed dynamic label `helm.sh/chart` to avoid restarting every time the chart is updated without changing the pods parameters. **Note that this time it will cause the pods to restart** (#695)
 
-## 0.11.0
+## v0.11.0
 
 **Release date:** 2023-09-28
 
@@ -963,7 +1137,7 @@
 
 - Add `extraObjects` which to allow deploying additional resources with the chart release (#689)
 
-## 0.10.9
+## v0.10.9
 
 **Release date:** 2023-09-21
 
@@ -973,7 +1147,7 @@
 - Support `behavior` setting in horizontal pod autoscalers for vminsert and vmselect (#679)
 - Bump version of VM components to [v1.93.5](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.93.5)
 
-## 0.10.8
+## v0.10.8
 
 **Release date:** 2023-09-11
 
@@ -982,7 +1156,7 @@
 
 - Bump version of VM components to [v1.93.4](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.93.4)
 
-## 0.10.7
+## v0.10.7
 
 **Release date:** 2023-09-04
 
@@ -991,7 +1165,7 @@
 
 - Bump version of Victoria Metrics Cluster to `v1.93.3`
 
-## 0.10.5
+## v0.10.5
 
 **Release date:** 2023-08-23
 
@@ -1000,7 +1174,7 @@
 
 - Update VictoriaMetrics components from v1.93.0 to v1.93.1
 
-## 0.10.4
+## v0.10.4
 
 **Release date:** 2023-08-12
 
@@ -1011,7 +1185,7 @@
 - charts/victoria-metrics-cluster: remove incorrect comment (#607)
 - vmstorage, vminsert: Add topologySpreadConstraints (#596)
 
-## 0.10.3
+## v0.10.3
 
 **Release date:** 2023-07-28
 
@@ -1020,7 +1194,7 @@
 
 - Update VictoriaMetrics components from v1.92.0 to v1.92.1 (#599)
 
-## 0.10.2
+## v0.10.2
 
 **Release date:** 2023-07-27
 
@@ -1030,7 +1204,7 @@
 - Update VictoriaMetrics components from v1.91.3 to v1.92.0
 - fix misused securityContext and podSecurityContext (#592)
 
-## 0.10.1
+## v0.10.1
 
 **Release date:** 2023-07-25
 
@@ -1039,7 +1213,7 @@
 
 - fix typo in suppressStorageFQDNsRender, address #580 (#581)
 
-## 0.10.0
+## v0.10.0
 
 **Release date:** 2023-07-13
 

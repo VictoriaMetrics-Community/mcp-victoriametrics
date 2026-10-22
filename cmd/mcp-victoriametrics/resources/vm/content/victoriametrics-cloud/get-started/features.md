@@ -7,6 +7,8 @@ menu:
     weight: 2
 tags:
   - metrics
+  - logs
+  - traces
   - cloud
   - enterprise
 aliases:
@@ -23,11 +25,14 @@ deploy your instances with a few clicks, sending and visualizing data is very ea
 an OpenTelemetry Collector or any agent to write data to VictoriaMetrics Cloud.
 * **VictoriaLogs**: scrape or push your logs directly from your applications, OpenTelemetry collectors, vector,
 [vlagent](https://docs.victoriametrics.com/victorialogs/vlagent/) or any other agent.
+* **VictoriaTraces**: push trace spans from your instrumented applications or OpenTelemetry
+collectors using the OpenTelemetry protocol (OTLP) over HTTP.
 
 Finally, [explore](https://docs.victoriametrics.com/victoriametrics-cloud/exploring-data/) your
 data with the built-in [VMUI](https://play.victoriametrics.com/) or [VLUI](https://play-vmlogs.victoriametrics.com/),
 or create dashboards in [Grafana](https://docs.victoriametrics.com/victoriametrics-cloud/integrations/grafana/)
-or [Perses](https://docs.victoriametrics.com/victoriametrics-cloud/integrations/perses/).
+or [Perses](https://docs.victoriametrics.com/victoriametrics-cloud/integrations/perses/). Trace data
+can be visualized in Grafana through the Tempo or Jaeger data sources.
 For compatibility, VictoriaMetrics instances can be integrated with the Prometheus data source.
 
 ## Features
@@ -55,14 +60,14 @@ VictoriaMetrics Cloud offers a robust suite of features designed to optimize you
 
 {{% collapse name="Operations" %}}
 
-* **Enterprise, managed VictoriaMetrics and VictoriaLogs Solutions**: Comes with all the proven features in VictoriaMetrics products. Open Source & Enterprise.
+* **Enterprise, managed VictoriaMetrics, VictoriaLogs and VictoriaTraces Solutions**: Comes with all the proven features in VictoriaMetrics products. Open Source & Enterprise.
 * **Fully managed** with automatic infrastructure and software versions, including security updates.
-* **Single-node** for both VictoriaMetrics and VictoriaLogs for efficiency and cost-savings.
+* **Single-node** for VictoriaMetrics, VictoriaLogs and VictoriaTraces for efficiency and cost-savings.
 * **Cluster** configuration available for VictoriaMetrics instances at scale.
-* Built-in [Alerting & Recording](https://docs.victoriametrics.com/victoriametrics-cloud/alertmanager-setup-for-deployment/#configure-alerting-rules) rules execution. Define your rules & get immediate alerts as issues arise, enabling swift action & minimizing disruption to your users.
+* Built-in [Alerting & Recording](https://docs.victoriametrics.com/victoriametrics-cloud/alertmanager-setup-for-deployment/#configure-alerting-and-recording-rules) rules execution. Define your rules & get immediate alerts as issues arise, enabling swift action & minimizing disruption to your users.
 * Hosted [Alertmanager](https://docs.victoriametrics.com/victoriametrics-cloud/alertmanager-setup-for-deployment/) for sending notifications.
 * **Isolated Deployments**: VictoriaMetrics Cloud provisions dedicated resources for your deployments, so you won’t encounter “noisy neighbors” problems as deployments do not compete for resources.
-* **Multitenancy**: Easily serve multiple teams (tenants) with VictoriaLogs Single or VictoriaMetrics Cluster deployments by having a dedicated namespace for each team.
+* **Multitenancy**: Easily serve multiple teams (tenants) with VictoriaLogs Single, VictoriaTraces Single or VictoriaMetrics Cluster deployments by having a dedicated namespace for each team.
 * **Automated Backups**: Regular backup procedures are in place. Your data is automatically saved to a backup storage, so you can easily restore it when the need arises.
 * **High-availability** & replication.
 * **Reliability** & extraordinary performance with 99.5% (Single) and 99.95% (Cluster) SLAs.
@@ -96,6 +101,18 @@ VictoriaMetrics Cloud allows you to explore and optimize both your data and depl
 
 ![Querying Logs](https://docs.victoriametrics.com/victoriametrics-cloud/get-started/features_logs_query.webp)
 <figcaption style="text-align: center; font-style: italic;">Query your logs with VictoriaMetrics Cloud</figcaption>
+
+{{% /collapse %}}
+
+{{% collapse name="Troubleshoot with traces" %}}
+
+* Ingest OpenTelemetry trace spans with no extra storage dependencies
+* Filter spans by service, operation, duration, span type or any attribute
+* Inspect a full trace in the built-in waterfall timeline, down to span events and links
+* Jump straight to a trace by pasting its Trace ID
+* Query spans with [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/), the same language used for logs
+* Build dashboards in Grafana or Perses through the Tempo or Jaeger data sources
+* Correlate traces with the metrics and logs already stored in your account
 
 {{% /collapse %}}
 

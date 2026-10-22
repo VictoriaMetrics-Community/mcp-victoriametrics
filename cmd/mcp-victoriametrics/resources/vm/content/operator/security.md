@@ -24,9 +24,215 @@ To run in a cluster the operator needs certain permissions, you can see them in 
 
 Also, you can use single-namespace mode with minimal permissions, see [this section](https://docs.victoriametrics.com/operator/configuration/#namespaced-mode) for details.
 
-<!-- TODO: service accounts / role bindings? -->
-<!-- TODO: resource/roles relations -->
+### Managed component RBAC
 
+`VMAgent` uses Kubernetes service discovery for scrape targets, so its `ServiceAccount` needs read-only access to Kubernetes discovery objects.
+The example [`vmagent_rbac.yaml` file](https://github.com/VictoriaMetrics/operator/blob/master/config/examples/vmagent_rbac.yaml) creates a `ClusterRole` with these permissions:
+
+- `get`, `list`, and `watch` for `nodes`, `nodes/metrics`, `services`, `endpoints`, `endpointslices`, `pods`, and `ingresses` in core, `networking.k8s.io`, and `discovery.k8s.io` API groups. These permissions allow vmagent to discover scrape targets across the cluster.
+- `get` for `namespaces` and `configmaps`. These permissions allow namespace metadata lookups and config map reads needed by discovery configuration.
+- `get` for non-resource URLs `/metrics`, `/metrics/resources`, and `/metrics/slis`. These permissions allow scraping Kubernetes API server metrics endpoints when configured.
+- `get` for OpenShift's `routers/metrics` and `registry/metrics` resources in `route.openshift.io` and `image.openshift.io` API groups. These permissions allow scraping OpenShift router and registry metrics when configured.
+
+`VMSingle` can use the same Kubernetes service discovery as `VMAgent` when it scrapes targets directly.
+When `spec.ingestOnlyMode` is disabled, operator creates the same cluster-wide discovery `ClusterRole` and `ClusterRoleBinding` for `VMSingle`.
+When `spec.ingestOnlyMode` is enabled, `VMSingle` doesn't need service discovery permissions and operator doesn't add these cluster-wide rules.
+
+`VLAgent` can collect Kubernetes logs by watching pods, nodes, and namespaces.
+When cluster-wide access is allowed, operator creates a `ClusterRole` with `get`, `list`, and `watch` permissions for `nodes`, `pods`, and `namespaces` in the core API group.
+When the operator runs in namespaced mode, operator skips the `VLAgent` `ClusterRole` and `ClusterRoleBinding`; configure namespaced RBAC manually if `VLAgent` still needs Kubernetes API access.
+
+`VMAuth` and `VMAlertmanager` don't need cluster-wide RBAC for their own runtime configuration reload.
+Operator creates namespaced `Role` and `RoleBinding` objects with `get`, `list`, and `watch` permissions for `secrets` in their own namespace, so the config-reloader can watch generated configuration secrets.
+
+For example, this `VMSingle` needs scrape discovery RBAC because it scrapes targets directly:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMSingle
+metadata:
+  name: scrape
+  namespace: monitoring
+spec:
+  ingestOnlyMode: false
+  selectAllByDefault: true
+```
+
+This `VMSingle` doesn't need scrape discovery RBAC, because it only receives ingested data:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMSingle
+metadata:
+  name: ingest
+  namespace: monitoring
+spec:
+  ingestOnlyMode: true
+```
+
+This `VLAgent` needs Kubernetes API access for pod metadata and log target discovery:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VLAgent
+metadata:
+  name: logs
+  namespace: monitoring
+spec:
+  remoteWrite:
+    - url: http://vlinsert-vlogs.monitoring.svc:9428/insert/jsonline
+```
+
+With cluster-wide operator access, it gets a `ClusterRole` similar to:
+
+```yaml
+rules:
+  - apiGroups: [""]
+    resources: ["nodes", "pods", "namespaces"]
+    verbs: ["get", "list", "watch"]
+```
+
+`VMAuth` and `VMAlertmanager` get namespace-scoped secret access similar to:
+
+```yaml
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+```
+
+### Reducing API access scope
+Cluster-wide discovery roles are created because Kubernetes service discovery can discover targets in multiple namespaces and cluster-scoped resources such as `nodes`.
+To reduce API access scope, run the operator in namespaced mode with the `WATCH_NAMESPACE` environment variable.
+When `WATCH_NAMESPACE` is set, operator avoids cluster-wide watches and limits object selection to the configured namespace list.
+For `VMAgent` and `VMSingle`, operator creates namespaced `Role` and `RoleBinding` objects in watched namespaces so service discovery can work there without granting a cluster-wide `ClusterRole` for namespaced resources.
+Their config and credential `secrets` access stays namespace-scoped even in cluster-wide mode.
+Cluster-scoped discovery, such as `nodes` and `nodes/metrics`, still requires cluster-level permissions if enabled in scrape configuration.
+
+For example, this operator watches only two namespaces:
+
+```yaml
+env:
+  - name: WATCH_NAMESPACE
+    value: team-a,team-b
+```
+
+In this mode, operator creates namespaced discovery `Role` and `RoleBinding` objects for `VMAgent` and `VMSingle` in `team-a` and `team-b` instead of cluster-wide discovery RBAC for namespaced resources.
+
+### Namespace isolation with enforced labels
+
+`enforcedNamespaceLabel` allows enforcing the namespace of the user-created operator object on metrics, alerting rules, and alert routing configuration.
+It is useful for building isolated environments where users manage monitoring objects in their own namespaces, while platform administrators run shared monitoring infrastructure. When the team creates `VMServiceScrape`, `VMRule`, or `VMAlertmanagerConfig` in namespace `team-a`, operator automatically adds or matches `tenant="team-a"` label, so metrics, rules, and alerts stay logically (not physically) isolated from other teams.
+
+The field can be configured on these objects:
+- [`VMAgent`](https://docs.victoriametrics.com/operator/resources/vmagent/) and [`VMSingle`](https://docs.victoriametrics.com/operator/resources/vmsingle/) enforce the namespace label for metrics collected from `VMServiceScrape`, `VMPodScrape`, `VMNodeScrape`, `VMStaticScrape`, `VMProbe`, and `VMScrapeConfig` objects.
+- [`VMAlert`](https://docs.victoriametrics.com/operator/resources/vmalert/) enforces the namespace label for rules loaded from `VMRule` objects.
+- [`VMAlertmanager`](https://docs.victoriametrics.com/operator/resources/vmalertmanager/) uses the configured label name as the top-level route matcher for `VMAlertmanagerConfig` objects. If the field is not configured, the route matcher uses the `namespace` label.
+
+For scrape objects, the operator appends the enforced namespace relabeling as the final `relabel_configs` rule.
+This prevents users from overriding the enforced label with custom target relabeling.
+The operator also ignores `metric_relabel_configs` rules that try to write into the enforced label.
+
+For example, this `VMAgent` selects user scrape objects from all namespaces but always writes the source CRD namespace into the `tenant` label:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  name: shared
+  namespace: monitoring-system
+spec:
+  enforcedNamespaceLabel: tenant
+  selectAllByDefault: true
+  remoteWrite:
+    - url: http://vminsert-vmcluster.monitoring-system.svc:8480/insert/0/prometheus/api/v1/write
+```
+
+If user `team-a` creates a `VMServiceScrape` in namespace `team-a`, all metrics collected through this object get `tenant="team-a"`.
+If user `team-b` creates scrape objects in namespace `team-b`, their metrics get `tenant="team-b"`.
+Users cannot change this label through scrape relabeling or metric relabeling in their scrape objects.
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: app
+  namespace: team-a
+spec:
+  selector:
+    matchLabels:
+      app: app
+  endpoints:
+    - port: http
+```
+
+`VMAlert` can use the same enforced label for rules:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlert
+metadata:
+  name: shared
+  namespace: monitoring-system
+spec:
+  enforcedNamespaceLabel: tenant
+  selectAllByDefault: true
+  datasource:
+    url: http://vmselect-vmcluster.monitoring-system.svc:8481/select/0/prometheus
+  notifier:
+    url: http://vmalertmanager-shared.monitoring-system.svc:9093
+```
+
+If user `team-a` creates a `VMRule` in namespace `team-a`, operator adds `tenant="team-a"` to every generated alerting and recording rule from this object.
+
+`VMAlertmanager` can use the same label to isolate alert routing configuration:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlertmanager
+metadata:
+  name: shared
+  namespace: monitoring-system
+spec:
+  enforcedNamespaceLabel: tenant
+  selectAllByDefault: true
+```
+
+With this configuration, a `VMAlertmanagerConfig` from namespace `team-a` is converted into Alertmanager routes that match only alerts with `tenant="team-a"`.
+Routes from namespace `team-b` match only `tenant="team-b"` alerts.
+This allows teams to manage their own receivers and routes without receiving alerts from other namespaces.
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlertmanagerConfig
+metadata:
+  name: team-routing
+  namespace: team-a
+spec:
+  route:
+    receiver: team-a
+  receivers:
+    - name: team-a
+      slackConfigs:
+        - apiURL:
+            key: url
+            name: team-a-slack
+          channel: '#team-a-alerts'
+```
+
+Use this pattern to build a managed monitoring service:
+
+- Platform administrators deploy shared `VMAgent`, `VMAlert`, `VMAlertmanager`, and VictoriaMetrics storage in an infrastructure namespace.
+- Administrators set the same `enforcedNamespaceLabel` value, such as `tenant`, on shared collection, rule evaluation, and alert routing objects.
+- Users receive Kubernetes RBAC permissions to create only namespaced CRDs, such as `VMServiceScrape`, `VMPodScrape`, `VMRule`, and `VMAlertmanagerConfig`, in their own namespaces.
+- Shared components select user objects with `selectAllByDefault` or explicit namespace and label selectors.
+- Dashboards, alerts, and optional query gateways filter by the enforced label, for example `tenant="team-a"`.
+
+This pattern gives every namespace isolated monitoring configuration while reusing one operator-managed backend.
+
+Note that the separation is logical, not physical - so it additionally needs to be enforced by RBAC and query authentication via vmauth or another query gateway.
+
+`enforcedNamespaceLabel` can be combined with `ignoreNamespaceSelectors: true` on `VMAgent` or `VMSingle` to restrict scrape objects from discovering targets in other namespaces. In this mode, scrape objects can discover endpoints only within their own namespace.
 ## Security policies
 
 VictoriaMetrics operator provides several security features. First of all, it's built-in hardening configuration.
@@ -68,7 +274,7 @@ spec:
         storage: 25Gi
 ```
 
- In addition, operator supports more granular per resource security configuration with [spec.securityContext](https://docs.victoriametrics.com/operator/api/#securitycontext) and [ContainerSecurityContext](https://docs.victoriametrics.com/operator/api/#containersecuritycontext)
+ In addition, operator supports more granular per resource security configuration with [spec.securityContext](https://docs.victoriametrics.com/operator/api/#v1beta1-securitycontext) and [ContainerSecurityContext](https://docs.victoriametrics.com/operator/api/#v1beta1-containersecuritycontext)
 
 ### Pod SecurityContext
 

@@ -22,7 +22,7 @@ For each `VMCluster` resource, the Operator creates:
 - `VMSelect` as `StatefulSet`
 - and `VMInsert` as deployment.
 
-For `VMStorage` and `VMSelect` headless  services are created. `VMInsert` is created as service with clusterIP.
+For `VMStorage` and `VMSelect` headless services are created. `VMInsert` is created as service with clusterIP.
 
 There is a strict order for these objects creation and reconciliation:
 
@@ -31,7 +31,7 @@ There is a strict order for these objects creation and reconciliation:
 1. `VMInsert` is the last object to sync.
 
 All [statefulsets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) are created
-with [OnDelete](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#on-delete) update type.
+with [OnDelete](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies) update type.
 It allows to manually manage the rolling update process for Operator by deleting pods one by one and waiting for the ready status.
 
 Rolling update process may be configured by the operator env variables.
@@ -39,12 +39,95 @@ The most important is `VM_PODWAITREADYTIMEOUT=80s` - it controls how long to wai
 
 ## Specification
 
-You can see the full actual specification of the `VMCluster` resource in the **[API docs -> VMCluster](https://docs.victoriametrics.com/operator/api/#vmcluster)**.
+You can see the full actual specification of the `VMCluster` resource in the **[API docs -> VMCluster](https://docs.victoriametrics.com/operator/api/#v1beta1-vmcluster)**.
 
 If you can't find necessary field in the specification of the custom resource,
 see [Extra arguments section](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
 
 Also, you can check out the [examples](https://docs.victoriametrics.com/operator/resources/vmcluster/#examples) section.
+
+## Services and URLs
+
+For a `VMCluster` named `<name>` in namespace `<namespace>`, the Operator creates the following Kubernetes services:
+
+| Service name | Type | Port | Purpose |
+|---|---|---|---|
+| `vminsert-<name>` | ClusterIP | 8480 | Metrics ingestion (write path) |
+| `vmselect-<name>` | Headless | 8481 | Metrics querying (read path) |
+| `vmstorage-<name>` | Headless | 8482 | vmstorage admin HTTP API (not for direct user access) |
+
+VictoriaMetrics cluster uses a **tenant** model where data is namespaced by an account ID.
+For single-tenant setups the default tenant is `0`.
+
+Common internal cluster URLs (replace `<name>` and `<namespace>` with your values):
+
+| Use case | URL |
+|---|---|
+| Prometheus remote write (VMAgent / Prometheus) | `http://vminsert-<name>.<namespace>.svc:8480/insert/0/prometheus/api/v1/write` |
+| PromQL / MetricsQL query API | `http://vmselect-<name>.<namespace>.svc:8481/select/0/prometheus` |
+| Grafana datasource URL | `http://vmselect-<name>.<namespace>.svc:8481/select/0/prometheus` |
+| VMUI (built-in web UI) | `http://vmselect-<name>.<namespace>.svc:8481/select/0/vmui/` |
+
+### Configuring VMAgent to write to VMCluster
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  name: example
+  namespace: default
+spec:
+  selectAllByDefault: true
+  remoteWrite:
+    - url: "http://vminsert-<name>.default.svc:8480/insert/0/prometheus/api/v1/write"
+```
+
+### Customizing service type or port
+
+By default each component service is created with the type and port shown in the table above.
+Use `serviceSpec` on each component to change these settings.
+Setting `useAsDefault: true` applies the changes to the main service rather than creating an additional one:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  name: example
+spec:
+  vminsert:
+    replicaCount: 2
+    serviceSpec:
+      useAsDefault: true
+      spec:
+        type: LoadBalancer
+```
+
+> **Note**: the default services of `vmselect` and `vmstorage` are headless (`clusterIP: None`), which
+> publishes the per-pod DNS records that these components address each other by: `vminsert` and `vmselect`
+> reach `vmstorage` pods this way, and `vmselect` nodes reach each other to propagate cache invalidation
+> after a series deletion.
+>
+> For `vmselect`, defining `spec.type` together with `useAsDefault: true` replaces its default `Service`
+> with a regular one and lets Kubernetes assign a `clusterIP`, which is needed by service meshes that only
+> load balance virtual IPs:
+>
+> ```yaml
+>   vmselect:
+>     replicaCount: 2
+>     serviceSpec:
+>       useAsDefault: true
+>       spec:
+>         type: ClusterIP
+> ```
+>
+> For `vmstorage` the same override is rejected: its default `Service` is also resolved to the addresses of
+> the individual storage pods through DNS SRV records, when `spec.discovery` is enabled. Omit `spec.type`
+> to only patch the default `Service`, for instance to add ports or annotations, keeping its headless
+> `clusterIP`. Set `spec.clusterIP: None` explicitly to keep it headless while defining `spec.type`. Omit
+> `useAsDefault` to leave the default `Service` untouched and create an additional, separate one instead.
+
+To expose VMCluster components outside the cluster via an ingress with authentication,
+see [Authorization and exposing components — VMCluster](https://docs.victoriametrics.com/operator/auth/#vmcluster).
 
 ## Requests Load-Balancing
 
@@ -56,7 +139,7 @@ Also, you can check out the [examples](https://docs.victoriametrics.com/operator
 
  In this case clients could establish multiple connections to the same `pod` via `service`. And client requests will be served only by subset of `pods`.
 
- Operator allows to tweak this behaviour with enabled [requestsLoadBalancer](https://docs.victoriametrics.com/operator/api/#vmclusterspec-requestsloadbalancer):
+ Operator allows to tweak this behaviour with enabled [requestsLoadBalancer](https://docs.victoriametrics.com/operator/api/#v1beta1-vmclusterspec-requestsloadbalancer):
 
 ```yaml
 apiVersion: operator.victoriametrics.com/v1beta1
@@ -264,6 +347,139 @@ spec:
   # ...
 ```
 
+## Update strategy
+
+The Operator provides fine-grained control over how `VMCluster` nodes are restarted when their spec changes (image tag, flags, etc.).
+The available strategies map to the [no downtime and minimum downtime upgrade approaches](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#updating--reconfiguring-cluster-nodes)
+described in the VictoriaMetrics cluster documentation.
+
+### vmstorage and vmselect
+
+The `rollingUpdateStrategy` field controls how `vmstorage` and `vmselect` nodes are updated:
+
+| Value | Behavior |
+|---|---|
+| `OnDelete` (default) | Operator restarts nodes one by one and waits for each to become ready before continuing |
+| `RollingUpdate` | Kubernetes restarts nodes natively; the Operator only waits for the rollout to complete |
+
+The default `OnDelete` strategy implements the **no downtime** approach: nodes are restarted one at a time
+in the order recommended by VictoriaMetrics (`vmstorage` first, then `vmselect`).
+
+Use `rollingUpdateStrategyBehavior.maxUnavailable` to control how many nodes are restarted simultaneously.
+The default is `1`:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  name: example
+spec:
+  vmstorage:
+    replicaCount: 6
+    rollingUpdateStrategyBehavior:
+      maxUnavailable: 2        # restart 2 nodes at a time
+  vmselect:
+    replicaCount: 3
+    rollingUpdateStrategyBehavior:
+      maxUnavailable: "33%"   # restart up to 33% of nodes at a time
+```
+
+Setting `maxUnavailable: "100%"` restarts all nodes in parallel, implementing the **minimum downtime** strategy
+at the cost of temporary unavailability:
+
+```yaml
+spec:
+  vmstorage:
+    replicaCount: 3
+    rollingUpdateStrategyBehavior:
+      maxUnavailable: "100%"
+```
+
+To delegate the rolling restart entirely to Kubernetes, set `rollingUpdateStrategy: RollingUpdate`.
+In this mode `rollingUpdateStrategyBehavior` is ignored:
+
+```yaml
+spec:
+  vmstorage:
+    replicaCount: 3
+    rollingUpdateStrategy: RollingUpdate
+```
+
+The timeout for each node to become ready is controlled by the Operator environment variable
+`VM_PODWAITREADYTIMEOUT` (default `80s`). The poll interval is `VM_PODWAITREADYINTERVALCHECK` (default `5s`).
+
+### vminsert
+
+`vminsert` nodes can be configured with standard Deployment update parameters:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  name: example
+spec:
+  vminsert:
+    replicaCount: 3
+    updateStrategy: RollingUpdate   # default; set to Recreate for minimum downtime
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+```
+
+## Storage node maintenance mode
+
+`vmstorage.maintenanceInsertNodeIDs` and `vmstorage.maintenanceSelectNodeIDs` exclude the listed `vmstorage` pods from `vminsert` and `vmselect` routing.
+Each ID is a pod ordinal, the numeric suffix of the pod name, e.g. `2` for the pod ending with `-2`.
+Use them when a `vmstorage` pod is expected to be unavailable for a while,
+for example when its Kubernetes node is under maintenance and the pod can't move, since its volume is bound to that node.
+
+Excluding a pod from routing affects the cluster:
+
+- with the pod in `maintenanceSelectNodeIDs`, data stored only on this pod is missing from query responses,
+  and `vmselect` doesn't mark them as partial, since it doesn't know about the pod.
+  Use [replicationFactor](#high-availability) > 1 to keep such data available;
+- with the pod in `maintenanceInsertNodeIDs`, `vminsert` spreads incoming series across the remaining pods,
+  so they take over the excluded pod's share of writes, and some series move to other pods, which increases churn there.
+
+These fields cannot be combined with [automatic vmstorage discovery](#automatic-vmstorage-discovery).
+
+### Pods excluded from all routing
+
+A pod listed in both `vmstorage.maintenanceInsertNodeIDs` and `vmstorage.maintenanceSelectNodeIDs` fields receives no reads and no writes.
+Starting from [v0.75.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.75.1),
+with the default `rollingUpdateStrategy: OnDelete`, where the Operator updates `vmstorage` pods itself, the Operator leaves such a pod alone during reconciliation:
+
+- it doesn't wait for the pod to become ready, so a pod stuck `Pending` or `Terminating` no longer blocks
+  reconciliation of `vminsert` and `vmselect`;
+- it doesn't apply `vmstorage` spec changes to the pod or its volumes, e.g. a new image or a bigger volume size.
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  name: example
+spec:
+  vmstorage:
+    replicaCount: 3
+    maintenanceInsertNodeIDs: [2]
+    maintenanceSelectNodeIDs: [2]   # the pod with ordinal 2 gets no traffic and is left alone by the Operator
+```
+
+When the pod is ready to get back, remove the ID from both fields before making other changes.
+The Operator then applies the `vmstorage` changes deferred during maintenance to the pod,
+and waits for it to become ready before adding it back to `vminsert` and `vmselect`, so an unhealthy pod never receives traffic.
+
+**Limitations:**
+
+- The pod is left alone only with the default `rollingUpdateStrategy: OnDelete` and without `minReadySeconds`,
+  where the StatefulSet uses `Parallel` pod management.
+  Setting `rollingUpdateStrategy: RollingUpdate` or `minReadySeconds` switches the StatefulSet to `OrderedReady` pod management,
+  where Kubernetes handles pods one by one in ordinal order: while the pod under maintenance isn't ready,
+  it doesn't roll out updates, scale the StatefulSet or recreate pods with a higher ordinal.
+  So reconciliation that changes `vmstorage` pods can block until the pod is ready.
+- With `vmstorage.podDisruptionBudget.maxUnavailable: 1`, a pod under maintenance that isn't ready uses up the disruption budget,
+  so the Operator can't evict other `vmstorage` pods, and changes that require restarting them fail until the pod is ready again.
+
 ## Resource management
 
 You can specify resources for each component of `VMCluster` resource in the `spec` section of the `VMCluster` CRD.
@@ -335,7 +551,7 @@ Also, you can specify requests without limits - in this case default values for 
 ## Enterprise features
 
 VMCluster supports following features
-from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise):
+from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise-features):
 
 - [Downsampling](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#downsampling)
 - [Multiple retentions / Retention filters](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#retention-filters)
@@ -343,19 +559,19 @@ from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametri
 - [mTLS for cluster components](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#mtls-protection)
 - [Backup automation](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/)
 
-VMCluster doesn't support yet feature
-[Automatic discovery for vmstorage nodes](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#automatic-vmstorage-discovery).
+- [Automatic vmstorage discovery](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#automatic-vmstorage-discovery)
 
 For using Enterprise version of [vmcluster](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/) you need to:
- - specify license at [`spec.license.key`](https://docs.victoriametrics.com/operator/api/#license-key) or at [`spec.license.keyRef`](https://docs.victoriametrics.com/operator/api/#license-keyref).
+ - specify license at [`spec.license.key`](https://docs.victoriametrics.com/operator/api/#v1beta1-license-key) or at [`spec.license.keyRef`](https://docs.victoriametrics.com/operator/api/#v1beta1-license-keyref).
  - change version of `vmcluster` to version with `-enterprise-cluster` suffix using [Version management](https://docs.victoriametrics.com/operator/resources/vmcluster/#version-management).
 
 ### Downsampling
 
-After that you can pass [Downsampling](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#downsampling)
-flag to `VMCluster/vmselect` and `VMCluster/vmstorage` with [extraArgs](https://docs.victoriametrics.com/operator/resources/#extra-arguments) too.
-
-Here are complete example for [Downsampling](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#downsampling):
+Use `spec.downsampling` to configure [Downsampling](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#downsampling).
+The operator automatically applies the rules to both `vmselect` and `vmstorage`. Note that it would overwrite the downsampling configuration set via `extraArgs`
+Each rule requires `offset` (how far back to downsample) and `interval` (target resolution).
+An optional `filter` restricts the rule to matching time series.
+The optional `dedupInterval` sets `-dedup.minScrapeInterval` on both components.
 
 ```yaml
 apiVersion: operator.victoriametrics.com/v1beta1
@@ -363,34 +579,38 @@ kind: VMCluster
 metadata:
   name: ent-example
 spec:
-  # enabling enterprise features
   license:
     keyRef:
       name: k8s-secret-that-contains-license
       key: key-in-a-secret-that-contains-license
   clusterVersion: v1.110.13-enterprise-cluster
-  vmselect:
-    # enabling enterprise features for vmselect
-    extraArgs:
-      # using enterprise features: Downsampling
-      # more details about downsampling you can read on https://docs.victoriametrics.com/victoriametrics/cluster-victoriaMetrics/#downsampling
-      downsampling.period: 30d:5m,180d:1h,1y:6h,2y:1d
-  vmstorage:
-    # enabling enterprise features for vmstorage
-    extraArgs:
-      # using enterprise features: Downsampling
-      # more details about downsampling you can read on https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#downsampling
-      downsampling.period: 30d:5m,180d:1h,1y:6h,2y:1d
+  downsampling:
+    dedupInterval: 1m
+    rules:
+      - periods:
+          - offset: 30d
+            interval: 5m
+          - offset: 180d
+            interval: 1h
+          - offset: 1y
+            interval: 6h
+      - filter: '{env="prod"}'
+        periods:
+          - offset: 30d
+            interval: 1m
+          - offset: 180d
+            interval: 10m
 
   # ...other fields...
 ```
+
+You can read more about downsampling configuration on the [VictoriaMetrics cluster downsampling page](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#downsampling).
 
 ### Retention filters
 
-You can pass [Retention filters](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#retention-filters)
-flag to  `VMCluster/vmstorage` with [extraArgs](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
-
-Here are complete example for [Retention filters](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#retention-filters):
+Use `spec.vmstorage.retentionFilters` to configure [Retention filters](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#retention-filters) on `vmstorage`. Note that it would overwrite the retention filters configuration set via `extraArgs`
+Each entry requires a MetricsQL label `filter` and a `retention` duration.
+The global `spec.retentionPeriod` applies to all series that don't match any filter.
 
 ```yaml
 apiVersion: operator.victoriametrics.com/v1beta1
@@ -398,20 +618,23 @@ kind: VMCluster
 metadata:
   name: ent-example
 spec:
-  # enabling enterprise features
   license:
     keyRef:
       name: k8s-secret-that-contains-license
       key: key-in-a-secret-that-contains-license
   clusterVersion: v1.110.13-enterprise-cluster
+  retentionPeriod: "12"
   vmstorage:
-    extraArgs:
-      # using enterprise features: Retention filters
-      # more details about retention filters you can read on https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#retention-filters
-      retentionFilter: '{vm_account_id="5",env="dev"}:5d,{vm_account_id="5",env="prod"}:5y'
+    retentionFilters:
+      - filter: '{vm_account_id="5",env="dev"}'
+        retention: 5d
+      - filter: '{vm_account_id="5",env="prod"}'
+        retention: 5y
 
   # ...other fields...
 ```
+
+You can read more about retention filters configuration on the [VictoriaMetrics cluster retention filters page](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#retention-filters).
 
 ### Advanced per-tenant statistic
 
@@ -616,11 +839,98 @@ It's needed to make consistent backups for each storage node.
 
 You can read more about backup configuration options and mechanics [here](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/)
 
-Possible configuration options for backup crd can be found at [link](https://docs.victoriametrics.com/operator/api/#vmbackup)
+Possible configuration options for backup crd can be found at [link](https://docs.victoriametrics.com/operator/api/#v1beta1-vmbackup)
 
 **Using VMBackupmanager for restoring backups** in Kubernetes environment is described [here](https://docs.victoriametrics.com/victoriametrics/vmbackupmanager/#how-to-restore-in-kubernetes).
 
 Also see VMCluster example spec [here](https://github.com/VictoriaMetrics/operator/blob/master/config/examples/vmcluster_with_backuper.yaml).
+
+### Automatic vmstorage discovery
+
+By default, the operator statically enumerates all `vmstorage` pod addresses in the `-storageNode` flag of `vminsert` and `vmselect`.
+With [automatic vmstorage discovery](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#automatic-vmstorage-discovery),
+`vminsert` and `vmselect` resolve storage node addresses dynamically via DNS SRV records, removing the need for a rolling restart when storage nodes scale up or down.
+
+This is an enterprise feature and requires a [valid license key](https://docs.victoriametrics.com/victoriametrics/enterprise/).
+
+The `discovery` field can be set at the cluster level (applies to both `vminsert` and `vmselect`) or overridden per component.
+
+**`spec.discovery` fields:**
+
+| Field      | Description |
+|------------|-------------|
+| `enabled`  | Enables automatic vmstorage node discovery via DNS SRV records. |
+| `interval` | How often to refresh the list of storage nodes. Minimum `1s`, defaults to `2s`. |
+| `filter`   | Optional regexp to filter discovered storage addresses. Only matching addresses are used. |
+
+When `discovery` is enabled the operator sets `-storageNode=srv+<headless-service>.<namespace>[.svc.<domain>]:<port>` instead of listing individual pod addresses.
+The DNS SRV lookup resolves this to individual pod addresses in the form `<pod-name>.<headless-service>.<namespace>.svc.<domain>:<port>` — for example, `vmstorage-ent-example-0.vmstorage-ent-example.default.svc.cluster.local:8401`.
+The `filter` regexp is matched against these full addresses, so it must account for the cluster name embedded in the pod name. The domain suffix does not need to be included in the filter since regexp matching is substring-based.
+
+The `maintenanceInsertNodeIDs` and `maintenanceSelectNodeIDs` fields on `vmstorage` cannot be used together with discovery, since node selection is delegated to the `filter` regexp.
+
+#### Enable discovery globally
+
+This enables discovery with the same settings for both `vminsert` and `vmselect`:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  name: ent-example
+spec:
+  license:
+    keyRef:
+      name: k8s-secret-that-contains-license
+      key: key-in-a-secret-that-contains-license
+  clusterVersion: v1.110.13-enterprise-cluster
+  discovery:
+    enabled: true
+    interval: 5s
+  vmstorage:
+    replicaCount: 3
+  vmselect:
+    replicaCount: 2
+  vminsert:
+    replicaCount: 2
+```
+
+#### Override discovery per component
+
+The `discovery` field on `vmselect` or `vminsert` overrides the cluster-level default for that component.
+This is useful when you want different refresh intervals or address filters for reads and writes,
+or when you want to disable discovery for one component while keeping it enabled globally:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  name: ent-example
+spec:
+  license:
+    keyRef:
+      name: k8s-secret-that-contains-license
+      key: key-in-a-secret-that-contains-license
+  clusterVersion: v1.110.13-enterprise-cluster
+  # global default: discovery enabled for both components
+  discovery:
+    enabled: true
+    interval: 5s
+  vmstorage:
+    replicaCount: 6
+  vmselect:
+    replicaCount: 2
+    # override: read only from nodes 0-2 (pod name format: vmstorage-ent-example-N)
+    discovery:
+      enabled: true
+      interval: 10s
+      filter: "vmstorage-ent-example-[0-2]\\."
+  vminsert:
+    replicaCount: 2
+    # override: disable discovery for vminsert, use static addresses instead
+    discovery:
+      enabled: false
+```
 
 ## Examples
 

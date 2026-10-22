@@ -5,6 +5,7 @@ menu:
     parent: victoriametrics
     weight: 7
 title: vmrestore
+description: "Restore VictoriaMetrics data from backups with support for resumable and incremental restores."
 tags:
   - metrics
 aliases:
@@ -47,13 +48,13 @@ i.e. the end result would be similar to [rsync --delete](https://askubuntu.com/q
 
 ## Troubleshooting
 
-* See [how to setup credentials via environment variables](https://docs.victoriametrics.com/victoriametrics/vmbackup/#providing-credentials-via-env-variables).
+* See [Connecting VM components to cloud storage](https://docs.victoriametrics.com/guides/connecting-vm-components-to-cloud-storage/) for instructions on configuring credentials.
 * If `vmrestore` consumes all the network bandwidth, then set `-maxBytesPerSecond` to the desired value.
 * If `vmrestore` has been interrupted due to temporary error, then just restart it with the same args. It will resume the restore process.
 
 ## Advanced usage
 
-Please, see [vmbackup docs](https://docs.victoriametrics.com/victoriametrics/vmbackup/#advanced-usage) for examples of authentication
+See [Connecting VM components to cloud storage](https://docs.victoriametrics.com/guides/connecting-vm-components-to-cloud-storage/) for examples of authentication
 with different storage types.
 
 Run `vmrestore -help` in order to see all the available options:
@@ -102,6 +103,8 @@ Run `vmrestore -help` in order to see all the available options:
      Disable compression of HTTP responses to save CPU resources. By default, compression is enabled to save network bandwidth
   -http.header.csp string
      Value for 'Content-Security-Policy' header, recommended: "default-src 'self'"
+  -http.header.disableServerHostname
+     Whether to disable 'X-Server-Hostname' header in HTTP responses
   -http.header.frameOptions string
      Value for 'X-Frame-Options' header
   -http.header.hsts string
@@ -197,6 +200,8 @@ Run `vmrestore -help` in order to see all the available options:
      Prefixing endpoint with bucket name when set false, true by default. (default true)
   -s3SSEKMSKeyId string
      SSE KMS Key ID for use with S3-compatible storages.
+  -s3SkipTaggingDirective
+     Whether to skip the x-amz-tagging-directive and x-amz-tagging headers when copying objects. Enable it only for S3-compatible storage that rejects these headers.
   -s3StorageClass string
      The Storage Class applied to objects uploaded to AWS S3. Supported values are: GLACIER, DEEP_ARCHIVE, GLACIER_IR, INTELLIGENT_TIERING, ONEZONE_IA, OUTPOSTS, REDUCED_REDUNDANCY, STANDARD, STANDARD_IA.
      See https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html

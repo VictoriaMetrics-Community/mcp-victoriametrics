@@ -7,6 +7,8 @@ menu:
     weight: 4
 tags:
   - metrics
+  - logs
+  - traces
   - cloud
   - enterprise
   - guide
@@ -27,3 +29,5 @@ Here you can find some guides and best practices:
 * [How to write and read data](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens/)
 * [LogsQL documentation](https://docs.victoriametrics.com/victorialogs/logsql/)
 * [Alerting with logs](https://docs.victoriametrics.com/victorialogs/vmalert/)
+* [Querying VictoriaTraces](https://docs.victoriametrics.com/victoriatraces/querying/)
+* [VictoriaTraces key concepts and data model](https://docs.victoriametrics.com/victoriatraces/keyconcepts/)

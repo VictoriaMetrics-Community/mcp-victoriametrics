@@ -11,15 +11,16 @@ menu:
 tags:
   - metrics
   - logs
+  - traces
   - cloud
   - enterprise
   - guide
 ---
 
-VictoriaMetrics Cloud helps users to analyze time series or logging data and troubleshoot
+VictoriaMetrics Cloud helps users to analyze time series, logging or tracing data and troubleshoot
 queries through the built-in `Explore` utility. This functionality is powered by
 [VMUI](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#vmui)
-components and available for both metrics and logs.
+components and available for metrics, logs and traces.
 
 You can `Explore` your data accessing to this section in the two following ways:
 1. Explore page at [console.victoriametrics.cloud/explore](https://console.victoriametrics.cloud/explore)
@@ -36,14 +37,17 @@ The VMUI documentation may be found [here](https://docs.victoriametrics.com/vict
 which is maintained and updated alongside product releases.
 
 The same approach is used for the VictoriaLogs User Interface, sometimes known as `VLUI`, which provides
-visualization and analysis capabilities for logs data stored in VictoriaLogs deployments.
+visualization and analysis capabilities for logs data stored in VictoriaLogs deployments, and for the
+VictoriaTraces User Interface, which allows browsing and filtering the trace spans stored in
+VictoriaTraces deployments.
 
 ![Logs Overview](https://docs.victoriametrics.com/victoriametrics-cloud/exploring-data/explore-logs-overview.webp)
 <figcaption style="text-align: center; font-style: italic;">Logs Overview in VictoriaMetrics Cloud</figcaption>
 
 ### Playground
 The quickest way to discover VMUI is by directly interacting with it. If you are curious, the available
-playgrounds for [VictoriaMetrics](https://play.victoriametrics.com/) and [VictoriaLogs](https://play-vmlogs.victoriametrics.com/)
+playgrounds for [VictoriaMetrics](https://play.victoriametrics.com/), [VictoriaLogs](https://play-vmlogs.victoriametrics.com/)
+and [VictoriaTraces](https://play-vtraces.victoriametrics.com/)
 allow you to check real examples of different installations of the VictoriaStack.
 There, you can easily testing and learn the query engine or the relabeling debugger among other tools
 and pages provided by VMUI.

@@ -21,12 +21,4 @@ To generate your access token (with **write access**, as metrics will be pushed)
 To set up Kubernetes monitoring using the VictoriaMetrics stack, visit the [cloud console](https://console.victoriametrics.cloud/integrations/kubernetes), or follow this interactive guide:
 
 
-<iframe 
-    width="100%" 
-    height="2100" 
-    name="iframe" 
-    id="integration" 
-    frameborder="0"
-    src="https://console.victoriametrics.cloud/public/integrations/kubernetes" 
-    style="background: white;" >
-</iframe>
+{{< cloud-console-iframe "kubernetes" >}}

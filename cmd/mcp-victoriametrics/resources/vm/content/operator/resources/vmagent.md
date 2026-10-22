@@ -38,10 +38,10 @@ so user can set custom configuration while still benefiting from the Operator's 
 
 ## Specification
 
-You can see the full actual specification of the `VMAgent` resource in the **[API docs -> VMAgent](https://docs.victoriametrics.com/operator/api/#vmagent)**.
+You can see the full actual specification of the `VMAgent` resource in the **[API docs -> VMAgent](https://docs.victoriametrics.com/operator/api/#v1beta1-vmagent)**.
 
 If you can't find necessary field in the specification of the custom resource,
-see [Extra arguments section](https://docs.victoriametrics.com/operator/resources/vmagent/#extra-arguments).
+see [Extra arguments section](https://docs.victoriametrics.com/operator/resources/#extra-arguments).
 
 Also, you can check out the [examples](https://docs.victoriametrics.com/operator/resources/vmagent/#examples) section.
 
@@ -68,28 +68,33 @@ These objects specify which targets VMAgent should scrape and how to collect met
 - `scrapeConfigNamespaceSelector` and `scrapeConfigSelector` for [VMScrapeConfig](https://docs.victoriametrics.com/operator/resources/vmscrapeconfig/) objects.
 
 This enables access control configuration for objects across namespaces.
-See [this doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#labelselector-v1-meta/) for selector specifications.
+See [this doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#labelselector-v1-meta) for selector specifications.
 
 In addition to these selectors, object filtering in a cluster can be done by the `selectAllByDefault` VMAgent spec field and the operator's `WATCH_NAMESPACE` environment variable.
 
 Following rules are applied:
 
-- If both `...NamespaceSelector` and `...Selector` are undefined, no objects are selected by default. Setting `spec.selectAllByDefault: true` selects all objects of the given type.
-- If `...NamespaceSelector` is defined and `...Selector` is undefined, all objects in the namespaces matched by ...NamespaceSelector are selected.
-- If `...NamespaceSelector` is undefined and `...Selector` is defined, all objects in VMAgent’s namespaces matching ...Selector are selected.
-- If `...NamespaceSelector` and `...Selector` both are defined, then only objects in the namespaces matched by...NamespaceSelector for the given ...Selector are matching.
+- If `...NamespaceSelector` and `...Selector` are both undefined, nothing is selected. Setting `spec.selectAllByDefault: true` selects all objects of the given type.
+- If `...NamespaceSelector` is defined and `...Selector` is undefined, all objects of the given type in the namespaces matched by `...NamespaceSelector` are selected.
+- If `...NamespaceSelector` is undefined and `...Selector` is defined, objects of the given type matching `...Selector` in the `VMAgent` namespace are selected.
+- If `...NamespaceSelector` and `...Selector` are both defined, objects of the given type matching `...Selector` in the namespaces matched by `...NamespaceSelector` are selected.
+- `selectAllByDefault` has an effect only when both `...NamespaceSelector` and `...Selector` are undefined.
+- An empty `...NamespaceSelector` (`{}`) matches all namespaces. If `...NamespaceSelector` matches no namespaces, nothing is selected.
+- If the operator's `WATCH_NAMESPACE` is set, `...NamespaceSelector` is ignored and objects of the given type are selected from all watched namespaces, not only from the `VMAgent` namespace. This also applies when only `...Selector` is defined.
+- If the operator's `WATCH_NAMESPACE` is set and `VMAgent` uses the operator-managed ServiceAccount, VMNodeScrape objects are not selected, because node discovery requires cluster-wide access.
 
 Below is a more visual and detailed view:
 
-| `...NamespaceSelector` | `...Selector` | `selectAllByDefault` | `WATCH_NAMESPACE` | Selected objects                                                                                            |
-|------------------------|---------------|----------------------|-------------------|-------------------------------------------------------------------------------------------------------------|
-| undefined              | undefined     | false                | undefined         | nothing                                                                                                     |
-| undefined              | undefined     | **true**             | undefined         | all objects of given type (`...`) in the cluster                                                            |
-| **defined**            | undefined     | *any*                | undefined         | all objects of given type (`...`) at namespaces for given `...NamespaceSelector`                            |
-| undefined              | **defined**   | *any*                | undefined         | all objects of given type (`...`) only at `VMAgent`'s namespace are matching for given `Selector`           |
-| **defined**            | **defined**   | *any*                | undefined         | all objects of given type (`...`) only at namespaces matched `...NamespaceSelector` for given `...Selector` |
-| *any*                  | undefined     | *any*                | **defined**       | all objects of given type (`...`) only at `VMAgent`'s namespace                                             |
-| *any*                  | **defined**   | *any*                | **defined**       | all objects of given type (`...`) only at `VMAgent`'s namespace for given `...Selector`                     |
+| `...NamespaceSelector` | `...Selector` | `selectAllByDefault` | `WATCH_NAMESPACE` | Selected objects                                                                                     |
+|------------------------|---------------|----------------------|-------------------|------------------------------------------------------------------------------------------------------|
+| undefined              | undefined     | false                | *any*             | nothing                                                                                              |
+| undefined              | undefined     | **true**             | undefined         | all objects of the given type in the cluster                                                         |
+| **defined**            | undefined     | *any*                | undefined         | all objects of the given type in the namespaces matched by `...NamespaceSelector`                    |
+| undefined              | **defined**   | *any*                | undefined         | objects of the given type matching `...Selector` in the `VMAgent` namespace                          |
+| **defined**            | **defined**   | *any*                | undefined         | objects of the given type matching `...Selector` in the namespaces matched by `...NamespaceSelector` |
+| undefined              | undefined     | **true**             | **defined**       | all objects of the given type in the watched namespaces                                              |
+| **defined**            | undefined     | *any*                | **defined**       | all objects of the given type in the watched namespaces                                              |
+| *any*                  | **defined**   | *any*                | **defined**       | objects of the given type matching `...Selector` in the watched namespaces                           |
 
 For more details about the `WATCH_NAMESPACE` variable, see [this doc](https://docs.victoriametrics.com/operator/configuration/#namespaced-mode).
 
@@ -681,10 +686,10 @@ Also, you can specify requests without limits - in this case default values for 
 ## Enterprise features
 
 VMAgent supports feature [Kafka integration](https://docs.victoriametrics.com/victoriametrics/vmagent/#kafka-integration)
-from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise).
+from [VictoriaMetrics Enterprise](https://docs.victoriametrics.com/victoriametrics/enterprise/#victoriametrics-enterprise-features).
 
 For using Enterprise version of [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) you need to:
- - specify license at [`spec.license.key`](https://docs.victoriametrics.com/operator/api/#license-key) or at [`spec.license.keyRef`](https://docs.victoriametrics.com/operator/api/#license-keyref).
+ - specify license at [`spec.license.key`](https://docs.victoriametrics.com/operator/api/#v1beta1-license-key) or at [`spec.license.keyRef`](https://docs.victoriametrics.com/operator/api/#v1beta1-license-keyref).
  - change version of `vmagent` to version with `-enterprise` suffix using [Version management](https://docs.victoriametrics.com/operator/resources/vmagent/#version-management).
 
 After that you can pass [Kafka integration](https://docs.victoriametrics.com/victoriametrics/vmagent/#kafka-integration)

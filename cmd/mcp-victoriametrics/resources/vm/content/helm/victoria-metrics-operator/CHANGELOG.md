@@ -1,55 +1,216 @@
 ## Next release
 
+- fix pod label selector in the chart notes: repeated `-l` flags were replaced with a single comma-separated selector, since `kubectl` only honours the last `-l`.
+
+## v0.68.1
+
+**Release date:** 01 Oct 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.75.0](https://img.shields.io/badge/v0.75.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0750)
+
+- bump `victoria-metrics-common` dependency to `0.4.*`. Resource names are unchanged.
+
+## v0.68.0
+
+**Release date:** 27 Sep 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.75.0](https://img.shields.io/badge/v0.75.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0750)
+
+**Update note 1**: This release contains new VTAgent CRD. It requires to perform CRD versions update.
+
+- updates operator to [v0.75.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.75.0) version
+
+## v0.67.3
+
+**Release date:** 31 Aug 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.74.1](https://img.shields.io/badge/v0.74.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0741)
+
+- add `dnsConfig` option to set a custom DNS config for the pod. See [#3174](https://github.com/VictoriaMetrics/helm-charts/issues/3174)
+- added `global.versions` (metrics/logs/traces/anomaly/alertmanager) to populate the operator's default-version env vars (`VM_METRICS_VERSION`, `VM_LOGS_VERSION`, `VM_TRACES_VERSION`, `VM_ANOMALY_VERSION`, `VM_VMALERTMANAGER_ALERTMANAGERVERSION`); an explicit entry in `env` for the same variable still takes precedence. See [#3186](https://github.com/VictoriaMetrics/helm-charts/issues/3186)
+
+## v0.67.2
+
+**Release date:** 03 Aug 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.74.0](https://img.shields.io/badge/v0.74.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0740)
+
+- restored `VM_ENABLEDPROMETHEUSCONVERTER_*` env vars when `operator.disable_prometheus_converter: true` and removed Prometheus CRD names (`PodMonitor`, `ServiceMonitor`, etc.) from `--controller.disableReconcileFor`. In operator v0.68.x the `controllersByName` map does not include Prometheus CRD names — passing them causes the operator to fail on startup.
+
+## v0.67.1
+
+**Release date:** 31 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.74.0](https://img.shields.io/badge/v0.74.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0740)
+
+- added `networkpolicies` permission to the operator ClusterRole. Without it the operator cannot sync its NetworkPolicy informer and stops reconciling every CR, even when no CR sets `.spec.networkPolicy`. See [#3129](https://github.com/VictoriaMetrics/helm-charts/issues/3129).
+
+## v0.67.0
+
+**Release date:** 30 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.74.0](https://img.shields.io/badge/v0.74.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0740)
+
+- updates operator to [v0.74.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.74.0) version
+
+## v0.66.3
+
+**Release date:** 20 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.73.1](https://img.shields.io/badge/v0.73.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0731)
+
+- added permissions for VPA and Gateway API. See [#3102](https://github.com/VictoriaMetrics/helm-charts/issues/3102).
+
+## v0.66.2
+
+**Release date:** 08 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.73.1](https://img.shields.io/badge/v0.73.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0731)
+
+- updates operator to [v0.73.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.73.1) version
+
+## v0.66.1
+
+**Release date:** 08 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.73.0](https://img.shields.io/badge/v0.73.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0730)
+
+- added openshift_compatibility property, which allows to enabled openshift compatibility on operator. Check [docs](https://docs.victoriametrics.com/operator/configuration/#variables-vm-openshift-compatibility).
+
+## v0.66.0
+
+**Release date:** 08 Jul 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.73.0](https://img.shields.io/badge/v0.73.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0730)
+
+- updates operator to [v0.73.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.73.0) version
+- added `runtimeClassName` option to the pod spec
+- add `nodePort` support for `Service` resources
+- added `global.extraLabels` and `global.extraAnnotations`; automatically injects `VM_COMMON_LABELS` and `VM_COMMON_ANNOTATIONS` env vars into the operator so they propagate to CRs
+- removed deprecated `VM_ENABLEDPROMETHEUSCONVERTER_*` env vars; `operator.disable_prometheus_converter: true` now uses `--controller.disableReconcileFor` CLI arg, merging with any user-provided values in `extraArgs` and deduplicating
+
+## v0.65.1
+
+**Release date:** 15 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.72.0](https://img.shields.io/badge/v0.72.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0720)
+
+- add `dnsPolicy` option; when `hostNetwork` is enabled and `dnsPolicy` is not set, it defaults to `ClusterFirstWithHostNet`. See [#2994](https://github.com/VictoriaMetrics/helm-charts/issues/2994)
+
+## v0.65.0
+
+**Release date:** 15 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.72.0](https://img.shields.io/badge/v0.72.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0720)
+
+- updates operator to [v0.72.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.72.0) version
+
+## v0.64.1
+
+**Release date:** 12 Jun 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.71.0](https://img.shields.io/badge/v0.71.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0710)
+
+- add ability to override container command.
+- updates operator to [v0.71.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.71.0) version
+
+## v0.63.1
+
+**Release date:** 20 May 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.70.1](https://img.shields.io/badge/v0.70.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0701)
+
 - TODO
 
-## 0.60.0
+## v0.63.0
+
+**Release date:** 18 May 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.70.0](https://img.shields.io/badge/v0.70.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0700)
+
+- updates operator to [v0.70.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.70.0) version
+
+## v0.62.1
+
+**Release date:** 28 Apr 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.69.0](https://img.shields.io/badge/v0.69.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0690)
+
+- include prometheus scrapeconfig controller to a list of controllers that should be disabled by .Values.operator.disable_prometheus_converter. See [#2838](https://github.com/VictoriaMetrics/helm-charts/issues/2838).
+
+## v0.62.0
+
+**Release date:** 22 Apr 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.69.0](https://img.shields.io/badge/v0.69.0-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0690)
+
+- replace rancher/kubectl images with registry.k8s.io/kubectl. See [#2833](https://github.com/VictoriaMetrics/helm-charts/issues/2833) and [#2830](https://github.com/VictoriaMetrics/helm-charts/issues/2830).
+- updates operator to [v0.69.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.69.0) version
+
+## v0.61.1
+
+**Release date:** 20 Apr 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.4](https://img.shields.io/badge/v0.68.4-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Foperator%2Freleases%2Ftag%2Fv0.68.4)
+
+- fixed selector for scrape objects. See [#2827](https://github.com/VictoriaMetrics/helm-charts/issues/2827).
+
+## v0.61.0
+
+**Release date:** 16 Apr 2026
+
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.4](https://img.shields.io/badge/v0.68.4-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Foperator%2Freleases%2Ftag%2Fv0.68.4)
+
+- revert change in Deployment's matchLabels, that was introduced in release 0.60.0
+
+## v0.60.0
 
 **Release date:** 14 Apr 2026
 
-![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.4](https://img.shields.io/badge/v0.68.4-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0684)
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.4](https://img.shields.io/badge/v0.68.4-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Foperator%2Freleases%2Ftag%2Fv0.68.4)
 
-**Update node 1**: due to change in label name pods will be restarted.
+**Known issue:** this release contains changes in Deployment matchLabels, which requires Deployment recreation. Skip this release to avoid disruption.
 
 - replace custom app label with app.kubernetes.io/component. See [#2785](https://github.com/VictoriaMetrics/helm-charts/issues/2785).
 - revert default helm hooks for validatingwebhookconfiguration due to ArgoCD issues
 - added .Values.admissionWebhooks.annotations
 - fixed .Values.admissionWebhooks.certManager.annotations rendering
 
-## 0.59.5
+## v0.59.5
 
 **Release date:** 12 Apr 2026
 
-![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.4](https://img.shields.io/badge/v0.68.4-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0684)
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.4](https://img.shields.io/badge/v0.68.4-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Foperator%2Freleases%2Ftag%2Fv0.68.4)
 
 - added helm post-install and post-upgrade hooks for validatingwebhookconfiguration
 
-## 0.59.4
+## v0.59.4
 
 **Release date:** 09 Apr 2026
 
-![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.4](https://img.shields.io/badge/v0.68.4-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0684)
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.4](https://img.shields.io/badge/v0.68.4-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Foperator%2Freleases%2Ftag%2Fv0.68.4)
 
 - added ability to configure operator deployment strategy. See [#2778](https://github.com/VictoriaMetrics/helm-charts/issues/2778).
 - updates operator to [v0.68.4](https://github.com/VictoriaMetrics/operator/releases/tag/v0.68.4) version
 
-## 0.59.3
+## v0.59.3
 
 **Release date:** 16 Mar 2026
 
-![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.3](https://img.shields.io/badge/v0.68.3-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0683)
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.3](https://img.shields.io/badge/v0.68.3-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Foperator%2Freleases%2Ftag%2Fv0.68.3)
 
 - support unhealthyPodEvictionPolicy for PodDisruptionBudget. See [#2747](https://github.com/VictoriaMetrics/helm-charts/issues/2747).
 - updates operator to [v0.68.3](https://github.com/VictoriaMetrics/operator/releases/tag/v0.68.3) version
 
-## 0.59.2
+## v0.59.2
 
 **Release date:** 05 Mar 2026
 
-![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.2](https://img.shields.io/badge/v0.68.2-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0682)
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.68.2](https://img.shields.io/badge/v0.68.2-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Foperator%2Freleases%2Ftag%2Fv0.68.2)
 
 - updates operator to [v0.68.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.68.2) version
 
-## 0.59.1
+## v0.59.1
 
 **Release date:** 03 Mar 2026
 
@@ -57,7 +218,7 @@
 
 - updates operator to [v0.68.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.68.1) version
 
-## 0.59.0
+## v0.59.0
 
 **Release date:** 24 Feb 2026
 
@@ -66,7 +227,7 @@
 - added .Values.shareProcessNamespace
 - updates operator to [v0.68.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.68.0) version
 
-## 0.58.1
+## v0.58.1
 
 **Release date:** 24 Jan 2026
 
@@ -75,7 +236,7 @@
 - removed operator.useCustomConfigReloader parameter
 - replaced .Values.configReloaderImage with .Values.configReloader.image
 
-## 0.58.0
+## v0.58.0
 
 **Release date:** 23 Jan 2026
 
@@ -85,7 +246,7 @@
 - updates operator to [v0.67.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.67.0) version
 - added .Values.configReloaderImage section to provide default config reloader image for operator
 
-## 0.57.1
+## v0.57.1
 
 **Release date:** 06 Dec 2025
 
@@ -93,7 +254,7 @@
 
 - updates operator to [v0.66.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.66.1) version
 
-## 0.57.0
+## v0.57.0
 
 **Release date:** 03 Dec 2025
 
@@ -102,7 +263,7 @@
 - add support of k8s service traffic distribution. See [#2580](https://github.com/VictoriaMetrics/helm-charts/issues/2580).
 - updates operator to [v0.66.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.66.0) version
 
-## 0.56.4
+## v0.56.4
 
 **Release date:** 12 Nov 2025
 
@@ -111,7 +272,7 @@
 - bump operator chart version 0.0.42 -> 0.0.45
 - use same config reloader version as operator by default
 
-## 0.56.3
+## v0.56.3
 
 **Release date:** 07 Nov 2025
 
@@ -119,7 +280,7 @@
 
 - set `.Values.upgrade.enabled: false` in a nested `crds` chart to fix lint helm issues
 
-## 0.56.2
+## v0.56.2
 
 **Release date:** 06 Nov 2025
 
@@ -127,7 +288,7 @@
 
 - revert adding common dependency to crds subchart. See [#2547](https://github.com/VictoriaMetrics/helm-charts/issues/2547).
 
-## 0.56.1
+## v0.56.1
 
 **Release date:** 06 Nov 2025
 
@@ -135,7 +296,7 @@
 
 - fix update job templates. See [#2535](https://github.com/VictoriaMetrics/helm-charts/issues/2535).
 
-## 0.56.0
+## v0.56.0
 
 **Release date:** 31 Oct 2025
 
@@ -143,7 +304,7 @@
 
 - updates operator to [v0.65.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.65.0) version
 
-## 0.55.3
+## v0.55.3
 
 **Release date:** 30 Oct 2025
 
@@ -151,7 +312,7 @@
 
 - updates operator to [v0.64.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.64.1) version
 
-## 0.55.2
+## v0.55.2
 
 **Release date:** 29 Oct 2025
 
@@ -159,7 +320,7 @@
 
 - allow setting `.Values.operator.useCustomConfigReloader` to `false`
 
-## 0.55.1
+## v0.55.1
 
 **Release date:** 29 Oct 2025
 
@@ -167,7 +328,7 @@
 
 - Use VM config reloader by default, as operator does starting 0.64.0. See [#2510](https://github.com/VictoriaMetrics/helm-charts/issues/2510).
 
-## 0.55.0
+## v0.55.0
 
 **Release date:** 29 Oct 2025
 
@@ -178,7 +339,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.64.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.64.0) version
 
-## 0.54.1
+## v0.54.1
 
 **Release date:** 28 Oct 2025
 
@@ -186,7 +347,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - set command for cleanup job. fixes [#2501](https://github.com/VictoriaMetrics/helm-charts/issues/2501).
 
-## 0.54.0
+## v0.54.0
 
 **Release date:** 27 Sep 2025
 
@@ -199,7 +360,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Replaced `.Values.admissionWebhooks.enabledCRDValidation` with `.Values.admissionWebhooks.disabledFor` list of CRD names to disable validation for. This change should not affect anyone, since before condition with `.Values.admissionWebhooks.enabledCRDValidation` was not working at all.
 - Added CRDs upgrade job, which is only available only for plain CRDs (`.Values.crds.plain: true`). See [#2334](https://github.com/VictoriaMetrics/helm-charts/issues/2334).
 
-## 0.53.0
+## v0.53.0
 
 **Release date:** 12 Sep 2025
 
@@ -209,7 +370,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.63.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.63.0) version
 
-## 0.52.1
+## v0.52.1
 
 **Release date:** 18 Aug 2025
 
@@ -217,7 +378,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.62.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.62.0) version
 
-## 0.52.0
+## v0.52.0
 
 **Release date:** 18 Aug 2025
 
@@ -226,7 +387,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Include patch version while building default cleanup image tag. See [#2339](https://github.com/VictoriaMetrics/helm-charts/issues/2339).
 - updates operator to [v0.62.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.62.0) version
 
-## 0.51.4
+## v0.51.4
 
 **Release date:** 23 Jul 2025
 
@@ -234,7 +395,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.61.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.61.2) version
 
-## 0.51.3
+## v0.51.3
 
 **Release date:** 21 Jul 2025
 
@@ -242,7 +403,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.61.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.61.1) version
 
-## 0.51.2
+## v0.51.2
 
 **Release date:** 17 Jul 2025
 
@@ -250,7 +411,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - TODO
 
-## 0.51.1
+## v0.51.1
 
 **Release date:** 16 Jul 2025
 
@@ -258,7 +419,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - add missing `pods/eviction` RBAC permission. Thanks to the @kevinastone
 
-## 0.51.0
+## v0.51.0
 
 **Release date:** 15 Jul 2025
 
@@ -268,7 +429,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.61.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.61.0) version
 
-## 0.50.3
+## v0.50.3
 
 **Release date:** 27 Jun 2025
 
@@ -276,7 +437,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.60.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.60.2) version
 
-## 0.50.2
+## v0.50.2
 
 **Release date:** 24 Jun 2025
 
@@ -284,7 +445,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.60.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.60.1) version
 
-## 0.50.1
+## v0.50.1
 
 **Release date:** 24 Jun 2025
 
@@ -292,7 +453,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - enabled VMAnomaly webhook
 
-## 0.50.0
+## v0.50.0
 
 **Release date:** 23 Jun 2025
 
@@ -302,7 +463,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.60.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.60.0) version
 
-## 0.49.2
+## v0.49.2
 
 **Release date:** 12 Jun 2025
 
@@ -313,7 +474,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updates operator to [v0.59.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.59.2) version
 - propagate .Values.global.image.registry to operator container VM_CONTAINERREGISTRY env variable. This will allow to use .Values.global.image.registry in k8s-stack chart. Related issue [#2226](https://github.com/VictoriaMetrics/helm-charts/issues/2226).
 
-## 0.49.1
+## v0.49.1
 
 **Release date:** 30 May 2025
 
@@ -325,7 +486,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Support scrape and probe CRs validation webhooks
 - updates operator to [v0.59.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.59.1) version
 
-## 0.49.0-rc1
+## v0.49.0-rc1
 
 **Release date:** 30 May 2025
 
@@ -336,7 +497,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Support scrape and probe CRs validation webhooks
 - updates operator to [v0.59.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.59.0) version
 
-## 0.47.0
+## v0.47.0
 
 **Release date:** 14 May 2025
 
@@ -344,7 +505,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.58.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.58.0) version
 
-## 0.46.0
+## v0.46.0
 
 **Release date:** 09 May 2025
 
@@ -352,7 +513,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.57.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.57.0) version
 
-## 0.45.0
+## v0.45.0
 
 **Release date:** 17 Apr 2025
 
@@ -360,7 +521,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.56.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.56.0) version
 
-## 0.44.0
+## v0.44.0
 
 **Release date:** 02 Apr 2025
 
@@ -368,7 +529,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.55.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.55.0) version
 
-## 0.43.1
+## v0.43.1
 
 **Release date:** 21 Mar 2025
 
@@ -377,7 +538,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updated common dependency 0.0.39 -> 0.0.42
 - add `.Values.crds.annotations` when `.Values.crds.plain: false`. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/2073).
 
-## 0.43.0
+## v0.43.0
 
 **Release date:** 13 Mar 2025
 
@@ -385,7 +546,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.54.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.54.1) version
 
-## 0.42.5
+## v0.42.5
 
 **Release date:** 11 Mar 2025
 
@@ -393,7 +554,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Add `.Values.serviceMonitor.vm` toggle, which allows to switch from `VMServiceScrape` to `ServiceMonitor` for operator monitoring.
 
-## 0.42.4
+## v0.42.4
 
 **Release date:** 03 Mar 2025
 
@@ -401,7 +562,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - add support for ServiceScrape `proxyURL`. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/2029).
 
-## 0.42.3
+## v0.42.3
 
 **Release date:** 02 Mar 2025
 
@@ -409,7 +570,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updated common dependency 0.0.39 -> 0.0.41
 
-## 0.42.2
+## v0.42.2
 
 **Release date:** 02 Mar 2025
 
@@ -417,7 +578,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - added webhook certificates configurable subject and secretTemplate. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/2022).
 
-## 0.42.1
+## v0.42.1
 
 **Release date:** 25 Feb 2025
 
@@ -426,7 +587,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updated common dependency 0.0.37 -> 0.0.39
 - added fullname prefix for victoriametrics:admin and victoriametrics:view roles to avoid collision during while deploying more than one operator. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/2012).
 
-## 0.42.0
+## v0.42.0
 
 **Release date:** 05 Feb 2025
 
@@ -434,7 +595,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.53.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.53.0) version
 
-## 0.41.2
+## v0.41.2
 
 **Release date:** 05 Feb 2025
 
@@ -442,7 +603,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - added `.Values.allowedMetricsEndpoints`
 
-## 0.41.1
+## v0.41.1
 
 **Release date:** 04 Feb 2025
 
@@ -450,7 +611,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Added default values for securityContext and podSecurityContext
 
-## 0.41.0
+## v0.41.0
 
 **Release date:** 22 Jan 2025
 
@@ -458,7 +619,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.52.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.52.0) version
 
-## 0.40.5
+## v0.40.5
 
 **Release date:** 20 Jan 2025
 
@@ -467,7 +628,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Made certManager certificates commonName and duration configurable. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1924).
 - Add pod priority class configuration for operator. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1929).
 
-## 0.40.4
+## v0.40.4
 
 **Release date:** 13 Jan 2025
 
@@ -475,7 +636,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.51.3](https://github.com/VictoriaMetrics/operator/releases/tag/v0.51.3) version
 
-## 0.40.3
+## v0.40.3
 
 **Release date:** 06 Jan 2025
 
@@ -484,7 +645,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updated common dependency 0.0.36 -> 0.0.37
 - support templating in `.Values.extraObjects`
 
-## 0.40.2
+## v0.40.2
 
 **Release date:** 24 Dec 2024
 
@@ -494,26 +655,26 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updated common dependency 0.0.35 -> 0.0.36
 - updates operator to [v0.51.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.51.2) version
 
-## 0.40.1
+## v0.40.1
 
 **Release date:** 19 Dec 2024
 
-![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.51.1](https://img.shields.io/badge/v0.51.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0511)
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.51.1](https://img.shields.io/badge/v0.51.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Foperator%2Freleases%2Ftag%2Fv0.51.1)
 
 - Compact CRD template. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1888).
 - Exclude markdown files from package
 
-## 0.40.0
+## v0.40.0
 
 **Release date:** 19 Dec 2024
 
-![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.51.1](https://img.shields.io/badge/v0.51.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0511)
+![Helm: v3](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0) ![AppVersion: v0.51.1](https://img.shields.io/badge/v0.51.1-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Foperator%2Freleases%2Ftag%2Fv0.51.1)
 
 - updated common dependency 0.0.34 -> 0.0.35
 - updates operator to [v0.51.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.51.1) version
 
 
-## 0.40.0-rc.1
+## v0.40.0-rc.1
 
 **Release date:** 2024-12-17
 
@@ -523,7 +684,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updated common dependency 0.0.32 -> 0.0.33
 - add an option to mount `ServiceAccount` token manually for security hardening reasons.
 
-## 0.39.1
+## v0.39.1
 
 **Release date:** 2024-11-25
 
@@ -532,7 +693,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updated common dependency 0.0.31 -> 0.0.32
 
-## 0.39.0
+## v0.39.0
 
 **Release date:** 2024-11-25
 
@@ -542,7 +703,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updated common dependency 0.0.28 -> 0.0.31
 - fixed app.kubernetes.io/version tag override if custom tag is set. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1766).
 
-## 0.38.0
+## v0.38.0
 
 **Release date:** 2024-11-18
 
@@ -556,7 +717,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - disabled cleanup, while `crds.enabled: false`. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1563).
 - updates operator to [v0.50.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.49.0) version
 
-## 0.37.0
+## v0.37.0
 
 **Release date:** 2024-11-05
 
@@ -567,7 +728,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updates operator to [v0.49.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.49.0) version
 
 
-## 0.36.0
+## v0.36.0
 
 **Release date:** 2024-10-22
 
@@ -576,7 +737,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - replaced `crd.enabled` property to `crds.plain`. Instead of disabling CRDs it selects if CRDs should be rendered from template or as plain CRDs
 
-## 0.35.5
+## v0.35.5
 
 **Release date:** 2024-10-15
 
@@ -585,7 +746,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.48.4](https://github.com/VictoriaMetrics/operator/releases/tag/v0.48.4) version
 
-## 0.35.4
+## v0.35.4
 
 **Release date:** 2024-10-11
 
@@ -594,7 +755,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Human-readable error about Helm version requirement
 
-## 0.35.3
+## v0.35.3
 
 **Release date:** 2024-10-10
 
@@ -606,7 +767,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - added configurable cleanup hook resources. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1571)
 - added ability to configure `terminationGracePeriodSeconds` and `lifecycle`. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1563) for details
 
-## 0.35.2
+## v0.35.2
 
 **Release date:** 2024-09-29
 
@@ -615,7 +776,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.48.3](https://github.com/VictoriaMetrics/operator/releases/tag/v0.48.3) version
 
-## 0.35.1
+## v0.35.1
 
 **Release date:** 2024-09-26
 
@@ -624,7 +785,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.48.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.48.1) version
 
-## 0.35.0
+## v0.35.0
 
 **Release date:** 2024-09-26
 
@@ -635,7 +796,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Changed crd cleanup hook delete policy to prevent `resource already exists` error.
 - updates operator to [v0.48.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.48.0) version
 
-## 0.34.8
+## v0.34.8
 
 **Release date:** 2024-09-10
 
@@ -647,7 +808,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Fixed operator Role creation when only watching own namespace using `watchNamespaces`
 - Changed webhook service port from 443 to 9443
 
-## 0.34.7
+## v0.34.7
 
 **Release date:** 2024-09-03
 
@@ -656,7 +817,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Do not create ClusterRole if `watchNamespaces` contains only namespace, where operator is deployed
 
-## 0.34.6
+## v0.34.6
 
 **Release date:** 2024-08-29
 
@@ -669,7 +830,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Made `watchNamespace` string deprecated in a favour of `watchNamespaces` slice
 - Decreased rendering time by 2 seconds
 
-## 0.34.5
+## v0.34.5
 
 **Release date:** 2024-08-26
 
@@ -678,7 +839,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - fixes typo at clean webhook. vmlogs->vlogs.
 
-## 0.34.4
+## v0.34.4
 
 **Release date:** 2024-08-26
 
@@ -687,7 +848,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - fixes RBAC by rollback <https://github.com/VictoriaMetrics/helm-charts/commit/7d75b93525bb0a99a8011b700d0a51b6b762321c>
 
-## 0.34.3
+## v0.34.3
 
 **Release date:** 2024-08-26
 
@@ -696,7 +857,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - removes not implemented scrape CRDs from validation webhook
 
-## 0.34.2
+## v0.34.2
 
 **Release date:** 2024-08-26
 
@@ -707,7 +868,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - fixed indent, for Issuer crd, when `cert-manager.enabled: true`
 - updates operator to [v0.47.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.47.2) version
 
-## 0.34.1
+## v0.34.1
 
 **Release date:** 2024-08-23
 
@@ -726,7 +887,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Added ability to configure container port
 - Fixed image pull secrets. See [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1285)
 
-## 0.34.0
+## v0.34.0
 
 **Release date:** 2024-08-15
 
@@ -739,7 +900,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updates operator to [v0.47.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.47.0) release
 - adds RBAC permissions to VLogs object
 
-## 0.33.6
+## v0.33.6
 
 **Release date:** 2024-08-07
 
@@ -748,7 +909,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - add missing permission to allow patching `horizontalpodautoscalers` when operator watches single namespace.
 
-## 0.33.5
+## v0.33.5
 
 **Release date:** 2024-08-01
 
@@ -757,7 +918,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - fix cleanup job image tag when `.Capabilities.KubeVersion.Minor` returns version with plus sign. See [this pull request](https://github.com/VictoriaMetrics/helm-charts/pull/1169) by @dimaslv.
 
-## 0.33.4
+## v0.33.4
 
 **Release date:** 2024-07-10
 
@@ -766,7 +927,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.46.4](https://github.com/VictoriaMetrics/operator/releases/tag/v0.46.4) release
 
-## 0.33.3
+## v0.33.3
 
 **Release date:** 2024-07-05
 
@@ -775,11 +936,11 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.46.3](https://github.com/VictoriaMetrics/operator/releases/tag/v0.46.3) release
 
-## 0.33.2
+## v0.33.2
 
 **Release date:** 2024-07-04
 
-![AppVersion: v0.46.2](https://img.shields.io/badge/v0.46.2-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Foperator%2Fchangelog%2F%23v0462)
+![AppVersion: v0.46.2](https://img.shields.io/badge/v0.46.2-success?logo=VictoriaMetrics&labelColor=gray&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Foperator%2Freleases%2Ftag%2Fv0.46.2)
 ![Helm: v3.14](https://img.shields.io/badge/Helm-v3.14%2B-informational?color=informational&logo=helm&link=https%3A%2F%2Fgithub.com%2Fhelm%2Fhelm%2Freleases%2Ftag%2Fv3.14.0)
 
 - breaking change: operator uses different entrypoint, remove `command` entrypoint
@@ -787,7 +948,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - removes podsecurity policy. It's longer supported by kubernetes
 - updates operator to [v0.46.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.46.2) release
 
-## 0.33.1
+## v0.33.1
 
 **Release date:** 2024-07-03
 
@@ -799,7 +960,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - removes podsecurity policy. It's longer supported by kubernetes
 - updates operator to [v0.46.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.46.0) release
 
-## 0.32.3
+## v0.32.3
 
 **Release date:** 2024-07-02
 
@@ -808,7 +969,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - use bitnami/kubectl image for cleanup instead of deprecated gcr.io/google_containers/hyperkube
 
-## 0.32.2
+## v0.32.2
 
 **Release date:** 2024-06-14
 
@@ -817,7 +978,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - fix default image tag when using `Chart.AppVersion`, previously the version is missing "v".
 
-## 0.32.1
+## v0.32.1
 
 **Release date:** 2024-06-14
 
@@ -828,7 +989,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - support specifying image tag suffix like "-enterprise" for VictoriaMetrics components using `.Values.<component>.image.variant`.
 
-## 0.32.0
+## v0.32.0
 
 **Release date:** 2024-06-10
 
@@ -837,7 +998,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.45.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.45.0)
 
-## 0.31.2
+## v0.31.2
 
 **Release date:** 2024-05-14
 
@@ -846,7 +1007,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - fix missing serviceaccounts patch permission in ClusterRole, see [this issue](https://github.com/VictoriaMetrics/helm-charts/issues/1012) for details.
 
-## 0.31.1
+## v0.31.1
 
 **Release date:** 2024-05-10
 
@@ -856,7 +1017,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - fix serviceAccount template when `.Values.serviceAccount.create=false`, see this [pull request](https://github.com/VictoriaMetrics/helm-charts/pull/1002) by @tylerturk for details.
 - support creating aggregated clusterRoles for VM CRDs with admin and read permissions, see this [pull request](https://github.com/VictoriaMetrics/helm-charts/pull/996) by @reegnz for details.
 
-## 0.31.0
+## v0.31.0
 
 **Release date:** 2024-05-09
 
@@ -865,7 +1026,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.44.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.44.0)
 
-## 0.30.3
+## v0.30.3
 
 **Release date:** 2024-04-26
 
@@ -874,7 +1035,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to [v0.43.5](https://github.com/VictoriaMetrics/operator/releases/tag/v0.43.5)
 
-## 0.30.2
+## v0.30.2
 
 **Release date:** 2024-04-23
 
@@ -884,7 +1045,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updates operator to v0.43.1 version
 - fixes typo at single-namespace role for `vmscrapeconfig`. See this [issue](https://github.com/VictoriaMetrics/helm-charts/issues/987) for details.
 
-## 0.30.1
+## v0.30.1
 
 **Release date:** 2024-04-18
 
@@ -895,7 +1056,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator to v0.43.1 version
 
-## 0.30.0
+## v0.30.0
 
 **Release date:** 2024-04-18
 
@@ -906,7 +1067,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - adds `events` create permission
 - properly truncate value of `app.kubernetes.io/managed-by` and `app.kubernetes.io/instance` labels in case release name exceeds 63 characters.
 
-## 0.29.6
+## v0.29.6
 
 **Release date:** 2024-04-16
 
@@ -916,7 +1077,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - clean up vmauth as well when uninstall chart with `cleanupCRD: true`, since it also has `finalizers`.
 - sync new crd VMScrapeConfig from operator, see detail in <https://docs.victoriametrics.com/operator/api/#vmscrapeconfig>.
 
-## 0.29.5
+## v0.29.5
 
 **Release date:** 2024-04-02
 
@@ -925,7 +1086,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - bump version of VM operator to [0.42.4](https://github.com/VictoriaMetrics/operator/releases/tag/v0.42.4)
 
-## 0.29.4
+## v0.29.4
 
 **Release date:** 2024-03-28
 
@@ -934,7 +1095,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - added ability to use slice variables in extraArgs (#944)
 
-## 0.29.3
+## v0.29.3
 
 **Release date:** 2024-03-12
 
@@ -943,7 +1104,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - TODO
 
-## 0.29.2
+## v0.29.2
 
 **Release date:** 2024-03-06
 
@@ -952,7 +1113,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - bump version of VM operator to [0.42.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.42.2)
 
-## 0.29.0
+## v0.29.0
 
 **Release date:** 2024-03-06
 
@@ -961,7 +1122,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - bump version of VM operator to [0.42.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.42.1)
 
-## 0.29.0
+## v0.29.0
 
 **Release date:** 2024-03-04
 
@@ -970,7 +1131,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - bump version of VM operator to [0.42.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.42.0)
 
-## 0.28.1
+## v0.28.1
 
 **Release date:** 2024-02-21
 
@@ -979,7 +1140,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - bump version of VM operator to [0.41.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.41.2)
 
-## 0.28.0
+## v0.28.0
 
 **Release date:** 2024-02-09
 
@@ -988,7 +1149,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Update victoriametrics CRD resources yaml.
 
-## 0.27.11
+## v0.27.11
 
 **Release date:** 2024-02-01
 
@@ -997,7 +1158,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - bump version of VM operator to [0.41.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.41.1)
 
-## 0.27.10
+## v0.27.10
 
 **Release date:** 2024-01-24
 
@@ -1006,7 +1167,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Bump operator version to [0.40.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.40.0)
 
-## 0.27.9
+## v0.27.9
 
 **Release date:** 2023-12-12
 
@@ -1015,7 +1176,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - bump version of VM operator to [0.39.4](https://github.com/VictoriaMetrics/operator/releases/tag/v0.39.4)
 
-## 0.27.8
+## v0.27.8
 
 **Release date:** 2023-12-08
 
@@ -1024,7 +1185,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Sync CRD resources with operator [v0.39.3](https://github.com/VictoriaMetrics/operator/releases/tag/v0.39.3).
 
-## 0.27.7
+## v0.27.7
 
 **Release date:** 2023-12-08
 
@@ -1033,7 +1194,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Skip deleting victoriametrics CRD resources when uninstall release.
 
-## 0.27.6
+## v0.27.6
 
 **Release date:** 2023-11-16
 
@@ -1042,7 +1203,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - bump version of VM operator to [0.39.3](https://github.com/VictoriaMetrics/operator/releases/tag/v0.39.3)
 
-## 0.27.5
+## v0.27.5
 
 **Release date:** 2023-11-15
 
@@ -1052,7 +1213,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - bump version of VM operator to [0.39.2](https://github.com/VictoriaMetrics/operator/releases/tag/v0.39.2)
 - Add `extraObjects` to allow deploying additional resources with the chart release. (#751)
 
-## 0.27.4
+## v0.27.4
 
 **Release date:** 2023-11-01
 
@@ -1061,7 +1222,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - bump version of VM operator to [0.39.1](https://github.com/VictoriaMetrics/operator/releases/tag/v0.39.1)
 
-## 0.27.3
+## v0.27.3
 
 **Release date:** 2023-10-08
 
@@ -1070,7 +1231,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Added endpointslices permissions to operator roles (#708)
 
-## 0.27.2
+## v0.27.2
 
 **Release date:** 2023-10-04
 
@@ -1079,7 +1240,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - bump version of VM operator to [0.39.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.39.0)
 
-## 0.27.1
+## v0.27.1
 
 **Release date:** 2023-09-28
 
@@ -1088,7 +1249,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Fix `relabelConfigs` for operator's VMServiceScrape (#624)
 
-## 0.27.0
+## v0.27.0
 
 **Release date:** 2023-09-11
 
@@ -1097,7 +1258,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Bump version of operator to [v0.38.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.38.0)
 
-## 0.26.2
+## v0.26.2
 
 **Release date:** 2023-09-07
 
@@ -1106,7 +1267,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Updated CRDs for operator
 
-## 0.26.1
+## v0.26.1
 
 **Release date:** 2023-09-04
 
@@ -1115,7 +1276,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - Bump version of Victoria Metrics operator to `v0.37.1`
 
-## 0.26.0
+## v0.26.0
 
 **Release date:** 2023-08-30
 
@@ -1125,7 +1286,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Bump operator version to [v0.37.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.37.0)
 - `psp_auto_creation_enabled` for operator is disabled by default
 
-## 0.25.0
+## v0.25.0
 
 **Release date:** 2023-08-24
 
@@ -1138,7 +1299,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - Add `cleanupCRD` option to clean up vm cr resources when uninstalling (#593)
 - Bump operator version to [v0.36.0](https://github.com/VictoriaMetrics/operator/releases/tag/v0.36.0)
 
-## 0.24.1
+## v0.24.1
 
 **Release date:** 2023-07-13
 
@@ -1147,7 +1308,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - operator release v0.35.1
 
-## 0.24.0
+## v0.24.0
 
 **Release date:** 2023-07-03
 
@@ -1157,7 +1318,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 - updates operator for v0.35.0
 - updates for v1.91.1 release
 
-## 0.23.1
+## v0.23.1
 
 **Release date:** 2023-05-29
 
@@ -1166,7 +1327,7 @@ This change could be reverted by providing env variable `VM_USECUSTOMCONFIGRELOA
 
 - updates operator for v0.34.1 version
 
-## 0.23.0
+## v0.23.0
 
 **Release date:** 2023-05-25
 

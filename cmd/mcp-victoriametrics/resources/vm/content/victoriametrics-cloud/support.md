@@ -21,7 +21,8 @@ For more details, check the [documentation](https://docs.victoriametrics.com/vic
 
 ## How to Reach Support
 To contact support, use the [Contact Support](https://console.victoriametrics.cloud/contact_support)
-button in the VictoriaMetrics Cloud UI.
+button in the VictoriaMetrics Cloud UI, or email us at
+<span>support&#45;cloud&#64;victoriametrics&#46;com</span>.
 
 We categorize support requests into three types:
 - Issues
@@ -29,7 +30,7 @@ We categorize support requests into three types:
 - General Questions
 
 ### Common reasons to reach out:
-- Troubleshoot issues with deployments, or writing/reading metrics and logs
+- Troubleshoot issues with deployments, or writing/reading metrics, logs and traces
 - Report potential bugs in VictoriaMetrics Cloud
 - Increase default quotas for allowed number of deployments
 - Request higher or custom tiers

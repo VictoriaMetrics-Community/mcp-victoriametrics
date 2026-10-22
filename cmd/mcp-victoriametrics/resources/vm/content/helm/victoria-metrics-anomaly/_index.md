@@ -3,6 +3,7 @@
 ---
 weight: 7
 title: VictoriaMetrics Anomaly
+description: "Deploy vmanomaly on Kubernetes."
 menu:
   docs:
     parent: helm
@@ -13,7 +14,7 @@ aliases:
   - /helm/victoriametrics-anomaly/
 ---
 
-![Version](https://img.shields.io/badge/1.12.11-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-anomaly%2Fchangelog%2F%2311211)
+![Version](https://img.shields.io/badge/1.12.20-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-anomaly%2Fchangelog%2F%23v11220)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-anomaly)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -87,13 +88,13 @@ Test the installation with command:
   - For HTTPS repository
 
     ```console
-    helm install vma vm/victoria-metrics-anomaly -f values.yaml -n NAMESPACE --debug
+    helm install vma vm/victoria-metrics-anomaly -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
   - For OCI repository
 
     ```console
-    helm install vma oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-anomaly -f values.yaml -n NAMESPACE --debug
+    helm install vma oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-anomaly -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
 Install chart with command:
@@ -160,6 +161,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Annotations to be added to the deployment</p>
+</td>
+    </tr>
+    <tr id="command">
+      <td><a href="#command"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Override default container command. Use when the VictoriaMetrics binary is available at a custom path</p>
 </td>
     </tr>
     <tr id="config">
@@ -293,6 +300,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>VMAnomaly strategy</p>
 </td>
     </tr>
+    <tr id="dnsconfig">
+      <td><a href="#dnsconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">dnsConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Custom DNS config for pod. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-config" target="_blank">here</a></p>
+</td>
+    </tr>
     <tr id="emptydir">
       <td><a href="#emptydir"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -365,6 +378,18 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">adaptSecurityContext</span><span class="p">:</span><span class="w"> </span><span class="l">auto</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Openshift security context compatibility configuration</p>
+</td>
+    </tr>
+    <tr id="global-extraannotations">
+      <td><a href="#global-extraannotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraAnnotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Annotations added to all resources</p>
+</td>
+    </tr>
+    <tr id="global-extralabels">
+      <td><a href="#global-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Labels added to all resources</p>
 </td>
     </tr>
     <tr id="global-image-registry">
@@ -488,6 +513,41 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#nameoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">nameOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Override chart name</p>
+</td>
+    </tr>
+    <tr id="networkpolicy">
+      <td><a href="#networkpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">networkPolicy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">egress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>See <code>kubectl explain networkpolicy.spec</code> for more. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="networkpolicy-annotations">
+      <td><a href="#networkpolicy-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">networkPolicy.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Extra annotations for NetworkPolicy</p>
+</td>
+    </tr>
+    <tr id="networkpolicy-egress">
+      <td><a href="#networkpolicy-egress"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">networkPolicy.egress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Egress rules</p>
+</td>
+    </tr>
+    <tr id="networkpolicy-ingress">
+      <td><a href="#networkpolicy-ingress"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">networkPolicy.ingress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Ingress rules</p>
+</td>
+    </tr>
+    <tr id="networkpolicy-labels">
+      <td><a href="#networkpolicy-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">networkPolicy.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Extra labels for NetworkPolicy</p>
 </td>
     </tr>
     <tr id="nodeselector">
@@ -647,6 +707,30 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>PodMonitor labels</p>
 </td>
     </tr>
+    <tr id="podmonitor-interval">
+      <td><a href="#podmonitor-interval"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podMonitor.interval</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Scrape interval, for example 30s</p>
+</td>
+    </tr>
+    <tr id="podmonitor-metricrelabelings">
+      <td><a href="#podmonitor-metricrelabelings"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podMonitor.metricRelabelings</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Metric relabeling rules</p>
+</td>
+    </tr>
+    <tr id="podmonitor-relabelings">
+      <td><a href="#podmonitor-relabelings"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podMonitor.relabelings</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Relabeling rules</p>
+</td>
+    </tr>
+    <tr id="podmonitor-scrapetimeout">
+      <td><a href="#podmonitor-scrapetimeout"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podMonitor.scrapeTimeout</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Scrape timeout, for example 10s</p>
+</td>
+    </tr>
     <tr id="podmonitor-vm">
       <td><a href="#podmonitor-vm"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">podMonitor.vm</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
@@ -799,16 +883,16 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Load balancer source range</p>
 </td>
     </tr>
+    <tr id="service-publishnotreadyaddresses">
+      <td><a href="#service-publishnotreadyaddresses"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">service.publishNotReadyAddresses</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Publish not-ready addresses for the headless service</p>
+</td>
+    </tr>
     <tr id="service-serviceport">
       <td><a href="#service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="m">8490</span></span></span></code></pre>
 </a></td>
       <td><em><code>(int)</code></em><p>Service port</p>
-</td>
-    </tr>
-    <tr id="service-targetport">
-      <td><a href="#service-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">service.targetPort</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>Target port</p>
 </td>
     </tr>
     <tr id="service-trafficdistribution">

@@ -3,6 +3,7 @@
 ---
 weight: 3
 title: VictoriaMetrics Single
+description: "Deploy single-node VictoriaMetrics on Kubernetes."
 menu:
   docs:
     parent: helm
@@ -16,7 +17,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.35.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-single%2Fchangelog%2F%230350)
+![Version](https://img.shields.io/badge/0.49.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-single%2Fchangelog%2F%23v0490)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-single)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -90,13 +91,13 @@ Test the installation with command:
   - For HTTPS repository
 
     ```console
-    helm install vms vm/victoria-metrics-single -f values.yaml -n NAMESPACE --debug
+    helm install vms vm/victoria-metrics-single -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
   - For OCI repository
 
     ```console
-    helm install vms oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-single -f values.yaml -n NAMESPACE --debug
+    helm install vms oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-single -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
 Install chart with command:
@@ -139,6 +140,40 @@ Remove application with command.
 helm uninstall vms -n NAMESPACE
 ```
 
+### HTTP listen address
+
+The chart configures the HTTP listen address via `.Values.server.http` list.
+Each entry in the list configures a separate HTTP listener.
+The primary listener (marked with `primary: true`) is used for Pod health checks and Service port generation.
+
+To enable TLS on the HTTP listener:
+
+```yaml
+server:
+  http:
+    - name: https
+      primary: true
+      value: :8428
+      tls: true
+      tlsCertFile: /path/to/tls.crt
+      tlsKeyFile: /path/to/tls.key
+```
+
+To expose an additional listener on a different port:
+
+```yaml
+server:
+  http:
+    - name: http
+      primary: true
+      value: :8428
+    - name: https
+      value: :8429
+      tls: true
+      tlsCertFile: /path/to/tls.crt
+      tlsKeyFile: /path/to/tls.key
+```
+
 ## Parameters
 
 The following tables lists the configurable parameters of the chart and their default values.
@@ -166,9 +201,28 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="global-compatibility">
       <td><a href="#global-compatibility"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.compatibility</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">openshift</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">adaptSecurityContext</span><span class="p">:</span><span class="w"> </span><span class="l">auto</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">adaptSecurityContext</span><span class="p">:</span><span class="w"> </span><span class="l">auto</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">automountServiceSigningCA</span><span class="p">:</span><span class="w"> </span><span class="l">auto</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Openshift security context compatibility configuration</p>
+</td>
+    </tr>
+    <tr id="global-compatibility-openshift-automountservicesigningca">
+      <td><a href="#global-compatibility-openshift-automountservicesigningca"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.compatibility.openshift.automountServiceSigningCA</span><span class="p">:</span><span class="w"> </span><span class="l">auto</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Automount OpenShift service signing CA into the pod</p>
+</td>
+    </tr>
+    <tr id="global-extraannotations">
+      <td><a href="#global-extraannotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraAnnotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Annotations added to all resources</p>
+</td>
+    </tr>
+    <tr id="global-extralabels">
+      <td><a href="#global-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Labels added to all resources</p>
 </td>
     </tr>
     <tr id="global-image-registry">
@@ -223,6 +277,41 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#nameoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">nameOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Override chart name</p>
+</td>
+    </tr>
+    <tr id="networkpolicy">
+      <td><a href="#networkpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">networkPolicy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">egress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>See <code>kubectl explain networkpolicy.spec</code> for more. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="networkpolicy-annotations">
+      <td><a href="#networkpolicy-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">networkPolicy.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Extra annotations for NetworkPolicy</p>
+</td>
+    </tr>
+    <tr id="networkpolicy-egress">
+      <td><a href="#networkpolicy-egress"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">networkPolicy.egress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Egress rules</p>
+</td>
+    </tr>
+    <tr id="networkpolicy-ingress">
+      <td><a href="#networkpolicy-ingress"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">networkPolicy.ingress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Ingress rules</p>
+</td>
+    </tr>
+    <tr id="networkpolicy-labels">
+      <td><a href="#networkpolicy-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">networkPolicy.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Extra labels for NetworkPolicy</p>
 </td>
     </tr>
     <tr id="poddisruptionbudget">
@@ -290,6 +379,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Pod affinity</p>
 </td>
     </tr>
+    <tr id="server-command">
+      <td><a href="#server-command"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.command</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Override default container command. Use when the VictoriaMetrics binary is available at a custom path</p>
+</td>
+    </tr>
     <tr id="server-containerworkingdir">
       <td><a href="#server-containerworkingdir"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.containerWorkingDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
@@ -303,6 +398,12 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">Recreate</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank">K8s Deployment</a> specific variables</p>
+</td>
+    </tr>
+    <tr id="server-dnsconfig">
+      <td><a href="#server-dnsconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.dnsConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Custom DNS config for pod. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-config" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="server-emptydir">
@@ -332,7 +433,6 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#server-extraargs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.extraArgs</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.enable</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.prefix</span><span class="p">:</span><span class="w"> </span><span class="l">VM_</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">httpListenAddr</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8428</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">loggerFormat</span><span class="p">:</span><span class="w"> </span><span class="l">json</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Extra command line arguments for container of component</p>
@@ -370,6 +470,24 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#server-fullnameoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.fullnameOverride</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Overrides the full name of server component</p>
+</td>
+    </tr>
+    <tr id="server-http">
+      <td><a href="#server-http"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.http</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">mtls</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">mtlsCAFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertCacheDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertEmail</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertHosts</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsCertFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsKeyFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsMinVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8428</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTP listen address configuration. See <a href="https://docs.victoriametrics.com/helm/victoria-metrics-single/#http-listen-address" target="_blank">https://docs.victoriametrics.com/helm/victoria-metrics-single/#http-listen-address</a> for details.</p>
 </td>
     </tr>
     <tr id="server-image-pullpolicy">
@@ -461,7 +579,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="server-mode">
       <td><a href="#server-mode"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.mode</span><span class="p">:</span><span class="w"> </span><span class="l">statefulSet</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>VictoriaMetrics mode: deployment, statefulSet</p>
+      <td><em><code>(string)</code></em><p>VictoriaMetrics mode: deployment, statefulSet. Only <code>deployment</code> is supported with <code>useLegacyNaming: false</code></p>
 </td>
     </tr>
     <tr id="server-name">
@@ -545,7 +663,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="server-persistentvolume-volumeattributesclassname">
       <td><a href="#server-persistentvolume-volumeattributesclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.persistentVolume.volumeAttributesClassName</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>VolumeClassAttribute to user for persistent volume</p>
+      <td><em><code>(string)</code></em><p>VolumeAttributesClass to use for persistent volume</p>
 </td>
     </tr>
     <tr id="server-podannotations">
@@ -702,6 +820,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#server-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="server-runtimeclassname">
+      <td><a href="#server-runtimeclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.runtimeClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Name of the <a href="https://kubernetes.io/docs/concepts/containers/runtime-class/" target="_blank">RuntimeClass</a> used to run the pod, e.g. &ldquo;gvisor&rdquo;</p>
 </td>
     </tr>
     <tr id="server-schedulername">
@@ -959,9 +1083,9 @@ Change the values according to the need of the environment in ``victoria-metrics
 </td>
     </tr>
     <tr id="server-service-clusterip">
-      <td><a href="#server-service-clusterip"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.clusterIP</span><span class="p">:</span><span class="w"> </span><span class="l">None</span></span></span></code></pre>
+      <td><a href="#server-service-clusterip"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.clusterIP</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Service ClusterIP</p>
+      <td><em><code>(string)</code></em><p>Service ClusterIP. When unset, the Service is headless (<code>None</code>) with legacy naming and a regular ClusterIP Service with operator naming</p>
 </td>
     </tr>
     <tr id="server-service-externalips">
@@ -1012,16 +1136,16 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Load balancer source range</p>
 </td>
     </tr>
-    <tr id="server-service-serviceport">
-      <td><a href="#server-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="m">8428</span></span></span></code></pre>
+    <tr id="server-service-portoverrides">
+      <td><a href="#server-service-portoverrides"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.portOverrides</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(int)</code></em><p>Service port</p>
+      <td><em><code>(object)</code></em><p>Per-port Service overrides, keyed by port name. Each entry may override port, protocol, targetPort, nodePort and/or appProtocol</p>
 </td>
     </tr>
-    <tr id="server-service-targetport">
-      <td><a href="#server-service-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.targetPort</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
+    <tr id="server-service-serviceport">
+      <td><a href="#server-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Target port</p>
+      <td><em><code>(string)</code></em><p>Service port</p>
 </td>
     </tr>
     <tr id="server-service-trafficdistribution">
@@ -1066,6 +1190,18 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Service Monitor metricRelabelings</p>
 </td>
     </tr>
+    <tr id="server-servicemonitor-path">
+      <td><a href="#server-servicemonitor-path"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.serviceMonitor.path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service Monitor path</p>
+</td>
+    </tr>
+    <tr id="server-servicemonitor-port">
+      <td><a href="#server-servicemonitor-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.serviceMonitor.port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service Monitor port. Uses primary http item name by default</p>
+</td>
+    </tr>
     <tr id="server-servicemonitor-relabelings">
       <td><a href="#server-servicemonitor-relabelings"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.serviceMonitor.relabelings</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
@@ -1073,9 +1209,9 @@ Change the values according to the need of the environment in ``victoria-metrics
 </td>
     </tr>
     <tr id="server-servicemonitor-targetport">
-      <td><a href="#server-servicemonitor-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.serviceMonitor.targetPort</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
+      <td><a href="#server-servicemonitor-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">server.serviceMonitor.targetPort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Service Monitor target port</p>
+      <td><em><code>(string)</code></em><p>Service Monitor target port. Overrides port when set</p>
 </td>
     </tr>
     <tr id="server-statefulset">

@@ -1,10 +1,10 @@
 ---
 title : "Access tokens"
-weight: 5
+weight: 6
 menu:
   docs:
     parent: "deployments"
-    weight: 5
+    weight: 6
 ---
 
 VictoriaMetrics Cloud handles data ingestion and querying in a secure way. That's why we need to
@@ -115,6 +115,19 @@ Authotization: Bearer <SECRET_VALUE>
 
 Please note that API paths are different for Single and Cluster deployments, you can read more details about it  in [How to work with tenants in cluster deployments](https://docs.victoriametrics.com/victoriametrics-cloud/deployments/access-tokens/#how-to-work-with-tenants-in-cluster-deployments)) section.
 
+API paths also depend on the type of the deployment the token belongs to:
+
+| Deployment type | Write path | Read path |
+|-----------------|------------|-----------|
+| VictoriaMetrics | [VictoriaMetrics URL examples](https://docs.victoriametrics.com/victoriametrics/url-examples/) | [VictoriaMetrics URL examples](https://docs.victoriametrics.com/victoriametrics/url-examples/) |
+| VictoriaLogs    | [VictoriaLogs data ingestion](https://docs.victoriametrics.com/victorialogs/data-ingestion/) | [VictoriaLogs querying](https://docs.victoriametrics.com/victorialogs/querying/) |
+| VictoriaTraces  | [VictoriaTraces data ingestion](https://docs.victoriametrics.com/victoriatraces/data-ingestion/) | [VictoriaTraces querying](https://docs.victoriametrics.com/victoriatraces/querying/) |
+
+> [!NOTE]
+> VictoriaTraces deployments accept trace spans only through the OTLP **HTTP** endpoint. The OTLP
+> gRPC endpoint (port `4317`) is not exposed in VictoriaMetrics Cloud, so collectors and SDKs must
+> be configured with their OTLP/HTTP exporter.
+
 The best way to configure writing data to your deployment is to use the [integrations page](https://console.victoriametrics.cloud/integrations)
 in the [Victoria Metrics Cloud console](https://console.victoriametrics.cloud/integrations) or [Integrations section](https://docs.victoriametrics.com/victoriametrics-cloud/integrations/) of the documentation.
 If there’s an integration you would like to use and it is currently missing, please [contact us](mailto:support-cloud@victoriametrics.com).
@@ -129,6 +142,10 @@ You can also open the Examples section of Access tokens:
 
    - For writing: [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/), Prometheus or CURL.
    - For reading: Grafana or CURL.
+
+   For VictoriaLogs and VictoriaTraces deployments, only the CURL examples are shown. The
+   VictoriaTraces write example pushes a span in OTLP/JSON, and the read example queries the Jaeger
+   API (`/select/jaeger/api/traces`).
 
    You can click on the button in the top right corner to copy command or config to clipboard with the access token substituted in it.
 

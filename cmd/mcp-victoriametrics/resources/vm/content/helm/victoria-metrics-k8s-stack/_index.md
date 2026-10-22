@@ -3,6 +3,7 @@
 ---
 weight: 12
 title: VictoriaMetrics K8s Stack
+description: "Full Kubernetes monitoring stack with Operator, Grafana dashboards, ServiceScrapes, and VMRules."
 menu:
   docs:
     parent: helm
@@ -16,7 +17,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.74.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%230740)
+![Version](https://img.shields.io/badge/0.96.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-k8s-stack%2Fchangelog%2F%23v0961)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-k8s-stack)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -33,13 +34,15 @@ Kubernetes monitoring on VictoriaMetrics stack. Includes VictoriaMetrics Operato
 * [Uninstall](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#how-to-uninstall)
 * [Version Upgrade](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#upgrade-guide)
 * [Troubleshooting](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#troubleshooting)
+* [Logs storage and collection](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#logs-storage-and-collection)
+* [Traces storage](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#traces-storage)
 * [Values](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/#parameters)
 
 ## Overview
 
-This chart is an All-in-one solution to start monitoring kubernetes cluster.
+This chart is an All-in-one solution to start monitoring and logging in a Kubernetes cluster.
 It installs multiple dependency charts like [grafana](https://github.com/grafana/helm-charts/tree/main/charts/grafana), [node-exporter](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter), [kube-state-metrics](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-state-metrics) and [victoria-metrics-operator](https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-operator).
-Also it installs Custom Resources like [VMSingle](https://docs.victoriametrics.com/operator/resources/vmsingle/), [VMCluster](https://docs.victoriametrics.com/operator/resources/vmcluster/), [VMAgent](https://docs.victoriametrics.com/operator/resources/vmagent/), [VMAlert](https://docs.victoriametrics.com/operator/resources/vmalert/).
+Also it installs Custom Resources like [VMSingle](https://docs.victoriametrics.com/operator/resources/vmsingle/), [VMCluster](https://docs.victoriametrics.com/operator/resources/vmcluster/), [VMAgent](https://docs.victoriametrics.com/operator/resources/vmagent/), [VMAlert](https://docs.victoriametrics.com/operator/resources/vmalert/) for metrics, optionally [VLSingle](https://docs.victoriametrics.com/operator/resources/vlsingle/), [VLCluster](https://docs.victoriametrics.com/operator/resources/vlcluster/), [VLAgent](https://docs.victoriametrics.com/operator/resources/vlagent/) for logs, and [VTSingle](https://docs.victoriametrics.com/operator/resources/vtsingle/), [VTCluster](https://docs.victoriametrics.com/operator/resources/vtcluster/) for traces.
 
 By default, the operator [converts all existing prometheus-operator API objects](https://docs.victoriametrics.com/operator/integrations/prometheus/#objects-conversion) into corresponding VictoriaMetrics Operator objects.
 
@@ -57,12 +60,12 @@ Configuration of this chart is done through helm values.
 
 Dependencies can be enabled or disabled by setting `enabled` to `true` or `false` in `values.yaml` file.
 
-**!Important:** for dependency charts anything that you can find in values.yaml of dependency chart can be configured in this chart under key for that dependency. For example if you want to configure `grafana` you can find all possible configuration options in [values.yaml](https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml) and you should set them in values for this chart under grafana: key. For example if you want to configure `grafana.persistence.enabled` you should set it in values.yaml like this:
+**!Important:** for dependency charts anything that you can find in values.yaml of dependency chart can be configured in this chart under key for that dependency. For example if you want to configure `grafana` you can find all possible configuration options in the [Grafana chart README](https://github.com/grafana-community/helm-charts/tree/main/charts/grafana#configuration) and you should set them in values for this chart under grafana: key. For example if you want to configure `grafana.persistence.enabled` you should set it in values.yaml like this:
 ```yaml
 #################################################
 ###              dependencies               #####
 #################################################
-# Grafana dependency chart configuration. For possible values refer to https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration
+# Grafana dependency chart configuration. For possible values refer to https://github.com/grafana-community/helm-charts/tree/main/charts/grafana#configuration
 grafana:
   enabled: true
   persistence:
@@ -203,6 +206,87 @@ grafana:
 ```
 When using this approach, you can find dashboards for VictoriaMetrics components published [here](https://grafana.com/orgs/victoriametrics).
 
+### Dashboards and rules in air-gapped environments
+
+By default the sync-job downloads dashboards and rules from public URLs (GitHub raw content) at deploy time.
+In environments without internet access there are several options.
+
+#### Option 1: Pre-generate manifests and commit to source control
+
+Run the sync-job binary locally against your `values.yaml` before deploying to the air-gapped cluster.
+The binary is distributed as a container image.
+
+**Step 1.** Render the sync-job config from your chart values:
+
+```shell
+helm template <RELEASE_NAME> vm/victoria-metrics-k8s-stack -f values.yaml \
+  --show-only templates/sync-job/config.yaml \
+  | yq '.data["config.yaml"]' > /tmp/sync-job-config.yaml
+```
+
+**Step 2.** Run the binary locally and capture the output:
+
+```shell
+docker run --rm \
+  -e OUTPUT=- \
+  -e NAMESPACE=<NAMESPACE> \
+  -e RELEASE=<RELEASE_NAME> \
+  -e RESOURCE_PREFIX=<RELEASE_NAME> \
+  -e PRUNE=false \
+  -e OWNER_REFERENCES=false \
+  -v /tmp/sync-job-config.yaml:/etc/config/config.yaml:ro \
+  ghcr.io/victoriametrics/sync-job:v0.0.11 > manifests.yaml
+```
+
+**Step 3.** Commit `manifests.yaml` to your source repository and apply it in the air-gapped cluster:
+
+```shell
+kubectl apply -f manifests.yaml
+```
+
+Disable the sync-job in your air-gapped deployment to prevent it from attempting to reach upstream sources:
+
+```yaml
+syncJob:
+  enabled: false
+```
+
+#### Option 2: Route traffic through an HTTP proxy
+
+If the cluster has a proxy with access to the internet, configure it in `syncJob.env`:
+
+```yaml
+syncJob:
+  env:
+    - name: HTTPS_PROXY
+      value: "http://proxy.example.com:3128"
+    - name: NO_PROXY
+      value: "kubernetes.default.svc,10.0.0.0/8"
+```
+
+#### Option 3: Mirror sources to an internal server
+
+Override `defaultDashboards.sources` and `defaultRules.sources` to point to an internal HTTP server
+(Nginx, Nexus, Artifactory, etc.) that mirrors the upstream files:
+
+```yaml
+defaultDashboards:
+  sources:
+    victoriametrics-cluster:
+      url: http://artifacts.internal/dashboards/victoriametrics.json
+    victoriametrics-vmagent:
+      url: http://artifacts.internal/dashboards/vmagent.json
+    # ... override remaining sources
+
+defaultRules:
+  sources:
+    etcd:
+      url: http://artifacts.internal/rules/etcd-alerts.yaml
+    # ... override remaining sources
+```
+
+The source keys match those defined in the default `values.yaml`; override only the ones you need.
+
 ### Prometheus scrape configs
 This chart installs multiple scrape configurations for kubernetes monitoring. They are configured under `#ServiceMonitors` section in `values.yaml` file. For example if you want to configure scrape config for `kubelet` you should set it in values.yaml like this:
 ```yaml
@@ -212,6 +296,157 @@ kubelet:
   # https://docs.victoriametrics.com/operator/api/#vmnodescrapespec
   spec:
     interval: "30s"
+```
+
+### Logs storage and collection
+
+This chart supports {{% available_from "v0.85.0" "helm-metrics-k8s-stack" %}} deploying [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/) alongside VictoriaMetrics for logs storage and collection.
+
+#### Logs storage
+
+Enable **VLSingle** for a single-node logs storage deployment:
+
+```yaml
+vlsingle:
+  enabled: true
+  spec:
+    retentionPeriod: 30d
+    storage:
+      resources:
+        requests:
+          storage: 50Gi
+```
+
+Enable **VLCluster** for a highly-available clustered deployment (mutually exclusive with VLSingle):
+
+```yaml
+vlcluster:
+  enabled: true
+  spec:
+    retentionPeriod: 30d
+    vlstorage:
+      replicaCount: 2
+    vlselect:
+      replicaCount: 2
+    vlinsert:
+      replicaCount: 2
+```
+
+To connect to an existing VictoriaLogs instance instead of deploying one, use the external URL configuration:
+
+```yaml
+external:
+  vl:
+    read:
+      url: http://your-victorialogs-host:9428
+    write:
+      url: http://your-victorialogs-host:9428
+```
+
+#### Logs collection
+
+Enable **VLAgent** to collect logs from Kubernetes pods and nodes:
+
+```yaml
+vlagent:
+  enabled: true
+  spec:
+    k8sCollector:
+      enabled: true
+```
+
+VLAgent automatically writes logs to the configured VictoriaLogs storage (VLSingle, VLCluster, or external). Additional remote write targets can be configured via `vlagent.additionalRemoteWrites`.
+
+#### Grafana datasource for VictoriaLogs
+
+When VLSingle, VLCluster, or an external VL URL is configured, a `VictoriaLogs (DS)` Grafana datasource is automatically provisioned. It requires the `victoriametrics-logs-datasource` Grafana plugin:
+
+```yaml
+grafana:
+  plugins:
+    - victoriametrics-logs-datasource
+```
+
+Without this plugin, the datasource entry will exist in Grafana but the plugin will not be available to use it.
+
+#### VMAlert with both VictoriaMetrics and VictoriaLogs
+
+When both a VM read endpoint (VLSingle, VMCluster, or external) and a VL read endpoint are configured and `vmalert.enabled` is `true`, the chart automatically deploys an internal VMAuth proxy that routes VMAlert datasource queries:
+
+- `/select/logsql/.*` → VictoriaLogs (for LogsQL alert rules)
+- `/.*` → VictoriaMetrics (for MetricsQL alert rules)
+
+No additional configuration is needed — the routing is handled transparently. This allows VMAlert to evaluate both MetricsQL and LogsQL rules against the correct backend.
+
+### Traces storage
+
+This chart supports {{% available_from "v0.85.0" "helm-metrics-k8s-stack" %}} deploying [VictoriaTraces](https://docs.victoriametrics.com/victorialogs/) alongside VictoriaMetrics for distributed traces storage.
+
+#### VTSingle (single-node)
+
+Enable **VTSingle** for a single-node traces storage deployment:
+
+```yaml
+vtsingle:
+  enabled: true
+  spec:
+    retentionPeriod: "7"    # days
+    storage:
+      resources:
+        requests:
+          storage: 20Gi
+```
+
+#### VTCluster
+
+Enable **VTCluster** for a highly-available clustered deployment (mutually exclusive with VTSingle):
+
+```yaml
+vtcluster:
+  enabled: true
+  spec:
+    retentionPeriod: 14d
+    vtstorage:
+      replicaCount: 2
+```
+
+#### External traces instance
+
+To connect to an existing VictoriaTraces instance instead of deploying one:
+
+```yaml
+external:
+  vt:
+    read:
+      url: http://your-victoriatraces-host:10428
+    write:
+      url: http://your-victoriatraces-host:10428
+```
+
+#### Grafana datasource for VictoriaTraces
+
+When VTSingle, VTCluster, or an external VT URL is configured, a `VictoriaTraces` Grafana datasource is automatically provisioned. It uses the Jaeger-compatible API exposed at `<endpoint>/select/jaeger`:
+
+| Field | Value |
+|---|---|
+| Name | `VictoriaTraces` |
+| UID | `VictoriaTraces` |
+| Type | `jaeger` |
+| URL | auto-set from the VTSingle / VTCluster service endpoint |
+
+The Jaeger datasource type is built into Grafana — no additional plugin is required.
+
+Additional datasource properties can be customised under `defaultDatasources.victoriatraces.datasources`:
+
+```yaml
+defaultDatasources:
+  victoriatraces:
+    datasources:
+      - name: VictoriaTraces
+        uid: VictoriaTraces
+        type: jaeger
+        jsonData:
+          tlsSkipVerify: true
 ```
 
 ### Using externally managed Grafana
@@ -273,32 +508,13 @@ grafana:
 All images of VictoriaMetrics components are available on [Docker Hub](https://hub.docker.com/u/victoriametrics) and [Quay](https://quay.io/organization/victoriametrics).
 It is possible to override default image registry for all components deployed by operator and operator itself by using the following values:
 ```yaml
-victoria-metrics-operator:
+global:
   image:
-    registry: "quay.io"
+    registry: quay.io
+victoria-metrics-operator:
   env:
-    - name: VM_CONFIG_RELOADER_IMAGE
-      value: "quay.io/victoriametrics/operator:config-reloader-v0.53.0"
-    - name: VM_VLOGSDEFAULT_IMAGE
-      value: "quay.io/victoriametrics/victoria-logs"
-    - name: "VM_VMALERTDEFAULT_IMAGE"
-      value: "quay.io/victoriametrics/vmalert"
-    - name: "VM_VMAGENTDEFAULT_IMAGE"
-      value: "quay.io/victoriametrics/vmagent"
-    - name: "VM_VMSINGLEDEFAULT_IMAGE"
-      value: "quay.io/victoriametrics/victoria-metrics"
-    - name: "VM_VMCLUSTERDEFAULT_VMSELECTDEFAULT_IMAGE"
-      value: "quay.io/victoriametrics/vmselect"
-    - name: "VM_VMCLUSTERDEFAULT_VMSTORAGEDEFAULT_IMAGE"
-      value: "quay.io/victoriametrics/vmstorage"
-    - name: "VM_VMCLUSTERDEFAULT_VMINSERTDEFAULT_IMAGE"
-      value: "quay.io/victoriametrics/vminsert"
-    - name: "VM_VMBACKUP_IMAGE"
-      value: "quay.io/victoriametrics/vmbackupmanager"
-    - name: "VM_VMAUTHDEFAULT_IMAGE"
-      value: "quay.io/victoriametrics/vmauth"
-    - name: "VM_VMALERTMANAGER_ALERTMANAGERDEFAULTBASEIMAGE"
-      value: "quay.io/prometheus/alertmanager"
+    - name: VM_VMALERTMANAGER_ALERTMANAGERDEFAULTBASEIMAGE
+      value: prometheus/alertmanager
 ```
 
 ## Prerequisites
@@ -360,13 +576,13 @@ Test the installation with command:
   - For HTTPS repository
 
     ```console
-    helm install vmks vm/victoria-metrics-k8s-stack -f values.yaml -n NAMESPACE --debug
+    helm install vmks vm/victoria-metrics-k8s-stack -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
   - For OCI repository
 
     ```console
-    helm install vmks oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-k8s-stack -f values.yaml -n NAMESPACE --debug
+    helm install vmks oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-k8s-stack -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
 Install chart with command:
@@ -639,6 +855,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Better alert templates for <a href="https://gist.github.com/milesbxf/e2744fc90e9c41b47aa47925f8ff6512" target="_blank">slack source</a></p>
 </td>
     </tr>
+    <tr id="alertmanager-namespaceoverride">
+      <td><a href="#alertmanager-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
+</td>
+    </tr>
     <tr id="alertmanager-route">
       <td><a href="#alertmanager-route"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.route</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
@@ -719,7 +941,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">configSecret</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">externalURL</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="l">v0.28.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;9093&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">routePrefix</span><span class="p">:</span><span class="w"> </span><span class="l">/</span><span class="w">
@@ -732,6 +954,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#alertmanager-spec-configsecret"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.spec.configSecret</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>If this one defined, it will be used for alertmanager configuration and config parameter will be ignored</p>
+</td>
+    </tr>
+    <tr id="alertmanager-spec-image-tag">
+      <td><a href="#alertmanager-spec-image-tag"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">alertmanager.spec.image.tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Alertmanager image tag. Defaults to <code>global.versions.alertmanager</code> when empty.</p>
 </td>
     </tr>
     <tr id="alertmanager-templatefiles">
@@ -812,42 +1040,62 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
     <tr id="defaultdashboards-annotations">
       <td><a href="#defaultdashboards-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDashboards.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em></td>
+      <td><em><code>(object)</code></em><p>Additional annotations for dashboard resources</p>
+</td>
     </tr>
     <tr id="defaultdashboards-dashboards">
       <td><a href="#defaultdashboards-dashboards"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDashboards.dashboards</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">alertmanager-overview</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.alertmanager.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">controller-manager</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeControllerManager.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">grafana-overview</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.grafana.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubelet</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubelet.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">node-exporter-full</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">node_uname_info</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">proxy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeProxy.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">scheduler</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeScheduler.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victorialogs-cluster</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">vm_app_version</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victorialogs-single-node</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">vm_app_version</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victorialogs-vlagent</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">vm_app_version</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-cluster</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">vm_app_version</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-operator</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">vm_app_version</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-single-node</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">vm_app_version</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-vmagent</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">vm_app_version</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-vmalert</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">vm_app_version</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriatraces-cluster</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">vm_app_version</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriatraces-single-node</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">clusterMetric</span><span class="p">:</span><span class="w"> </span><span class="l">vm_app_version</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Create dashboards as ConfigMap despite dependency it requires is not installed</p>
+      <td><em><code>(object)</code></em><p>Per-dashboard configuration. Keys match dashboard names from JSON content. Set enabled: false to skip a dashboard. Set clusterMetric to patch the cluster variable query.</p>
 </td>
-    </tr>
-    <tr id="defaultdashboards-dashboards-node-exporter-full">
-      <td><a href="#defaultdashboards-dashboards-node-exporter-full"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDashboards.dashboards.node-exporter-full</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(object)</code></em><p>In ArgoCD using client-side apply this dashboard reaches annotations size limit and causes k8s issues without server side apply See <a href="https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-k8s-stack#metadataannotations-too-long-must-have-at-most-262144-bytes-on-dashboards" target="_blank">this issue</a></p>
-</td>
-    </tr>
-    <tr id="defaultdashboards-defaulttimezone">
-      <td><a href="#defaultdashboards-defaulttimezone"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDashboards.defaultTimezone</span><span class="p">:</span><span class="w"> </span><span class="l">utc</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em></td>
     </tr>
     <tr id="defaultdashboards-enabled">
       <td><a href="#defaultdashboards-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDashboards.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(bool)</code></em><p>Enable custom dashboards installation</p>
+      <td><em><code>(bool)</code></em><p>Enable dashboard sync via sync-job</p>
 </td>
     </tr>
     <tr id="defaultdashboards-grafanaoperator-enabled">
       <td><a href="#defaultdashboards-grafanaoperator-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDashboards.grafanaOperator.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(bool)</code></em><p>Create dashboards as CRDs (requires grafana-operator to be installed)</p>
+      <td><em><code>(bool)</code></em><p>Create GrafanaDashboard CRDs instead of ConfigMaps (requires grafana-operator)</p>
 </td>
     </tr>
     <tr id="defaultdashboards-grafanaoperator-spec-allowcrossnamespaceimport">
@@ -863,7 +1111,69 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
     <tr id="defaultdashboards-labels">
       <td><a href="#defaultdashboards-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDashboards.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em></td>
+      <td><em><code>(object)</code></em><p>Additional labels for dashboard resources (ConfigMaps or GrafanaDashboard CRDs)</p>
+</td>
+    </tr>
+    <tr id="defaultdashboards-sources">
+      <td><a href="#defaultdashboards-sources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDashboards.sources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">etcd</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeEtcd.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/etcd/dashboards/etcd.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kube-prometheus</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/grafana-dashboardDefinitions.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-system-api-server</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeApiServer.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-system-coredns</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.coreDns.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-coredns.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-views-global</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-views-namespaces</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-views-nodes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-views-pods</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">node-exporter-full</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ index .Values &#34;prometheus-node-exporter&#34; &#34;enabled&#34; }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/rfmoz/grafana-dashboards/master/prometheus/node-exporter-full.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victorialogs-cluster</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vlcluster.enabled .Values.vldistributed.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/master/dashboards/victorialogs-cluster.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victorialogs-single-node</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vlsingle.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/master/dashboards/victorialogs.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victorialogs-vlagent</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vlagent.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/master/dashboards/vlagent.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-backupmanager</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or (not (empty (dig &#34;spec&#34; &#34;vmBackup&#34; &#34;destination&#34; &#34;&#34; .Values.vmsingle))) (not (empty (dig &#34;spec&#34; &#34;storage&#34; &#34;vmBackup&#34; &#34;destination&#34; &#34;&#34; .Values.vmcluster))) }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/dashboards/backupmanager.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-cluster</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmcluster.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/dashboards/victoriametrics-cluster.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-operator</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ index .Values &#34;victoria-metrics-operator&#34; &#34;enabled&#34; }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/dashboards/operator.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-single-node</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmsingle.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/dashboards/victoriametrics.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-vmagent</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmagent.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/dashboards/vmagent.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriametrics-vmalert</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmalert.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/dashboards/vmalert.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriatraces-cluster</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vtcluster.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaTraces/master/dashboards/victoriatraces-cluster.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriatraces-single-node</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vtsingle.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaTraces/master/dashboards/victoriatraces.json</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Dashboard sources. Set enabled: false on any entry to disable it. Add new keys to extend.</p>
+</td>
     </tr>
     <tr id="defaultdatasources-alertmanager">
       <td><a href="#defaultdatasources-alertmanager"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDatasources.alertmanager</span><span class="p">:</span><span class="w">
@@ -871,7 +1181,8 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l">proxy</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">jsonData</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">implementation</span><span class="p">:</span><span class="w"> </span><span class="l">prometheus</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Alertmanager</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Alertmanager</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">uid</span><span class="p">:</span><span class="w"> </span><span class="l">Alertmanager</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>List of alertmanager datasources. VMAlertmanager generated <code>url</code> will be added to each datasource in template if alertmanager is enabled</p>
 </td>
@@ -879,7 +1190,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
     <tr id="defaultdatasources-extra">
       <td><a href="#defaultdatasources-extra"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDatasources.extra</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(list)</code></em><p>Configure additional grafana datasources (passed through tpl). Check <a href="http://docs.grafana.org/administration/provisioning/#datasources" target="_blank">here</a> for details</p>
+      <td><em><code>(list)</code></em><p>Configure additional grafana datasources (passed through tpl). Check <a href="https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources" target="_blank">here</a> for details</p>
 </td>
     </tr>
     <tr id="defaultdatasources-grafanaoperator-annotations">
@@ -903,154 +1214,164 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </a></td>
       <td><em><code>(string)</code></em></td>
     </tr>
+    <tr id="defaultdatasources-victorialogs-datasources">
+      <td><a href="#defaultdatasources-victorialogs-datasources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDatasources.victorialogs.datasources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l">proxy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">VictoriaLogs (DS)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">victoriametrics-logs-datasource</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">uid</span><span class="p">:</span><span class="w"> </span><span class="l">VictoriaLogs</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>List of VictoriaLogs datasource configurations. VL <code>url</code> will be added to each of them in templates.</p>
+</td>
+    </tr>
     <tr id="defaultdatasources-victoriametrics-datasources">
       <td><a href="#defaultdatasources-victoriametrics-datasources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDatasources.victoriametrics.datasources</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l">proxy</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">isDefault</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">VictoriaMetrics</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">prometheus</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">uid</span><span class="p">:</span><span class="w"> </span><span class="l">VictoriaMetrics</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l">proxy</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">isDefault</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">VictoriaMetrics (DS)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">victoriametrics-metrics-datasource</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">victoriametrics-metrics-datasource</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">uid</span><span class="p">:</span><span class="w"> </span><span class="l">VictoriaMetricsDS</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>List of prometheus compatible datasource configurations. VM <code>url</code> will be added to each of them in templates.</p>
 </td>
     </tr>
+    <tr id="defaultdatasources-victoriatraces-datasources">
+      <td><a href="#defaultdatasources-victoriatraces-datasources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultDatasources.victoriatraces.datasources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l">proxy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">VictoriaTraces</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">jaeger</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">uid</span><span class="p">:</span><span class="w"> </span><span class="l">VictoriaTraces</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>List of VictoriaTraces (Jaeger-compatible) datasource configurations. VT <code>url</code> will be added to each of them in templates.</p>
+</td>
+    </tr>
     <tr id="defaultrules">
       <td><a href="#defaultrules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">additionalGroupByLabels</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">alerting</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraGroupByLabels</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">params</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">groups</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">alertmanager</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">alertmanager.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">labelRewrites</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">job</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="l">alertmanager-main</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">vmalertmanager-.*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">namespace</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="l">alertmanager-main</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ include &#34;vm-k8s-stack.alertmanager.namespace&#34; $ }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">etcd</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">alerting</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">recording</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">general</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">general.rules</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sContainerCpuLimits</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8s.rules.container_cpu_limits</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sContainerCpuRequests</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8s.rules.container_cpu_requests</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sContainerCpuUsageSecondsTotal</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8s.rules.container_cpu_usage_seconds_total</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sContainerMemoryCache</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8s.rules.container_memory_cache</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sContainerMemoryLimits</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8s.rules.container_memory_limits</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sContainerMemoryRequests</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8s.rules.container_memory_requests</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sContainerMemoryRss</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8s.rules.container_memory_rss</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sContainerMemorySwap</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8s.rules.container_memory_swap</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sContainerMemoryWorkingSetBytes</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8s.rules.container_memory_working_set_bytes</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sContainerResource</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8s.rules.pod_owner</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">k8sPodOwner</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kube-apiserver-burnrate.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeApiServer.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubeApiserver</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kube-apiserver-histogram.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeApiServer.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubeApiserverAvailability</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kube-apiserver-slos</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeApiServer.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubeApiserverBurnrate</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kube-prometheus-general.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubeApiserverHistogram</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kube-prometheus-node-recording.rules</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubeApiserverSlos</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kube-scheduler.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeScheduler.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubePrometheusGeneral</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kube-state-metrics</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubePrometheusNodeRecording</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubelet.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubelet.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubeScheduler</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes-apps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">labelRewrites</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">namespace</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="l">kube-state-metrics</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">.*</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubeStateMetrics</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes-resources</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubelet</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes-storage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">labelRewrites</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">namespace</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="l">kubelet</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">.*</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetesApps</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes-system</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">targetNamespace</span><span class="p">:</span><span class="w"> </span><span class="l">.*</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetesResources</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes-system-apiserver</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeApiServer.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetesStorage</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes-system-controller-manager</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeControllerManager.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">targetNamespace</span><span class="p">:</span><span class="w"> </span><span class="l">.*</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetesSystem</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes-system-kubelet</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubelet.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetesSystemApiserver</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes-system-scheduler</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeScheduler.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetesSystemControllerManager</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">node-exporter</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetesSystemKubelet</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">node-exporter.rules</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetesSystemScheduler</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">node-network</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">node</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">node.rules</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">nodeNetwork</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmHealth</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vm-health</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmagent</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmalert</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmcluster</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmoperator</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmsingle</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">jobNamespaces</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labelRewrites</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">recording</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
@@ -1061,15 +1382,59 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runbookUrl</span><span class="p">:</span><span class="w"> </span><span class="l">https://runbooks.prometheus-operator.dev/runbooks</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runbookUrl</span><span class="p">:</span><span class="w"> </span><span class="l">https://runbooks.prometheus-operator.dev/runbooks</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">sources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">alertmanager</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.alertmanager.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/alertmanager-prometheusRule.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">etcd</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeEtcd.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/etcd/alerts.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kube-state-metrics</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ index .Values &#34;kube-state-metrics&#34; &#34;enabled&#34; }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/kubeStateMetrics-prometheusRule.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/kubePrometheus-prometheusRule.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes-control-plane</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/kubernetesControlPlane-prometheusRule.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">node-exporter</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ index .Values &#34;prometheus-node-exporter&#34; &#34;enabled&#34; }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/nodeExporter-prometheusRule.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">victorialogs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vlsingle.enabled .Values.vlcluster.enabled .Values.vldistributed.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/master/deployment/docker/rules/alerts-vlogs.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">victoriatraces</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vtsingle.enabled .Values.vtcluster.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaTraces/master/deployment/docker/rules/alerts-vtraces.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlagent</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vlagent.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/master/deployment/docker/rules/alerts-vlagent.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlhealth</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vlsingle.enabled .Values.vlcluster.enabled .Values.vldistributed.enabled .Values.vlagent.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/master/deployment/docker/rules/alerts-health.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmagent</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmagent.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/deployment/docker/rules/alerts-vmagent.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmalert</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmalert.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/deployment/docker/rules/alerts-vmalert.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmcluster</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmcluster.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/deployment/docker/rules/alerts-cluster.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmhealth</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vmsingle.enabled .Values.vmcluster.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/deployment/docker/rules/alerts-health.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmoperator</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ index .Values &#34;victoria-metrics-operator&#34; &#34;enabled&#34; }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/operator/master/config/alerting/vmoperator-rules.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vmsingle</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmsingle.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/deployment/docker/rules/alerts-single-node.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vthealth</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vtsingle.enabled .Values.vtcluster.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaTraces/master/deployment/docker/rules/alerts-health.yml</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Create default rules for monitoring the cluster</p>
-</td>
-    </tr>
-    <tr id="defaultrules-additionalgroupbylabels">
-      <td><a href="#defaultrules-additionalgroupbylabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.additionalGroupByLabels</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(list)</code></em><p>Labels, which are used for grouping results of the queries. Note that these labels are joined with <code>.Values.global.clusterLabel</code></p>
 </td>
     </tr>
     <tr id="defaultrules-alerting">
@@ -1099,151 +1464,147 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(object)</code></em><p>Annotations for default rules</p>
 </td>
     </tr>
+    <tr id="defaultrules-extragroupbylabels">
+      <td><a href="#defaultrules-extragroupbylabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.extraGroupByLabels</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Labels, which are used for grouping results of the queries. Note that these labels are joined with <code>.Values.global.clusterLabel</code></p>
+</td>
+    </tr>
     <tr id="defaultrules-group">
       <td><a href="#defaultrules-group"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.group</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">params</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Common properties for VMRule groups</p>
 </td>
     </tr>
-    <tr id="defaultrules-group-spec-params">
-      <td><a href="#defaultrules-group-spec-params"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.group.spec.params</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
-</a></td>
-      <td><em><code>(object)</code></em><p>Optional HTTP URL parameters added to each rule request</p>
-</td>
-    </tr>
     <tr id="defaultrules-groups">
       <td><a href="#defaultrules-groups"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.groups</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">alertmanager</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">alertmanager.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">labelRewrites</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">job</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="l">alertmanager-main</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">vmalertmanager-.*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">namespace</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="l">alertmanager-main</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ include &#34;vm-k8s-stack.alertmanager.namespace&#34; $ }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">etcd</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">alerting</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">recording</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">general</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">general.rules</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sContainerCpuLimits</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s.rules.container_cpu_limits</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sContainerCpuRequests</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s.rules.container_cpu_requests</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sContainerCpuUsageSecondsTotal</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s.rules.container_cpu_usage_seconds_total</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sContainerMemoryCache</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s.rules.container_memory_cache</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sContainerMemoryLimits</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s.rules.container_memory_limits</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sContainerMemoryRequests</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s.rules.container_memory_requests</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sContainerMemoryRss</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s.rules.container_memory_rss</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sContainerMemorySwap</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s.rules.container_memory_swap</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sContainerMemoryWorkingSetBytes</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s.rules.container_memory_working_set_bytes</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sContainerResource</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s.rules.pod_owner</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sPodOwner</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kube-apiserver-burnrate.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeApiServer.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubeApiserver</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kube-apiserver-histogram.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeApiServer.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubeApiserverAvailability</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kube-apiserver-slos</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeApiServer.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubeApiserverBurnrate</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kube-prometheus-general.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubeApiserverHistogram</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kube-prometheus-node-recording.rules</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubeApiserverSlos</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kube-scheduler.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeScheduler.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubePrometheusGeneral</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kube-state-metrics</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubePrometheusNodeRecording</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubelet.rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubelet.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubeScheduler</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-apps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">labelRewrites</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">namespace</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="l">kube-state-metrics</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">.*</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubeStateMetrics</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-resources</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubelet</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-storage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">labelRewrites</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">namespace</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="l">kubelet</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">.*</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetesApps</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-system</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">targetNamespace</span><span class="p">:</span><span class="w"> </span><span class="l">.*</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetesResources</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-system-apiserver</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeApiServer.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetesStorage</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-system-controller-manager</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeControllerManager.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">targetNamespace</span><span class="p">:</span><span class="w"> </span><span class="l">.*</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetesSystem</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-system-kubelet</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubelet.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetesSystemApiserver</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-system-scheduler</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeScheduler.enabled }}&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetesSystemControllerManager</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">node-exporter</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetesSystemKubelet</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">node-exporter.rules</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetesSystemScheduler</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">node-network</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">node</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">node.rules</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">nodeNetwork</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmHealth</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vm-health</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmagent</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmalert</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmcluster</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmoperator</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmsingle</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Rule group properties</p>
+      <td><em><code>(object)</code></em><p>Rule group properties. Keys must match upstream group names exactly. <code>enabled</code> may be a template expression (e.g. <code>{{ .Values.kubeScheduler.enabled }}</code>), rendered before use.</p>
+</td>
+    </tr>
+    <tr id="defaultrules-groups-"kube-prometheus-general-rules"-enabled">
+      <td><a href="#defaultrules-groups-"kube-prometheus-general-rules"-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="l">defaultRules.groups.&#34;kube-prometheus-general.rules&#34;.enabled: false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Only contains count:up0/count:up1. count:up0 has no data when all targets are up, triggering RecordingRulesNoData.</p>
 </td>
     </tr>
     <tr id="defaultrules-groups-etcd-alerting">
       <td><a href="#defaultrules-groups-etcd-alerting"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.groups.etcd.alerting</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Common properties for all alerting rules in a group</p>
+</td>
+    </tr>
+    <tr id="defaultrules-groups-etcd-enabled">
+      <td><a href="#defaultrules-groups-etcd-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.groups.etcd.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable/disable rule group</p>
 </td>
     </tr>
     <tr id="defaultrules-groups-etcd-recording">
@@ -1256,6 +1617,18 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#defaultrules-groups-etcd-rules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.groups.etcd.rules</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Common properties for all rules in a group</p>
+</td>
+    </tr>
+    <tr id="defaultrules-jobnamespaces">
+      <td><a href="#defaultrules-jobnamespaces"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.jobNamespaces</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Deprecated: use labelRewrites instead (e.g. <code>labelRewrites.namespace: {match: &lt;job&gt;, value: &lt;value&gt;}</code>). Inject namespace=~&rdquo;<value>&rdquo; filter into metric selectors for metrics scraped by the given job. Merged with per-group jobNamespaces (per-group wins on conflict). Only use for jobs whose metrics are always namespace-scoped.</p>
+</td>
+    </tr>
+    <tr id="defaultrules-labelrewrites">
+      <td><a href="#defaultrules-labelrewrites"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.labelRewrites</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Each entry rewrites label <code>name</code> (defaults to the map key) to <code>value</code> (a regexp) for selectors whose job is <code>match</code>. <code>value</code> may be a template expression, rendered before use. Merged with per-group labelRewrites by key (per-group wins on conflict).</p>
 </td>
     </tr>
     <tr id="defaultrules-labels">
@@ -1318,6 +1691,61 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(string)</code></em><p>Runbook url prefix for default rules</p>
 </td>
     </tr>
+    <tr id="defaultrules-sources">
+      <td><a href="#defaultrules-sources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultRules.sources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">alertmanager</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.alertmanager.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/alertmanager-prometheusRule.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">etcd</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.kubeEtcd.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/etcd/alerts.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kube-state-metrics</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ index .Values &#34;kube-state-metrics&#34; &#34;enabled&#34; }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/kubeStateMetrics-prometheusRule.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/kubePrometheus-prometheusRule.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes-control-plane</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/kubernetesControlPlane-prometheusRule.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">node-exporter</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ index .Values &#34;prometheus-node-exporter&#34; &#34;enabled&#34; }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/nodeExporter-prometheusRule.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victorialogs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vlsingle.enabled .Values.vlcluster.enabled .Values.vldistributed.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/master/deployment/docker/rules/alerts-vlogs.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">victoriatraces</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vtsingle.enabled .Values.vtcluster.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaTraces/master/deployment/docker/rules/alerts-vtraces.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vlagent</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vlagent.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/master/deployment/docker/rules/alerts-vlagent.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vlhealth</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vlsingle.enabled .Values.vlcluster.enabled .Values.vldistributed.enabled .Values.vlagent.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/master/deployment/docker/rules/alerts-health.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmagent</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmagent.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/deployment/docker/rules/alerts-vmagent.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmalert</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmalert.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/deployment/docker/rules/alerts-vmalert.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmcluster</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmcluster.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/deployment/docker/rules/alerts-cluster.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmhealth</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vmsingle.enabled .Values.vmcluster.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/deployment/docker/rules/alerts-health.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmoperator</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ index .Values &#34;victoria-metrics-operator&#34; &#34;enabled&#34; }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/operator/master/config/alerting/vmoperator-rules.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmsingle</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vmsingle.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/master/deployment/docker/rules/alerts-single-node.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vthealth</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ or .Values.vtsingle.enabled .Values.vtcluster.enabled }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">https://raw.githubusercontent.com/VictoriaMetrics/VictoriaTraces/master/deployment/docker/rules/alerts-health.yml</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Rule sources. Set enabled: false on any entry to disable it. Add new keys to extend.</p>
+</td>
+    </tr>
     <tr id="defaultscrapeservice-namespace">
       <td><a href="#defaultscrapeservice-namespace"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">defaultScrapeService.namespace</span><span class="p">:</span><span class="w"> </span><span class="l">kube-system</span></span></span></code></pre>
 </a></td>
@@ -1335,6 +1763,16 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(string)</code></em><p>External Grafana host</p>
 </td>
     </tr>
+    <tr id="external-vl">
+      <td><a href="#external-vl"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">external.vl</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">read</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">write</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>External VL read and write URLs</p>
+</td>
+    </tr>
     <tr id="external-vm">
       <td><a href="#external-vm"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">external.vm</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">read</span><span class="p">:</span><span class="w">
@@ -1343,6 +1781,16 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>External VM read and write URLs</p>
+</td>
+    </tr>
+    <tr id="external-vt">
+      <td><a href="#external-vt"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">external.vt</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">read</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">write</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>External VT read and write URLs</p>
 </td>
     </tr>
     <tr id="extraobjects">
@@ -1375,12 +1823,35 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(string)</code></em><p>Cluster label to use for dashboards and rules</p>
 </td>
     </tr>
+    <tr id="global-extraannotations">
+      <td><a href="#global-extraannotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraAnnotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Annotations added to all resources</p>
+</td>
+    </tr>
+    <tr id="global-extralabels">
+      <td><a href="#global-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Labels added to all resources</p>
+</td>
+    </tr>
     <tr id="global-license">
       <td><a href="#global-license"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.license</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">keyRef</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Global license configuration</p>
+</td>
+    </tr>
+    <tr id="global-versions">
+      <td><a href="#global-versions"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.versions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">alertmanager</span><span class="p">:</span><span class="w"> </span><span class="l">v0.34.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">anomaly</span><span class="p">:</span><span class="w"> </span><span class="l">v1.30.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">logs</span><span class="p">:</span><span class="w"> </span><span class="l">v1.53.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">metrics</span><span class="p">:</span><span class="w"> </span><span class="l">v1.154.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">traces</span><span class="p">:</span><span class="w"> </span><span class="l">v0.10.0</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Default component versions. Propagated automatically (as a global value) to the embedded operator chart&rsquo;s own <code>global.versions</code>, which it uses to populate its default-version env vars, so that CRs created outside this chart (no explicit spec.image.tag) get the same version this chart deploys. Keep in sync with the corresponding renovate-tracked tags/appVersion below.</p>
 </td>
     </tr>
     <tr id="grafana">
@@ -1421,7 +1892,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ include &#34;grafana.name&#34; .Subcharts.grafana }}&#39;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Grafana dependency chart configuration. For possible values refer <a href="https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration" target="_blank">here</a></p>
+      <td><em><code>(object)</code></em><p>Grafana dependency chart configuration. For possible values refer <a href="https://github.com/grafana-community/helm-charts/tree/main/charts/grafana#configuration" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="grafana-forcedeploydatasource">
@@ -1458,6 +1929,19 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ include &#34;grafana.name&#34; .Subcharts.grafana }}&#39;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p><a href="https://docs.victoriametrics.com/operator/api/#vmservicescrapespec" target="_blank">Scrape configuration</a> for Grafana</p>
+</td>
+    </tr>
+    <tr id="internal-vmauth-name">
+      <td><a href="#internal-vmauth-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">internal.vmauth.name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .fullname }}-internal&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>name is a template for the internal VMAuth CR used for vmalert datasource routing</p>
+</td>
+    </tr>
+    <tr id="internal-vmauth-spec">
+      <td><a href="#internal-vmauth-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">internal.vmauth.spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;8427&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Spec for internal VMAuth CRD used as a vmalert datasource proxy. If <code>unauthorizedUserAccessSpec.url_map</code>, <code>.url_prefix</code> and <code>.targetRefs</code> are all left unset, the chart automatically routes <code>/select/logsql/.*</code> to vlsingle/vlcluster (or <code>external.vl.read</code>) and everything else to vmsingle/vmcluster (or <code>external.vm.read</code>) using <code>targetRefs</code> with <code>crd</code> references. Set <code>url_map</code>, <code>url_prefix</code> or <code>targetRefs</code> explicitly to take full control of routing instead. It&rsquo;s possible to use given below predefined variables in a custom spec: * <code>{{ .vm.read }}</code> - parsed vmselect, vmsingle or external.vm.read URL * <code>{{ .vl.read }}</code> - parsed vlselect, vlsingle or external.vl.read URL * <code>{{ .vt.read }}</code> - parsed vtselect, vtsingle or external.vt.read URL</p>
 </td>
     </tr>
     <tr id="kube-state-metrics">
@@ -1939,10 +2423,11 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#prometheus-node-exporter"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">prometheus-node-exporter</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraArgs</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- --<span class="l">collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- --<span class="l">collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|erofs|sysfs|tracefs)$</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- --<span class="l">collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- --<span class="l">collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|erofs|sysfs|tracefs)$</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">service</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">node-exporter</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmScrape</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
@@ -1953,7 +2438,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">                      </span><span class="nt">source_labels</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                        </span>- <span class="l">mountpoint</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">metrics</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">app.kubernetes.io/name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">jobLabel</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">selector</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ include &#34;prometheus-node-exporter.name&#34; (index .Subcharts &#34;prometheus-node-exporter&#34;) }}&#39;</span></span></span></code></pre>
@@ -1972,7 +2457,7 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">                  </span><span class="nt">source_labels</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                    </span>- <span class="l">mountpoint</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">metrics</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">app.kubernetes.io/name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">jobLabel</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">selector</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ include &#34;prometheus-node-exporter.name&#34; (index .Subcharts &#34;prometheus-node-exporter&#34;) }}&#39;</span></span></span></code></pre>
@@ -1989,12 +2474,139 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
 </span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">source_labels</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="l">mountpoint</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">metrics</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">app.kubernetes.io/name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l">jobLabel</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">selector</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ include &#34;prometheus-node-exporter.name&#34; (index .Subcharts &#34;prometheus-node-exporter&#34;) }}&#39;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p><a href="https://docs.victoriametrics.com/operator/api/#vmservicescrapespec" target="_blank">Scrape configuration</a> for Node Exporter</p>
+</td>
+    </tr>
+    <tr id="syncjob-affinity">
+      <td><a href="#syncjob-affinity"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.affinity</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Affinity for sync-job Pod scheduling</p>
+</td>
+    </tr>
+    <tr id="syncjob-backofflimit">
+      <td><a href="#syncjob-backofflimit"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.backoffLimit</span><span class="p">:</span><span class="w"> </span><span class="m">3</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(int)</code></em><p>Maximum number of retries before the Job is considered failed</p>
+</td>
+    </tr>
+    <tr id="syncjob-containersecuritycontext">
+      <td><a href="#syncjob-containersecuritycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.containerSecurityContext</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Security context for the sync-job container</p>
+</td>
+    </tr>
+    <tr id="syncjob-dnsconfig">
+      <td><a href="#syncjob-dnsconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.dnsConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Custom dns config for the sync job Pod.</p>
+</td>
+    </tr>
+    <tr id="syncjob-dnspolicy">
+      <td><a href="#syncjob-dnspolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.dnsPolicy</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Alternative DNS policy for the sync job Pod</p>
+</td>
+    </tr>
+    <tr id="syncjob-enabled">
+      <td><a href="#syncjob-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Fetch dashboards and rules from upstream sources at deploy time. Creates ConfigMaps (for Grafana sidecar) or GrafanaDashboard CRDs and VMRules directly in the cluster. A new Job runs automatically whenever this config changes.</p>
+</td>
+    </tr>
+    <tr id="syncjob-env">
+      <td><a href="#syncjob-env"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.env</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra env variables for sync job</p>
+</td>
+    </tr>
+    <tr id="syncjob-extravolumemounts">
+      <td><a href="#syncjob-extravolumemounts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.extraVolumeMounts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra volume mounts to add to the sync-job container.</p>
+</td>
+    </tr>
+    <tr id="syncjob-extravolumes">
+      <td><a href="#syncjob-extravolumes"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.extraVolumes</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra volumes to add to the sync-job Pod. Useful for mounting custom CA certificates; set SSL_CERT_FILE in env to point to the mounted cert.</p>
+</td>
+    </tr>
+    <tr id="syncjob-image-pullpolicy">
+      <td><a href="#syncjob-image-pullpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.image.pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
+    <tr id="syncjob-image-repository">
+      <td><a href="#syncjob-image-repository"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.image.repository</span><span class="p">:</span><span class="w"> </span><span class="l">ghcr.io/victoriametrics/sync-job</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
+    <tr id="syncjob-image-tag">
+      <td><a href="#syncjob-image-tag"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.image.tag</span><span class="p">:</span><span class="w"> </span><span class="l">v0.0.17</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em></td>
+    </tr>
+    <tr id="syncjob-imagepullsecrets">
+      <td><a href="#syncjob-imagepullsecrets"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.imagePullSecrets</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Image pull secrets for the sync-job Pod. Needed when <code>image.repository</code> points at a private registry. Falls back to <code>global.imagePullSecrets</code> when not set.</p>
+</td>
+    </tr>
+    <tr id="syncjob-nodeselector">
+      <td><a href="#syncjob-nodeselector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.nodeSelector</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em></td>
+    </tr>
+    <tr id="syncjob-podannotations">
+      <td><a href="#syncjob-podannotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.podAnnotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Annotations to add to the sync-job Pod</p>
+</td>
+    </tr>
+    <tr id="syncjob-podsecuritycontext">
+      <td><a href="#syncjob-podsecuritycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.podSecurityContext</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Security context for the sync-job Pod</p>
+</td>
+    </tr>
+    <tr id="syncjob-prune">
+      <td><a href="#syncjob-prune"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.prune</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Delete managed resources that are no longer in the current config</p>
+</td>
+    </tr>
+    <tr id="syncjob-resourceprefix">
+      <td><a href="#syncjob-resourceprefix"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.resourcePrefix</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Prefix for managed resource names (VMRules, ConfigMaps, GrafanaDashboards). Defaults to the Helm release name when empty.</p>
+</td>
+    </tr>
+    <tr id="syncjob-resources">
+      <td><a href="#syncjob-resources"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.resources</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Override multicluster mode for dashboard and rule patching. Falls back to grafana.sidecar.dashboards.multicluster when not set. multicluster: false</p>
+</td>
+    </tr>
+    <tr id="syncjob-tolerations">
+      <td><a href="#syncjob-tolerations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.tolerations</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em></td>
+    </tr>
+    <tr id="syncjob-ttlsecondsafterfinished">
+      <td><a href="#syncjob-ttlsecondsafterfinished"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.ttlSecondsAfterFinished</span><span class="p">:</span><span class="w"> </span><span class="m">600</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(int)</code></em><p>Seconds to keep a finished job before automatic deletion</p>
+</td>
+    </tr>
+    <tr id="syncjob-useownerreferences">
+      <td><a href="#syncjob-useownerreferences"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">syncJob.useOwnerReferences</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Set owner references on managed resources so they are automatically garbage-collected by Kubernetes when the chart is uninstalled, regardless of the deployment tool (Helm, ArgoCD, etc.)</p>
 </td>
     </tr>
     <tr id="tenant">
@@ -2005,12 +2617,14 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
     </tr>
     <tr id="victoria-metrics-operator">
       <td><a href="#victoria-metrics-operator"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">victoria-metrics-operator</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">admissionWebhooks</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">policy</span><span class="p">:</span><span class="w"> </span><span class="l">Ignore</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">crds</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">cleanup</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">image</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">rancher/kubectl</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">registry.k8s.io/kubectl</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">plain</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">operator</span><span class="p">:</span><span class="w">
@@ -2021,10 +2635,795 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(object)</code></em><p>VictoriaMetrics Operator dependency chart configuration. More values can be found <a href="https://docs.victoriametrics.com/helm/victoria-metrics-operator/#parameters" target="_blank">here</a>. Also checkout <a href="https://docs.victoriametrics.com/operator/configuration/#environment-variables" target="_blank">here</a> possible ENV variables to configure operator behaviour</p>
 </td>
     </tr>
+    <tr id="victoria-metrics-operator-admissionwebhooks-policy">
+      <td><a href="#victoria-metrics-operator-admissionwebhooks-policy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">victoria-metrics-operator.admissionWebhooks.policy</span><span class="p">:</span><span class="w"> </span><span class="l">Ignore</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Default the validating webhook <code>failurePolicy</code> to <code>Ignore</code> so the stack can be installed/upgraded in a single pass without races against the operator&rsquo;s webhook server. Override to <code>Fail</code> for strict validation once the operator is in steady state.</p>
+</td>
+    </tr>
     <tr id="victoria-metrics-operator-operator-disable-prometheus-converter">
       <td><a href="#victoria-metrics-operator-operator-disable-prometheus-converter"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">victoria-metrics-operator.operator.disable_prometheus_converter</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>By default, operator converts prometheus-operator objects.</p>
+</td>
+    </tr>
+    <tr id="vlagent-additionalremotewrites">
+      <td><a href="#vlagent-additionalremotewrites"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.additionalRemoteWrites</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Remote write configuration of VLAgent, allowed parameters defined in a <a href="https://docs.victoriametrics.com/operator/api/#vlagentremotewritespec" target="_blank">spec</a></p>
+</td>
+    </tr>
+    <tr id="vlagent-annotations">
+      <td><a href="#vlagent-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VLAgent annotations</p>
+</td>
+    </tr>
+    <tr id="vlagent-enabled">
+      <td><a href="#vlagent-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Create VLAgent CR</p>
+</td>
+    </tr>
+    <tr id="vlagent-ingress">
+      <td><a href="#vlagent-ingress"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.ingress</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraPaths</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hosts</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">vlagent.domain.com</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l">Prefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VLAgent ingress configuration</p>
+</td>
+    </tr>
+    <tr id="vlagent-labels">
+      <td><a href="#vlagent-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VLAgent labels</p>
+</td>
+    </tr>
+    <tr id="vlagent-namespaceoverride">
+      <td><a href="#vlagent-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
+</td>
+    </tr>
+    <tr id="vlagent-rbac-annotations">
+      <td><a href="#vlagent-rbac-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.rbac.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Role/RoleBinding annotations</p>
+</td>
+    </tr>
+    <tr id="vlagent-rbac-extralabels">
+      <td><a href="#vlagent-rbac-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.rbac.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Role/RoleBinding labels</p>
+</td>
+    </tr>
+    <tr id="vlagent-rbac-namespaced">
+      <td><a href="#vlagent-rbac-namespaced"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.rbac.namespaced</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Defines if ClusterRole or Role with respective bindings should be created</p>
+</td>
+    </tr>
+    <tr id="vlagent-rbac-rules">
+      <td><a href="#vlagent-rbac-rules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.rbac.rules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>additional rules for a role</p>
+</td>
+    </tr>
+    <tr id="vlagent-route">
+      <td><a href="#vlagent-route"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.route</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;spec&#34; &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vlagent }}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vlagent.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VLAgent route configuration</p>
+</td>
+    </tr>
+    <tr id="vlagent-route-annotations">
+      <td><a href="#vlagent-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vlagent-route-enabled">
+      <td><a href="#vlagent-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for vlagent component</p>
+</td>
+    </tr>
+    <tr id="vlagent-route-extrarules">
+      <td><a href="#vlagent-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vlagent-route-filters">
+      <td><a href="#vlagent-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vlagent-route-hostnames">
+      <td><a href="#vlagent-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vlagent-route-labels">
+      <td><a href="#vlagent-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vlagent-route-matches">
+      <td><a href="#vlagent-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;spec&#34; &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vlagent }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vlagent-route-parentrefs">
+      <td><a href="#vlagent-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vlagent-route-port">
+      <td><a href="#vlagent-route-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.route.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vlagent.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vlagent-spec">
+      <td><a href="#vlagent-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8sCollector</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;9429&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Full spec for VLAgent CRD. Allowed values described <a href="https://docs.victoriametrics.com/operator/api/#vlagentspec" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="vlagent-spec-image-tag">
+      <td><a href="#vlagent-spec-image-tag"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlagent.spec.image.tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>VictoriaLogs image tag. Defaults to <code>global.versions.logs</code> when empty.</p>
+</td>
+    </tr>
+    <tr id="vlcluster-annotations">
+      <td><a href="#vlcluster-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VLCluster annotations</p>
+</td>
+    </tr>
+    <tr id="vlcluster-enabled">
+      <td><a href="#vlcluster-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Create VLCluster CR</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlinsert-annotations">
+      <td><a href="#vlcluster-ingress-vlinsert-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlinsert.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress annotations</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlinsert-enabled">
+      <td><a href="#vlcluster-ingress-vlinsert-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlinsert.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of ingress for server component</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlinsert-extrapaths">
+      <td><a href="#vlcluster-ingress-vlinsert-extrapaths"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlinsert.extraPaths</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra paths to prepend to every host configuration. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlinsert-hosts">
+      <td><a href="#vlcluster-ingress-vlinsert-hosts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlinsert.hosts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of host objects</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlinsert-ingressclassname">
+      <td><a href="#vlcluster-ingress-vlinsert-ingressclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlinsert.ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress controller class name</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlinsert-labels">
+      <td><a href="#vlcluster-ingress-vlinsert-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlinsert.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress extra labels</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlinsert-path">
+      <td><a href="#vlcluster-ingress-vlinsert-path"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlinsert.path</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vlcluster.spec.vlinsert }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress default path</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlinsert-pathtype">
+      <td><a href="#vlcluster-ingress-vlinsert-pathtype"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlinsert.pathType</span><span class="p">:</span><span class="w"> </span><span class="l">Prefix</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress path type</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlinsert-tls">
+      <td><a href="#vlcluster-ingress-vlinsert-tls"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlinsert.tls</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of TLS objects</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlselect-annotations">
+      <td><a href="#vlcluster-ingress-vlselect-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlselect.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress annotations</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlselect-enabled">
+      <td><a href="#vlcluster-ingress-vlselect-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlselect.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of ingress for server component</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlselect-extrapaths">
+      <td><a href="#vlcluster-ingress-vlselect-extrapaths"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlselect.extraPaths</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra paths to prepend to every host configuration. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlselect-hosts">
+      <td><a href="#vlcluster-ingress-vlselect-hosts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlselect.hosts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of host objects</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlselect-ingressclassname">
+      <td><a href="#vlcluster-ingress-vlselect-ingressclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlselect.ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress controller class name</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlselect-labels">
+      <td><a href="#vlcluster-ingress-vlselect-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlselect.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress extra labels</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlselect-path">
+      <td><a href="#vlcluster-ingress-vlselect-path"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlselect.path</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vlcluster.spec.vlselect }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress default path</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlselect-pathtype">
+      <td><a href="#vlcluster-ingress-vlselect-pathtype"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlselect.pathType</span><span class="p">:</span><span class="w"> </span><span class="l">Prefix</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress path type</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlselect-tls">
+      <td><a href="#vlcluster-ingress-vlselect-tls"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlselect.tls</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of TLS objects</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlstorage-annotations">
+      <td><a href="#vlcluster-ingress-vlstorage-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlstorage.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress annotations</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlstorage-enabled">
+      <td><a href="#vlcluster-ingress-vlstorage-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlstorage.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of ingress for server component</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlstorage-extrapaths">
+      <td><a href="#vlcluster-ingress-vlstorage-extrapaths"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlstorage.extraPaths</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra paths to prepend to every host configuration. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlstorage-hosts">
+      <td><a href="#vlcluster-ingress-vlstorage-hosts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlstorage.hosts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of host objects</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlstorage-ingressclassname">
+      <td><a href="#vlcluster-ingress-vlstorage-ingressclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlstorage.ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress controller class name</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlstorage-labels">
+      <td><a href="#vlcluster-ingress-vlstorage-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlstorage.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress extra labels</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlstorage-path">
+      <td><a href="#vlcluster-ingress-vlstorage-path"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlstorage.path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress default path</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlstorage-pathtype">
+      <td><a href="#vlcluster-ingress-vlstorage-pathtype"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlstorage.pathType</span><span class="p">:</span><span class="w"> </span><span class="l">Prefix</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress path type</p>
+</td>
+    </tr>
+    <tr id="vlcluster-ingress-vlstorage-tls">
+      <td><a href="#vlcluster-ingress-vlstorage-tls"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.ingress.vlstorage.tls</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of TLS objects</p>
+</td>
+    </tr>
+    <tr id="vlcluster-labels">
+      <td><a href="#vlcluster-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VLCluster labels</p>
+</td>
+    </tr>
+    <tr id="vlcluster-namespaceoverride">
+      <td><a href="#vlcluster-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlinsert-annotations">
+      <td><a href="#vlcluster-route-vlinsert-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlinsert.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlinsert-enabled">
+      <td><a href="#vlcluster-route-vlinsert-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlinsert.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for insert component</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlinsert-extrarules">
+      <td><a href="#vlcluster-route-vlinsert-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlinsert.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlinsert-filters">
+      <td><a href="#vlcluster-route-vlinsert-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlinsert.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlinsert-hostnames">
+      <td><a href="#vlcluster-route-vlinsert-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlinsert.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlinsert-labels">
+      <td><a href="#vlcluster-route-vlinsert-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlinsert.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlinsert-matches">
+      <td><a href="#vlcluster-route-vlinsert-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlinsert.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vlcluster.spec.vlinsert }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlinsert-parentrefs">
+      <td><a href="#vlcluster-route-vlinsert-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlinsert.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlinsert-port">
+      <td><a href="#vlcluster-route-vlinsert-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlinsert.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vlcluster.spec.vlinsert.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlselect-annotations">
+      <td><a href="#vlcluster-route-vlselect-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlselect.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlselect-enabled">
+      <td><a href="#vlcluster-route-vlselect-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlselect.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for select component</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlselect-extrarules">
+      <td><a href="#vlcluster-route-vlselect-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlselect.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlselect-filters">
+      <td><a href="#vlcluster-route-vlselect-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlselect.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlselect-hostnames">
+      <td><a href="#vlcluster-route-vlselect-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlselect.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlselect-labels">
+      <td><a href="#vlcluster-route-vlselect-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlselect.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlselect-matches">
+      <td><a href="#vlcluster-route-vlselect-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlselect.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vlcluster.spec.vlselect }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlselect-parentrefs">
+      <td><a href="#vlcluster-route-vlselect-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlselect.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlselect-port">
+      <td><a href="#vlcluster-route-vlselect-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlselect.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vlcluster.spec.vlselect.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlstorage-annotations">
+      <td><a href="#vlcluster-route-vlstorage-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlstorage.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlstorage-enabled">
+      <td><a href="#vlcluster-route-vlstorage-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlstorage.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for storage component</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlstorage-extrarules">
+      <td><a href="#vlcluster-route-vlstorage-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlstorage.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlstorage-filters">
+      <td><a href="#vlcluster-route-vlstorage-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlstorage.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlstorage-hostnames">
+      <td><a href="#vlcluster-route-vlstorage-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlstorage.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlstorage-labels">
+      <td><a href="#vlcluster-route-vlstorage-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlstorage.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlstorage-matches">
+      <td><a href="#vlcluster-route-vlstorage-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlstorage.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vlcluster.spec.vlstorage }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlstorage-parentrefs">
+      <td><a href="#vlcluster-route-vlstorage-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlstorage.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vlcluster-route-vlstorage-port">
+      <td><a href="#vlcluster-route-vlstorage-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.route.vlstorage.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vlcluster.spec.vlstorage.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vlcluster-spec">
+      <td><a href="#vlcluster-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">clusterVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1.53.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vlinsert</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">extraArgs</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;9481&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vlselect</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">extraArgs</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;9471&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vlstorage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;9491&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="l">14d</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">storage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">volumeClaimTemplate</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">10Gi</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">storageDataPath</span><span class="p">:</span><span class="w"> </span><span class="l">/vl-data</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Full spec for VLCluster CRD. Allowed values described <a href="https://docs.victoriametrics.com/operator/api/#vlclusterspec" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="vlcluster-spec-vlinsert-enabled">
+      <td><a href="#vlcluster-spec-vlinsert-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.spec.vlinsert.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Set this value to false to disable VMInsert</p>
+</td>
+    </tr>
+    <tr id="vlcluster-spec-vlselect-enabled">
+      <td><a href="#vlcluster-spec-vlselect-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.spec.vlselect.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Set this value to false to disable VMSelect</p>
+</td>
+    </tr>
+    <tr id="vlcluster-spec-vlstorage-retentionperiod">
+      <td><a href="#vlcluster-spec-vlstorage-retentionperiod"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlcluster.spec.vlstorage.retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="l">14d</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these <a href="https://docs.victoriametrics.com/victorialogs/#retention" target="_blank">docs</a></p>
+</td>
+    </tr>
+    <tr id="vldistributed-annotations">
+      <td><a href="#vldistributed-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vldistributed.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VLDistributed annotations</p>
+</td>
+    </tr>
+    <tr id="vldistributed-enabled">
+      <td><a href="#vldistributed-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vldistributed.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Create VLDistributed CR</p>
+</td>
+    </tr>
+    <tr id="vldistributed-labels">
+      <td><a href="#vldistributed-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vldistributed.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VLDistributed labels</p>
+</td>
+    </tr>
+    <tr id="vldistributed-spec">
+      <td><a href="#vldistributed-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vldistributed.spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vmauth</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;8427&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">zoneCommon</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">vlcluster</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">clusterVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1.53.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">vlinsert</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">vlselect</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">vlstorage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="l">14d</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">storage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">volumeClaimTemplate</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                    </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                        </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">10Gi</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">storageDataPath</span><span class="p">:</span><span class="w"> </span><span class="l">/vl-data</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">zones</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">zone-0</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Full spec for VLDistributed CRD. Allowed values described <a href="https://docs.victoriametrics.com/operator/api/#vldistributedspec" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="vlsingle-annotations">
+      <td><a href="#vlsingle-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VLSingle annotations</p>
+</td>
+    </tr>
+    <tr id="vlsingle-enabled">
+      <td><a href="#vlsingle-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Create VLSingle CR</p>
+</td>
+    </tr>
+    <tr id="vlsingle-ingress-annotations">
+      <td><a href="#vlsingle-ingress-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.ingress.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress annotations</p>
+</td>
+    </tr>
+    <tr id="vlsingle-ingress-enabled">
+      <td><a href="#vlsingle-ingress-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.ingress.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of ingress for server component</p>
+</td>
+    </tr>
+    <tr id="vlsingle-ingress-extrapaths">
+      <td><a href="#vlsingle-ingress-extrapaths"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.ingress.extraPaths</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra paths to prepend to every host configuration. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vlsingle-ingress-hosts">
+      <td><a href="#vlsingle-ingress-hosts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.ingress.hosts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of host objects</p>
+</td>
+    </tr>
+    <tr id="vlsingle-ingress-ingressclassname">
+      <td><a href="#vlsingle-ingress-ingressclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.ingress.ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress controller class name</p>
+</td>
+    </tr>
+    <tr id="vlsingle-ingress-labels">
+      <td><a href="#vlsingle-ingress-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.ingress.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress extra labels</p>
+</td>
+    </tr>
+    <tr id="vlsingle-ingress-path">
+      <td><a href="#vlsingle-ingress-path"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.ingress.path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress default path</p>
+</td>
+    </tr>
+    <tr id="vlsingle-ingress-pathtype">
+      <td><a href="#vlsingle-ingress-pathtype"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.ingress.pathType</span><span class="p">:</span><span class="w"> </span><span class="l">Prefix</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress path type</p>
+</td>
+    </tr>
+    <tr id="vlsingle-ingress-tls">
+      <td><a href="#vlsingle-ingress-tls"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.ingress.tls</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of TLS objects</p>
+</td>
+    </tr>
+    <tr id="vlsingle-labels">
+      <td><a href="#vlsingle-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VLSingle labels</p>
+</td>
+    </tr>
+    <tr id="vlsingle-namespaceoverride">
+      <td><a href="#vlsingle-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
+</td>
+    </tr>
+    <tr id="vlsingle-route-annotations">
+      <td><a href="#vlsingle-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vlsingle-route-enabled">
+      <td><a href="#vlsingle-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for server component</p>
+</td>
+    </tr>
+    <tr id="vlsingle-route-extrarules">
+      <td><a href="#vlsingle-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vlsingle-route-filters">
+      <td><a href="#vlsingle-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vlsingle-route-hostnames">
+      <td><a href="#vlsingle-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vlsingle-route-labels">
+      <td><a href="#vlsingle-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vlsingle-route-matches">
+      <td><a href="#vlsingle-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;spec&#34; &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vlsingle }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vlsingle-route-parentrefs">
+      <td><a href="#vlsingle-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vlsingle-route-port">
+      <td><a href="#vlsingle-route-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.route.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vlsingle.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vlsingle-spec">
+      <td><a href="#vlsingle-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraArgs</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;9428&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;1&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">accessModes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="l">ReadWriteOnce</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">20Gi</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Full spec for VLSingle CRD. Allowed values describe <a href="https://docs.victoriametrics.com/operator/api/#vlsinglespec" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="vlsingle-spec-image-tag">
+      <td><a href="#vlsingle-spec-image-tag"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.spec.image.tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>VictoriaLogs image tag. Defaults to <code>global.versions.logs</code> when empty.</p>
+</td>
+    </tr>
+    <tr id="vlsingle-spec-retentionperiod">
+      <td><a href="#vlsingle-spec-retentionperiod"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vlsingle.spec.retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;1&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these <a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention" target="_blank">docs</a></p>
 </td>
     </tr>
     <tr id="vmagent-additionalremotewrites">
@@ -2064,6 +3463,12 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#vmagent-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>VMAgent labels</p>
+</td>
+    </tr>
+    <tr id="vmagent-namespaceoverride">
+      <td><a href="#vmagent-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmagent.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
 </td>
     </tr>
     <tr id="vmagent-rbac-annotations">
@@ -2222,6 +3627,12 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(object)</code></em><p>VMAlert labels</p>
 </td>
     </tr>
+    <tr id="vmalert-namespaceoverride">
+      <td><a href="#vmalert-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
+</td>
+    </tr>
     <tr id="vmalert-remotewritevmagent">
       <td><a href="#vmalert-remotewritevmagent"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmalert.remoteWriteVMAgent</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
@@ -2339,23 +3750,20 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(object)</code></em><p>VMAuth labels</p>
 </td>
     </tr>
+    <tr id="vmauth-namespaceoverride">
+      <td><a href="#vmauth-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
+</td>
+    </tr>
     <tr id="vmauth-spec">
       <td><a href="#vmauth-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;8427&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">unauthorizedUserAccessSpec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">disabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">discover_backend_ips</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">url_map</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="nt">src_paths</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s1">&#39;{{ .vm.read.path }}/.*&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">url_prefix</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s1">&#39;{{ urlJoin (omit .vm.read &#34;path&#34;) }}/&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="nt">src_paths</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s1">&#39;{{ .vm.write.path }}/.*&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">url_prefix</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s1">&#39;{{ urlJoin (omit .vm.write &#34;path&#34;) }}/&#39;</span></span></span></code></pre>
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">discover_backend_ips</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Full spec for VMAuth CRD. Allowed values described <a href="https://docs.victoriametrics.com/operator/api/#vmauthspec" target="_blank">here</a> It&rsquo;s possible to use given below predefined variables in spec: * <code>{{ .vm.read }}</code> - parsed vmselect, vmsingle or external.vm.read URL * <code>{{ .vm.write }}</code> - parsed vminsert, vmsingle or external.vm.write URL</p>
+      <td><em><code>(object)</code></em><p>Full spec for VMAuth CRD. Allowed values described <a href="https://docs.victoriametrics.com/operator/api/#vmauthspec" target="_blank">here</a> If <code>unauthorizedUserAccessSpec.url_map</code>, <code>.url_prefix</code> and <code>.targetRefs</code> are all left unset, the chart automatically routes to vmsingle/vmcluster (or <code>external.vm.read</code>/<code>external.vm.write</code>) using <code>targetRefs</code> with <code>crd</code> references, so the operator derives all backend routes (e.g. <code>/admin/tenants</code>) automatically. Set <code>url_map</code>, <code>url_prefix</code> or <code>targetRefs</code> explicitly to take full control of routing instead. It&rsquo;s possible to use given below predefined variables in a custom spec: * <code>{{ .vm.read }}</code> - parsed vmselect, vmsingle or external.vm.read URL * <code>{{ .vm.write }}</code> - parsed vminsert, vmsingle or external.vm.write URL * <code>{{ .vl.read }}</code> - parsed vlselect, vlsingle or external.vl.read URL * <code>{{ .vl.write }}</code> - parsed vlinsert, vlsingle or external.vl.write URL * <code>{{ .vt.read }}</code> - parsed vtselect, vtsingle or external.vt.read URL * <code>{{ .vt.write }}</code> - parsed vtinsert, vtsingle or external.vt.write URL</p>
 </td>
     </tr>
     <tr id="vmauth-spec-unauthorizeduseraccessspec-disabled">
@@ -2542,6 +3950,12 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#vmcluster-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>VMCluster labels</p>
+</td>
+    </tr>
+    <tr id="vmcluster-namespaceoverride">
+      <td><a href="#vmcluster-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmcluster.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
 </td>
     </tr>
     <tr id="vmcluster-route-insert-annotations">
@@ -2894,6 +4308,12 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><em><code>(object)</code></em><p>VMSingle labels</p>
 </td>
     </tr>
+    <tr id="vmsingle-namespaceoverride">
+      <td><a href="#vmsingle-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
+</td>
+    </tr>
     <tr id="vmsingle-route-annotations">
       <td><a href="#vmsingle-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -2971,6 +4391,577 @@ If you&rsquo;re migrating existing config, please make sure that <code>.Values.a
       <td><a href="#vmsingle-spec-retentionperiod"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmsingle.spec.retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;1&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these <a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention" target="_blank">docs</a></p>
+</td>
+    </tr>
+    <tr id="vtcluster-annotations">
+      <td><a href="#vtcluster-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VTCluster annotations</p>
+</td>
+    </tr>
+    <tr id="vtcluster-enabled">
+      <td><a href="#vtcluster-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Create VTCluster CR</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtinsert-annotations">
+      <td><a href="#vtcluster-ingress-vtinsert-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtinsert.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress annotations</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtinsert-enabled">
+      <td><a href="#vtcluster-ingress-vtinsert-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtinsert.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of ingress for insert component</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtinsert-extrapaths">
+      <td><a href="#vtcluster-ingress-vtinsert-extrapaths"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtinsert.extraPaths</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra paths to prepend to every host configuration. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtinsert-hosts">
+      <td><a href="#vtcluster-ingress-vtinsert-hosts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtinsert.hosts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of host objects</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtinsert-ingressclassname">
+      <td><a href="#vtcluster-ingress-vtinsert-ingressclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtinsert.ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress controller class name</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtinsert-labels">
+      <td><a href="#vtcluster-ingress-vtinsert-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtinsert.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress extra labels</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtinsert-path">
+      <td><a href="#vtcluster-ingress-vtinsert-path"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtinsert.path</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vtcluster.spec.vtinsert }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress default path</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtinsert-pathtype">
+      <td><a href="#vtcluster-ingress-vtinsert-pathtype"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtinsert.pathType</span><span class="p">:</span><span class="w"> </span><span class="l">Prefix</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress path type</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtinsert-tls">
+      <td><a href="#vtcluster-ingress-vtinsert-tls"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtinsert.tls</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of TLS objects</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtselect-annotations">
+      <td><a href="#vtcluster-ingress-vtselect-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtselect.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress annotations</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtselect-enabled">
+      <td><a href="#vtcluster-ingress-vtselect-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtselect.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of ingress for select component</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtselect-extrapaths">
+      <td><a href="#vtcluster-ingress-vtselect-extrapaths"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtselect.extraPaths</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra paths to prepend to every host configuration. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtselect-hosts">
+      <td><a href="#vtcluster-ingress-vtselect-hosts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtselect.hosts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of host objects</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtselect-ingressclassname">
+      <td><a href="#vtcluster-ingress-vtselect-ingressclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtselect.ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress controller class name</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtselect-labels">
+      <td><a href="#vtcluster-ingress-vtselect-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtselect.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress extra labels</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtselect-path">
+      <td><a href="#vtcluster-ingress-vtselect-path"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtselect.path</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vtcluster.spec.vtselect }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress default path</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtselect-pathtype">
+      <td><a href="#vtcluster-ingress-vtselect-pathtype"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtselect.pathType</span><span class="p">:</span><span class="w"> </span><span class="l">Prefix</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress path type</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtselect-tls">
+      <td><a href="#vtcluster-ingress-vtselect-tls"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtselect.tls</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of TLS objects</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtstorage-annotations">
+      <td><a href="#vtcluster-ingress-vtstorage-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtstorage.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress annotations</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtstorage-enabled">
+      <td><a href="#vtcluster-ingress-vtstorage-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtstorage.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of ingress for storage component</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtstorage-extrapaths">
+      <td><a href="#vtcluster-ingress-vtstorage-extrapaths"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtstorage.extraPaths</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra paths to prepend to every host configuration. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtstorage-hosts">
+      <td><a href="#vtcluster-ingress-vtstorage-hosts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtstorage.hosts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of host objects</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtstorage-ingressclassname">
+      <td><a href="#vtcluster-ingress-vtstorage-ingressclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtstorage.ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress controller class name</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtstorage-labels">
+      <td><a href="#vtcluster-ingress-vtstorage-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtstorage.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress extra labels</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtstorage-path">
+      <td><a href="#vtcluster-ingress-vtstorage-path"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtstorage.path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress default path</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtstorage-pathtype">
+      <td><a href="#vtcluster-ingress-vtstorage-pathtype"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtstorage.pathType</span><span class="p">:</span><span class="w"> </span><span class="l">Prefix</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress path type</p>
+</td>
+    </tr>
+    <tr id="vtcluster-ingress-vtstorage-tls">
+      <td><a href="#vtcluster-ingress-vtstorage-tls"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.ingress.vtstorage.tls</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of TLS objects</p>
+</td>
+    </tr>
+    <tr id="vtcluster-labels">
+      <td><a href="#vtcluster-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VTCluster labels</p>
+</td>
+    </tr>
+    <tr id="vtcluster-namespaceoverride">
+      <td><a href="#vtcluster-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtinsert-annotations">
+      <td><a href="#vtcluster-route-vtinsert-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtinsert.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtinsert-enabled">
+      <td><a href="#vtcluster-route-vtinsert-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtinsert.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for insert component</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtinsert-extrarules">
+      <td><a href="#vtcluster-route-vtinsert-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtinsert.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtinsert-filters">
+      <td><a href="#vtcluster-route-vtinsert-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtinsert.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtinsert-hostnames">
+      <td><a href="#vtcluster-route-vtinsert-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtinsert.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtinsert-labels">
+      <td><a href="#vtcluster-route-vtinsert-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtinsert.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtinsert-matches">
+      <td><a href="#vtcluster-route-vtinsert-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtinsert.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vtcluster.spec.vtinsert }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtinsert-parentrefs">
+      <td><a href="#vtcluster-route-vtinsert-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtinsert.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtinsert-port">
+      <td><a href="#vtcluster-route-vtinsert-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtinsert.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vtcluster.spec.vtinsert.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtselect-annotations">
+      <td><a href="#vtcluster-route-vtselect-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtselect.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtselect-enabled">
+      <td><a href="#vtcluster-route-vtselect-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtselect.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for select component</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtselect-extrarules">
+      <td><a href="#vtcluster-route-vtselect-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtselect.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtselect-filters">
+      <td><a href="#vtcluster-route-vtselect-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtselect.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtselect-hostnames">
+      <td><a href="#vtcluster-route-vtselect-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtselect.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtselect-labels">
+      <td><a href="#vtcluster-route-vtselect-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtselect.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtselect-matches">
+      <td><a href="#vtcluster-route-vtselect-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtselect.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vtcluster.spec.vtselect }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtselect-parentrefs">
+      <td><a href="#vtcluster-route-vtselect-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtselect.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtselect-port">
+      <td><a href="#vtcluster-route-vtselect-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtselect.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vtcluster.spec.vtselect.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtstorage-annotations">
+      <td><a href="#vtcluster-route-vtstorage-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtstorage.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtstorage-enabled">
+      <td><a href="#vtcluster-route-vtstorage-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtstorage.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for storage component</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtstorage-extrarules">
+      <td><a href="#vtcluster-route-vtstorage-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtstorage.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtstorage-filters">
+      <td><a href="#vtcluster-route-vtstorage-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtstorage.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtstorage-hostnames">
+      <td><a href="#vtcluster-route-vtstorage-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtstorage.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtstorage-labels">
+      <td><a href="#vtcluster-route-vtstorage-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtstorage.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtstorage-matches">
+      <td><a href="#vtcluster-route-vtstorage-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtstorage.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vtcluster.spec.vtstorage }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtstorage-parentrefs">
+      <td><a href="#vtcluster-route-vtstorage-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtstorage.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vtcluster-route-vtstorage-port">
+      <td><a href="#vtcluster-route-vtstorage-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.route.vtstorage.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vtcluster.spec.vtstorage.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vtcluster-spec">
+      <td><a href="#vtcluster-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">clusterVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v0.9.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vtinsert</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">extraArgs</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;10481&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vtselect</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">extraArgs</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;10471&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">vtstorage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;10491&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="l">14d</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">storage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">volumeClaimTemplate</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">10Gi</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">storageDataPath</span><span class="p">:</span><span class="w"> </span><span class="l">/vt-data</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Full spec for VTCluster CRD. Allowed values described <a href="https://docs.victoriametrics.com/operator/api/#vtclusterspec" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="vtcluster-spec-vtinsert-enabled">
+      <td><a href="#vtcluster-spec-vtinsert-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.spec.vtinsert.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Set this value to false to disable VTInsert</p>
+</td>
+    </tr>
+    <tr id="vtcluster-spec-vtselect-enabled">
+      <td><a href="#vtcluster-spec-vtselect-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.spec.vtselect.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Set this value to false to disable VTSelect</p>
+</td>
+    </tr>
+    <tr id="vtcluster-spec-vtstorage-retentionperiod">
+      <td><a href="#vtcluster-spec-vtstorage-retentionperiod"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtcluster.spec.vtstorage.retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="l">14d</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h.</p>
+</td>
+    </tr>
+    <tr id="vtsingle-annotations">
+      <td><a href="#vtsingle-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VTSingle annotations</p>
+</td>
+    </tr>
+    <tr id="vtsingle-enabled">
+      <td><a href="#vtsingle-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Create VTSingle CR</p>
+</td>
+    </tr>
+    <tr id="vtsingle-ingress-annotations">
+      <td><a href="#vtsingle-ingress-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.ingress.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress annotations</p>
+</td>
+    </tr>
+    <tr id="vtsingle-ingress-enabled">
+      <td><a href="#vtsingle-ingress-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.ingress.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of ingress for server component</p>
+</td>
+    </tr>
+    <tr id="vtsingle-ingress-extrapaths">
+      <td><a href="#vtsingle-ingress-extrapaths"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.ingress.extraPaths</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra paths to prepend to every host configuration. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vtsingle-ingress-hosts">
+      <td><a href="#vtsingle-ingress-hosts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.ingress.hosts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of host objects</p>
+</td>
+    </tr>
+    <tr id="vtsingle-ingress-ingressclassname">
+      <td><a href="#vtsingle-ingress-ingressclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.ingress.ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress controller class name</p>
+</td>
+    </tr>
+    <tr id="vtsingle-ingress-labels">
+      <td><a href="#vtsingle-ingress-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.ingress.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Ingress extra labels</p>
+</td>
+    </tr>
+    <tr id="vtsingle-ingress-path">
+      <td><a href="#vtsingle-ingress-path"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.ingress.path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress default path</p>
+</td>
+    </tr>
+    <tr id="vtsingle-ingress-pathtype">
+      <td><a href="#vtsingle-ingress-pathtype"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.ingress.pathType</span><span class="p">:</span><span class="w"> </span><span class="l">Prefix</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Ingress path type</p>
+</td>
+    </tr>
+    <tr id="vtsingle-ingress-tls">
+      <td><a href="#vtsingle-ingress-tls"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.ingress.tls</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of TLS objects</p>
+</td>
+    </tr>
+    <tr id="vtsingle-labels">
+      <td><a href="#vtsingle-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>VTSingle labels</p>
+</td>
+    </tr>
+    <tr id="vtsingle-namespaceoverride">
+      <td><a href="#vtsingle-namespaceoverride"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.namespaceOverride</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Override the namespace for this component. When set, deploys the CR to a different namespace than the release namespace.</p>
+</td>
+    </tr>
+    <tr id="vtsingle-route-annotations">
+      <td><a href="#vtsingle-route-annotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.route.annotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute annotations</p>
+</td>
+    </tr>
+    <tr id="vtsingle-route-enabled">
+      <td><a href="#vtsingle-route-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.route.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Enable deployment of HTTPRoute for server component</p>
+</td>
+    </tr>
+    <tr id="vtsingle-route-extrarules">
+      <td><a href="#vtsingle-route-extrarules"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.route.extraRules</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra rules to prepend to route. This is useful when working with annotation based services.</p>
+</td>
+    </tr>
+    <tr id="vtsingle-route-filters">
+      <td><a href="#vtsingle-route-filters"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.route.filters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Filters for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vtsingle-route-hostnames">
+      <td><a href="#vtsingle-route-hostnames"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.route.hostnames</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Array of hostnames</p>
+</td>
+    </tr>
+    <tr id="vtsingle-route-labels">
+      <td><a href="#vtsingle-route-labels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.route.labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>HTTPRoute extra labels</p>
+</td>
+    </tr>
+    <tr id="vtsingle-route-matches">
+      <td><a href="#vtsingle-route-matches"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.route.matches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">path</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ dig &#34;spec&#34; &#34;extraArgs&#34; &#34;http.pathPrefix&#34; &#34;/&#34; .Values.vtsingle }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Matches for a default rule in HTTPRoute</p>
+</td>
+    </tr>
+    <tr id="vtsingle-route-parentrefs">
+      <td><a href="#vtsingle-route-parentrefs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.route.parentRefs</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTPGateway objects refs</p>
+</td>
+    </tr>
+    <tr id="vtsingle-route-port">
+      <td><a href="#vtsingle-route-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.route.port</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{{ .Values.vtsingle.spec.port }}&#39;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Route port</p>
+</td>
+    </tr>
+    <tr id="vtsingle-spec">
+      <td><a href="#vtsingle-spec"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extraArgs</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;10428&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;1&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">accessModes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="l">ReadWriteOnce</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">20Gi</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Full spec for VTSingle CRD. Allowed values described <a href="https://docs.victoriametrics.com/operator/api/#vtsinglespec" target="_blank">here</a></p>
+</td>
+    </tr>
+    <tr id="vtsingle-spec-image-tag">
+      <td><a href="#vtsingle-spec-image-tag"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.spec.image.tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>VictoriaTraces image tag. Defaults to <code>global.versions.traces</code> when empty.</p>
+</td>
+    </tr>
+    <tr id="vtsingle-spec-retentionperiod">
+      <td><a href="#vtsingle-spec-retentionperiod"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vtsingle.spec.retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;1&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h.</p>
 </td>
     </tr>
   </tbody>

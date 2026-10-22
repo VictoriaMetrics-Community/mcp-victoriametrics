@@ -3,6 +3,7 @@
 ---
 weight: 4
 title: VictoriaMetrics Cluster
+description: "Deploy cluster version on Kubernetes."
 menu:
   docs:
     parent: helm
@@ -16,7 +17,7 @@ tags:
   - kubernetes
 ---
 
-![Version](https://img.shields.io/badge/0.39.0-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-cluster%2Fchangelog%2F%230390)
+![Version](https://img.shields.io/badge/0.53.1-gray?logo=Helm&labelColor=gray&link=https%3A%2F%2Fdocs.victoriametrics.com%2Fhelm%2Fvictoria-metrics-cluster%2Fchangelog%2F%23v0531)
 ![ArtifactHub](https://img.shields.io/badge/ArtifactHub-informational?logoColor=white&color=417598&logo=artifacthub&link=https%3A%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Fvictoriametrics%2Fvictoria-metrics-cluster)
 ![License](https://img.shields.io/github/license/VictoriaMetrics/helm-charts?labelColor=green&label=&link=https%3A%2F%2Fgithub.com%2FVictoriaMetrics%2Fhelm-charts%2Fblob%2Fmaster%2FLICENSE)
 ![Slack](https://img.shields.io/badge/Join-4A154B?logo=slack&link=https%3A%2F%2Fslack.victoriametrics.com)
@@ -43,7 +44,7 @@ For installation instructions, refer to the official documentation:
 
 ## Chart Details
 
-Note: this chart installs VictoriaMetrics cluster components such as vminsert, vmselect and vmstorage. It doesn't create or configure metrics scraping. If you are looking for a chart to configure monitoring stack in cluster check out [victoria-metrics-k8s-stack chart](https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-k8s-stack#helm-chart-for-victoria-metrics-kubernetes-monitoring-stack).
+Note: this chart installs VictoriaMetrics cluster components such as vminsert, vmselect and vmstorage. It doesn't create or configure metrics scraping. If you are looking for a chart to configure monitoring stack in cluster check out [victoria-metrics-k8s-stack chart](https://docs.victoriametrics.com/helm/victoria-metrics-k8s-stack/).
 
 ## How to install
 
@@ -88,13 +89,13 @@ Test the installation with command:
   - For HTTPS repository
 
     ```console
-    helm install vmc vm/victoria-metrics-cluster -f values.yaml -n NAMESPACE --debug
+    helm install vmc vm/victoria-metrics-cluster -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
   - For OCI repository
 
     ```console
-    helm install vmc oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-cluster -f values.yaml -n NAMESPACE --debug
+    helm install vmc oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-cluster -f values.yaml -n NAMESPACE --debug --dry-run
     ```
 
 Install chart with command:
@@ -135,6 +136,41 @@ Remove application with command.
 
 ```console
 helm uninstall vmc -n NAMESPACE
+```
+
+### HTTP listen address
+
+Each cluster component configures its HTTP listen address via a per-component `http` list:
+`.Values.vminsert.http`, `.Values.vmselect.http`, `.Values.vmstorage.http`, `.Values.vmauth.http`.
+Each entry in the list configures a separate HTTP listener.
+The primary listener (marked with `primary: true`) is used for Pod health checks and Service port generation.
+
+To enable TLS on a component's HTTP listener (e.g. vminsert):
+
+```yaml
+vminsert:
+  http:
+    - name: https
+      primary: true
+      value: :8480
+      tls: true
+      tlsCertFile: /path/to/tls.crt
+      tlsKeyFile: /path/to/tls.key
+```
+
+To expose an additional listener on a different port:
+
+```yaml
+vminsert:
+  http:
+    - name: http
+      primary: true
+      value: :8480
+    - name: https
+      value: :8481
+      tls: true
+      tlsCertFile: /path/to/tls.crt
+      tlsKeyFile: /path/to/tls.key
 ```
 
 ## Parameters
@@ -186,6 +222,18 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">adaptSecurityContext</span><span class="p">:</span><span class="w"> </span><span class="l">auto</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Openshift security context compatibility configuration</p>
+</td>
+    </tr>
+    <tr id="global-extraannotations">
+      <td><a href="#global-extraannotations"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraAnnotations</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Annotations added to all resources</p>
+</td>
+    </tr>
+    <tr id="global-extralabels">
+      <td><a href="#global-extralabels"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">global.extraLabels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Labels added to all resources</p>
 </td>
     </tr>
     <tr id="global-image-registry">
@@ -296,6 +344,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>VMAuth annotations</p>
 </td>
     </tr>
+    <tr id="vmauth-command">
+      <td><a href="#vmauth-command"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.command</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Override default container command. Use when the VictoriaMetrics binary is available at a custom path</p>
+</td>
+    </tr>
     <tr id="vmauth-config">
       <td><a href="#vmauth-config"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.config</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -312,6 +366,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vmauth-containerworkingdir"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.containerWorkingDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Container workdir</p>
+</td>
+    </tr>
+    <tr id="vmauth-dnsconfig">
+      <td><a href="#vmauth-dnsconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.dnsConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Custom DNS config for pod. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-config" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="vmauth-enabled">
@@ -336,7 +396,6 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vmauth-extraargs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.extraArgs</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.enable</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.prefix</span><span class="p">:</span><span class="w"> </span><span class="l">VM_</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">httpListenAddr</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8427</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">loggerFormat</span><span class="p">:</span><span class="w"> </span><span class="l">json</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Extra command line arguments for vmauth component</p>
@@ -380,7 +439,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">metrics</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">minReplicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Horizontal Pod Autoscaling</p>
+      <td><em><code>(object)</code></em><p>Horizontal Pod Autoscaler</p>
 </td>
     </tr>
     <tr id="vmauth-horizontalpodautoscaler-behavior">
@@ -411,6 +470,24 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vmauth-horizontalpodautoscaler-minreplicas"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.horizontalPodAutoscaler.minReplicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span></span></span></code></pre>
 </a></td>
       <td><em><code>(int)</code></em><p>Minimum replicas for HPA to use to scale the vmauth component</p>
+</td>
+    </tr>
+    <tr id="vmauth-http">
+      <td><a href="#vmauth-http"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.http</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">mtls</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">mtlsCAFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertCacheDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertEmail</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertHosts</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsCertFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsKeyFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsMinVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8427</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTP listen address configuration. See <a href="https://docs.victoriametrics.com/helm/victoria-metrics-cluster/#http-listen-address" target="_blank">https://docs.victoriametrics.com/helm/victoria-metrics-cluster/#http-listen-address</a> for details.</p>
 </td>
     </tr>
     <tr id="vmauth-image-pullpolicy">
@@ -500,6 +577,17 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Override default <code>app</code> label name</p>
 </td>
     </tr>
+    <tr id="vmauth-networkpolicy">
+      <td><a href="#vmauth-networkpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.networkPolicy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">egress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>See <code>kubectl explain networkpolicy.spec</code> for more. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/" target="_blank">here</a></p>
+</td>
+    </tr>
     <tr id="vmauth-nodeselector">
       <td><a href="#vmauth-nodeselector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.nodeSelector</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -552,12 +640,6 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Pod&rsquo;s security context. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/" target="_blank">here</a></p>
-</td>
-    </tr>
-    <tr id="vmauth-ports-name">
-      <td><a href="#vmauth-ports-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.ports.name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>VMAuth http port name</p>
 </td>
     </tr>
     <tr id="vmauth-priorityclassname">
@@ -663,6 +745,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Timeouts for a default rule in HTTPRoute</p>
 </td>
     </tr>
+    <tr id="vmauth-runtimeclassname">
+      <td><a href="#vmauth-runtimeclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.runtimeClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Name of the <a href="https://kubernetes.io/docs/concepts/containers/runtime-class/" target="_blank">RuntimeClass</a> used to run the pod, e.g. &ldquo;gvisor&rdquo;</p>
+</td>
+    </tr>
     <tr id="vmauth-securitycontext">
       <td><a href="#vmauth-securitycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.securityContext</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
@@ -742,16 +830,22 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Load balancer source range</p>
 </td>
     </tr>
-    <tr id="vmauth-service-serviceport">
-      <td><a href="#vmauth-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="m">8427</span></span></span></code></pre>
+    <tr id="vmauth-service-nodeport">
+      <td><a href="#vmauth-service-nodeport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.service.nodePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(int)</code></em><p>Service port</p>
+      <td><em><code>(string)</code></em><p>Service node port</p>
 </td>
     </tr>
-    <tr id="vmauth-service-targetport">
-      <td><a href="#vmauth-service-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.service.targetPort</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
+    <tr id="vmauth-service-portoverrides">
+      <td><a href="#vmauth-service-portoverrides"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.service.portOverrides</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Target port</p>
+      <td><em><code>(object)</code></em><p>Per-port Service overrides, keyed by port name. Each entry may override port, protocol, targetPort, nodePort and/or appProtocol</p>
+</td>
+    </tr>
+    <tr id="vmauth-service-serviceport">
+      <td><a href="#vmauth-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service port</p>
 </td>
     </tr>
     <tr id="vmauth-service-trafficdistribution">
@@ -808,10 +902,22 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Target namespace of ServiceMonitor manifest</p>
 </td>
     </tr>
+    <tr id="vmauth-servicemonitor-port">
+      <td><a href="#vmauth-servicemonitor-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.serviceMonitor.port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service Monitor port. Uses primary http item name by default</p>
+</td>
+    </tr>
     <tr id="vmauth-servicemonitor-relabelings">
       <td><a href="#vmauth-servicemonitor-relabelings"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.serviceMonitor.relabelings</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>Service Monitor relabelings</p>
+</td>
+    </tr>
+    <tr id="vmauth-servicemonitor-targetport">
+      <td><a href="#vmauth-servicemonitor-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.serviceMonitor.targetPort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service Monitor target port. Overrides port when set</p>
 </td>
     </tr>
     <tr id="vmauth-strategy">
@@ -838,15 +944,15 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Pod topologySpreadConstraints</p>
 </td>
     </tr>
-    <tr id="vmauth-verticalpodautoscaling">
-      <td><a href="#vmauth-verticalpodautoscaling"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.verticalPodAutoscaling</span><span class="p">:</span><span class="w">
+    <tr id="vmauth-verticalpodautoscaler">
+      <td><a href="#vmauth-verticalpodautoscaler"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.verticalPodAutoscaler</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Vertical Pod Autoscaling. Requires VPA CRD (<code>autoscaling.k8s.io/v1</code>) to be installed in the cluster. Note that VPA should not be used together with HPA on the same resource metrics (CPU/memory).</p>
+      <td><em><code>(object)</code></em><p>Vertical Pod Autoscaler. Requires VPA CRD (<code>autoscaling.k8s.io/v1</code>) to be installed in the cluster. Note that VPA should not be used together with HPA on the same resource metrics (CPU/memory).</p>
 </td>
     </tr>
-    <tr id="vmauth-verticalpodautoscaling-enabled">
-      <td><a href="#vmauth-verticalpodautoscaling-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.verticalPodAutoscaling.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+    <tr id="vmauth-verticalpodautoscaler-enabled">
+      <td><a href="#vmauth-verticalpodautoscaler-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmauth.verticalPodAutoscaler.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>Use VPA for vmagent</p>
 </td>
@@ -863,10 +969,22 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>StatefulSet/Deployment annotations</p>
 </td>
     </tr>
+    <tr id="vminsert-command">
+      <td><a href="#vminsert-command"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.command</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Override default container command. Use when the VictoriaMetrics binary is available at a custom path</p>
+</td>
+    </tr>
     <tr id="vminsert-containerworkingdir">
       <td><a href="#vminsert-containerworkingdir"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.containerWorkingDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Container workdir</p>
+</td>
+    </tr>
+    <tr id="vminsert-dnsconfig">
+      <td><a href="#vminsert-dnsconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.dnsConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Custom DNS config for pod. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-config" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="vminsert-enabled">
@@ -897,7 +1015,6 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vminsert-extraargs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.extraArgs</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.enable</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.prefix</span><span class="p">:</span><span class="w"> </span><span class="l">VM_</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">httpListenAddr</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8480</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">loggerFormat</span><span class="p">:</span><span class="w"> </span><span class="l">json</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Extra command line arguments for vminsert component</p>
@@ -941,7 +1058,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">metrics</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">minReplicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Horizontal Pod Autoscaling</p>
+      <td><em><code>(object)</code></em><p>Horizontal Pod Autoscaler</p>
 </td>
     </tr>
     <tr id="vminsert-horizontalpodautoscaler-behavior">
@@ -972,6 +1089,24 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vminsert-horizontalpodautoscaler-minreplicas"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.horizontalPodAutoscaler.minReplicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span></span></span></code></pre>
 </a></td>
       <td><em><code>(int)</code></em><p>Minimum replicas for HPA to use to scale the vminsert component</p>
+</td>
+    </tr>
+    <tr id="vminsert-http">
+      <td><a href="#vminsert-http"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.http</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">mtls</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">mtlsCAFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertCacheDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertEmail</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertHosts</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsCertFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsKeyFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsMinVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8480</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTP listen address configuration. See <a href="https://docs.victoriametrics.com/helm/victoria-metrics-cluster/#http-listen-address" target="_blank">https://docs.victoriametrics.com/helm/victoria-metrics-cluster/#http-listen-address</a> for details.</p>
 </td>
     </tr>
     <tr id="vminsert-image-pullpolicy">
@@ -1068,6 +1203,17 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Override default <code>app</code> label name</p>
 </td>
     </tr>
+    <tr id="vminsert-networkpolicy">
+      <td><a href="#vminsert-networkpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.networkPolicy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">egress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>See <code>kubectl explain networkpolicy.spec</code> for more. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/" target="_blank">here</a></p>
+</td>
+    </tr>
     <tr id="vminsert-nodeselector">
       <td><a href="#vminsert-nodeselector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.nodeSelector</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -1120,12 +1266,6 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Pod&rsquo;s security context. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/" target="_blank">here</a></p>
-</td>
-    </tr>
-    <tr id="vminsert-ports-name">
-      <td><a href="#vminsert-ports-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.ports.name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>VMInsert http port name</p>
 </td>
     </tr>
     <tr id="vminsert-priorityclassname">
@@ -1265,6 +1405,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Timeouts for a default rule in HTTPRoute</p>
 </td>
     </tr>
+    <tr id="vminsert-runtimeclassname">
+      <td><a href="#vminsert-runtimeclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.runtimeClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Name of the <a href="https://kubernetes.io/docs/concepts/containers/runtime-class/" target="_blank">RuntimeClass</a> used to run the pod, e.g. &ldquo;gvisor&rdquo;</p>
+</td>
+    </tr>
     <tr id="vminsert-securitycontext">
       <td><a href="#vminsert-securitycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.securityContext</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
@@ -1344,16 +1490,22 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Load balancer source range</p>
 </td>
     </tr>
-    <tr id="vminsert-service-serviceport">
-      <td><a href="#vminsert-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="m">8480</span></span></span></code></pre>
+    <tr id="vminsert-service-nodeport">
+      <td><a href="#vminsert-service-nodeport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.service.nodePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(int)</code></em><p>Service port</p>
+      <td><em><code>(string)</code></em><p>Service node port</p>
 </td>
     </tr>
-    <tr id="vminsert-service-targetport">
-      <td><a href="#vminsert-service-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.service.targetPort</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
+    <tr id="vminsert-service-portoverrides">
+      <td><a href="#vminsert-service-portoverrides"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.service.portOverrides</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Target port</p>
+      <td><em><code>(object)</code></em><p>Per-port Service overrides, keyed by port name. Each entry may override port, protocol, targetPort, nodePort and/or appProtocol</p>
+</td>
+    </tr>
+    <tr id="vminsert-service-serviceport">
+      <td><a href="#vminsert-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service port</p>
 </td>
     </tr>
     <tr id="vminsert-service-trafficdistribution">
@@ -1410,10 +1562,22 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Target namespace of ServiceMonitor manifest</p>
 </td>
     </tr>
+    <tr id="vminsert-servicemonitor-port">
+      <td><a href="#vminsert-servicemonitor-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.serviceMonitor.port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service Monitor port. Uses primary http item name by default</p>
+</td>
+    </tr>
     <tr id="vminsert-servicemonitor-relabelings">
       <td><a href="#vminsert-servicemonitor-relabelings"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.serviceMonitor.relabelings</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>Service Monitor relabelings</p>
+</td>
+    </tr>
+    <tr id="vminsert-servicemonitor-targetport">
+      <td><a href="#vminsert-servicemonitor-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.serviceMonitor.targetPort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service Monitor target port. Overrides port when set</p>
 </td>
     </tr>
     <tr id="vminsert-strategy">
@@ -1445,15 +1609,15 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Pod topologySpreadConstraints</p>
 </td>
     </tr>
-    <tr id="vminsert-verticalpodautoscaling">
-      <td><a href="#vminsert-verticalpodautoscaling"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.verticalPodAutoscaling</span><span class="p">:</span><span class="w">
+    <tr id="vminsert-verticalpodautoscaler">
+      <td><a href="#vminsert-verticalpodautoscaler"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.verticalPodAutoscaler</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Vertical Pod Autoscaling. Requires VPA CRD (<code>autoscaling.k8s.io/v1</code>) to be installed in the cluster. Note that VPA should not be used together with HPA on the same resource metrics (CPU/memory).</p>
+      <td><em><code>(object)</code></em><p>Vertical Pod Autoscaler. Requires VPA CRD (<code>autoscaling.k8s.io/v1</code>) to be installed in the cluster. Note that VPA should not be used together with HPA on the same resource metrics (CPU/memory).</p>
 </td>
     </tr>
-    <tr id="vminsert-verticalpodautoscaling-enabled">
-      <td><a href="#vminsert-verticalpodautoscaling-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.verticalPodAutoscaling.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+    <tr id="vminsert-verticalpodautoscaler-enabled">
+      <td><a href="#vminsert-verticalpodautoscaler-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vminsert.verticalPodAutoscaler.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>Use VPA for vmagent</p>
 </td>
@@ -1476,6 +1640,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Cache root folder</p>
 </td>
     </tr>
+    <tr id="vmselect-command">
+      <td><a href="#vmselect-command"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.command</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Override default container command. Use when the VictoriaMetrics binary is available at a custom path</p>
+</td>
+    </tr>
     <tr id="vmselect-containerworkingdir">
       <td><a href="#vmselect-containerworkingdir"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.containerWorkingDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
@@ -1494,6 +1664,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vmselect-deployment-spec-strategy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.deployment.spec.strategy</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>VMSelect strategy</p>
+</td>
+    </tr>
+    <tr id="vmselect-dnsconfig">
+      <td><a href="#vmselect-dnsconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.dnsConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Custom DNS config for pod. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-config" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="vmselect-emptydir">
@@ -1524,7 +1700,6 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vmselect-extraargs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.extraArgs</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.enable</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.prefix</span><span class="p">:</span><span class="w"> </span><span class="l">VM_</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">httpListenAddr</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8481</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">loggerFormat</span><span class="p">:</span><span class="w"> </span><span class="l">json</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Extra command line arguments for vmselect component</p>
@@ -1594,6 +1769,24 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vmselect-horizontalpodautoscaler-minreplicas"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.horizontalPodAutoscaler.minReplicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span></span></span></code></pre>
 </a></td>
       <td><em><code>(int)</code></em><p>Minimum replicas for HPA to use to scale the vmselect component</p>
+</td>
+    </tr>
+    <tr id="vmselect-http">
+      <td><a href="#vmselect-http"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.http</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">mtls</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">mtlsCAFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertCacheDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertEmail</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertHosts</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsCertFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsKeyFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsMinVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8481</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTP listen address configuration. See <a href="https://docs.victoriametrics.com/helm/victoria-metrics-cluster/#http-listen-address" target="_blank">https://docs.victoriametrics.com/helm/victoria-metrics-cluster/#http-listen-address</a> for details.</p>
 </td>
     </tr>
     <tr id="vmselect-image-pullpolicy">
@@ -1696,6 +1889,17 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Override default <code>app</code> label name</p>
 </td>
     </tr>
+    <tr id="vmselect-networkpolicy">
+      <td><a href="#vmselect-networkpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.networkPolicy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">egress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>See <code>kubectl explain networkpolicy.spec</code> for more. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/" target="_blank">here</a></p>
+</td>
+    </tr>
     <tr id="vmselect-nodeselector">
       <td><a href="#vmselect-nodeselector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.nodeSelector</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -1754,7 +1958,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="vmselect-persistentvolume-volumeattributesclassname">
       <td><a href="#vmselect-persistentvolume-volumeattributesclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.persistentVolume.volumeAttributesClassName</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>VolumeClassAttribute to user for persistent volume</p>
+      <td><em><code>(string)</code></em><p>VolumeAttributesClass to use for persistent volume</p>
 </td>
     </tr>
     <tr id="vmselect-podannotations">
@@ -1809,12 +2013,6 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Pod&rsquo;s security context. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/" target="_blank">here</a></p>
-</td>
-    </tr>
-    <tr id="vmselect-ports-name">
-      <td><a href="#vmselect-ports-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.ports.name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>VMSelect http port name</p>
 </td>
     </tr>
     <tr id="vmselect-priorityclassname">
@@ -1939,6 +2137,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Timeouts for a default rule in HTTPRoute</p>
 </td>
     </tr>
+    <tr id="vmselect-runtimeclassname">
+      <td><a href="#vmselect-runtimeclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.runtimeClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Name of the <a href="https://kubernetes.io/docs/concepts/containers/runtime-class/" target="_blank">RuntimeClass</a> used to run the pod, e.g. &ldquo;gvisor&rdquo;</p>
+</td>
+    </tr>
     <tr id="vmselect-securitycontext">
       <td><a href="#vmselect-securitycontext"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.securityContext</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
@@ -1953,9 +2157,9 @@ Change the values according to the need of the environment in ``victoria-metrics
 </td>
     </tr>
     <tr id="vmselect-service-clusterip">
-      <td><a href="#vmselect-service-clusterip"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.service.clusterIP</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+      <td><a href="#vmselect-service-clusterip"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.service.clusterIP</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Service ClusterIP</p>
+      <td><em><code>(string)</code></em><p>Service ClusterIP. When unset, the Service is a regular ClusterIP Service with legacy naming and headless (<code>None</code>), as in the VictoriaMetrics operator, with operator naming</p>
 </td>
     </tr>
     <tr id="vmselect-service-enabled">
@@ -2018,16 +2222,28 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Load balancer source range</p>
 </td>
     </tr>
-    <tr id="vmselect-service-serviceport">
-      <td><a href="#vmselect-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="m">8481</span></span></span></code></pre>
+    <tr id="vmselect-service-nodeport">
+      <td><a href="#vmselect-service-nodeport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.service.nodePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(int)</code></em><p>Service port</p>
+      <td><em><code>(string)</code></em><p>Service node port</p>
 </td>
     </tr>
-    <tr id="vmselect-service-targetport">
-      <td><a href="#vmselect-service-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.service.targetPort</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
+    <tr id="vmselect-service-portoverrides">
+      <td><a href="#vmselect-service-portoverrides"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.service.portOverrides</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Target port</p>
+      <td><em><code>(object)</code></em><p>Per-port Service overrides, keyed by port name. Each entry may override port, protocol, targetPort, nodePort and/or appProtocol</p>
+</td>
+    </tr>
+    <tr id="vmselect-service-publishnotreadyaddresses">
+      <td><a href="#vmselect-service-publishnotreadyaddresses"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.service.publishNotReadyAddresses</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Publish not-ready addresses. Set this to <code>true</code> together with <code>clusterIP: None</code> when vmselect is discovered via its headless service (e.g. behind vmauth balancing) before pods pass readiness checks</p>
+</td>
+    </tr>
+    <tr id="vmselect-service-serviceport">
+      <td><a href="#vmselect-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service port</p>
 </td>
     </tr>
     <tr id="vmselect-service-trafficdistribution">
@@ -2078,10 +2294,22 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Target namespace of ServiceMonitor manifest</p>
 </td>
     </tr>
+    <tr id="vmselect-servicemonitor-port">
+      <td><a href="#vmselect-servicemonitor-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.serviceMonitor.port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service Monitor port. Uses primary http item name by default</p>
+</td>
+    </tr>
     <tr id="vmselect-servicemonitor-relabelings">
       <td><a href="#vmselect-servicemonitor-relabelings"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.serviceMonitor.relabelings</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>Service Monitor relabelings</p>
+</td>
+    </tr>
+    <tr id="vmselect-servicemonitor-targetport">
+      <td><a href="#vmselect-servicemonitor-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.serviceMonitor.targetPort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service Monitor target port. Overrides port when set</p>
 </td>
     </tr>
     <tr id="vmselect-statefulset">
@@ -2122,15 +2350,15 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Pod topologySpreadConstraints</p>
 </td>
     </tr>
-    <tr id="vmselect-verticalpodautoscaling">
-      <td><a href="#vmselect-verticalpodautoscaling"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.verticalPodAutoscaling</span><span class="p">:</span><span class="w">
+    <tr id="vmselect-verticalpodautoscaler">
+      <td><a href="#vmselect-verticalpodautoscaler"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.verticalPodAutoscaler</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Vertical Pod Autoscaling. Requires VPA CRD (<code>autoscaling.k8s.io/v1</code>) to be installed in the cluster. Note that VPA should not be used together with HPA on the same resource metrics (CPU/memory).</p>
+      <td><em><code>(object)</code></em><p>Vertical Pod Autoscaler. Requires VPA CRD (<code>autoscaling.k8s.io/v1</code>) to be installed in the cluster. Note that VPA should not be used together with HPA on the same resource metrics (CPU/memory).</p>
 </td>
     </tr>
-    <tr id="vmselect-verticalpodautoscaling-enabled">
-      <td><a href="#vmselect-verticalpodautoscaling-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.verticalPodAutoscaling.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+    <tr id="vmselect-verticalpodautoscaler-enabled">
+      <td><a href="#vmselect-verticalpodautoscaler-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmselect.verticalPodAutoscaler.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>Use VPA for vmagent</p>
 </td>
@@ -2147,10 +2375,22 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>StatefulSet/Deployment annotations</p>
 </td>
     </tr>
+    <tr id="vmstorage-command">
+      <td><a href="#vmstorage-command"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.command</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Override default container command. Use when the VictoriaMetrics binary is available at a custom path</p>
+</td>
+    </tr>
     <tr id="vmstorage-containerworkingdir">
       <td><a href="#vmstorage-containerworkingdir"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.containerWorkingDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Container workdir</p>
+</td>
+    </tr>
+    <tr id="vmstorage-dnsconfig">
+      <td><a href="#vmstorage-dnsconfig"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.dnsConfig</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Custom DNS config for pod. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-config" target="_blank">here</a></p>
 </td>
     </tr>
     <tr id="vmstorage-emptydir">
@@ -2181,7 +2421,6 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vmstorage-extraargs"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.extraArgs</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.enable</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">envflag.prefix</span><span class="p">:</span><span class="w"> </span><span class="l">VM_</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">httpListenAddr</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8482</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">loggerFormat</span><span class="p">:</span><span class="w"> </span><span class="l">json</span></span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Additional vmstorage container arguments. Extra command line arguments for vmstorage component</p>
@@ -2261,6 +2500,24 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(int)</code></em><p>Minimum replicas for HPA to use to scale the vmstorage component</p>
 </td>
     </tr>
+    <tr id="vmstorage-http">
+      <td><a href="#vmstorage-http"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.http</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">mtls</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">mtlsCAFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertCacheDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertEmail</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsAutocertHosts</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsCertFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsKeyFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tlsMinVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p">:</span><span class="m">8482</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>HTTP listen address configuration. See <a href="https://docs.victoriametrics.com/helm/victoria-metrics-cluster/#http-listen-address" target="_blank">https://docs.victoriametrics.com/helm/victoria-metrics-cluster/#http-listen-address</a> for details.</p>
+</td>
+    </tr>
     <tr id="vmstorage-image-pullpolicy">
       <td><a href="#vmstorage-image-pullpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.image.pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span></span></span></code></pre>
 </a></td>
@@ -2314,6 +2571,17 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Override default <code>app</code> label name</p>
 </td>
     </tr>
+    <tr id="vmstorage-networkpolicy">
+      <td><a href="#vmstorage-networkpolicy"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.networkPolicy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">annotations</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">egress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>See <code>kubectl explain networkpolicy.spec</code> for more. Details are <a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/" target="_blank">here</a></p>
+</td>
+    </tr>
     <tr id="vmstorage-nodeselector">
       <td><a href="#vmstorage-nodeselector"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.nodeSelector</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
@@ -2358,9 +2626,9 @@ Change the values according to the need of the environment in ``victoria-metrics
 </td>
     </tr>
     <tr id="vmstorage-persistentvolume-name">
-      <td><a href="#vmstorage-persistentvolume-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.persistentVolume.name</span><span class="p">:</span><span class="w"> </span><span class="l">vmstorage-volume</span></span></span></code></pre>
+      <td><a href="#vmstorage-persistentvolume-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.persistentVolume.name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>Override Persistent Volume Claim name</p>
+      <td><em><code>(string)</code></em><p>Override Persistent Volume Claim template name. Defaults to <code>vmstorage-volume</code>, or to <code>vmstorage-db</code> when <code>useLegacyNaming</code> is <code>false</code></p>
 </td>
     </tr>
     <tr id="vmstorage-persistentvolume-size">
@@ -2384,7 +2652,7 @@ Change the values according to the need of the environment in ``victoria-metrics
     <tr id="vmstorage-persistentvolume-volumeattributesclassname">
       <td><a href="#vmstorage-persistentvolume-volumeattributesclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.persistentVolume.volumeAttributesClassName</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(string)</code></em><p>VolumeClassAttribute to user for persistent volume</p>
+      <td><em><code>(string)</code></em><p>VolumeAttributesClass to use for persistent volume</p>
 </td>
     </tr>
     <tr id="vmstorage-podannotations">
@@ -2441,12 +2709,6 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Pod&rsquo;s security context. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/" target="_blank">here</a></p>
 </td>
     </tr>
-    <tr id="vmstorage-ports-name">
-      <td><a href="#vmstorage-ports-name"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.ports.name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span></span></span></code></pre>
-</a></td>
-      <td><em><code>(string)</code></em><p>VMStorage http port name</p>
-</td>
-    </tr>
     <tr id="vmstorage-priorityclassname">
       <td><a href="#vmstorage-priorityclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.priorityClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
@@ -2499,6 +2761,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><a href="#vmstorage-retentionperiod"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.retentionPeriod</span><span class="p">:</span><span class="w"> </span><span class="m">1</span></span></span></code></pre>
 </a></td>
       <td><em><code>(int)</code></em><p>Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these <a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention" target="_blank">docs</a></p>
+</td>
+    </tr>
+    <tr id="vmstorage-runtimeclassname">
+      <td><a href="#vmstorage-runtimeclassname"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.runtimeClassName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Name of the <a href="https://kubernetes.io/docs/concepts/containers/runtime-class/" target="_blank">RuntimeClass</a> used to run the pod, e.g. &ldquo;gvisor&rdquo;</p>
 </td>
     </tr>
     <tr id="vmstorage-schedulername">
@@ -2567,10 +2835,28 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(object)</code></em><p>Service labels</p>
 </td>
     </tr>
-    <tr id="vmstorage-service-serviceport">
-      <td><a href="#vmstorage-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="m">8482</span></span></span></code></pre>
+    <tr id="vmstorage-service-nodeport">
+      <td><a href="#vmstorage-service-nodeport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.service.nodePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(int)</code></em><p>Service port</p>
+      <td><em><code>(string)</code></em><p>Service node port</p>
+</td>
+    </tr>
+    <tr id="vmstorage-service-portoverrides">
+      <td><a href="#vmstorage-service-portoverrides"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.service.portOverrides</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
+</a></td>
+      <td><em><code>(object)</code></em><p>Per-port Service overrides, keyed by port name. Each entry may override port, protocol, targetPort, nodePort and/or appProtocol</p>
+</td>
+    </tr>
+    <tr id="vmstorage-service-publishnotreadyaddresses">
+      <td><a href="#vmstorage-service-publishnotreadyaddresses"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.service.publishNotReadyAddresses</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(bool)</code></em><p>Publish not-ready addresses for the headless service, so vminsert/vmselect can discover vmstorage pods via DNS before they pass readiness checks</p>
+</td>
+    </tr>
+    <tr id="vmstorage-service-serviceport">
+      <td><a href="#vmstorage-service-serviceport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.service.servicePort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service port</p>
 </td>
     </tr>
     <tr id="vmstorage-service-trafficdistribution">
@@ -2633,10 +2919,22 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(string)</code></em><p>Target namespace of ServiceMonitor manifest</p>
 </td>
     </tr>
+    <tr id="vmstorage-servicemonitor-port">
+      <td><a href="#vmstorage-servicemonitor-port"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.serviceMonitor.port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service Monitor port. Uses primary http item name by default</p>
+</td>
+    </tr>
     <tr id="vmstorage-servicemonitor-relabelings">
       <td><a href="#vmstorage-servicemonitor-relabelings"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.serviceMonitor.relabelings</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
 </a></td>
       <td><em><code>(list)</code></em><p>Service Monitor relabelings</p>
+</td>
+    </tr>
+    <tr id="vmstorage-servicemonitor-targetport">
+      <td><a href="#vmstorage-servicemonitor-targetport"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.serviceMonitor.targetPort</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(string)</code></em><p>Service Monitor target port. Overrides port when set</p>
 </td>
     </tr>
     <tr id="vmstorage-terminationgraceperiodseconds">
@@ -2657,15 +2955,15 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Pod topologySpreadConstraints</p>
 </td>
     </tr>
-    <tr id="vmstorage-verticalpodautoscaling">
-      <td><a href="#vmstorage-verticalpodautoscaling"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.verticalPodAutoscaling</span><span class="p">:</span><span class="w">
+    <tr id="vmstorage-verticalpodautoscaler">
+      <td><a href="#vmstorage-verticalpodautoscaler"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.verticalPodAutoscaler</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
-      <td><em><code>(object)</code></em><p>Vertical Pod Autoscaling. Requires VPA CRD (<code>autoscaling.k8s.io/v1</code>) to be installed in the cluster. Note that VPA should not be used together with HPA on the same resource metrics (CPU/memory).</p>
+      <td><em><code>(object)</code></em><p>Vertical Pod Autoscaler. Requires VPA CRD (<code>autoscaling.k8s.io/v1</code>) to be installed in the cluster. Note that VPA should not be used together with HPA on the same resource metrics (CPU/memory).</p>
 </td>
     </tr>
-    <tr id="vmstorage-verticalpodautoscaling-enabled">
-      <td><a href="#vmstorage-verticalpodautoscaling-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.verticalPodAutoscaling.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
+    <tr id="vmstorage-verticalpodautoscaler-enabled">
+      <td><a href="#vmstorage-verticalpodautoscaler-enabled"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.verticalPodAutoscaler.enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre>
 </a></td>
       <td><em><code>(bool)</code></em><p>Use VPA for vmagent</p>
 </td>
@@ -2727,6 +3025,12 @@ Change the values according to the need of the environment in ``victoria-metrics
       <td><em><code>(list)</code></em><p>Extra secret mounts for vmbackupmanager</p>
 </td>
     </tr>
+    <tr id="vmstorage-vmbackupmanager-extravolumemounts">
+      <td><a href="#vmstorage-vmbackupmanager-extravolumemounts"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.vmbackupmanager.extraVolumeMounts</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre>
+</a></td>
+      <td><em><code>(list)</code></em><p>Extra Volume Mounts for the container</p>
+</td>
+    </tr>
     <tr id="vmstorage-vmbackupmanager-image-registry">
       <td><a href="#vmstorage-vmbackupmanager-image-registry"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.vmbackupmanager.image.registry</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
@@ -2746,7 +3050,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </td>
     </tr>
     <tr id="vmstorage-vmbackupmanager-image-variant">
-      <td><a href="#vmstorage-vmbackupmanager-image-variant"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.vmbackupmanager.image.variant</span><span class="p">:</span><span class="w"> </span><span class="l">cluster</span></span></span></code></pre>
+      <td><a href="#vmstorage-vmbackupmanager-image-variant"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.vmbackupmanager.image.variant</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span></span></span></code></pre>
 </a></td>
       <td><em><code>(string)</code></em><p>Variant of the image tag to use. e.g. enterprise.</p>
 </td>
@@ -2760,13 +3064,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">tcpSocket</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">manager-http</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">readiness</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">httpGet</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">manager-http</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">readiness</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">startup</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>Readiness &amp; Liveness probes</p>
@@ -2785,13 +3083,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 </td>
     </tr>
     <tr id="vmstorage-vmbackupmanager-probe-readiness">
-      <td><a href="#vmstorage-vmbackupmanager-probe-readiness"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.vmbackupmanager.probe.readiness</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">httpGet</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">manager-http</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">5</span></span></span></code></pre>
+      <td><a href="#vmstorage-vmbackupmanager-probe-readiness"><pre class="chroma"><code><span class="line"><span class="cl"><span class="nt">vmstorage.vmbackupmanager.probe.readiness</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre>
 </a></td>
       <td><em><code>(object)</code></em><p>VMBackupManager readiness probe</p>
 </td>
