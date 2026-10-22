@@ -12,6 +12,7 @@ import (
 	"maps"
 	"slices"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -161,6 +162,8 @@ type requestError struct {
 	id   any
 	code int
 	err  error
+	// message, when set, is sent instead of err.Error().
+	message *string
 	// data, when set, is sent as the data member of the JSON-RPC error.
 	data any
 }
@@ -170,10 +173,14 @@ func (e *requestError) Error() string {
 }
 
 func (e *requestError) ToJSONRPCError() mcp.JSONRPCError {
+	message := e.err.Error()
+	if e.message != nil {
+		message = *e.message
+	}
 	return mcp.JSONRPCError{
 		JSONRPC: mcp.JSONRPC_VERSION,
 		ID:      mcp.NewRequestId(e.id),
-		Error:   mcp.NewJSONRPCErrorDetails(e.code, e.err.Error(), e.data),
+		Error:   mcp.NewJSONRPCErrorDetails(e.code, message, e.data),
 	}
 }
 
@@ -220,11 +227,17 @@ type MCPServer struct {
 	resourceCompletionProvider ResourceCompletionProvider
 	capabilities               serverCapabilities
 	cacheHints                 map[mcp.MCPMethod]cacheHints
+	// toolHeaderBindings holds each registered tool's x-mcp-header bindings,
+	// extracted once at registration so a tools/call never re-reads the input
+	// schema. Keyed like tools and taskTools and kept in step with them under
+	// toolsMu; session tools are not cached here.
+	toolHeaderBindings map[string][]mcp.ParamHeaderBinding
 	// allowServerInitiatedRequests keeps RequestSampling, RequestElicitation,
 	// and RequestRoots usable against clients speaking protocol version
 	// 2026-07-28 or later. See WithLegacyServerInitiatedRequests.
 	allowServerInitiatedRequests bool
 	paginationLimit              *int
+	toolResultSizeLimit          int
 	sessions                     sync.Map
 	listenSessions               sync.Map // see registerListenSession
 	hooks                        *Hooks
@@ -299,10 +312,22 @@ func WithLegacyServerInitiatedRequests() ServerOption {
 	}
 }
 
-// WithPaginationLimit sets the pagination limit for the server.
+// WithPaginationLimit sets the maximum page size for list results.
+// Zero and negative limits leave the list unpaged.
 func WithPaginationLimit(limit int) ServerOption {
 	return func(s *MCPServer) {
 		s.paginationLimit = &limit
+	}
+}
+
+// WithToolResultSizeLimit replaces a tool result whose JSON encoding is
+// larger than maxBytes with an error result. The oversized payload is not
+// sent. The same check runs for a synchronous call and for both task
+// execution paths, before the result is stored. Zero and negative limits
+// disable the check.
+func WithToolResultSizeLimit(maxBytes int) ServerOption {
+	return func(s *MCPServer) {
+		s.toolResultSizeLimit = maxBytes
 	}
 }
 
@@ -731,6 +756,7 @@ func NewMCPServer(
 		promptHandlers:             make(map[string]PromptHandlerFunc),
 		tools:                      make(map[string]ServerTool),
 		taskTools:                  make(map[string]ServerTaskTool),
+		toolHeaderBindings:         make(map[string][]mcp.ParamHeaderBinding),
 		toolHandlerMiddlewares:     make([]ToolHandlerMiddleware, 0),
 		resourceHandlerMiddlewares: make([]ResourceHandlerMiddleware, 0),
 		promptHandlerMiddlewares:   make([]PromptHandlerMiddleware, 0),
@@ -1059,6 +1085,9 @@ func (s *MCPServer) AddTools(tools ...ServerTool) {
 		staged[name] = entry
 	}
 	maps.Copy(s.tools, staged)
+	for name, entry := range staged {
+		s.toolHeaderBindings[name] = mcp.ExtractParamHeaderBindings(&entry.Tool)
+	}
 	s.toolsMu.Unlock()
 
 	// When the list of available tools changes, servers that declared the listChanged capability SHOULD send a notification.
@@ -1089,6 +1118,9 @@ func (s *MCPServer) AddTaskTools(taskTools ...ServerTaskTool) {
 		staged[name] = entry
 	}
 	maps.Copy(s.taskTools, staged)
+	for name, entry := range staged {
+		s.toolHeaderBindings[name] = mcp.ExtractParamHeaderBindings(&entry.Tool)
+	}
 	s.toolsMu.Unlock()
 
 	// When the list of available tools changes, servers that declared the listChanged capability SHOULD send a notification.
@@ -1118,7 +1150,13 @@ func (s *MCPServer) SetTools(tools ...ServerTool) {
 		}
 		newTools[name] = entry
 	}
+	for name := range s.tools {
+		delete(s.toolHeaderBindings, name)
+	}
 	s.tools = newTools
+	for name, entry := range newTools {
+		s.toolHeaderBindings[name] = mcp.ExtractParamHeaderBindings(&entry.Tool)
+	}
 	s.toolsMu.Unlock()
 	s.inputValidator.invalidateAll()
 	s.outputValidator.invalidateAll()
@@ -1164,6 +1202,7 @@ func (s *MCPServer) DeleteTools(names ...string) {
 	for _, name := range names {
 		if _, ok := s.tools[name]; ok {
 			delete(s.tools, name)
+			delete(s.toolHeaderBindings, name)
 			exists = true
 		}
 	}
@@ -1472,6 +1511,8 @@ func (s *MCPServer) handleSetLevel(
 	return &mcp.EmptyResult{}, nil
 }
 
+// listByPagination returns the page of allElements that follows cursor.
+// allElements must be sorted by name, then by pageTieBreak.
 func listByPagination[T mcp.Named](
 	_ context.Context,
 	s *MCPServer,
@@ -1480,17 +1521,31 @@ func listByPagination[T mcp.Named](
 ) ([]T, mcp.Cursor, error) {
 	startPos := 0
 	if cursor != "" {
-		c, err := base64.StdEncoding.DecodeString(string(cursor))
+		encodedName, encodedTieBreak, hasTieBreak := strings.Cut(string(cursor), ".")
+		c, err := base64.StdEncoding.DecodeString(encodedName)
 		if err != nil {
 			return nil, "", err
 		}
-		cString := string(c)
-		startPos = sort.Search(len(allElements), func(i int) bool {
-			return allElements[i].GetName() > cString
-		})
+		name := string(c)
+		if !hasTieBreak {
+			// Legacy cursors identify only a name. Preserve their continuation
+			// after the whole name group instead of restarting at its first URI.
+			startPos = sort.Search(len(allElements), func(i int) bool {
+				return allElements[i].GetName() > name
+			})
+		} else {
+			t, err := base64.StdEncoding.DecodeString(encodedTieBreak)
+			if err != nil {
+				return nil, "", err
+			}
+			tieBreak := string(t)
+			startPos = sort.Search(len(allElements), func(i int) bool {
+				return comparePageKey(&allElements[i], name, tieBreak) > 0
+			})
+		}
 	}
 	endPos := len(allElements)
-	if s.paginationLimit != nil {
+	if s.paginationLimit != nil && *s.paginationLimit > 0 {
 		if len(allElements) > startPos+*s.paginationLimit {
 			endPos = startPos + *s.paginationLimit
 		}
@@ -1504,14 +1559,51 @@ func listByPagination[T mcp.Named](
 	}
 	// set the next cursor
 	nextCursor := func() mcp.Cursor {
-		if s.paginationLimit != nil && len(elementsToReturn) >= *s.paginationLimit {
-			nc := elementsToReturn[len(elementsToReturn)-1].GetName()
-			toString := base64.StdEncoding.EncodeToString([]byte(nc))
-			return mcp.Cursor(toString)
+		if s.paginationLimit != nil && *s.paginationLimit > 0 && len(elementsToReturn) >= *s.paginationLimit {
+			return encodePageCursor(&elementsToReturn[len(elementsToReturn)-1])
 		}
 		return ""
 	}()
 	return elementsToReturn, nextCursor, nil
+}
+
+// pageTieBreak orders list elements that share a name. Tool, prompt and task
+// names are unique, but resource and resource template names need not be, so
+// those are ordered by URI or URI template within a name. Without it, the
+// cursor could not say where among equally named elements a page ended, and
+// the rest of them would be skipped.
+func pageTieBreak[T mcp.Named](element *T) string {
+	switch e := any(element).(type) {
+	case *mcp.Resource:
+		return e.URI
+	case *mcp.ResourceTemplate:
+		if e.URITemplate != nil {
+			return e.URITemplate.Raw()
+		}
+	}
+	return ""
+}
+
+// comparePageKey compares element with the position given by a name and a
+// tie-break. The tie-break is only looked at when the names are equal.
+func comparePageKey[T mcp.Named](element *T, name, tieBreak string) int {
+	if c := cmp.Compare((*element).GetName(), name); c != 0 {
+		return c
+	}
+	return cmp.Compare(pageTieBreak(element), tieBreak)
+}
+
+// encodePageCursor returns the cursor for the page after element: the base64
+// of its name, followed for resources and templates by a dot and the base64 of
+// their URI, even when empty. The dot distinguishes composite cursors from
+// legacy name-only cursors and is outside the base64 alphabet.
+func encodePageCursor[T mcp.Named](element *T) mcp.Cursor {
+	cursor := base64.StdEncoding.EncodeToString([]byte((*element).GetName()))
+	switch any(element).(type) {
+	case *mcp.Resource, *mcp.ResourceTemplate:
+		cursor += "." + base64.StdEncoding.EncodeToString([]byte(pageTieBreak(element)))
+	}
+	return mcp.Cursor(cursor)
 }
 
 func (s *MCPServer) handleListResources(
@@ -1539,9 +1631,12 @@ func (s *MCPServer) handleListResources(
 		}
 	}
 
-	// Sort the resources by name
+	// Sort the resources by name, then URI
 	resourcesList := slices.SortedFunc(maps.Values(resourceMap), func(a, b mcp.Resource) int {
-		return cmp.Compare(a.Name, b.Name)
+		if c := cmp.Compare(a.Name, b.Name); c != 0 {
+			return c
+		}
+		return cmp.Compare(a.URI, b.URI)
 	})
 
 	// Apply pagination
@@ -1602,7 +1697,10 @@ func (s *MCPServer) handleListResourceTemplates(
 	}
 
 	sort.Slice(templates, func(i, j int) bool {
-		return templates[i].Name < templates[j].Name
+		if c := strings.Compare(templates[i].Name, templates[j].Name); c != 0 {
+			return c < 0
+		}
+		return pageTieBreak(&templates[i]) < pageTieBreak(&templates[j])
 	})
 	templatesToReturn, nextCursor, err := listByPagination(
 		ctx,
@@ -2219,7 +2317,22 @@ func (s *MCPServer) handleToolCall(
 		}
 	}
 
-	return result, nil
+	return s.limitToolResult(result), nil
+}
+
+// limitToolResult returns result when it fits in the configured limit.
+// An oversized payload is replaced with an error result so those bytes are
+// not sent or stored. CreateTaskResult hides Content behind json:"-", so
+// callers that store one must measure a CallToolResult view of the same fields.
+func (s *MCPServer) limitToolResult(result *mcp.CallToolResult) *mcp.CallToolResult {
+	if result == nil || s.toolResultSizeLimit <= 0 {
+		return result
+	}
+	encoded, err := json.Marshal(result)
+	if err != nil || len(encoded) <= s.toolResultSizeLimit {
+		return result
+	}
+	return mcp.NewToolResultError(fmt.Sprintf("tool result exceeds %d bytes", s.toolResultSizeLimit))
 }
 
 // handleTaskAugmentedToolCall handles tool calls that are executed as tasks.
@@ -2360,47 +2473,7 @@ func (s *MCPServer) executeTaskTool(
 		// The cancelTask method will handle setting the proper status.
 		// However, if cancelTask hasn't been called yet, we should still mark it.
 		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
-			// Check if task was already cancelled via tasks/cancel
-			s.tasksMu.Lock()
-			alreadyCancelled := entry.task.Status == mcp.TaskStatusCancelled
-			s.tasksMu.Unlock()
-
-			if !alreadyCancelled {
-				// Handler detected cancellation before tasks/cancel was called
-				// Mark as cancelled with the context error message
-				cancelledAt := time.Now()
-				duration := cancelledAt.Sub(entry.createdAt)
-
-				s.tasksMu.Lock()
-				if !entry.completed {
-					entry.task.Status = mcp.TaskStatusCancelled
-					entry.task.StatusMessage = err.Error()
-					entry.task.LastUpdatedAt = cancelledAt.UTC().Format(time.RFC3339)
-					entry.completed = true
-					close(entry.done)
-
-					// Decrement active tasks counter
-					s.activeTasks--
-
-					s.sendTaskStatusNotification(entry.task)
-
-					// Fire task cancellation hook
-					if s.taskHooks != nil {
-						metrics := TaskMetrics{
-							TaskID:        entry.task.TaskId,
-							ToolName:      entry.toolName,
-							Status:        entry.task.Status,
-							StatusMessage: entry.task.StatusMessage,
-							CreatedAt:     entry.createdAt,
-							CompletedAt:   &cancelledAt,
-							Duration:      duration,
-							SessionID:     entry.sessionID,
-						}
-						s.taskHooks.taskCancelled(ctx, metrics)
-					}
-				}
-				s.tasksMu.Unlock()
-			}
+			_ = s.cancelTaskEntry(ctx, entry, err.Error())
 			return
 		}
 
@@ -2431,7 +2504,32 @@ func (s *MCPServer) executeTaskTool(
 			return
 		}
 	}
-	s.completeTask(entry, result, nil)
+	s.completeTask(entry, s.limitCreateTaskResult(result), nil)
+}
+
+// limitCreateTaskResult measures the payload tasks/result will copy out,
+// including the handler's _meta. The content fields are omitted from
+// CreateTaskResult's own JSON.
+func (s *MCPServer) limitCreateTaskResult(result *mcp.CreateTaskResult) *mcp.CreateTaskResult {
+	if result == nil {
+		return nil
+	}
+	view := &mcp.CallToolResult{
+		Result:            mcp.Result{Meta: result.Meta},
+		Content:           result.Content,
+		StructuredContent: result.StructuredContent,
+		IsError:           result.IsError,
+	}
+	limited := s.limitToolResult(view)
+	if limited == view {
+		return result
+	}
+	stored := *result
+	stored.Meta = nil
+	stored.Content = limited.Content
+	stored.StructuredContent = limited.StructuredContent
+	stored.IsError = limited.IsError
+	return &stored
 }
 
 // executeRegularToolAsTask executes a regular tool handler asynchronously as a task.
@@ -2472,47 +2570,7 @@ func (s *MCPServer) executeRegularToolAsTask(
 		// The cancelTask method will handle setting the proper status.
 		// However, if cancelTask hasn't been called yet, we should still mark it.
 		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
-			// Check if task was already cancelled via tasks/cancel
-			s.tasksMu.Lock()
-			alreadyCancelled := entry.task.Status == mcp.TaskStatusCancelled
-			s.tasksMu.Unlock()
-
-			if !alreadyCancelled {
-				// Handler detected cancellation before tasks/cancel was called
-				// Mark as cancelled with the context error message
-				cancelledAt := time.Now()
-				duration := cancelledAt.Sub(entry.createdAt)
-
-				s.tasksMu.Lock()
-				if !entry.completed {
-					entry.task.Status = mcp.TaskStatusCancelled
-					entry.task.StatusMessage = err.Error()
-					entry.task.LastUpdatedAt = cancelledAt.UTC().Format(time.RFC3339)
-					entry.completed = true
-					close(entry.done)
-
-					// Decrement active tasks counter
-					s.activeTasks--
-
-					s.sendTaskStatusNotification(entry.task)
-
-					// Fire task cancellation hook
-					if s.taskHooks != nil {
-						metrics := TaskMetrics{
-							TaskID:        entry.task.TaskId,
-							ToolName:      entry.toolName,
-							Status:        entry.task.Status,
-							StatusMessage: entry.task.StatusMessage,
-							CreatedAt:     entry.createdAt,
-							CompletedAt:   &cancelledAt,
-							Duration:      duration,
-							SessionID:     entry.sessionID,
-						}
-						s.taskHooks.taskCancelled(ctx, metrics)
-					}
-				}
-				s.tasksMu.Unlock()
-			}
+			_ = s.cancelTaskEntry(ctx, entry, err.Error())
 			return
 		}
 
@@ -2542,7 +2600,7 @@ func (s *MCPServer) executeRegularToolAsTask(
 			return
 		}
 	}
-	s.completeTask(entry, result, nil)
+	s.completeTask(entry, s.limitToolResult(result), nil)
 }
 
 func (s *MCPServer) handleNotification(
@@ -2723,6 +2781,9 @@ func (s *MCPServer) handleTaskResult(
 	case *mcp.CallToolResult:
 		result.Content = taskResult.Content
 		result.StructuredContent = taskResult.StructuredContent
+		if len(taskResult.RawStructuredContent) > 0 {
+			result.StructuredContent = append(json.RawMessage(nil), taskResult.RawStructuredContent...)
+		}
 		result.IsError = taskResult.IsError
 		mergeTaskResultMeta(result, taskResult.Meta)
 	case *mcp.CreateTaskResult:
@@ -2862,11 +2923,11 @@ func (s *MCPServer) createTask(ctx context.Context, taskID string, toolName stri
 
 	// Single critical section for check + increment + insert
 	s.tasksMu.Lock()
-	defer s.tasksMu.Unlock()
 
 	// Check concurrent task limit
 	if s.maxConcurrentTasks != nil && *s.maxConcurrentTasks > 0 {
 		if s.activeTasks >= *s.maxConcurrentTasks {
+			s.tasksMu.Unlock()
 			return nil, fmt.Errorf("max concurrent tasks limit reached (%d)", *s.maxConcurrentTasks)
 		}
 	}
@@ -2874,6 +2935,7 @@ func (s *MCPServer) createTask(ctx context.Context, taskID string, toolName stri
 	// Increment active task counter and insert task atomically
 	s.activeTasks++
 	s.tasks[taskID] = entry
+	s.tasksMu.Unlock()
 
 	// Fire task created hook
 	if s.taskHooks != nil {
@@ -2970,10 +3032,10 @@ func (s *MCPServer) listTasks(ctx context.Context) []mcp.Task {
 // completeTask marks a task as completed with the given result.
 func (s *MCPServer) completeTask(entry *taskEntry, result any, err error) {
 	s.tasksMu.Lock()
-	defer s.tasksMu.Unlock()
 
 	// Guard against double completion
 	if entry.completed {
+		s.tasksMu.Unlock()
 		return
 	}
 
@@ -2998,24 +3060,25 @@ func (s *MCPServer) completeTask(entry *taskEntry, result any, err error) {
 
 	// Decrement active tasks counter
 	s.activeTasks--
+	task := entry.task
+	metrics := TaskMetrics{
+		TaskID:        task.TaskId,
+		ToolName:      entry.toolName,
+		Status:        task.Status,
+		StatusMessage: task.StatusMessage,
+		CreatedAt:     entry.createdAt,
+		CompletedAt:   &completedAt,
+		Duration:      duration,
+		SessionID:     entry.sessionID,
+		Error:         err,
+	}
+	s.tasksMu.Unlock()
 
 	// Send task status notification
-	s.sendTaskStatusNotification(entry.task)
+	s.sendTaskStatusNotification(task)
 
 	// Fire task hooks
 	if s.taskHooks != nil {
-		metrics := TaskMetrics{
-			TaskID:        entry.task.TaskId,
-			ToolName:      entry.toolName,
-			Status:        entry.task.Status,
-			StatusMessage: entry.task.StatusMessage,
-			CreatedAt:     entry.createdAt,
-			CompletedAt:   &completedAt,
-			Duration:      duration,
-			SessionID:     entry.sessionID,
-			Error:         err,
-		}
-
 		if err != nil {
 			s.taskHooks.taskFailed(context.Background(), metrics)
 		} else {
@@ -3030,53 +3093,44 @@ func (s *MCPServer) cancelTask(ctx context.Context, taskID string) error {
 	if err != nil {
 		return err
 	}
+	return s.cancelTaskEntry(ctx, entry, "Task cancelled by request")
+}
 
+// cancelTaskEntry records a cancellation and invokes observers after unlocking.
+func (s *MCPServer) cancelTaskEntry(ctx context.Context, entry *taskEntry, message string) error {
 	s.tasksMu.Lock()
-	defer s.tasksMu.Unlock()
-
-	// Don't allow cancelling already completed tasks
 	if entry.completed {
-		return fmt.Errorf("cannot cancel task in terminal status: %s", entry.task.Status)
+		status := entry.task.Status
+		s.tasksMu.Unlock()
+		return fmt.Errorf("cannot cancel task in terminal status: %s", status)
 	}
-
-	// Cancel the context if available
-	if entry.cancelFunc != nil {
-		entry.cancelFunc()
-	}
-
+	cancel := entry.cancelFunc
 	cancelledAt := time.Now()
-	duration := cancelledAt.Sub(entry.createdAt)
-
 	entry.task.Status = mcp.TaskStatusCancelled
-	entry.task.StatusMessage = "Task cancelled by request"
-	// Update the lastUpdatedAt timestamp
+	entry.task.StatusMessage = message
 	entry.task.LastUpdatedAt = cancelledAt.UTC().Format(time.RFC3339)
-
-	// Mark as completed and signal
 	entry.completed = true
 	close(entry.done)
-
-	// Decrement active tasks counter
 	s.activeTasks--
-
-	// Send task status notification
-	s.sendTaskStatusNotification(entry.task)
-
-	// Fire task cancellation hook
+	task := entry.task
+	metrics := TaskMetrics{
+		TaskID:        task.TaskId,
+		ToolName:      entry.toolName,
+		Status:        task.Status,
+		StatusMessage: task.StatusMessage,
+		CreatedAt:     entry.createdAt,
+		CompletedAt:   &cancelledAt,
+		Duration:      cancelledAt.Sub(entry.createdAt),
+		SessionID:     entry.sessionID,
+	}
+	s.tasksMu.Unlock()
+	if cancel != nil {
+		cancel()
+	}
+	s.sendTaskStatusNotification(task)
 	if s.taskHooks != nil {
-		metrics := TaskMetrics{
-			TaskID:        entry.task.TaskId,
-			ToolName:      entry.toolName,
-			Status:        entry.task.Status,
-			StatusMessage: entry.task.StatusMessage,
-			CreatedAt:     entry.createdAt,
-			CompletedAt:   &cancelledAt,
-			Duration:      duration,
-			SessionID:     entry.sessionID,
-		}
 		s.taskHooks.taskCancelled(ctx, metrics)
 	}
-
 	return nil
 }
 
