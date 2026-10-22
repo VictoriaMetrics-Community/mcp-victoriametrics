@@ -235,7 +235,7 @@ models:
 
 Starting from [v1.16.3](https://docs.victoriametrics.com/anomaly-detection/changelog/#v1163), `vmanomaly` supports [mutual TLS (mTLS)](https://en.wikipedia.org/wiki/Mutual_authentication) to ensure secure communication across its components — such as [VmReader](https://docs.victoriametrics.com/anomaly-detection/components/reader/#vm-reader), [VmWriter](https://docs.victoriametrics.com/anomaly-detection/components/writer/#vm-writer), and [Monitoring/Push](https://docs.victoriametrics.com/anomaly-detection/components/monitoring/#push-config-parameters). 
 
-mTLS enables both client and server to authenticate each other using certificates, enhancing security by ensuring that only authorized entities can communicate with mTLS-enabled [VictoriaMetrics](https://docs.victoriametrics.com/#mtls-protection).
+mTLS enables both client and server to authenticate each other using certificates, enhancing security by ensuring that only authorized entities can communicate with mTLS-enabled [VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/#mtls-protection).
 
 To configure mTLS in `vmanomaly`, you can use the following parameters:
 - `verify_tls`: Specifies the CA bundle for TLS verification, or set it to `True` to use the system's default certificate store.

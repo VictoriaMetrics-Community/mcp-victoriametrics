@@ -43,7 +43,7 @@ It is built upon the same principles that drive VictoriaMetrics since its incept
 
 For details on this benchmark, please view: 
 
-[https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/logs-benchmark](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/logs-benchmark)
+[https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/logs-benchmark](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/logs-benchmark)
 
 
 ## **Open Source Benchmark**
@@ -52,7 +52,7 @@ Don’t take our word for it and run the VictoriaLogs preview alongside existing
 
 We’ve published an open source benchmark  that lets you do just that.
 
-Try it out here and let us know your results: [https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/logs-benchmark](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/logs-benchmark)
+Try it out here and let us know your results: [https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/logs-benchmark](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/logs-benchmark)
 
 ## **Efficient, easy-to-use monitoring for better observability**
 
@@ -80,5 +80,5 @@ Over time it will accept data from FluentBit, Promtail and Logstash and is suita
 * [LogsQL page](/products/logsql)
 * [VictoriaLogs & LogsQL on GitHub](https://github.com/VictoriaMetrics/VictoriaMetrics)
 * [VictoriaLogs & LogsQL documentation](https://docs.victoriametrics.com/victorialogs/)
-* [Open source benchmark](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/logs-benchmark)
+* [Open source benchmark](https://github.com/VictoriaMetrics/VictoriaLogs/tree/master/deployment/logs-benchmark)
 

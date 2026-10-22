@@ -62,24 +62,24 @@ This blog post provides a summary of our main achievements this year with our to
 - [UI for VictoriaMetrics](https://github.com/VictoriaMetrics/vmui)
   - vmui is - as the name suggests, a user interface for VictoriaMetrics, which makes it even easier to get started and to manage your monitoring solution.
 
-- [Clustering in vmagent](https://docs.victoriametrics.com/vmagent.html#scraping-big-number-of-targets)
+- [Clustering in vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/#scraping-big-number-of-targets)
   - A single vmagent instance can scrape tens of thousands of scrape targets, but this isn't always enough due to limitations of CPU, network, RAM, etc. With this new feature, scrape targets can be split among multiple vmagent instances (aka vmagent horizontal scaling, sharding and clustering).
 
-- [extra_labels](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html#prometheus-querying-api-enhancements)
+- [extra_labels](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#prometheus-querying-api-enhancements)
   - Help to enforce filters on user's queries. This feature is particularly  powerful as it  allows multi-tenancy on a single server (without the need for clustering).
 
-- [vmalert replay](https://docs.victoriametrics.com/vmalert.html#rules-backfilling)
+- [vmalert replay](https://docs.victoriametrics.com/victoriametrics/vmalert/#rules-backfilling)
   - Allows users to evaluate recording and alerting rules from the past and backfill results of these evaluations back to the database.
 
 ## Top 3 New VictoriaMetrics Enterprise Features
 
-- [Downsampling](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#downsampling)
+- [Downsampling](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#downsampling)
   - Also referred to as Rollups: this is a tool that rewrites old data with a configurable, lower sample rate - and helps achieve significant savings on storage costs.
 
-- [Graphite Query API](https://docs.victoriametrics.com/#graphite-api-usage)
+- [Graphite Query API](https://docs.victoriametrics.com/victoriametrics/integrations/graphite/#graphite-api-usage)
   - Provides the ability to query data using Graphite Query Language in addition to the currently supported MetricsQL and PromQL.
 
-- [Kafka Integration](https://docs.victoriametrics.com/vmagent.html?highlight=Kafka%20integration#kafka-integration)
+- [Kafka Integration](https://docs.victoriametrics.com/victoriametrics/integrations/kafka/)
   - Supports reading (consumer) & writing (producer) from Kafka & lets users build highly reliable data pipelines across multiple regions.
 
 Read Aliaksandr Valialkin’s [2021 VictoriaMetrics Features Roundup](/blog/features-roundup-2021/) for all the details!

@@ -138,7 +138,7 @@ If the system can't find it in IndexDB either, it generates a new `TSID` for the
 - The metric name and each label in the metrics (e.g., `code="200"`, `path="/"`) also have their own entries mapped to the metric ID.
 - And many more...
 
-For more details, check out the [IndexDB brief](https://docs.victoriametrics.com/#indexdb). We will explain it in another article about querying data, where it's more suitable to cover IndexDB.
+For more details, check out the [IndexDB brief](https://docs.victoriametrics.com/victoriametrics/#indexdb). We will explain it in another article about querying data, where it's more suitable to cover IndexDB.
 
 Now, that's a lot of work for a new time series, right?
 

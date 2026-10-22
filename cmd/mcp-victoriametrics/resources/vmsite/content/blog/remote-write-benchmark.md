@@ -6,6 +6,7 @@ authors:
 date: 2022-01-17
 title: "Benchmarking Prometheus-compatible time series databases"
 summary: "A Helm chart for pushing node_exporter metrics to Prometheus-compatible systems via remote_write protocol"
+description: "A helm chart for pushing node_exporter metrics to Prometheus-compatible systems via remote_write protocol"
 enableComments: true
 categories: 
  - Company News
@@ -21,7 +22,9 @@ tags:
 images:
  - /blog/remote-write-benchmark/benchmark-architecture.webp
 ---
-  
+
+> **Summary**: VictoriaMetrics created the Prometheus-benchmark tool to compare versions and other systems that use the remote_write protocol. It uses node_exporter to generate realistic metrics, an nginx proxy to manage heavy scraping loads, and vmagent to send data to multiple destinations. The tool has proven valuable for internal testing and can help the community evaluate performance across observability solutions, though real-world validation remains essential.
+
 ## Prometheus remote_write benchmark
 
 Some time ago, Aliaksandr Valialkin published a medium post about 
@@ -86,10 +89,10 @@ and overall performance via [the official Grafana dashboards for VictoriaMetrics
 
 ## Bonus: read load
 
-As a bonus, the helm chart also contains a [vmalert](https://docs.victoriametrics.com/vmalert.html)
+As a bonus, the helm chart also contains a [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/)
 configuration for running read queries.
 These are standard [alerting rules](https://github.com/VictoriaMetrics/prometheus-benchmark/blob/main/chart/files/alerts.yaml)
-for node_exporter. Running vmalert is optional and allows generating more production-like workload, where metrics storage
+for node_exporter. Running vmalert is optional and allows generating a more production-like workload, where metrics storage
 receives production-like read requests additionally to data ingestion. 
 The [alerting rules file](https://github.com/VictoriaMetrics/prometheus-benchmark/blob/main/chart/files/alerts.yaml) can be easily
 replaced with custom set of rules. The frequency of rules evaluation is controlled 
@@ -102,3 +105,27 @@ The benchmark proved to be useful for our internal tests. We believe that the co
 when comparing different solutions or versions of the same solution, which accept data via Prometheus remote_write protocol. For example, [Prometheus itself](https://prometheus.io/docs/prometheus/latest/storage/#overview), [Cortex](https://cortexmetrics.io/docs/api/#remote-write), [Thanos](https://thanos.io/tip/components/receive.md/), [M3DB](https://github.com/m3db/m3/blob/master/site/content/reference/m3coordinator/api/remote.md) and [TimescaleDB](https://docs.timescale.com/promscale/latest/send-data/prometheus/).
 However, we always recommend to not simply believe synthetic
 benchmarks, but validate the numbers and resource usage on production-like data.
+
+
+## Frequently Asked Questions
+
+### In what ways does VictoriaMetrics implementation of the remote write protocol differ from the standard protocol, and what advantages does that bring?
+
+We use vmagent to scrape metrics and forward them through the Prometheus remote_write protocol. This lets teams test VictoriaMetrics and other compatible backends consistently while comparing ingestion, resource usage, compression, and performance.
+
+### What are the limitations or trade-offs of using a custom remote write protocol in large-scale deployments?
+
+Custom protocols can improve efficiency, but they may reduce portability if other systems do not support them. For broad compatibility, we support Prometheus remote_write, which makes it easier to integrate with existing Prometheus-based monitoring stacks.
+
+### How representative is this Prometheus benchmark of real-world workloads (e.g. churn, cardinality, scrape intervals)?
+
+Our benchmark uses node_exporter metrics, scrape intervals, target counts, and optional churn to model production-like workloads. Still, we recommend validating results with your own data, cardinality, churn, query load, and retention needs.
+
+### Does optimizing write performance affect query performance or data retention costs?
+
+It can. Ingestion efficiency, compression, scrape interval, cardinality, and storage design all affect resource usage, query performance, and retention costs. We recommend testing both write and read workloads together before making production decisions.
+
+### Can these benchmark results be replicated, and if so, how?
+
+Yes. We built the open-source Prometheus-benchmark project so teams can run similar tests using node_exporter, nginx, vmagent, remote_write destinations, and optional vmalert read queries. Adjust targets, scrape intervals, churn, and storage backends.
+

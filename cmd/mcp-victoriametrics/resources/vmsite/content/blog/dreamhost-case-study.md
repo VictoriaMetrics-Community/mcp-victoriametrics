@@ -45,4 +45,4 @@ The ultimate goal of monitoring isn't just to collect data; it's to gain visibil
 
 DreamHost's success is a powerful example of what happens when a great product meets a challenging problem. If their story resonates with you, here's how you can learn more:
 
-- **Talk to Us:** Facing similar scaling challenges? Let's chat about how VictoriaMetrics can help you achieve the same results. [Contact Sales](https://victoriametrics.com/contact/)
+- **Talk to Us:** Facing similar scaling challenges? Let's chat about how VictoriaMetrics can help you achieve the same results. [Contact Sales](https://victoriametrics.com/contact-us/)

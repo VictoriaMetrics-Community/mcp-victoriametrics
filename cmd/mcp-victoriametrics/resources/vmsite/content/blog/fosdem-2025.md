@@ -79,7 +79,7 @@ enough to monitor and observe distributed applications.
 
 {{<image href="/blog/fosdem-2025/jose-slide-1.webp">}}
 
-Don't hesitate to take a look at the [slides](https://fosdem.org/2025/events/attachments/fosdem-2025-4146-discovering-the-magic-behind-opentelemetry-instrumentation/slides/237238/FOSDEM_20_mlr45ST.pdf) 
+Don't hesitate to take a look at the [slides](https://archive.fosdem.org/2025/events/attachments/fosdem-2025-4146-discovering-the-magic-behind-opentelemetry-instrumentation/slides/238369/FOSDEM_20_mlr45ST.pdf) 
 or [recording](https://video.fosdem.org/2025/ud2120/fosdem-2025-4146-discovering-the-magic-behind-opentelemetry-instrumentation.av1.webm)
 if you are struggling with instrumenting your application!
 

@@ -34,7 +34,7 @@ The Vicky community and our team have been busy with contributions as you can se
 
 ## **What's new in VictoriaMetrics at Q1 2023**
 
-### **[vmalert](https://docs.victoriametrics.com/vmalert.html) - in [VictoriaMetrics Enterprise](https://victoriametrics.com/products/enterprise/)**
+### **[vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/) - in [VictoriaMetrics Enterprise](https://victoriametrics.com/products/enterprise/)**
 
 * GCS and S3 support for config rules
 
@@ -50,7 +50,7 @@ The Vicky community and our team have been busy with contributions as you can se
 
 {{< image href="/blog/q1-roadmap-review-2023/image1.webp" >}}
 
-### **[VictoriaMetrics Remote Write Protocol](https://docs.victoriametrics.com/vmagent.html?highlight=%20remote%20write#victoriametrics-remote-write-protocol])**
+### **[VictoriaMetrics Remote Write Protocol](https://docs.victoriametrics.com/victoriametrics/vmagent/?highlight=%20remote%20write#victoriametrics-remote-write-protocol])**
 
 * The VictoriaMetrics remote write protocol allows reducing network traffic costs by 2x-4x!
 

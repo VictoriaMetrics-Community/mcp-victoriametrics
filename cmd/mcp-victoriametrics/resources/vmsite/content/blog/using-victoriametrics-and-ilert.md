@@ -33,7 +33,7 @@ Please read on to learn more about [ilert](https://www.ilert.com/?utm_campaign=V
 
 ## Improving Monitoring & Alerting Capabilities
 
-Continuity and efficiency are pivotal. The alignment of sophisticated monitoring solutions with responsive alerting systems is crucial for maintaining system integrity and performance. With this vision at its core, ilert is excited to unveil the latest addition to its robust catalog of integrations: [VictoriaMetrics](https://victoriametrics.com/products/open-source/). This integration marks a significant advancement for DevOps teams and IT professionals who are striving to improve their monitoring and alerting capabilities.
+Continuity and efficiency are pivotal. The alignment of sophisticated monitoring solutions with responsive alerting systems is crucial for maintaining system integrity and performance. With this vision at its core, ilert is excited to unveil the latest addition to its robust catalog of integrations: [VictoriaMetrics](https://victoriametrics.com/products/victoriametrics/). This integration marks a significant advancement for DevOps teams and IT professionals who are striving to improve their monitoring and alerting capabilities.
 
 ## The ilert Incident Management Platform
 
@@ -56,7 +56,7 @@ With ilert integration for VictoriaMetrics, you can:
 
 ## How ilert Augments VictoriaMetrics Functionality
 
-The integration of [VictoriaMetrics](https://victoriametrics.com/products/open-source/) and ilert creates a potent combination, ensuring not just comprehensive monitoring but also unparalleled alert responsiveness.
+The integration of [VictoriaMetrics](https://victoriametrics.com/products/victoriametrics/) and ilert creates a potent combination, ensuring not just comprehensive monitoring but also unparalleled alert responsiveness.
 
 ### Real-Time Alerts with Precision
 
@@ -77,6 +77,6 @@ A standout advantage of this integration is the simplification of communication 
 
 ## Elevating Your Monitoring Game with ilert and VictoriaMetrics
 
-This collaboration encourages businesses to utilize the strengths of both platforms: the comprehensive monitoring capabilities of [VictoriaMetrics](https://victoriametrics.com/products/open-source/) along with the intelligent alerting and incident management system of ilert. By adopting this integration, organizations can not only prevent potential system failures but also proactively refine their operations for enhanced performance, reliability, and user satisfaction.
+This collaboration encourages businesses to utilize the strengths of both platforms: the comprehensive monitoring capabilities of [VictoriaMetrics](https://victoriametrics.com/products/victoriametrics/) along with the intelligent alerting and incident management system of ilert. By adopting this integration, organizations can not only prevent potential system failures but also proactively refine their operations for enhanced performance, reliability, and user satisfaction.
 
 Learn more about how to connect ilert and VictoriaMetrics in the [documentation](https://docs.ilert.com/integrations/victoria-metrics?utm_campaign=VictoriaMetrics&utm_source=integration&utm_medium=organic).

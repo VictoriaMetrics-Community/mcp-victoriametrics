@@ -6,6 +6,7 @@ authors:
 date: 2022-02-14
 enableComments: true
 title: "Managed VictoriaMetrics announcement"
+description: "We are glad to announce the availability of Managed VictoriaMetrics (VictoriaMetrics Cloud) - try it right now!"
 summary: "We are glad to announce the availability of Managed VictoriaMetrics (VictoriaMetrics Cloud) - try it right now!"
 aliases:
  - /blog/dbaas-announcement/
@@ -24,12 +25,15 @@ tags:
 images:
  - /blog/dbaas-announcement/vm-stats.webp
 ---
+
+> **Summary**: VictoriaMetrics now offers an "as-a-service" version: Managed VictoriaMetrics. Now users can run a powerful time series database on AWS without handling DevOps tasks manually. It's fully managed, scales up or down, isolates instances, automates backups, and charges only for the compute used. Designed to fit into modern data monitoring solutions environments, it integrates easily with Prometheus, Grafana, and other tools to help teams focus on metrics and not infrastructure.
+
   
 ## Managed VictoriaMetrics announcement
 
 VictoriaMetrics is a fast and easy-to-use monitoring solution and time series database. 
 It integrates well with existing monitoring systems such as Grafana, Prometheus, Graphite, 
-InfluxDB, OpenTSDB and DataDog - see [these docs](https://docs.victoriametrics.com/#how-to-import-time-series-data)
+InfluxDB, OpenTSDB and DataDog - see [these docs](https://docs.victoriametrics.com/victoriametrics/#how-to-import-time-series-data)
 for details. The most common use cases for VictoriaMetrics are:
 * Long-term remote storage for Prometheus;
 * More efficient drop-in replacement for Prometheus and Graphite
@@ -49,7 +53,7 @@ configuration and software maintenance.
 
 Managed VictoriaMetrics comes with the following features:
 * It can be used as a Managed Prometheus - just configure [Prometheus](https://github.com/prometheus/prometheus)
-or [vmagent](https://docs.victoriametrics.com/vmagent.html) to write data 
+or [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) to write data 
 to Managed VictoriaMetrics and then use the provided endpoint as 
 a Prometheus datasource in [Grafana](https://github.com/grafana/grafana);
 * Every Managed VictoriaMetrics instance runs in an isolated environment, so instances cannot 
@@ -72,7 +76,7 @@ instance - you'd be surprised with its ability to handle huge workloads!
 ## Performance expectations
 
 Let's see which workload can be handled by a Managed VictoriaMetrics instance with 2vCPU and 4GB of RAM. 
-For the purpose of this test, let’s run a benchmark with [vmagent](https://docs.victoriametrics.com/vmagent.html)
+For the purpose of this test, let’s run a benchmark with [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/)
 scraping 1000 [node-exporter](https://github.com/prometheus/node_exporter) hosts with 5s interval 
 (the benchmark is available in [this repository](https://github.com/VictoriaMetrics/rw-benchmark), 
 so you can verify the numbers below on your Managed VictoriaMetrics instance):
@@ -112,3 +116,22 @@ As a welcome pack, we provide **$200 credit** for newly registered accounts.
 This is enough for running a VictoriaMetrics instance with 2vCPU and 4GB of RAM for free for a month. 
 If you feel Managed VictoriaMetrics misses some features or just want to learn more about internal 
 architecture - please contact us via info@victoriametrics.com.
+
+
+## Frequently Asked Questions
+
+### How is pricing structured for Managed VictoriaMetrics? 
+
+We price Managed VictoriaMetrics by actual compute resources: instance type, disk size, and network egress. This makes costs easier to plan because pricing is not directly tied to sudden spikes in ingestion, active time series, or heavy queries.
+
+### Can I migrate my existing VictoriaMetrics or Prometheus setup into the managed service?
+
+Yes. You can use Managed VictoriaMetrics as managed Prometheus by configuring Prometheus or vmagent to write data to it, then using the provided endpoint as a Prometheus datasource in Grafana.
+
+### What security and reliability features are included?
+
+We run each Managed VictoriaMetrics instance in an isolated environment and handle access protection, monitoring, logs collection, software updates, optimal configuration, and automated backups.
+
+### What are performance expectations (ingestion rate, query latency) under common workloads?
+
+In our benchmark, a 2 vCPU, 4 GB RAM instance handled 211K samples per second, around 1M active series, and 14ms median query duration while using about 50% of available resources.

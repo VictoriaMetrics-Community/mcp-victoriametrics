@@ -146,7 +146,7 @@ Some local file system cons:
 
 * It has a higher price per GB
 * It has limited size and requires resizing when needed
-* It requires additional availability guarantees - cloud providers usually do provide these guarantees (https://cloud.google.com/compute/docs/disks/high-availability-regional-persistent-disk). But when running it on premises - one should take care of it.
+* It requires additional availability guarantees - cloud providers usually do provide these guarantees ([Google's regional persistent disks](https://cloud.google.com/compute/docs/disks/high-availability-regional-persistent-disk)). But when running it on premises - one should take care of it.
 
 
 ## **So what is probably the most scalable open source time series database?**
@@ -165,7 +165,7 @@ This was one of the key reasons why VictoriaMetrics was developed in the first p
 * Each service may run on hardware optimized for the service needs
 * Heavy inserts don’t interfere with heavy selects
 * Better vmstorage durability because it offloads complex querying logic to vmselect
-* [Built-in replication](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#replication-and-data-safety)
+* [Built-in replication](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#replication-and-data-safety)
 * Per-tenant rate-limiting
 
 VictoriaMetrics’ cluster version is a great option for ingestion rates over a million data points per second and this is what its architecture looks like:
@@ -195,9 +195,9 @@ The less magic happens under the hood and the lower number of components is used
 
 It’s not only about efficient usage of hardware resources, but also about the amount of effort engineers need to make in order to understand and maintain the software. Which, sometimes, costs a lot more than hardware.
 
-VictoriaMetrics documentation contains [clear tips](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#cluster-resizing-and-scalability) for the scaling of cluster components. [The Capacity planning](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#capacity-planning) section also contains general recommendations and performance expectations based on the amount of provided resources and workload volume.
+VictoriaMetrics documentation contains [clear tips](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#cluster-resizing-and-scalability) for the scaling of cluster components. [The Capacity planning](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#capacity-planning) section also contains general recommendations and performance expectations based on the amount of provided resources and workload volume.
 
-We always pay extra attention to performance reports from our users and do everything we can to make VictoriaMetrics even better. All the performance improvements we publish are based on real world scenarios, which we learn from and optimize all together with our users.
+We always pay extra attention to performance reports from our users and do everything we can to make VictoriaMetrics even better. All the performance improvements we publish are based on real-world scenarios, which we learn from and optimize together with our users.
 
 Finally, we’re always very keen to collaborate, learn from our customers and users, their setups and specific cases.
 

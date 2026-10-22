@@ -16,7 +16,7 @@ tags:
   - Events
   - Video
 images:
-  - /blog/tech-talk-streems/vm-anomaly-deep-dive/preview.webp
+  - /blog/tech-talk-streems/vm-anomaly-deep-dive/can-ai-ml-v2.webp
 ---
 
 ## Our vmanomaly Deep Dive: My Favorite Takeaways from the Tech Talk
@@ -78,4 +78,3 @@ This was one of my favorite talks to host so far. It’s clear that vmanomaly is
 To get started, I highly recommend checking out the official docs, especially the pages on the [**self-monitoring dashboard**](https://docs.victoriametrics.com/anomaly-detection/self-monitoring/) and the [**Grafana dashboard presets**](https://docs.victoriametrics.com/anomaly-detection/presets/#grafana-dashboard).
 
 Thanks so much to Fred, Matthias, and everyone who joined us live. We'll see you at the end of August for the next one!
-

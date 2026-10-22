@@ -34,13 +34,13 @@ In this blog post, we’d like to share a summary of these highlights.
 
 Support for Graphite querying APIs needed for [Graphite datasource in Grafana](https://grafana.com/docs/grafana/latest/datasources/graphite/):
 
-* [Render API](https://docs.victoriametrics.com/?highlight=graphite#graphite-render-api-usage)
-* [Metrics API](https://docs.victoriametrics.com/?highlight=graphite#graphite-metrics-api-usage)
-* [Tags API](https://docs.victoriametrics.com/?highlight=graphite#graphite-tags-api-usage)
+* [Render API](https://docs.victoriametrics.com/victoriametrics/integrations/graphite/#render-api)
+* [Metrics API](https://docs.victoriametrics.com/victoriametrics/integrations/graphite/#metrics-api)
+* [Tags API](https://docs.victoriametrics.com/victoriametrics/integrations/graphite/#tags-api)
 
-Starting from VictoriaMetrics [v1.90](https://docs.victoriametrics.com/CHANGELOG.html#v1900)
+Starting from VictoriaMetrics [v1.90](https://docs.victoriametrics.com/victoriametrics/changelog/#v1900)
 
-Read more at [Graphite API usage docs](https://docs.victoriametrics.com/#graphite-api-usage) and/or our [announcement blog](/blog/graphite-query-language-opensource/).
+Read more at [Graphite API usage docs](https://docs.victoriametrics.com/victoriametrics/integrations/graphite/#graphite-api-usage) and/or our [announcement blog](/blog/graphite-query-language-opensource/).
 
 {{< image href="/blog/q2-round-up-roadmap-review-q3-2023-look-ahead/image1.webp" src="/blog/graphite-query-language-opensource/" >}}
 
@@ -49,10 +49,10 @@ Read more at [Graphite API usage docs](https://docs.victoriametrics.com/#graphit
 Release Windows binaries for:
 
 * [single-node VictoriaMetrics](https://docs.victoriametrics.com/)
-* [cluster VictoriaMetrics](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html)
-* [vmbackup](https://docs.victoriametrics.com/vmbackup.html) and [vmrestore](https://docs.victoriametrics.com/vmrestore.html)
+* [cluster VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/)
+* [vmbackup](https://docs.victoriametrics.com/victoriametrics/vmbackup/) and [vmrestore](https://docs.victoriametrics.com/victoriametrics/vmrestore/)
 
-Starting from VictoriaMetrics [v1.90](https://docs.victoriametrics.com/CHANGELOG.html#v1900)
+Starting from VictoriaMetrics [v1.90](https://docs.victoriametrics.com/victoriametrics/changelog/#v1900)
 
 {{< image href="/blog/q2-round-up-roadmap-review-q3-2023-look-ahead/image2.webp" src="https://docs.victoriametrics.com/quick-start/" >}}
 
@@ -77,15 +77,15 @@ See it all in action here: [https://play.victoriametrics.com/](https://play.vict
 * Default route for unmatched requests
 * Automatically retry POST requests on the remaining backends if the currently selected backend isn't reachable
 
-See here for details: [https://docs.victoriametrics.com/vmauth.html](https://docs.victoriametrics.com/vmauth.html)
+See here for details: [https://docs.victoriametrics.com/victoriametrics/vmauth/](https://docs.victoriametrics.com/victoriametrics/vmauth/)
 
 ### 5. vmagent Kafka Integration Improvements
 
 * Support for Kafka producer and consumer on arm64 machines
 * Allow tuning of consumer concurrency via -kafka.consumer.topic.concurrency
-* Support [VictoriaMetrics remote write protocol](https://docs.victoriametrics.com/vmagent.html#victoriametrics-remote-write-protocol) while consuming or pushing data to Kafka
+* Support [VictoriaMetrics remote write protocol](https://docs.victoriametrics.com/victoriametrics/vmagent/#victoriametrics-remote-write-protocol) while consuming or pushing data to Kafka
 
-See here for details: [https://docs.victoriametrics.com/vmagent.html#kafka-integration](https://docs.victoriametrics.com/vmagent.html#kafka-integration)
+See here for details: [https://docs.victoriametrics.com/victoriametrics/integrations/kafka/](https://docs.victoriametrics.com/victoriametrics/integrations/kafka/)
  
 
 ### 6. New Features in vmalert
@@ -93,9 +93,9 @@ See here for details: [https://docs.victoriametrics.com/vmagent.html#kafka-integ
 * vmalert detects alerting rules with no matching series
 * Alerts for alerting and recording rules
 
-{{< image href="/blog/q2-round-up-roadmap-review-q3-2023-look-ahead/image4.webp" src="https://docs.victoriametrics.com/vmalert.html" >}}
+{{< image href="/blog/q2-round-up-roadmap-review-q3-2023-look-ahead/image4.webp" src="https://docs.victoriametrics.com/victoriametrics/vmalert/" >}}
 
-See here for details: [https://docs.victoriametrics.com/vmalert.html](https://docs.victoriametrics.com/vmalert.html)
+See here for details: [https://docs.victoriametrics.com/victoriametrics/vmalert/](https://docs.victoriametrics.com/victoriametrics/vmalert/)
 
 
 ## **2023 Roadmap Review**

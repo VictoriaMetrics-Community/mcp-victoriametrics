@@ -167,7 +167,10 @@ To handle these situations, vminsert has two kinds of rerouting: one for overloa
 
 #### Overloaded Rerouting
 
-Overloaded rerouting is turned off by default (`-disableRerouting=true`). The reason? While spreading the load might seem like a good idea, it can actually backfire and cause a chain reaction.
+[Overloaded rerouting](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#slowness-based-re-routing) is turned off by default (`-disableRerouting=true`). The reason? While spreading the load might seem like a good idea, it can actually backfire and cause a chain reaction.
+
+> [!NOTE] Update: v1.149.0+
+> Starting with [v1.149.0](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/docs/victoriametrics/changelog/CHANGELOG.md#v11490), overload rerouting is enabled by default. vminsert received several improvements that prevent rerouting storms. The main reason it was disabled in the first place.
 
 Instead, by default, vminsert blocks incoming requests until there's enough space in the buffer. Alternatively, you can configure it to drop samples instead (`-dropSamplesOnOverload`).
 

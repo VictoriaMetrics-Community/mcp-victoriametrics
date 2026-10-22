@@ -49,8 +49,8 @@ talk about into perspective.
 
 {{< image href="/blog/tsdb-performance-techniques-strings-interning/what-is-a-metric.webp" class="wide-img" alt="An example metric that you might store in a TSDB" >}}
 
-In VictoriaMetrics, the [data model](https://docs.victoriametrics.com/keyConcepts.html#data-model) is centered around 
-the [concept of a metric](https://docs.victoriametrics.com/keyConcepts.html#what-is-a-metric).
+In VictoriaMetrics, the [data model](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#data-model) is centered around 
+the [concept of a metric](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#what-is-a-metric).
 A metric is an observation of **some value** at **some point in time**. 
 The image above shows an example metric that collects information on a Go installation. 
 Metrics consist of the following parts:
@@ -60,12 +60,12 @@ Metrics consist of the following parts:
 * `Value` - The observation itself.
 * `Timestamp` - The time the observation was recorded.
 
-A combination of a metric name and its metadata defines a [time series](https://docs.victoriametrics.com/keyConcepts.html#time-series).
+A combination of a metric name and its metadata defines a [time series](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#time-series).
 In the real world, one could expect millions of unique time series to be processed and stored in a TSDB for a moderate load.
 
-VictoriaMetrics provides a component [vmagent](https://docs.victoriametrics.com/vmagent.html), a metric collector. 
+VictoriaMetrics provides a component [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/), a metric collector. 
 Metric collectors periodically collect time series from your services or other targets and forward them on to a TSDB. 
-The collector visits a `/metrics` endpoint for each target to gather the metrics that target exposes. 
+The collector visits a `/metrics` endpoint for each target to gather the metrics that the it exposes. 
 For example, visiting `http://service:port/metrics` may yield the following time series:
 
 ```html
@@ -80,7 +80,7 @@ go_memstats_alloc_bytes 1.0304216e+08
 go_memstats_alloc_bytes_total 1.423416806112e+12
 ```
 
-The above metrics are in “Prometheus exposition format”, a great, human-readable [format popularized by Prometheus](https://github.com/prometheus/docs/blob/main/content/docs/instrumenting/exposition_formats.md). 
+The above metrics are in “Prometheus exposition format”, a great, human-readable [format popularized by Prometheus](https://prometheus.io/docs/instrumenting/exposition_formats/). 
 
 ## Workloads
 

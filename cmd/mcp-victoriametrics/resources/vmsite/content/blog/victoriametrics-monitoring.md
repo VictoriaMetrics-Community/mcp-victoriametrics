@@ -34,13 +34,13 @@ metrics and logs is critical for us.
 
 ## Metrics
 
-Each component of the VictoriaMetrics ecosystem exposes metrics in Prometheus-compatible format at `/metrics` page on the 
-TCP port set in `-httpListenAddr` command-line flag. For example, [vmagent](https://docs.victoriametrics.com/vmagent.html)
-by default exposes its metrics at `http://vmagent-host:8429/metrics` page. These metrics can be collected by vmagent
-itself, by [single-server VictoriaMetrics](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html),
+Each component of the VictoriaMetrics ecosystem exposes metrics in Prometheus-compatible format on the `/metrics` page on the 
+TCP port set in `-httpListenAddr` command-line flag. For example, [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/)
+by default exposes its metrics on the `http://vmagent-host:8429/metrics` page. These metrics can be collected by vmagent
+itself, by [single-server VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/),
 by [Prometheus](https://prometheus.io/) or by any other compatible solution.
 
-I strongly recommend configuring [metrics collection](https://docs.victoriametrics.com/#how-to-scrape-prometheus-exporters-such-as-node-exporter)
+I strongly recommend configuring [metrics collection](https://docs.victoriametrics.com/victoriametrics/#how-to-scrape-prometheus-exporters-such-as-node-exporter)
 from each VictoriaMetrics component you use. Having this data in place might be very insightful to better 
 understand the software you run or be handy in finding the root cause if something doesn't go as expected.
 
@@ -104,7 +104,7 @@ If there is something you need to be aware of, let the alerting system to notify
 ## Alerts
 
 Alerting rules for VictoriaMetrics components are available [here](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/docker#alerts).
-To start using them, you need to install and configure [vmalert](https://docs.victoriametrics.com/vmalert.html#quickstart),
+To start using them, you need to install and configure [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/#quickstart),
 [Prometheus](https://prometheus.io/docs/alerting/latest/overview/) or any other tool compatible with
 [Alert Generator specification](https://github.com/prometheus/compliance/blob/main/alert_generator/specification.md#alert-generator-compliance-specification-10).
 
@@ -151,7 +151,7 @@ what was the error message, what did vminsert do in response to this situation.
 
 ## Troubleshooting tips
 
-Always [monitor](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#monitoring) your monitoring system.
+Always [monitor](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#monitoring) your monitoring system.
 The rule of thumb is to have a separate installation of VictoriaMetrics or any other monitoring solution 
 to scrape metrics from the VictoriaMetrics components. This would make monitoring independent and will help identify
 problems with the main monitoring installation.
@@ -173,10 +173,10 @@ having issues;
 4. Go to the instance/pod and read error messages to get more context on what is happening;
 5. Act according to recommendations from the alert message, dashboard panel and log message.
 
-As a runbook, use [Troubleshooting](https://docs.victoriametrics.com/Troubleshooting.html) section from official docs.
+As a runbook, use the [Troubleshooting](https://docs.victoriametrics.com/troubleshooting/) section from official docs.
 
 I hope the recommendations in this post will give enough information and tools for maintaining a healthy and performant
-VictoriaMetrics installation. But when in doubt, [ask for assistance](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html#community-and-contributions)
+VictoriaMetrics installation. But when in doubt, [ask for assistance](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#community-and-contributions)
 and we'll be happy to help. For enterprise users, we provide a [Monitoring of Monitoring](https://victoriametrics.com/products/mom/)
-service, where VictoriaMetrics team looks after installations, notifies about potential issues, and helps to build
+service, where the VictoriaMetrics team looks after installations, notifies about potential issues, and helps to build
 performant and reliable setups.

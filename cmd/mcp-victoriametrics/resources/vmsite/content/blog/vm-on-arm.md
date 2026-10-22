@@ -7,6 +7,7 @@ date: 2022-03-11
 title: "Running VictoriaMetrics on ARM-based processors"
 enableComments: true
 summary: "VictoriaMetrics has new production ready builds for ARM"
+description: "VictoriaMetrics has new production ready builds for ARM"
 categories: 
  - Company News
  - Product News
@@ -20,6 +21,9 @@ tags:
 images:
  - /blog/vm-on-arm/cpu_optimized.webp
 ---
+
+> **Summary**: VictoriaMetrics is optimized to run more effectively on ARM hardware by introducing a CGO build and fine-tuning its compression library usage, narrowing the performance gap with x86 systems. While x86 still maintains an advantage in query latency, the enhancements make ARM processor performance with VictoriaMetrics much more cost-efficient and competitive.
+
 
 ## The future is now and it's ARM
 
@@ -59,14 +63,14 @@ to run cross-compiled ARM64 build without [CGO](https://pkg.go.dev/cmd/cgo).
 3. `m6g.4xlarge` - graviton2 based instance with **16 CPU** and **64 RAM** $0.616 hour
 to run [CGO](https://pkg.go.dev/cmd/cgo) build for ARM64.
 
-And installed [vmsingle](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html) 
-[v1.72.0](https://docs.victoriametrics.com/CHANGELOG.html#v1720) on each of the instances.
+And installed [vmsingle](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) 
+[v1.72.0](https://docs.victoriametrics.com/victoriametrics/changelog/#v1720) on each of the instances.
 
 
 ### Workload
 
 For workload generation, I've used our [benchmark suite](https://github.com/VictoriaMetrics/prometheus-benchmark)
-and set up a separate [vmsingle](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html) node for metrics collection.
+and set up a separate [vmsingle](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) node for metrics collection.
  
 
 ### Results
@@ -107,5 +111,28 @@ In my case, I had to rebuild [gozstd](https://github.com/valyala/gozstd) lib.
 ARM instances are ~ 20% cheaper than x86 with the same performance.
  - Read queries latency at x86 system is better - x86 instance has ~10% lower query duration.
  - VictoriaMetrics has production-ready builds for ARM, prebuilt binaries, docker images 
-since [v1.73.0 release](https://docs.victoriametrics.com/CHANGELOG.html#v1730).
+since [v1.73.0 release](https://docs.victoriametrics.com/victoriametrics/changelog/#v1730).
+
+
+## Frequently Asked Questions
+
+### Are there specific workloads or query types where x86 still has a significant advantage?
+
+Yes. In our benchmark, x86 still had about 10% lower query duration than optimized ARM. For read-heavy workloads where query latency is the top priority, x86 may still have an edge, though ARM delivered strong cost-performance overall.
+
+### How should I choose between ARM (e.g. AWS Graviton) and x86 for new deployments of VictoriaMetrics?
+
+We recommend testing both with your own workload. ARM can offer better cost-performance, especially on AWS Graviton, while x86 may be preferable for query-latency-sensitive workloads. Compare ingestion, queries, disk IO, and total instance cost.
+
+### What library differences (e.g. zstd vs Go compress) matter most in ARM builds?
+
+The main difference is compression. x86 builds used gozstd, while cross-compiled ARM64 builds used the native Go compress library. Much of the performance gap came from these encoding and compression differences.
+
+### What tuning, flags, or build options are recommended to get good ARM performance?
+
+For best ARM performance, we added CGO builds with zstd-related optimizations. When building manually, use ARM64 CGO with the correct aarch64 musl compiler and rebuild C dependencies with the same compiler.
+
+### Will future VictoriaMetrics releases improve ARM parity further or change recommended build strategies?
+
+We continue to improve performance where possible. Since [v1.73.0](https://docs.victoriametrics.com/victoriametrics/changelog/#v1730), we have provided production-ready ARM builds, prebuilt binaries, and Docker images, making ARM deployments easier and more practical.
 

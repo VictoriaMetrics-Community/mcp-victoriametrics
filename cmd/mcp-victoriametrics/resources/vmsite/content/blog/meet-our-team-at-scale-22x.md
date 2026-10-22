@@ -56,7 +56,7 @@ Our flagship product is designed to be super user-friendly, allowing you to easi
 VictoriaMetrics is ideal for solving use cases with large amounts of time series data and is the perfect solution for collecting metrics (both push and pull models), running queries, and generating alerts. 
 With VictoriaMetrics, you can store millions of data points per second on a single instance or scale to a high-load monitoring system across multiple data centers.
 
-[Get started & get more information here.](https://victoriametrics.com/products/open-source/)
+[Get started & get more information here.](https://victoriametrics.com/products/victoriametrics/)
 
 We’re looking forward to talking with you onsite!
 

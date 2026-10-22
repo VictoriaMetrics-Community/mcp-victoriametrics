@@ -58,9 +58,9 @@ VictoriaMetrics is ideal for solving use cases with large amounts of time series
 
 With VictoriaMetrics, you can easily handle millions of data points per second on a single instance or scale up to a robust monitoring system across multiple data centers—whatever fits your needs!
 
-It is [designed to store 10x more data](https://docs.victoriametrics.com/#prominent-features) using the same computing and storage resources as existing solutions, making it a highly efficient choice.
+It is [designed to store 10x more data](https://docs.victoriametrics.com/victoriametrics/#prominent-features) using the same computing and storage resources as existing solutions, making it a highly efficient choice.
 
-[Get started today!](https://victoriametrics.com/products/open-source/)
+[Get started today!](https://victoriametrics.com/products/victoriametrics/)
 
 ## VictoriaMetrics Enterprise: Features & Support for Demanding Observability Setups
 
@@ -102,8 +102,8 @@ VictoriaMetrics Cloud is designed for organizations that need a powerful, easy-t
 
 ## VictoriaMetrics Anomaly Detection: ML-Optimized Observability
 
-VictoriaMetrics [Anomaly Detection](https://docs.victoriametrics.com/anomaly-detection/index.html), part of our Enterprise offering, automates anomaly detection in metrics data, reducing manual effort for SREs and DevOps teams. Unlike static thresholds, it provides a stable, interpretable ML-powered anomaly score that adapts over time through continuous model retraining. This allows teams to detect and respond to issues faster while minimizing maintenance overhead.
+VictoriaMetrics [Anomaly Detection](https://docs.victoriametrics.com/anomaly-detection/), part of our Enterprise offering, automates anomaly detection in metrics data, reducing manual effort for SREs and DevOps teams. Unlike static thresholds, it provides a stable, interpretable ML-powered anomaly score that adapts over time through continuous model retraining. This allows teams to detect and respond to issues faster while minimizing maintenance overhead.
 
-[Try it now](https://victoriametrics.com/products/enterprise/anomaly-detection/)  -
+[Try it now](https://victoriametrics.com/products/enterprise/anomaly-detection/)
 
 See you in London at KubeCon Europe 2025 🇬🇧💷💂‍♀️.

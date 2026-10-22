@@ -20,7 +20,7 @@ images:
 
 [Recording rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/#recording-rules)
 is a clever concept introduced by [Prometheus](https://prometheus.io) for storing results of query expressions in a form
-of a new [time series](https://docs.victoriametrics.com/keyConcepts.html#time-series).
+of a new [time series](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#time-series).
 It is similar to [materialized view](https://www.postgresqltutorial.com/postgresql-views/postgresql-materialized-views/)
 and helps to speed up queries by using data pre-computed in advance instead of doing all the hard work on query time.
 
@@ -33,8 +33,8 @@ recording rule was configured. Data before that time will be missing. And result
 in the past, only [deleted or replaced](https://docs.victoriametrics.com/guides/guide-delete-or-replace-metrics.html).
 
 Starting from [v1.61.0](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.61.0),
-VictoriaMetrics gained a feature named [replay](https://docs.victoriametrics.com/vmalert.html#rules-backfilling)
-as a part [vmalert](https://docs.victoriametrics.com/vmalert.html) component. 
+VictoriaMetrics gained a feature named [replay](https://docs.victoriametrics.com/victoriametrics/vmalert/#rules-backfilling)
+as a part [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/) component. 
 It allows running vmalert in a special mode to retroactively evaluate recording or alerting rules and backfill
 their results back to the database. Let's see how this feature can be used in practice.
 
@@ -88,7 +88,7 @@ The full list of generated rules is available [here](https://gist.github.com/hag
 
 Now we can feed this configuration to the vmalert, and it will start evaluating the rules.
 But to retroactively evaluate these rules for all the data I already have, I'm going to run 
-vmalert in [replay](https://docs.victoriametrics.com/vmalert.html#rules-backfilling) mode
+vmalert in [replay](https://docs.victoriametrics.com/victoriametrics/vmalert/#rules-backfilling) mode
 using the same generated configuration file:
 ```bash
 ./vmalert -rule=slo_rules.yml \               # path to the configuration file
@@ -98,8 +98,8 @@ using the same generated configuration file:
     -replay.timeTo=2023-01-21T00:00:00Z       # when to end the evaluation
 ```
 
-As a source of data and destination for persisting results, I'm using local installation
-of [single-node VictoriaMetrics](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html). 
+As a source of data and destination for persisting results, I'm using a local installation
+of [single-node VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/). 
 The process of the `replay` mode looks like the following:
 
 {{< image href="/blog/rules-replay/replay-progress.gif"  alt="The vmalert's replay mode in-progress." >}}
@@ -108,15 +108,15 @@ In replay mode, rule groups and rules within groups are executed sequentially on
 This is especially important for `rules chaining` - approach when the rule depends on the results of the previous rule.
 Just like in the SLI rules we generated above.
 
-During evaluation, vmalert executes rule's expression via 
-[/query_range](https://docs.victoriametrics.com/keyConcepts.html#range-query) API to minimize the number of API calls.
+During evaluation, vmalert executes the rule's expression via 
+[/query_range](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#range-query) API to minimize the number of API calls.
 The configured time range is split into smaller ranges, so the API calls remain efficient and resilient to 
-[time series churn](https://docs.victoriametrics.com/FAQ.html#what-is-high-churn-rate). The cache on VictoriaMetrics side
+[time series churn](https://docs.victoriametrics.com/FAQ.html#what-is-high-churn-rate). The cache on the VictoriaMetrics side
 is automatically disabled by vmalert in order to prevent cache pollution. But VictoriaMetrics could have already cached 
 responses for previously made requests, so it is recommended to follow general recommendations 
-after [data backfilling](https://docs.victoriametrics.com/#backfilling).
+after [data backfilling](https://docs.victoriametrics.com/victoriametrics/#backfilling).
 
-Once the replay is done, we should be able to see recording rules backfilled and available on the whole time range:
+Once the replay is done, we should be able to see the recording rules backfilled and available for the whole time range:
 
 {{< image href="/blog/rules-replay/rules-backfilled.webp" class="wide-img" alt="Screenshot from the Grafana dashboard for SLO/SLI metrics <a href='https://sloth.dev/introduction/dashboards/' target='_blank'>by slok/sloth</a>." >}}
 
@@ -143,7 +143,7 @@ Replay mode is a great feature for retroactive rules evaluation, both recording 
 `replay` mode are the following:
 * supports both recordings and alerting rules;
 * support rules chaining within the group;
-* uses [Prometheus HTTP API](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html#prometheus-querying-api-usage)
+* uses [Prometheus HTTP API](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#prometheus-querying-api-usage)
 and [Remote Write protocol](https://github.com/prometheus/prometheus/blob/main/prompb/remote.proto) which makes it
 compatible with many other TSDBs;
 * can be used for evaluating rules against single and clustered installations;
@@ -151,7 +151,7 @@ compatible with many other TSDBs;
 one installation to another via recording rules.
 
 With all said, `replay` mode overcomes limitations of [Prometheus backfilling for recording rules](https://prometheus.io/docs/prometheus/latest/storage/#limitations).
-But the `replay` mode has its own [limitations](https://docs.victoriametrics.com/vmalert.html#limitations-1):
-* [Graphite query engine](https://docs.victoriametrics.com/vmalert.html#graphite) isn't supported;
-* `query` [template function](https://docs.victoriametrics.com/vmalert.html#template-functions) is disabled for performance reasons;
-* `limit` [group's param](https://docs.victoriametrics.com/vmalert.html#groups) has no effect during replay.
+But the `replay` mode has its own [limitations](https://docs.victoriametrics.com/victoriametrics/vmalert/#limitations-1):
+* [Graphite query engine](https://docs.victoriametrics.com/victoriametrics/vmalert/#graphite) isn't supported;
+* `query` [template function](https://docs.victoriametrics.com/victoriametrics/vmalert/#template-functions) is disabled for performance reasons;
+* `limit` [group's param](https://docs.victoriametrics.com/victoriametrics/vmalert/#groups) has no effect during replay.

@@ -120,7 +120,7 @@ In essence, integrating anomaly detection with robust monitoring and alerting me
 
 ## **Why is Simple Rule-Based Alerting Not Enough?**
 
-While simpler rule-based [alerting systems](https://docs.victoriametrics.com/vmalert.html) with *constant thresholds on raw or pre-aggregated metrics* can be effective in [certain situations](#rule-based-alerting), they often fall short when dealing with **complex** [time series data](#time-series).
+While simpler rule-based [alerting systems](https://docs.victoriametrics.com/victoriametrics/vmalert/) with *constant thresholds on raw or pre-aggregated metrics* can be effective in [certain situations](#rule-based-alerting), they often fall short when dealing with **complex** [time series data](#time-series).
 <br>Such rule-based systems rely on predefined thresholds or conditions to trigger alerts. 
 <br>However, time series data often exhibit complex behaviors and patterns that can't be effectively captured by simple rules, thus requiring [Machine Learning (ML)-based alerting](#ml-based-alerting):
 <p></p>
@@ -354,10 +354,10 @@ Here is a list of terms that corresponds to VM components, often used together t
 Please find **tech-savvy use case** of those services working together as AD & alerting system [here](https://docs.victoriametrics.com/guides/guide-vmanomaly-vmalert.html)
 
 ### VictoriaMetrics (VM)
-[VictoriaMetrics](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html) is a fast, cost-effective and scalable monitoring solution and time series database. 
+[VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) is a fast, cost-effective and scalable monitoring solution and time series database. 
 <br>It can handle millions of metrics with high query speed, optimal resource usage and provides long-term retention of your data.
 
-You can configure finding anomalies on data stored in VM, calculate anomaly scores and push it back as new metrics to VM database, staying within **the same convenient ecosystem for time series monitoring**
+You can configure finding anomalies on data stored in VM, calculate anomaly scores and push them back as new metrics to VM database, staying within **the same convenient ecosystem for time series monitoring**
 
 ### VictoriaMetrics Anomaly Detection
 [vmanomaly](/products/enterprise/anomaly-detection/) is an enterprise-level solution crafted by [VictoriaMetrics](https://victoriametrics.com/) specifically for anomaly detection in time-series data. Utilizing state-of-the-art algorithms, it efficiently pinpoints anomalies with minimal configuration, yet offers the flexibility for customization. Additionally, customers have the option to integrate their own detection algorithms through a straightforward API.
@@ -368,7 +368,7 @@ You can configure finding anomalies on data stored in VM, calculate anomaly scor
 `vmagent` is a tiny agent which helps you collect metrics from various sources, relabel and filter the collected metrics and store them in [VictoriaMetrics](#victoriametrics-vm) or any other storage systems via Prometheus `remote_write` protocol.
 
 ### VMAlert
-[VMAlert](https://docs.victoriametrics.com/vmalert.html) is a service that evaluates a predefined set of alerting or recording rules against a specified data source. As a critical element in a comprehensive anomaly detection system, VMAlert goes beyond merely identifying and pinpointing anomalies. It generates actionable insights by delivering notifications and recommendations to the system's end users, enabling them to understand the issue at hand and take appropriate corrective actions.
+[VMAlert](https://docs.victoriametrics.com/victoriametrics/vmalert/) is a service that evaluates a predefined set of alerting or recording rules against a specified data source. As a critical element in a comprehensive anomaly detection system, VMAlert goes beyond merely identifying and pinpointing anomalies. It generates actionable insights by delivering notifications and recommendations to the system's end users, enabling them to understand the issue at hand and take appropriate corrective actions.
 
 #### ML-Based Alerting
 Machine Learning (ML)-based alerting is a more sophisticated system that leverages machine learning techniques to trigger alerts. 

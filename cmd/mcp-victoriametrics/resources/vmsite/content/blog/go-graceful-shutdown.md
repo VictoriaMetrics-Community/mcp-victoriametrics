@@ -73,7 +73,8 @@ func main() {
 }
 ```
 
-![Graceful shutdown begins with signal setup](/blog/go-graceful-shutdown/signal-setup-before-init.webp)	
+![Graceful shutdown begins with signal setup](/blog/go-graceful-shutdown/signal-setup-before-init.webp)
+
 <figcaption style="text-align: center; font-style: italic;">Graceful shutdown begins with signal setup</figcaption>
 
 `signal.Notify` tells the Go runtime to deliver specified signals to a channel instead of using the default behavior. This allows you to handle them manually and prevents the application from terminating automatically.
@@ -153,13 +154,15 @@ The external load balancer, however, operates independently from Kubernetes. It 
 There are 2 ways to handle this:
 
 1. Use a `preStop` hook to sleep for a while, so the external load balancer has time to recognize that the pod is terminating.
-    ```yaml
-	lifecycle:
-	preStop:
-		exec:
-		command: ["/bin/sh", "-c", "sleep 10"]
-    ```
-	And really importantly, the time taken by the `preStop` hook is included within the `terminationGracePeriodSeconds`.
+
+   ```yaml
+   lifecycle:
+   preStop:
+   	exec:
+   	command: ["/bin/sh", "-c", "sleep 10"]
+   ```
+
+   And really importantly, the time taken by the `preStop` hook is included within the `terminationGracePeriodSeconds`.
 
 2. Fail the readiness probe and sleep at the code level. This approach is not only applicable to Kubernetes environments, but also to other environments with load balancers that need to know the pod is not ready.
 
@@ -184,6 +187,7 @@ func readinessHandler(w http.ResponseWriter, r *http.Request) {
 ```
 
 ![Delay shutdown by failing readiness first](/blog/go-graceful-shutdown/fail-readiness-before-shutdown.webp)
+
 <figcaption style="text-align: center; font-style: italic;">Delay shutdown by failing readiness first</figcaption>
 
 This pattern is also used as a code example in the test images. In [their implementation](https://github.com/kubernetes/kubernetes/blob/95860cff1c418ea6f5494e4a6168e7acd1c390ec/test/images/agnhost/netexec/netexec.go#L357), a closed channel is used to signal the readiness probe to return HTTP 503 when the application is preparing to shut down.
@@ -222,12 +226,12 @@ ctx, cancelFn := context.WithTimeout(context.Background(), timeout)
 err := server.Shutdown(ctx)
 ```
 
-The `server.Shutdown` function returns in only two situations:
+When `server.Shutdown` is called, the server stops accepting new connections and closes idle connections. It then waits for active handlers to finish. This call returns in 2 cases:
 
-1. All active connections are closed and all handlers have finished processing.
-2. The context passed to `Shutdown(ctx)` expires before the handlers finish. In this case, the server gives up waiting.
+1. Every active handler finishes before `ctx` expires,
+2. If `ctx` expires first, Shutdown returns `ctx.Err()`, but unfinished handlers continue running.
 
-In either case, `Shutdown` only returns after the server has completely stopped handling requests. This is why your handlers must be fast and context-aware. Otherwise, they may be cut off mid-process in case 2, which can cause issues like partial writes, data loss, inconsistent state, open transactions, or corrupted data.
+Therefore, a `nil` error means the graceful shutdown completed successfully. A non-nil error means either the context expired before shutdown completed or the server could not close one of its listeners. If the context expired, some handlers may still be running. Returning from `main` at that point terminates them along with the rest of the process and can lead to data loss, inconsistent state, corrupted data,... so always check the error before exiting.
 
 A common issue is that handlers are not automatically aware when the server is shutting down.
 
@@ -271,6 +275,7 @@ time.Sleep(5 * time.Second) // optional delay to allow context propagation
 In an HTTP server, you can customize two types of contexts: `BaseContext` and `ConnContext`. For graceful shutdown, `BaseContext` is more suitable. It allows you to create a global context with cancellation that applies to the entire server, and you can cancel it to signal all active requests that the server is shutting down.
 
 ![Full graceful shutdown with propagation delay](/blog/go-graceful-shutdown/shutdown-context-propagation-timeline.webp)
+
 <figcaption style="text-align: center; font-style: italic;">Full graceful shutdown with propagation delay</figcaption>
 
 All of this work around graceful shutdown won't help if your functions do not respect context cancellation. Try to avoid using `context.Background()`, `time.Sleep()`, or any other function that ignores context.
@@ -289,9 +294,9 @@ func Sleep(ctx context.Context, duration time.Duration) error {
 ```
 
 > [!WARNING] Leaking Resources  
-> In older versions of Go, `time.After` can leak memory until the timer fires. This was fixed in Go 1.23 and newer. If you're unsure which version you're using, consider using `time.NewTimer` along with `Stop` and an optional `<-t.C` check if `Stop` returns false.  
-> > 
-> See: [time: stop requiring Timer/Ticker.Stop for prompt GC](https://github.com/golang/go/issues/61542)
+> In older versions of Go, `time.After` can leak memory until the timer fires. This was fixed in Go 1.23 and newer. If you're unsure which version you're using, consider using `time.NewTimer` along with `Stop` and an optional `<-t.C` check if `Stop` returns false.
+>
+> > See: [time: stop requiring Timer/Ticker.Stop for prompt GC](https://github.com/golang/go/issues/61542)
 
 Although this article focuses on HTTP servers, the same concept applies to third-party services as well. For example, the `database/sql` package has a `DB.Close` method. It closes the database connection and prevents new queries from starting. It also waits for any ongoing queries to finish before fully shutting down.
 
@@ -323,7 +328,7 @@ However, there are important cases where explicit cleanup is still necessary dur
 - **Message queues and brokers** often require a clean shutdown. This may involve flushing messages, committing offsets, or signaling to the broker that the client is exiting. Without this, there can be rebalancing issues or message loss.
 - **External services** may not detect the disconnect immediately. Closing connections manually allows those systems to clean up faster than waiting for TCP timeouts.
 
-A good rule is to shut down components in the reverse order of how they were initialized. This respects dependencies between components. 
+A good rule is to shut down components in the reverse order of how they were initialized. This respects dependencies between components.
 
 Go's `defer` statement makes this easier since the last deferred function is executed first:
 

@@ -19,11 +19,8 @@ tags:
  - open source
  - monitoring
 images:
- - /blog/prometheus-monitoring-metrics-counters-gauges-histogram-summaries/prometheus-metrics-explained-counters-gauges-histograms-summaries-preview.webp
+ - /blog/prometheus-monitoring-metrics-counters-gauges-histogram-summaries/prometheus-monitoring-metrics-counters-gauges-histogram-summaries-preview.webp
 ---
-
-![Prometheus Metrics Explained: Counters, Gauges, Histograms & Summaries](/blog/prometheus-monitoring-metrics-counters-gauges-histogram-summaries/prometheus-monitoring-metrics-counters-gauges-histogram-summaries-preview.webp)
-<figcaption style="text-align: center; font-style: italic;">Prometheus Metrics Explained: Counters, Gauges, Histograms & Summaries</figcaption>
 
 This discussion is part of the basic monitoring series, an effort to clarify monitoring concepts for both beginners and experienced users:
 

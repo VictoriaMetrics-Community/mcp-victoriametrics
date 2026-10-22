@@ -73,7 +73,7 @@ With VictoriaMetrics, you can store millions of data points per second on a sing
 
 It is designed to store 10x more data using the same compute and storage resources as existing solutions, making it a highly efficient choice.
 
-[Get started & get more information here](https://victoriametrics.com/products/open-source/), and do come by booth R17 to discuss your particular use case with our expert team.
+[Get started & get more information here](https://victoriametrics.com/products/victoriametrics/), and do come by booth R17 to discuss your particular use case with our expert team.
 
 ## VictoriaMetrics Enterprise: Features & Support for Demanding Observability Setups
 

@@ -15,10 +15,10 @@ tags:
   - Events
   - Tech Talk
 images:
-  - /blog/tech-talk-streems/vmalert-maximize-your-monitoring/preview.webp
+  - /blog/tech-talk-streems/vmalert-maximize-your-monitoring/vmalert-maximize-your-monitoring-replay-v2.webp
 ---
 
-![Banner for vmalert: Maximize Your Monitoring Tech Talk](/blog/tech-talk-streems/vmalert-maximize-your-monitoring/preview.webp)
+![Banner for vmalert: Maximize Your Monitoring Tech Talk](/blog/tech-talk-streems/vmalert-maximize-your-monitoring/vmalert-maximize-your-monitoring-replay-v2.webp)
 
 Tired of being glued to your dashboards, constantly searching for signs of trouble? With today's massive data volumes, manually sifting through metrics and logs simply doesn't scale. This is where effective alerting comes in. It is the cornerstone of a solid observability strategy, allowing your team to shift from anxiously watching for problems to proactively resolving issues—often before they impact users.
 
@@ -58,7 +58,7 @@ Alerts go through a few states:
 
 ## Setting Up vmalert (The Self-Managed Way)
 
-As demonstrated in the tech talk, if you're running your own VictoriaMetrics setup, you'll configure vmalert using rule files, usually in [YAML.](http://yaml.if) For more information, our [docs](https://docs.victoriametrics.com/victoriametrics/vmalert/#quickstart), and [community](https://victoriametrics.com/community/) are here to help.
+As demonstrated in the tech talk, if you're running your own VictoriaMetrics setup, you'll configure vmalert using rule files, usually in YAML. For more information, our [docs](https://docs.victoriametrics.com/victoriametrics/vmalert/#quickstart), and [community](https://victoriametrics.com/community/) are here to help.
 
 ### Key Configuration Bits:
 
@@ -264,7 +264,7 @@ The big win here is **Simplicity**: VictoriaMetrics Cloud handles the tricky bit
 
 Whether you're captaining a self-managed VictoriaMetrics ship or cruising with the convenience of VictoriaMetrics Cloud, getting comfortable with vmalert is your ticket to proactive, effective monitoring. The power to define precise recording and alerting rules helps you stay ahead of trouble and keep your services reliable.
 
-We definitely encourage you to check out the [official vmalert documentation](https://www.google.com/search?q=%5Bhttps://docs.victoriametrics.com/vmalert.html%5D(https://docs.victoriametrics.com/vmalert.html)) for even more details.
+We definitely encourage you to check out the [official vmalert documentation](https://www.google.com/search?q=%5Bhttps://docs.victoriametrics.com/victoriametrics/vmalert/%5D(https://docs.victoriametrics.com/victoriametrics/vmalert/)) for even more details.
 
 And if you're curious about VictoriaMetrics Cloud, why not [give our free trial a spin](https://console.victoriametrics.cloud/signup) and see how easy managed alerting can be?
 

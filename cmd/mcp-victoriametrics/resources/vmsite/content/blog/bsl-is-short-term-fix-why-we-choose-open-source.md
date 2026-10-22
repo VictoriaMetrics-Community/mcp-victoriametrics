@@ -48,7 +48,7 @@ Famous projects using it include HashiCorp’s suite of products (Terraform, Vag
 
 ## **Where did the BSL come from?**
 
-The BSL was [first announced](http://monty-says.blogspot.com/2013/06/business-source-software-license-with.html) in 2013 and first applied to MariaDB. The license was developed by the creator of MySQL and MariaDB, Michael “Monty” Widenius, alongside Linus Nyman, an economist. The identity of the license’s creator [shocked](https://www.adventuresinoss.com/2016/09/12/open-core-returns-from-the-dead-sigh/) quite a few people due to his open source credentials.
+The BSL was [first announced](http://monty-says.blogspot.com/2013/06/business-source-software-license-with.html) in 2013 and first applied to MariaDB. The license was developed by the creator of MySQL and MariaDB, Michael “Monty” Widenius, alongside Linus Nyman, an economist. The identity of the license’s creator [shocked](https://www.adventuresinoss.com/open-core-returns-from-the-dead-sigh/) quite a few people due to his open source credentials.
 
 Monty hoped for [a few things with](https://monty-says.blogspot.com/2016/08/applying-business-source-licensing-bsl.html) the BSL:
 

@@ -128,7 +128,7 @@ In this post, we compare the cost of using managed services for Prometheus, whic
 
 **[Cardinality Explorer](/blog/cardinality-explorer/)**
 
-In monitoring, the term [cardinality](https://docs.victoriametrics.com/keyConcepts.html#cardinality) defines the number of unique time series stored in a time series database (TSDB). The higher the cardinality, the more resources are usually required for metrics processing and querying. According [to our observations], more than 50% of stored metrics are never used. So having an insight to the stored data and its structure can significantly improve the reliability and resource usage of the monitoring solution.
+In monitoring, the term [cardinality](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#cardinality) defines the number of unique time series stored in a time series database (TSDB). The higher the cardinality, the more resources are usually required for metrics processing and querying. According to our observations, more than 50% of stored metrics are never used. So having an insight into the stored data and its structure can significantly improve the reliability and resource usage of the monitoring solution.
 
 **[Save Network Costs with VictoriaMetrics Remote Write Protocol](/blog/victoriametrics-remote-write/)**
 

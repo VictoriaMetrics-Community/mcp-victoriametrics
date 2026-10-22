@@ -24,7 +24,7 @@ images:
 
 Logs and log management have been around far longer than monitoring and it is easy to forget just how useful and essential they can be for modern observability.
 
-Most of you will know us for [VictoriaMetrics](/products/open-source/), our open source time series database and monitoring solution. Metrics are our “thing”; but as engineers, we’ve had our fair share of frustrations in the past caused by modern logging systems that tend to create further complexity, rather than removing it.
+Most of you will know us for [VictoriaMetrics](/products/victoriametrics/), our open source time series database and monitoring solution. Metrics are our “thing”; but as engineers, we’ve had our fair share of frustrations in the past caused by modern logging systems that tend to create further complexity, rather than removing it.
 
 This blog post looks at what logs are and why they matter (as a refresher or brief introduction), why logs are generated and collected as well as at the costs associated with that.
 
@@ -135,4 +135,3 @@ A user-friendly and cost-efficient database for logs, which we’re looking to c
   
 
   
-

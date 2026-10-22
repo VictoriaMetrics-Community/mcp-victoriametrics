@@ -20,7 +20,7 @@ images:
  - /blog/cardinality-explorer/cardinality-explorer-start.webp
 ---
 
-In monitoring, the term [cardinality](https://docs.victoriametrics.com/keyConcepts.html#cardinality) defines the number 
+In monitoring, the term [cardinality](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#cardinality) defines the number 
 of unique time series stored in a time series database (TSDB).
 The higher the cardinality, the more resources are usually required for metrics processing and querying. 
 For example [VictoriaMetrics single version needs 850MB RAM](https://valyala.medium.com/insert-benchmarks-with-inch-influxdb-vs-victoriametrics-e31a41ae2893)
@@ -33,10 +33,10 @@ significantly increase the cost of running a TSDB or a monitoring solution.
 ## Time series and metrics
 
 TSDBs like VictoriaMetrics or Prometheus share very similar data models. It consists of metrics, time series, and
-samples. [A metric](https://docs.victoriametrics.com/keyConcepts.html#what-is-a-metric) is a numeric measure or
-observation of something. For example, we can measure how many requests users make via metric **http_request_total**.
+samples. [A metric](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#what-is-a-metric) is a numeric measure or
+observation of something. For example, we can measure how many requests users make via the metric **http_request_total**.
 We use `labels` to add some additional information, like which `instance` handles this request or which `path` was requested.
-A combination of a metric name and its labels defines a [time series](https://docs.victoriametrics.com/keyConcepts.html#time-series):
+A combination of a metric name and its labels defines a [time series](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#time-series):
 ```
 http_request_total{instance=’1’, path=’/read’}
 http_request_total{instance=’1’, path=’/write’}
@@ -44,7 +44,7 @@ http_request_total{instance=’1’, path=’/write’}
 The example above contains two unique time series of the same metric. The number of time series defines the cardinality
 of the data set.
 
-See more information about VictoriaMetrics data model in [Key Concepts](https://docs.victoriametrics.com/keyConcepts.html).
+See more information about VictoriaMetrics data model in [Key Concepts](https://docs.victoriametrics.com/victoriametrics/keyconcepts/).
 
 ## High cardinality
 
@@ -68,8 +68,8 @@ impact the monitoring platform. This is why it is essentially to have control ov
 
 ## How can you explore cardinality in VictoriaMetrics?
 
-VictoriaMetrics provides a special tool called [cardinality explorer](https://docs.victoriametrics.com/#cardinality-explorer). 
-Cardinality explorer is built on top of the [/api/v1/status/tsdb](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html#tsdb-stats) API.
+VictoriaMetrics provides a special tool called [cardinality explorer](https://docs.victoriametrics.com/victoriametrics/#cardinality-explorer). 
+Cardinality explorer is built on top of the [/api/v1/status/tsdb](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#tsdb-stats) API.
 Try it on our [playground!](https://play.victoriametrics.com/select/accounting/1/6a716b0f-38bc-4856-90ce-448fd713e3fe/prometheus/graph/?_gl=1*jdsbsq*_ga*MTU2NDg0Mzg4MC4xNjU2ODQxMDQ0*_ga_N9SVT8S3HK*MTY2Mzc2MDUwOC43Ni4xLjE2NjM3NjA4NzkuMC4wLjA.#/cardinality)
 
 In the blogpost, I'm going to analyze our "Sandbox" environment, monitored by VictoriaMetrics cluster. 
@@ -112,7 +112,7 @@ It looks like checksum assets are producing about **1207 series**, which is roug
 **github_downloads_total** metric. And removing these series is the right thing to do since we have no use for them.
 
 The other metrics from our top-3 list aren't used as well, so I decided to remove them by updating our 
-[relabeling config](https://docs.victoriametrics.com/relabeling.html):
+[relabeling config](https://docs.victoriametrics.com/relabeling/):
 
 ```yaml
 metricRelabelConfigs:
@@ -146,9 +146,9 @@ The change in amount of inserted data helped us to increase our storage capacity
 
 ## Summary ##
 
-[Cardinality explorer](https://docs.victoriametrics.com/#cardinality-explorer) is a helpful instrument for 
+[Cardinality explorer](https://docs.victoriametrics.com/victoriametrics/#cardinality-explorer) is a helpful instrument for 
 analyzing the data of VictoriaMetrics TSDB. It helps to understand which metrics contribute to the cardinality (and so
-to the resource usage), so user can act accordingly. Always pay attention to the data you write and store. According
-[to our observations], more than 50% of stored metrics are never used. So having an insight to the stored data and its 
+to the resource usage), so users can act accordingly. Always pay attention to the data you write and store. According
+to our observations, more than 50% of stored metrics are never used. So having an insight to the stored data and its 
 structure can significantly improve the reliability and resource usage of the monitoring solution.
 

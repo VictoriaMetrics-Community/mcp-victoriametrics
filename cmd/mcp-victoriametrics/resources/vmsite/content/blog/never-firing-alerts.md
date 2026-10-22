@@ -37,7 +37,7 @@ This blog post looks at what these are, what they mean, and how to deal with the
 
 VictoriaMetrics' approach to alerting is very similar to the Prometheus one.
 Except that the [ruler](https://github.com/prometheus/compliance/blob/main/alert_generator/specification.md)
-isn't built-in in the database, but is a separate service - [vmalert](https://docs.victoriametrics.com/vmalert.html):
+isn't built-in in the database, but is a separate service - [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/):
 
 {{<image class="wide-img" href="/blog/never-firing-alerts/vmalert.webp" alt="vmalert as an external Ruler for VictoriaMetrics" >}}
 
@@ -58,10 +58,10 @@ For example:
 * `expr: increase(http_errors_total[5m]) > 10` will fire only if metric `http_errors_total` increased by at least 10. 
 
 vmalert doesn't understand the difference between `http_errors_total` and `increase(http_errors_total[5m]) > 0`.
-These are just expressions it needs to evaluate via [query API](https://docs.victoriametrics.com/keyConcepts.html#query-data) 
+These are just expressions it needs to evaluate via [query API](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#query-data) 
 and check if they return a response. That's it.
 
-The response from query API has the following format:
+The response from the query API has the following format:
 ```json
 {
   "status": "success",
@@ -116,7 +116,7 @@ Could it be simpler?
 
 ## Alerts that never fire
 
-Starting from [v1.90](https://docs.victoriametrics.com/CHANGELOG.html#v1900), VictoriaMetrics returns an extra object in response to read queries:
+Starting from [v1.90](https://docs.victoriametrics.com/victoriametrics/changelog/#v1900), VictoriaMetrics returns an extra object in response to read queries:
 ```json
 "stats": {"seriesFetched": "42"}
 ```
@@ -126,7 +126,7 @@ a single time series. If it is `> 0` but you still get an empty response - then 
 by the comparison operator.
 
 vmalert can [read and understand](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/4039)
-this new field in VictoriaMetrics response starting from [v1.91](https://docs.victoriametrics.com/CHANGELOG.html#v1910). 
+this new field in VictoriaMetrics response starting from [v1.91](https://docs.victoriametrics.com/victoriametrics/changelog/#v1910). 
 Based on that, it exposes a new metric `vmalert_alerting_rules_last_evaluation_series_fetched` showing how
 many time series were fetched during the last evaluation. 
 The following expression would return you alerting rules which are likely to contain a typo or wrong time series selector:
@@ -150,7 +150,7 @@ sum(vmalert_recording_rules_last_evaluation_samples) by(group, recording) < 1
 ```
 
 _You can find [this](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/7ea2531db0bdc3e68d2503f665f6c487a1f3cd29/deployment/docker/alerts-vmalert.yml#L42-L52)
-and many other useful alerting rules [here](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/deployment/docker/alerts-vmalert.yml)._
+and many other useful alerting rules [here](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/deployment/docker/rules/alerts-vmalert.yml)._
 
 
 ## False positives
@@ -174,4 +174,4 @@ Because of this, the mentioned alerting rule will match no series until the `syn
 Never-firing alerts is a real thing in modern monitoring. It is very easy to make a mistake while copy&pasting alerting
 rules. Or deploy a new version of the software with breaking changes in metric names. Such subtle errors don't reveal 
 themselves until it is too late. We hope that vmalert will help users to identify such problems quicker.
-Try it in new [v1.91](https://docs.victoriametrics.com/CHANGELOG.html#v1910)!
+Try it in new [v1.91](https://docs.victoriametrics.com/victoriametrics/changelog/#v1910)!

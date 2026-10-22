@@ -96,7 +96,7 @@ For detecting point anomalies, models that assess the fundamental statistical at
   ```
   This examines the average anomaly score over the last `period=5m` and triggers if it's above `thld=1`. You can use any other reasonable [alerting threshold](/blog/victoriametrics-anomaly-detection-handbook-chapter-1/#anomaly-threshold)
 
-- To reduce the chances of alerting fatigue, use `for` to ensure persistence of the anomaly before actual alerting (following [VMAlert syntax](https://docs.victoriametrics.com/vmalert.html#alerting-rules) and [alert states](https://docs.victoriametrics.com/vmalert.html#alerts-state)):
+- To reduce the chances of alerting fatigue, use `for` to ensure persistence of the anomaly before actual alerting (following [VMAlert syntax](https://docs.victoriametrics.com/victoriametrics/vmalert/#alerting-rules) and [alert states](https://docs.victoriametrics.com/victoriametrics/vmalert/#alerts-state)):
   ```yaml
   - alert: YourAwesomeAlertName
     expr: anomaly_score > 1

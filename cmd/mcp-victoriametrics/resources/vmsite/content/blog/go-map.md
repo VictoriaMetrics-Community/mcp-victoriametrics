@@ -18,6 +18,9 @@ images:
   - /blog/go-map/go-map-preview.webp
 ---
 
+> [!WARNING]
+> Go's built-in map no longer uses the bucket and overflow-bucket implementation explained in this article. Go 1.24 replaced it with an implementation based on Swiss Tables. If you're here to learn how maps work today, check out [How Swiss Tables Work in Go’s Built-in Map](/blog/go-swiss-table-map/).
+
 If you're new to Go, it can be a bit confusing to figure out how to use maps in Go. And even when you're more experienced, understanding how maps really work can be pretty tough.
 
 Take this example: Have you ever set a 'hint' for a map and wondered why it's called a 'hint' and not something simple like length, like we do with slices?
@@ -30,8 +33,6 @@ m := make(map[string]int, 10)
 Or maybe you've noticed that when you use a for-range loop on a map, the order doesn't match the insertion order, and it even changes if you loop over the same map at different times. But weirdly enough, if you loop over it at the exact same time, the order usually stays the same.
 
 This is a long story, so fasten your seat belt and dive in.
-
-_Before we move on, just a heads up—the info here is based on Go 1.23. If things have changed and this isn't up to date, feel free to ping me on [X(@func25)](https://x.com/func25)._
 
 ## Map in Go: Quick Start
 

@@ -103,7 +103,7 @@ Visit our vmui playground for details: [vmui playground](https://play.victoriame
 - Multi-tenant support
 - Performance improvements
 
-See here for all vmagent features details: [https://docs.victoriametrics.com/vmagent.html](https://docs.victoriametrics.com/vmagent.html)
+See here for all vmagent features details: [https://docs.victoriametrics.com/victoriametrics/vmagent/](https://docs.victoriametrics.com/victoriametrics/vmagent/)
 
 #### Relabeling Features
 
@@ -111,7 +111,7 @@ See here for all vmagent features details: [https://docs.victoriametrics.com/vma
 - Named label placeholders
 - Graphite-style relabeling
 
-See here for all relabeling features details: [https://docs.victoriametrics.com/vmagent.html#relabeling](https://docs.victoriametrics.com/vmagent.html#relabeling)
+See here for all relabeling features details: [https://docs.victoriametrics.com/victoriametrics/relabeling/]https://docs.victoriametrics.com/victoriametrics/relabeling/)
 
 #### vmalert Features
 
@@ -120,14 +120,14 @@ See here for all relabeling features details: [https://docs.victoriametrics.com/
 - Debugging of alerting rules
 - Improved compatibility with Prometheus
 
-See here for all vmalert features details: [https://docs.victoriametrics.com/vmalert.html](https://docs.victoriametrics.com/vmalert.html)
+See here for all vmalert features details: [https://docs.victoriametrics.com/victoriametrics/vmalert/](https://docs.victoriametrics.com/victoriametrics/vmalert/)
 
 #### vmctl Features
 
 - Migrate all the data between clusters
 - Data migration via Prometheus remote_read protocol
 
-See here for all vmctl features details: [https://docs.victoriametrics.com/vmctl.html](https://docs.victoriametrics.com/vmctl.html)
+See here for all vmctl features details: [https://docs.victoriametrics.com/victoriametrics/vmctl/](https://docs.victoriametrics.com/victoriametrics/vmctl/)
 
 
 For a complete review of all our new features in 2022, please [watch the presentation by Aliaksandr Valialkin](https://www.youtube.com/watch?v=Mesc6JBFNhQ&t=660s) recorded at our December 2022 Meet Up.
@@ -140,7 +140,7 @@ For a complete review of all our new features in 2022, please [watch the present
 - Automatic vmstorage discovery
 - Multiple retentions
 
-See here for all VictoriaMetrics Enterprise features details: [https://docs.victoriametrics.com/enterprise.html](https://docs.victoriametrics.com/enterprise.html)
+See here for all VictoriaMetrics Enterprise features details: [https://docs.victoriametrics.com/enterprise.html](https://docs.victoriametrics.com/enterprise/)
 
 
 ### **Top 3 Blogs**
@@ -163,7 +163,7 @@ See here for all VictoriaMetrics Enterprise features details: [https://docs.vict
 
 - [Grafana datasource plugin](https://github.com/VictoriaMetrics/grafana-datasource)
   - Completed in January 2023
-- [Streaming aggregation](https://docs.victoriametrics.com/stream-aggregation.html)
+- [Streaming aggregation](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/)
   - Completed in January 2023
 - vmalert: UI for rules management
 - vmalert hysteresis support

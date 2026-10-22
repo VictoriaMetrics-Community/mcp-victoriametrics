@@ -22,7 +22,7 @@ images:
 
 ## **Problem**
 
-We need to remove a vmstorage node from [VictoriaMetrics cluster](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html) gracefully. Every vmstorage node contains its own portion of data and removing the vmstorage node from the cluster creates gaps in the graph (because replication is out of scope).
+We need to remove a vmstorage node from [VictoriaMetrics cluster](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/) gracefully. Every vmstorage node contains its own portion of data and removing the vmstorage node from the cluster creates gaps in the graph (because replication is out of scope).
 
 ## **Setup example**
 
@@ -51,18 +51,18 @@ We have a VictoriaMetrics cluster with 2 vminsert, 2 vmselect and 3 vmstorage no
 <p></p>
 
 1. Remove `vmstorage A` from the vminsert list (same as in Solution One).
-2. Set up a dedicated vmselect node that knows only about the vmstorage node that we want to remove (vmstorage A). We need this vmselect node for migration data from vmstorage A to other vmstorage nodes in the cluster.
-3. Using [vmctl native import/export](https://docs.victoriametrics.com/vmctl.html#migrating-data-from-victoriametrics) reads data from vmselect for `vmstorage A` and writes data back to vminsert nodes. 4. This process creates duplicates.
-5. Turn on [deduplication on vmselect nodes](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#deduplication).
+2. Set up a dedicated vmselect node that knows only about the vmstorage node that we want to remove (vmstorage A). We need this vmselect node for migrating data from vmstorage A to other vmstorage nodes in the cluster.
+3. Using [vmctl native import/export](https://docs.victoriametrics.com/victoriametrics/vmctl/victoriametrics/) reads data from vmselect for `vmstorage A` and writes data back to vminsert nodes. 4. This process creates duplicates.
+5. Turn on [deduplication on vmselect nodes](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#deduplication).
 6. Remove `vmstorage A` from the cluster.
 
 **Note**: Please expect higher resource usage on the existing nodes (`vmstorage B` and `vmstorage C`), as they now need to handle all the incoming data.
 
 **Pros**: Faster way to decommission a vmstorage node.
 
-**Cons**: The process is more complex compared to solution One. The vmctl import/export process may require tuning if you migrate hundreds GB of data (or more).
+**Cons**: The process is more complex compared to solution One. The vmctl import/export process may require tuning if you migrate hundreds of GB of data (or more).
 
-*Hint*	: [downsampling](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#downsampling) reduces the amount of data in a cluster; after downsampling, the vmctl migration requires less data to transfer and less time.
+*Hint*	: [downsampling](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#downsampling) reduces the amount of data in a cluster; after downsampling, the vmctl migration requires less data to transfer and less time.
 
 We trust that this is helpful!
 

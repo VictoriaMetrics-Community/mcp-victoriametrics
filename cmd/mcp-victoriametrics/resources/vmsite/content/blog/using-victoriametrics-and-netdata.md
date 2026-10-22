@@ -39,13 +39,13 @@ of [discovering and collecting metrics from popular Prometheus exporters](https:
 While Netdata Agent is great for real-time monitoring, using VictoriaMetrics as a long-term storage for Netdata Agent
 metrics allows to:
 
-- Efficiently store collected metrics for long-term period;
-- Make use of VictoriaMetrics' features like [downsampling](https://docs.victoriametrics.com/#downsampling)
-  and [retention filters](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html#retention-filters) to make
+- Efficiently store collected metrics long term;
+- Make use of VictoriaMetrics' features like [downsampling](https://docs.victoriametrics.com/victoriametrics/#downsampling)
+  and [retention filters](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#retention-filters) to make
   it easier to work with long-term data;
 - Use Netdata Agent metrics as part of a centrally managed monitoring system
-  with [alerting](https://docs.victoriametrics.com/vmalert.html)
-  and [authentication](https://docs.victoriametrics.com/vmauth.html) managed within the same ecosystem;
+  with [alerting](https://docs.victoriametrics.com/victoriametrics/vmalert/)
+  and [authentication](https://docs.victoriametrics.com/victoriametrics/vmauth/) managed within the same ecosystem;
 - Use [MetricsQL](https://docs.victoriametrics.com/metricsql/) to query Netdata Agent metrics together with other
   data sources.
 
@@ -55,8 +55,8 @@ As a prerequisite, it is needed to have Netdata Agent installed and running. Ple
 Agent [documentation](https://learn.netdata.cloud/docs/agent/packaging/installer) for installation instructions.
 
 VictoriaMetrics can receive metrics from Netdata Agent in two ways: by
-using [remote write](https://docs.victoriametrics.com/#prometheus-setup) or by
-using [vmagent](https://docs.victoriametrics.com/vmagent.html) to scrape metrics from Netdata Agent.
+using [remote write](https://docs.victoriametrics.com/victoriametrics/#prometheus-setup) or by
+using [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) to scrape metrics from Netdata Agent.
 
 ### Using remote write
 
@@ -83,13 +83,13 @@ destination = vminsert:8480
 remote write URL path = /insert/0/api/v1/write
 ```
 
-Please, note URL format for cluster version uses `/insert/<accountID>` prefix.
-`<accountID>` is used to route metrics to the corresponding tenant in VictoriaMetrics cluster.
+Please, note the URL format for cluster version uses `/insert/<accountID>` prefix.
+`<accountID>` is used to route metrics to the corresponding tenant in a VictoriaMetrics cluster.
 Please, refer
-to [VictoriaMetrics URL format documentation](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#url-format)
+to [VictoriaMetrics URL format documentation](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#url-format)
 for details.
 
-Do not forget to replace `victoriametrics` or `vminsert` with the actual hostname of VictoriaMetrics instance.
+Do not forget to replace `victoriametrics` or `vminsert` with the actual hostname of the VictoriaMetrics instance.
 This will instruct Netdata Agent to send metrics to VictoriaMetrics on port 8429 (single-node) or 8480 (cluster) using
 Prometheus remote write protocol.
 
@@ -102,8 +102,8 @@ Note that there are the following limitations when using remote write:
   using [this](https://learn.netdata.cloud/docs/deployment-in-production/how-to-optimize-the-netdata-agent-s-performance#global)
   guide on how to optimize Netdata Agent's performance.
 
-In order to improve reliability of metrics delivery it is possible to use vmagent as remote write target.
-See [How to push data to vmagent](https://docs.victoriametrics.com/vmagent.html#how-to-push-data-to-vmagent) docs for
+In order to improve the reliability of metrics delivery, it is possible to use vmagent as a remote write target.
+See [How to push data to vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/#how-to-push-data-to-vmagent) docs for
 details.
 
 ### Using vmagent to scrape metrics from Netdata Agent
@@ -125,11 +125,11 @@ configuration file:
            - 'netdata3:19999'
 ```
 
-Where `netdata` is the hostname of Netdata Agent instance.
+Where `netdata` is the hostname of the Netdata Agent instance.
 
 Using vmagent to scrape metrics from Netdata Agent allows to
-use [data buffering](https://docs.victoriametrics.com/vmagent.html#features) feature of vmagent, which means that if
-VictoriaMetrics is not reachable, vmagent will buffer metrics and send them to VictoriaMetrics once it will become
+use [data buffering](https://docs.victoriametrics.com/victoriametrics/vmagent/#features) feature of vmagent, which means that if
+VictoriaMetrics is not reachable, vmagent will buffer metrics and send them to VictoriaMetrics once it becomes
 reachable again.
 
 ## How to set up Grafana to visualize Netdata metrics?
@@ -143,7 +143,7 @@ repository.
 
 ## Using Netdata Agent metrics for alerting
 
-Metrics from Netdata Agent can be used for alerting via [vmalert](https://docs.victoriametrics.com/vmalert.html).
+Metrics from Netdata Agent can be used for alerting via [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/).
 For example, the following vmalert config can be used to get basic alerts on Netdata Agent metrics (rules
 from [this](https://learn.netdata.cloud/docs/exporting-data/prometheus/#prometheus-alerts-for-netdata-metrics) guide)
 

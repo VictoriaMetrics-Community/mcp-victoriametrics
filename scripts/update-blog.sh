@@ -11,8 +11,9 @@ cd cmd/mcp-victoriametrics/resources/vmsite
 git sparse-checkout init --cone
 git sparse-checkout set content/blog
 git checkout master
-rm -rf ./.git
-rm -f ./content/_index.md ./Dockerfile ./Makefile ./*.md ./*.json ./*.lock ./.gitignore
+rm -f ./content/_index.md
+find . -mindepth 1 -maxdepth 1 ! -name content -exec rm -rf {} +
+find content -type f ! -name '*.md' -delete
 
 cd -
 

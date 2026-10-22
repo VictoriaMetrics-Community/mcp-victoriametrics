@@ -33,7 +33,7 @@ Performance optimization techniques in time series databases:
 
 ---
 
-[Relabeling](https://docs.victoriametrics.com/relabeling.html) is an important feature that allows users to modify 
+[Relabeling](https://docs.victoriametrics.com/relabeling/) is an important feature that allows users to modify 
 metadata (labels) of scraped metrics before they ever make it to the database.
 
 As an example, some of your scrape targets may generate metric labels with underscores (`_`),

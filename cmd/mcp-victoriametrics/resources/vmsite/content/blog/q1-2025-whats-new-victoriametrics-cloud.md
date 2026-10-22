@@ -44,7 +44,7 @@ To improve usability, we have also redesigned the interface to clearly separate 
 
 ## OpenTelemetry Integration: Easier Than Ever
 
-VictoriaMetrics has long supported [OpenTelemetry](https://docs.victoriametrics.com/#sending-data-via-opentelemetry),
+VictoriaMetrics has long supported [OpenTelemetry](https://docs.victoriametrics.com/victoriametrics/#sending-data-via-opentelemetry),
 and now we’ve made it even easier to integrate! As usual for all VictoriaMetrics Cloud use cases, you just need to
 pick an **endpoint** and a **Bearer Token** (for authorization), and you'll be all set to start sending your
 OpenTelemetry metrics.

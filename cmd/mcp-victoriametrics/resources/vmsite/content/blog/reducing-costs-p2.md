@@ -46,7 +46,7 @@ with [EXPLAIN](https://www.postgresql.org/docs/current/sql-explain.html),
 a command used to give insight into how the database will run a query. The information that `EXPLAIN ANALYZE` provides
 can help to figure out why a query is slow, and what can be done to speed it up.
 
-VictoriaMetrics has a very similar tool known as [query tracing](https://docs.victoriametrics.com/#query-tracing).
+VictoriaMetrics has a very similar tool known as [query tracing](https://docs.victoriametrics.com/victoriametrics/#query-tracing).
 Query tracing helps take the guesswork out of speeding up VictoriaMetrics queries by showing exactly where time is spent
 in processing a query. If you would like to play with query tracing, you can
 visit [play.victoriametrics.com](https://play.victoriametrics.com/)
@@ -86,7 +86,7 @@ of two things:
 2. **Be smarter about data**
 
 In the next section, we'll take a look at
-the [cardinality explorer](https://docs.victoriametrics.com/#cardinality-explorer),
+the [cardinality explorer](https://docs.victoriametrics.com/victoriametrics/#cardinality-explorer),
 a tool that helps us understand the amount of data we store and where we can trim data.
 
 ## Cardinality explorer
@@ -152,14 +152,14 @@ that data back to the database. This means that recording rules **add to the amo
 in total. Recording rules need to be executed on interval basis, contributing to the overall load on the database.
 
 VictoriaMetrics provides an alternative to recording rules in the form
-of [streaming aggregation](https://docs.victoriametrics.com/stream-aggregation.html).
+of [streaming aggregation](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/).
 Streaming aggregation is a similar concept to recording rules, except the aggregation happens before the data ever
 hits the database.
 
 {{< image href="/blog/reducing-costs-p2/stream-aggregation-2.webp" alt="Stream aggregation concept: data gets aggregated before it gets into database." >}}
 
 By aggregating the data before it has been written, you only end up storing the data that you will later query.
-Below is an example of [vmagent](https://docs.victoriametrics.com/vmagent.html) configuration for streaming aggregation:
+Below is an example of [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) configuration for streaming aggregation:
 
 ```yaml
 - match: "grpc_server_handled_total"   # time series selector
@@ -181,21 +181,21 @@ Streaming aggregation provides both cost savings and speed boosts to your querie
 
 1. Aggregates incoming samples in streaming mode before data is written to remote storage
 1. Works both with metrics from
-   any [supported data ingestion protocol](https://docs.victoriametrics.com/#how-to-import-time-series-data)
+   any [supported data ingestion protocol](https://docs.victoriametrics.com/victoriametrics/#how-to-import-time-series-data)
    and metrics scraped
-   from [Prometheus-compatible targets](https://docs.victoriametrics.com/#how-to-scrape-prometheus-exporters-such-as-node-exporter)
-1. Is a [statsd alternative](https://docs.victoriametrics.com/stream-aggregation.html#statsd-alternative)
+   from [Prometheus-compatible targets](https://docs.victoriametrics.com/victoriametrics/#how-to-scrape-prometheus-exporters-such-as-node-exporter)
+1. Is a [statsd alternative](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/#statsd-alternative)
 1. Is
-   a [recording rules alternative](https://docs.victoriametrics.com/stream-aggregation.html#recording-rules-alternative)
-1. [Reduces the number of stored samples](https://docs.victoriametrics.com/stream-aggregation.html#reducing-the-number-of-stored-samples)
-1. [Reduces the number of stored series](https://docs.victoriametrics.com/stream-aggregation.html#reducing-the-number-of-stored-series)
+   a [recording rules alternative](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/#recording-rules-alternative)
+1. [Reduces the number of stored samples](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/#reducing-the-number-of-stored-samples)
+1. [Reduces the number of stored series](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/#reducing-the-number-of-stored-series)
 1. Is compatible with any tool supporting the Prometheus remote write protocol
 
-Stream aggregation is available in [vmagent](https://docs.victoriametrics.com/vmagent.html), metrics collector
+Stream aggregation is available in [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/), metrics collector
 from VictoriaMetrics ecosystem. Compatibility with Prometheus standards means vmagent and stream aggregation
 can be used with Prometheus or any other system which supports Prometheus remote-write protocol.
 
-You can read more in the [streaming aggregation docs](https://docs.victoriametrics.com/stream-aggregation.html).
+You can read more in the [streaming aggregation docs](https://docs.victoriametrics.com/victoriametrics/stream-aggregation/).
 
 ## Reducing significant figures
 
@@ -248,7 +248,7 @@ This means that if you want to build a monitoring platform with high availabilit
 across zones. And the price for this traffic, depending on the cloud provider costs, could become a significant part
 of your monthly bill.
 
-VictoriaMetrics [vmagent](https://docs.victoriametrics.com/vmagent.html) uses the enhanced version of Prometheus
+VictoriaMetrics [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) uses the enhanced version of Prometheus
 remote-write protocol with better compression:
 
 {{< image href="/blog/reducing-costs-p2/network-2.webp" alt="The change in network traffic after switching to VictoriaMetrics-native `remote_write` protocol." >}}

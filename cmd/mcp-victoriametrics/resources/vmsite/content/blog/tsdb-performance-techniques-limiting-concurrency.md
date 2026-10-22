@@ -41,8 +41,8 @@ a significant amount of time, and we collect their metrics at fixed intervals. T
 {{< image href="/blog/tsdb-performance-techniques-strings-interning/ingestion-rate.webp" alt="An example of stable ingestion rate of metrics samples in VictoriaMetrics database." >}}
 
 But with Kubernetes many services run in [auto-scaling mode](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/),
-when the number of their replicas can change depending on demand. So does the number of targets that [vmagent](https://docs.victoriametrics.com/vmagent.html) 
-or [VictoriaMetrics Single Server](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html) needs to scrape
+when the number of their replicas can change depending on demand. So does the number of targets that [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) 
+or [VictoriaMetrics Single Server](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/) needs to scrape
 generating fluctuations in the ingestion pattern.
 
 {{< image href="/blog/tsdb-performance-techniques-limiting-concurrency/targets-number.webp" alt="Daily fluctuations in the number of scrape targets for an application." >}}

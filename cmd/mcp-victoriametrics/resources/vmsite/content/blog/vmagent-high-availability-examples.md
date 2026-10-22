@@ -32,7 +32,7 @@ vmagent supports both the pushing and pulling (scrape) of metrics and here are e
 
 {{< image href="/blog/vmagent-ha-examples/vmagent-ha-1.webp"  alt="vmagent push model high availability" >}}
 
-Multiple sources can push data simultaneously to two groups of identically configured [vmagents](https://docs.victoriametrics.com/vmagent.html) via the following [supported push protocols](https://docs.victoriametrics.com/vmagent.html#features):
+Multiple sources can push data simultaneously to two groups of identically configured [vmagents](https://docs.victoriametrics.com/victoriametrics/vmagent/) via the following [supported push protocols](https://docs.victoriametrics.com/victoriametrics/vmagent/#features):
 
 - InfluxDB line protocol
 - DataDog "submit metrics" API
@@ -48,13 +48,13 @@ the collected data continues flowing to the group in another AZ.
 
 The load-balancer in front of vmagent groups serves the following purposes:
 
-- Horizontal scalability. If existing vmagent nodes in the group reach their scalability limits, then just add new vmagent nodes in order to process bigger amounts of data.
+- Horizontal scalability. If existing vmagent nodes in the group reach their scalability limits, then just add new vmagent nodes in order to process larger amounts of data.
 - High availability. If a single vmagent becomes unavailable, then the load-balancer continues routing the incoming data via the remaining available vmagent nodes.
 
-vmagent nodes push the incoming data to VictoriaMetrics (either [single-node](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html)
-or [cluster version](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html) may be used for storing the data).
+vmagent nodes push the incoming data to VictoriaMetrics (either [single-node](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/)
+or [cluster version](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/) may be used for storing the data).
 
-The deduplication must be set up at VictoriaMetrics in order to remove duplicate samples received via two vmagent groups. See [how to deduplicate data in single-node VictoriaMetrics](https://docs.victoriametrics.com/#deduplication) and [how to deduplicate data in cluster version of VictoriaMetrics](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#deduplication).
+The deduplication must be set up at VictoriaMetrics in order to remove duplicate samples received via two vmagent groups. See [how to deduplicate data in single-node VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/#deduplication) and [how to deduplicate data in the cluster version of VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#deduplication).
 
 
 ##  **Pull and High Availability for small-to-medium loads**
@@ -62,12 +62,12 @@ The deduplication must be set up at VictoriaMetrics in order to remove duplicate
 {{< image href="/blog/vmagent-ha-examples/vmagent-ha-2.webp"  alt="vmagent pull model high availability for small-to-medium loads" >}}
 
 Two identically configured vmagent instances scrape the same targets and send the collected metrics to VictoriaMetrics
-(either [single-node](https://docs.victoriametrics.com/Single-server-VictoriaMetrics.html)
-or [cluster version](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html) may be used for storing the data).
+(either [single-node](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/)
+or [cluster version](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/) may be used for storing the data).
 If a single vmagent instance is temporarily unavailable, then the remaining vmagent continues scraping the metrics.
-This prevents from gaps in the collected data at VictoriaMetrics.
+This prevents gaps in the collected data at VictoriaMetrics.
 
-The deduplication must be set up at VictoriaMetrics in order to remove duplicate samples received via two vmagent instances. See [how to deduplicate data in single-node VictoriaMetrics](https://docs.victoriametrics.com/#deduplication) and [how to deduplicate data in cluster version of VictoriaMetrics](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#deduplication).
+The deduplication must be set up at VictoriaMetrics in order to remove duplicate samples received via two vmagent instances. See [how to deduplicate data in single-node VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/#deduplication) and [how to deduplicate data in the cluster version of VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#deduplication).
 
 ##  **Pull and High Availability for high loads**
 
@@ -85,6 +85,6 @@ Every vmagent instance must have unique value for the `-promscrape.cluster.membe
 In this setup every vmagent instance scrapes `promscrape.cluster.replicationFactor / promscrape.cluster.membersCount` part of all the scrape targets
 defined at `-promscrape.config` (including dynamically discovered scrape targets).
 
-If `-promscrape.cluster.replicationFactor` is set to a value greater than 1, then deduplication must be set up at VictoriaMetrics in order to remove duplicate samples received from vmagent replicas. See [how to deduplicate data in single-node VictoriaMetrics](https://docs.victoriametrics.com/#deduplication) and [how to deduplicate data in cluster version of VictoriaMetrics](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#deduplication).
+If `-promscrape.cluster.replicationFactor` is set to a value greater than 1, then deduplication must be set up at VictoriaMetrics in order to remove duplicate samples received from vmagent replicas. See [how to deduplicate data in single-node VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/#deduplication) and [how to deduplicate data in the cluster version of VictoriaMetrics](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#deduplication).
 
 Give it a try and please do share your feedback or ask us any questions via the comments section below. We’d love to know your experience!

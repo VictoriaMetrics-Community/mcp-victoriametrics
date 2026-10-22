@@ -6,6 +6,7 @@ authors:
 date: 2022-04-04
 enableComments: true
 title: "Pricing comparison for Managed Prometheus"
+description: "To help with choosing the most cost-effective solution, we compare managed service for Prometheus pricing across AWS, Google Cloud, and VictoriaMetrics. "
 summary: "We'll have to see what would be the cost of serving the same workload 
 at Amazon Managed Service for Prometheus, Google Cloud Managed Service for Prometheus and VictoriaMetrics Cloud."
 aliases:
@@ -22,6 +23,8 @@ tags:
 images:
  - /blog/managed-prometheus-pricing/title.webp
 ---
+
+> **Summary**: This post breaks down the managed service for Prometheus pricing, comparing the cost of ingesting and storing metrics on Amazon Managed Service for Prometheus vs Google Cloud Managed Service for Prometheus and VictoriaMetrics. The result: AWS comes in at ~$13K/month, Google much higher, while VictoriaMetrics offers dramatically lower and more predictable pricing.
 
 Observability has become a critical part of many companies and their business.
 
@@ -197,3 +200,26 @@ Besides all the features provided by VictoriaMetrics itself, the service also pr
 monitoring solution without extra complexity and maintenance burden. As a welcome pack, we provide **$200** bonus 
 for [newly registered accounts](https://console.victoriametrics.cloud/signUp). This is enough for running a VictoriaMetrics instance with 2vCPU and 4GB of RAM 
 for free for a month!
+
+## Frequently Asked Questions
+
+### What are the main pricing differences between Amazon Managed Service for Prometheus and Google Cloud Managed Service for Prometheus?
+
+AWS and Google both use usage-based pricing, but their billing models differ across ingestion, storage, and query/read activity. At VictoriaMetrics, we recommend checking current provider pricing pages because costs can change quickly and depend heavily on workload size and usage patterns.
+
+### Are there hidden costs or variable charges (e.g. for read/query traffic, network egress) not included in the article's estimates?
+
+Yes. Query/read activity, network transfer, retention, scrape frequency, and high-cardinality metrics can all affect the final bill. In our article, we treat pricing estimates as workload examples, not fixed totals. Teams should validate costs against their own architecture and usage.
+
+### Are there differences in SLAs, performance, and support between these managed Prometheus offerings?
+
+Yes. AWS and Google differ in architecture, regional availability, retention, integrations, SLAs, and support options. At VictoriaMetrics, we recommend reviewing each provider's official documentation and support terms before choosing a managed Prometheus service for production workloads.
+
+### How is managed service for Prometheus pricing calculated across ingest, storage, and query usage?
+
+Managed Prometheus pricing is usually driven by samples ingested, data stored, retention period, and query or read volume. At VictoriaMetrics, we recommend modeling costs around scrape interval, active series count, cardinality, and dashboard or alerting frequency. For the latest info on our cloud-based tiers, check out this blog post: <https://victoriametrics.com/blog/new-tiers-in-victoriametrics-cloud-2025/>
+
+### Does using a managed Prometheus service eliminate the need to manage the infrastructure, scaling, and maintenance overhead?
+
+It reduces infrastructure work, but it does not remove all operational responsibility. Teams still need to manage metric volume, cardinality, scrape intervals, dashboards, alerts, access, and costs. At VictoriaMetrics, we see managed services as reducing overhead, not eliminating it.
+

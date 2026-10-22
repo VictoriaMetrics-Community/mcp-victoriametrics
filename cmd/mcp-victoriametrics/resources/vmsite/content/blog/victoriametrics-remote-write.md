@@ -21,13 +21,13 @@ images:
 #### Prometheus remote write protocol
 
 Prometheus remote write protocol is used by Prometheus for sending data to remote storage systems
-such as VictoriaMetrics. See [these docs](https://docs.victoriametrics.com/#prometheus-setup) on how to setup Prometheus
-to send the data to VictoriaMetrics. This protocol is very simple - it writes the collected [raw samples](https://docs.victoriametrics.com/keyConcepts.html#raw-samples)
+such as VictoriaMetrics. See [these docs](https://docs.victoriametrics.com/victoriametrics/#prometheus-setup) on how to set up Prometheus
+to send the data to VictoriaMetrics. This protocol is very simple - it writes the collected [raw samples](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#raw-samples)
 into [WriteRequest protobuf message](https://github.com/prometheus/prometheus/blob/35026fb26d30fb63dbe6557058fb336c1bd400fa/prompb/remote.proto#L22),
 then compresses the message with [Snappy compression algorithm](https://github.com/google/snappy) and sends it to the remote storage
 in an [HTTP POST](https://en.wikipedia.org/wiki/POST_(HTTP)) request.
 
-[vmagent](https://docs.victoriametrics.com/vmagent.html) uses Prometheus remote write protocol for transferring the collected samples
+[vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) uses Prometheus remote write protocol for transferring the collected samples
 to remote storage specified via `-remoteWrite.url`.
 
 The Prometheus remote write protocol serves well in most cases. But it isn't optimized for low network bandwidth usage.
@@ -42,10 +42,10 @@ at a rate of 1 million of samples/sec. Our internal stats show that an average d
 `50MB/sec * 3600sec * 24h * 30d = 129600GB` of network traffic per month. 1GB of egress network traffic costs $0.08 at Google Cloud
 according to [this pricing](https://cloud.google.com/vpc/network-pricing). So the monthly network transfer costs will be around `129600GB * $0.08 = $10K`.
 
-The issue with high network costs when transferring the data from [vmagent](https://docs.victoriametrics.com/vmagent.html)
+The issue with high network costs when transferring the data from [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/)
 to Prometheus-compatible remote storage is quite common. That's why we started exploring on how to resolve it.
 
-Prometheus remote write protocol transfers all the labels with each [sample](https://docs.victoriametrics.com/keyConcepts.html#raw-samples).
+Prometheus remote write protocol transfers all the labels with each [sample](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#raw-samples).
 Real-world samples usually contain a big number of labels. For example:
 
 
@@ -69,7 +69,7 @@ needed per each sample stored by VictoriaMetrics.
 
 #### Possible solutions for reducing network bandwidth costs
 
-A single [time series](https://docs.victoriametrics.com/keyConcepts.html#time-series) usually consists of many samples.
+A single [time series](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#time-series) usually consists of many samples.
 These samples are sent to the remote storage with some interval. This interval is known as `scrape_interval` in the Prometheus ecosystem.
 So we can assign a small id per each new time series seen on the wire and then send the series id together with `(value, timestamp)`
 to the remote storage instead of sending the metric name plus labels next time. This allows sending `<4-byte sample id> + <8-byte value> + <8-byte timestamp> = 20 bytes`
@@ -120,12 +120,12 @@ between different cloud providers.
 
 #### How to enable VictoriaMetrics remote write protocol?
 
-Just [upgrade](https://docs.victoriametrics.com/#how-to-upgrade-victoriametrics) VictoriaMetrics components (including [vmagent](https://docs.victoriametrics.com/vmagent.html))
-to [v1.88](https://docs.victoriametrics.com/CHANGELOG.html) or to any version beyond that.
+Just [upgrade](https://docs.victoriametrics.com/victoriametrics/#how-to-upgrade-victoriametrics) VictoriaMetrics components (including [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/))
+to [v1.88](https://docs.victoriametrics.com/victoriametrics/changelog/) or to any version beyond that.
 
 `vmagent` automatically detects whether the configured remote storage supports VictoriaMetrics remote write protocol
 and uses this protocol instead of Prometheus remote write protocol for data transfer.
-See [these docs](https://docs.victoriametrics.com/vmagent.html#victoriametrics-remote-write-protocol) for more details.
+See [these docs](https://docs.victoriametrics.com/victoriametrics/vmagent/#victoriametrics-remote-write-protocol) for more details.
 
 #### Future work
 

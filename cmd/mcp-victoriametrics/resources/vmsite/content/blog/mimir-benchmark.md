@@ -95,12 +95,12 @@ scrapeConfigUpdateInterval: 10m
 _See the full list of used configuration params [here](https://gist.github.com/hagen1778/a0824cde3903d6506e1b18eff7fd8b40)._
 
 Each node_exporter target in the benchmark generates around
-**900** (depends on hardware where node_exporter runs) [time series](https://docs.victoriametrics.com/keyConcepts.html#time-series).
+**900** (depends on hardware where node_exporter runs) [time series](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#time-series).
 `targetsCount=6000` and `scrapeInterval=15s` generate around **5.5 million active series** at the ingestion rate **360k samples/s**
 to each configured remote storage.
 `queryInterval=15s` for
 configured [list of alerts](https://github.com/VictoriaMetrics/prometheus-benchmark/blob/main/chart/files/alerts.yaml)
-generates about **1.5 queries/s** of a read load via [instant queries](https://docs.victoriametrics.com/keyConcepts.html#instant-query). 
+generates about **1.5 queries/s** of a read load via [instant queries](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#instant-query). 
 `scrapeConfigUpdatePercent=1` and `scrapeConfigUpdateInterval=10m` generates a [churn rate](https://docs.victoriametrics.com/FAQ.html#what-is-high-churn-rate)
 of ~60k new time series every 10 minutes.
 
@@ -178,7 +178,7 @@ very useful and easy to understand. Mimir's team did a great job here by making 
 
 ### VictoriaMetrics setup
 
-VictoriaMetrics [cluster architecture](https://docs.VictoriaMetrics.com/Cluster-VictoriaMetrics.html#architecture-overview)
+VictoriaMetrics [cluster architecture](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#architecture-overview)
 looks as the following:
 
 {{< image href="/blog/mimir-benchmark/vmcluster_arch.webp" class="wide-img" alt="VictoriaMetrics cluster architecture" >}}
@@ -195,8 +195,8 @@ to remain in boundaries set by allocation for Mimir:
 | vmstorage | 10       | 2      | 16        |
 | **Total** |          | **44** | **208**   |
 
-_Please note, we [recommended](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#capacity-planning)
-to run a cluster with big number of small vmstorage nodes instead of a cluster with small number of big vmstorage nodes_
+_Please note, we [recommended](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#capacity-planning)
+to run a cluster with a large number of small vmstorage nodes instead of a cluster with a small number of big vmstorage nodes_
 
 VictoriaMetrics resource allocation exceeds CPU limit by ~1 core and uses about 80GiB less memory.
 The complete override list for helm chart values can be found [here](https://gist.github.com/hagen1778/bf143173b5512515950f41e3a9bd6005).
@@ -221,7 +221,7 @@ for self-monitoring.
 - the total number of new time series generated during the benchmark is **~13.6 million**: `5.5M initial series + 6K series/min * 60min * 24`.
 
 In the used [benchmark utility](https://github.com/VictoriaMetrics/prometheus-benchmark), the ingestion load is generated 
-by [vmagent](https://docs.victoriametrics.com/vmagent.html). It exposes a lot of useful metrics
+by [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/). It exposes a lot of useful metrics
 and curious readers can investigate them on the [Grafana dashboard snapshot](https://snapshots.raintank.io/dashboard/snapshot/AjF4PJvLouPB807ypreMy1XBiy377P4n).
 According to the metrics, both remote storages were fine with the ingestion. No errors were returned, no data was dropped, 
 every metric was delivered as expected.
@@ -279,9 +279,9 @@ The CPU usage of VictoriaMetrics is lower than Mimir's:
 
 For curious readers, [the snapshot](https://snapshots.raintank.io/dashboard/snapshot/1lXGSoVm6xVDtKVZ8LFQvBCG1uDYKChJ?viewPanel=2)
 contains detailed information about per-pod CPU usage. The metrics prove once again that both solutions have very
-different architecture and components design. For Mimir, the top CPU users are [ingesters](https://grafana.com/docs/mimir/latest/operators-guide/architecture/components/ingester/) - they alone are responsible
+different designs for architecture and components. For Mimir, the top CPU users are [ingesters](https://grafana.com/docs/mimir/latest/operators-guide/architecture/components/ingester/) - they alone are responsible
 for consuming 13 CPU cores on average, with spikes up to 18 and utilization of 80% of their limits. 
-For VictoriaMetrics, the most of CPU is used by [vmselects](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#architecture-overview): 7 CPUs on average, with spikes up to 12 CPU cores and
+For VictoriaMetrics, most of the CPU is used by [vmselects](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#architecture-overview): 7 CPUs on average, with spikes up to 12 CPU cores and
 utilization of 70% of their limits. On average, VictoriaMetrics consumes **1.7 times less CPU** than Mimir in this
 benchmark.
 
@@ -298,13 +298,13 @@ The latency for read queries has the following stats:
 
 {{< image href="/blog/mimir-benchmark/mimir-vm-latency.webp" class="wide-img" alt="Read queries latency for Mimir and VictoriaMetrics" >}}
 
-As was mentioned, read load consists of [instant queries](https://docs.victoriametrics.com/keyConcepts.html#instant-query)
+As was mentioned, read load consists of [instant queries](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#instant-query)
 only and is generated by an external ruler which executes [alerting rules](https://github.com/VictoriaMetrics/prometheus-benchmark/blob/main/chart/files/alerts.yaml)
 for node_exporter metrics. The list of rules contains lightweight queries and heavy queries touching hours of data. 
 This affects the latency, making the 50th percentile for both solutions between 100 and 500ms. 
 But the 99th percentile hits **47sec at max** for Mimir and **20sec at max** for VictoriaMetrics.
 
-I didn't test [range queries](https://docs.victoriametrics.com/keyConcepts.html#range-query) in this benchmark. 
+I didn't test [range queries](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#range-query) in this benchmark. 
 This would be a great test to run in the future.
 
 ### Replication
@@ -330,22 +330,22 @@ Replication at VictoriaMetrics protects from data loss when some of `vmstorage` 
 `vminsert` at VictoriaMetrics cluster replicates every incoming sample to `-replicationFactor` distinct `vmstorage` nodes.
 For example, if `-replicationFactor=2`, then it is safe to drop an arbitrary `vmstorage` from the cluster
 without any data loss - all the queries over arbitrary time ranges continue returning full responses.
-See [these docs](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#replication-and-data-safety) for details.
+See [these docs](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#replication-and-data-safety) for details.
 
-When some of `vmstorage` nodes are temporarily unavailable, VictoriaMetrics cluster continues accepting incoming samples
+When some of the`vmstorage` nodes are temporarily unavailable, VictoriaMetrics cluster continues accepting incoming samples
 and replicating them among the remaining `vmstorage` nodes according to the given `-replicationFactor`.
-This means that VictoriaMetrics doesn't lose incoming samples when some of `vmstorage` nodes are unavailable.
+This means that the VictoriaMetrics doesn't lose incoming samples when some of the `vmstorage` nodes are unavailable.
 
 VictoriaMetrics cluster continues serving incoming queries by fetching the needed data from the remaining `vmstorage` nodes.
 Some queries in this case may return incomplete results if they rely on the historical data stored at unavailable `vmstorage` nodes.
-Responses for such queries are marked as `incomplete`. See [these docs](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#cluster-availability) for details.
+Responses for such queries are marked as `incomplete`. See [these docs](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#cluster-availability) for details.
 
 `vmstorage` nodes do not have WAL [intentionally](https://valyala.medium.com/wal-usage-looks-broken-in-modern-time-series-databases-b62a627ab704),
 so they could start up and become operational very fast.
 
-VictoriaMetrics cluster architecture allows upgrading and reconfiguring cluster components without interruptions on data ingestion path
-and with minimal interruptions on query path even if cluster-level replication is disabled.
-See [these docs](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#updating--reconfiguring-cluster-nodes) for details.
+VictoriaMetrics cluster architecture allows upgrading and reconfiguring cluster components without interruptions in the data ingestion path
+and with minimal interruptions on the query path even if cluster-level replication is disabled.
+See [these docs](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#updating--reconfiguring-cluster-nodes) for details.
 
 While in both cases replication is about data safety, it still does not guarantee it. We run the benchmark in 
 Google Cloud using SSD persistent disks (SSD PD) for local file system and Cloud Storage as object storage for Mimir. 
@@ -398,7 +398,7 @@ benchmark. Operationally, VictoriaMetrics scaling is a bit more complicated beca
 stateful vmstorage nodes. This makes scaling down the number of vmstorage nodes non-trivial.
 I recommend always planning cluster's architecture with a decent number of vmstorage nodes.
 See more details about scaling in
-our [documentation](https://docs.VictoriaMetrics.com/Cluster-VictoriaMetrics.html#cluster-resizing-and-scalability).
+our [documentation](https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/#cluster-resizing-and-scalability).
 
 In numbers, benchmark results are the following:
 

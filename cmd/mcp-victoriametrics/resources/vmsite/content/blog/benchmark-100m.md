@@ -96,11 +96,11 @@ so we built a benchmark tool that uses it as a **source of data**. The benefits 
 * It is easy to scale by just deploying more node-exporter instances.
 
 We needed something very efficient and transparent from a monitoring perspective for delivering the data
-from node-exporter to the tested database. So we used [vmagent](https://docs.victoriametrics.com/vmagent.html) -
+from node-exporter to the tested database. So we used [vmagent](https://docs.victoriametrics.com/victoriametrics/vmagent/) -
 a swiss army knife for metrics collection. It is optimized for speed and it comes along with
 a [Grafana dashboard](https://grafana.com/grafana/dashboards/12683) for monitoring.
 
-For read load, we use [vmalert](https://docs.victoriametrics.com/vmalert.html) configured with typical alerting rules
+For read load, we use [vmalert](https://docs.victoriametrics.com/victoriametrics/vmalert/) configured with typical alerting rules
 used in production for the node-exporter metrics. `vmalert` captures latency and success rate of executed queries,
 and also provides a [Grafana dashboard](https://grafana.com/grafana/dashboards/14950) for monitoring.
 
@@ -121,12 +121,12 @@ So how did it work for the 100M benchmark? To generate 100M samples/s for a bill
 
 {{< image href="/blog/benchmark-100m/dash-overview.webp" class="wide-img" alt="Screenshot of the official Grafana dashboard for VictoriaMetrics vmagent during the benchmark." >}}
 
-The most CPU-extensive part of work for vmagent is the parsing of the scraped data. Each scrape also generates additional
+The most CPU-intensive part of the work for vmagent is the parsing of the scraped data. Each scrape also generates additional
 pressure on Nginx and node-exporter processes. So in order to save some resources, we decided to benefit
-from [VictoriaMetrics API enhancements](https://docs.victoriametrics.com/#prometheus-querying-api-enhancements).
+from [VictoriaMetrics API enhancements](https://docs.victoriametrics.com/victoriametrics/#prometheus-querying-api-enhancements).
 Adding `extra_label` param to the remote write URL instructs VictoriaMetrics to add an extra label to all
 the received data via this URL. This made it possible to introduce a `writeURLReplicas: N` benchmark config,
-which makes vmagent fan-out the scraped data `N` times, each with unique `url_replica` label in URL.
+which makes vmagent fan-out the scraped data `N` times, each with a unique `url_replica` label in URL.
 This is why vmagent scrapes 3.13M samples/s from node-exporter instances, but writes `3.13 * 32 replicas = 101M samples/s` to the remote storage.
 
 This is cheating a bit, but it has no significant effect on VictoriaMetrics itself. All the written data remains

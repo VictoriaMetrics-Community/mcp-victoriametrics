@@ -2,21 +2,21 @@
 draft: false
 page: blog blog_post
 authors:
- - Phuong Le
+  - Phuong Le
 date: 2024-09-13
 title: "Go sync.Cond, the Most Overlooked Sync Mechanism"
 summary: "In Go, sync.Cond is a synchronization primitive, though it's not as commonly used as its siblings like sync.Mutex or sync.WaitGroup. That said, as a Go engineer, you don't really want to find yourself reading through code that uses sync.Cond and not have a clue what's going on."
 enableComments: true
 categories:
- - Go @ VictoriaMetrics
- - Open Source Tech
+  - Go @ VictoriaMetrics
+  - Open Source Tech
 tags:
- - go
- - golang
- - sync
- - cond
+  - go
+  - golang
+  - sync
+  - cond
 images:
- - /blog/go-sync-cond/go-sync-cond-preview.webp
+  - /blog/go-sync-cond/go-sync-cond-preview.webp
 ---
 
 This post is part of a series about handling concurrency in Go:
@@ -26,9 +26,9 @@ This post is part of a series about handling concurrency in Go:
 - [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/)
 - Go sync.Cond, the Most Overlooked Sync Mechanism (We're here)
 - [Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map/)
+- [Understanding Go's sync.Map from API to Hash Trie](/blog/go-sync-map-hash-trie/)
 - [Go Sync.Once is Simple... Does It Really?](/blog/go-sync-once/)
 - [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight/)
-
 
 In Go, `sync.Cond` is a synchronization primitive, though it's not as commonly used as its siblings like sync.Mutex or sync.WaitGroup. You'll rarely see it in most projects or even in the standard libraries, where other sync mechanisms tend to take its place.
 
@@ -46,10 +46,10 @@ Here's what that might look like:
 
 ```go
 // wait until condition is true
-for !condition {  
+for !condition {
 }
 
-// or 
+// or
 for !condition {
     time.Sleep(100 * time.Millisecond)
 }
@@ -76,6 +76,7 @@ func (c *Cond) Broadcast() {}
 ```
 
 ![Overview of `sync.Cond`](/blog/go-sync-cond/go-sync-cond-overview.webp)
+
 <figcaption style="text-align: center; font-style: italic;">Overview of sync.Cond</figcaption>
 
 Alright, let's check out a quick pseudo-example. This time, we've got a Pokémon theme going on, imagine we're waiting for a specific Pokémon, and we want to notify other goroutines when it shows up.
@@ -104,7 +105,7 @@ func main() {
 		// Every 1ms, a random Pokémon appears
 		for i := 0; i < 100; i++ {
 			time.Sleep(time.Millisecond)
-			
+
 			cond.L.Lock()
 			pokemon = pokemonList[rand.Intn(len(pokemonList))]
 			cond.L.Unlock()
@@ -124,7 +125,7 @@ In this example, one goroutine is waiting for Pikachu to show up, while another 
 
 When the producer sends the signal, the consumer wakes up and checks if the right Pokémon has appeared. If it has, we catch the Pokémon, if not, the consumer goes back to sleep and waits for the next one.
 
-The problem is, there's a gap between the producer sending the signal and the consumer actually waking up. In the meantime, the Pokémon could change, because the consumer goroutine might wake up later than 1ms (rarely) or other goroutine modifies the shared pokemon. So `sync.Cond` is basically saying: _'Hey, something changed! Wake up and check it out, but if you're too late, it might change again.'_ 
+The problem is, there's a gap between the producer sending the signal and the consumer actually waking up. In the meantime, the Pokémon could change, because the consumer goroutine might wake up later than 1ms (rarely) or other goroutine modifies the shared pokemon. So `sync.Cond` is basically saying: _'Hey, something changed! Wake up and check it out, but if you're too late, it might change again.'_
 
 If the consumer wakes up late, the Pokémon might run away, and the goroutine will go back to sleep.
 
@@ -132,7 +133,7 @@ If the consumer wakes up late, the Pokémon might run away, and the goroutine wi
 
 Absolutely. In fact, channels are generally preferred over `sync.Cond` in Go because they're simpler, more idiomatic, and familiar to most developers.
 
-In the case above, you could easily send the Pokémon name through a channel, or just use an empty `struct{}` to signal without sending any data. But our issue isn't just about passing messages through channels, it's about dealing with a shared state. 
+In the case above, you could easily send the Pokémon name through a channel, or just use an empty `struct{}` to signal without sending any data. But our issue isn't just about passing messages through channels, it's about dealing with a shared state.
 
 Our example is pretty simple, but if multiple goroutines are accessing the shared pokemon variable, let's look at what happens if we use a channel:
 
@@ -152,33 +153,53 @@ By the way, there's actually been talk about removing sync.Cond in Go 2: [propos
 
 Well, there are certain scenarios where `sync.Cond` can be more appropriate than channels.
 
-1. With a channel, you can either send a signal to one goroutine by sending a value or notify all goroutines by closing the channel, but you can't do both. `sync.Cond` gives you more fine-grained control. You can call Signal() to wake up a single goroutine or `Broadcast()` to wake up all of them. 
+1. With a channel, you can either send a signal to one goroutine by sending a value or notify all goroutines by closing the channel, but you can't do both. `sync.Cond` gives you more fine-grained control. You can call Signal() to wake up a single goroutine or `Broadcast()` to wake up all of them.
 2. And you can call `Broadcast()` as many times as you need, which channels can't do once they're closed (closing a closed channel will trigger a panic).
 3. Channels don't provide a built-in way to protect shared data—you'd need to manage that separately with a mutex. sync.Cond, on the other hand, gives you a more integrated approach by combining locking and signaling in one package (and better performance).
 
 > **_"Why is the Lock embedded in sync.Cond?"_**
 
-In theory, a condition variable like `sync.Cond` doesn't have to be tied to a lock for its signaling to work. 
+In theory, the lock does not have to be stored as a field inside the condition variable. Another API could accept a lock as an argument to `Wait()` instead.
 
-You could have the users manage their own locks outside of the condition variable, which might sound like it gives more flexibility. It's not really a technical limitation but more about human error.
+But `Wait()` still has to coordinate 2 things: registering the goroutine for a notification and releasing the lock. If these operations happen in the wrong order, the goroutine can miss a notification and wait forever.
 
-Managing it manually can easily lead to mistakes because the pattern isn't really intuitive, you have to unlock the mutex before calling `Wait()`, then lock it again when the goroutine wakes up. This process can feel awkward and is pretty prone to errors, like forgetting to lock or unlock at the right time.
+Why does the order matter?
 
-But why does the pattern seem a little off?
-
-Typically, goroutines that call `cond.Wait()` need to check some shared state in a loop, like this:
+Typically, a goroutine acquires `L` before checking some shared state in a loop, like this:
 
 ```go
+cond.L.Lock()
 for !checkSomeSharedState() {
-    cond.Wait()
+	cond.Wait()
 }
+cond.L.Unlock()
 ```
 
-The lock embedded in `sync.Cond` helps handle the lock/unlock process for us, making the code cleaner and less error-prone, we will discuss the pattern in detail soon.
+Suppose the goroutine checks the shared state, finds that it still needs to wait, and unlocks the mutex before registering for a notification. Another goroutine could then change the shared state and call `Signal()` or `Broadcast()`. The first goroutine has not registered yet, so it would miss that notification and could wait forever if no other notification arrives:
+
+```text
+waiting goroutine              worker goroutine
+
+Lock
+check condition: false
+Unlock
+
+                               Lock
+                               change condition
+                               Unlock
+                               Signal or Broadcast
+
+register for notification
+wait forever
+```
+
+`sync.Cond.Wait()` prevents this by registering the goroutine before it releases `L`. If a notification arrives after the unlock but before the goroutine actually goes to sleep, `Wait()` detects that the notification has already arrived and does not put the goroutine to sleep.
+
+This coordination is what [the documentation](https://pkg.go.dev/sync#Cond.Wait) means when it says that `Wait()` atomically unlocks `L` and suspends execution. It does not mean that both actions happen in one CPU instruction. It means there is no gap between registering for a notification and releasing `L` in which that notification can be lost. Keeping `L` inside `sync.Cond` gives `Wait()` the lock it needs to provide this guarantee, and it also makes the API harder to misuse.
 
 ## How to use it?
 
-If you look closely at the previous example, you'll notice a consistent pattern in consumer: we always lock the mutex before waiting (`.Wait()`) on the condition, and we unlock it after the condition is met. 
+If you look closely at the previous example, you'll notice a consistent pattern in consumer: we always lock the mutex before waiting (`.Wait()`) on the condition, and we unlock it after the condition is met.
 
 Plus, we wrap the waiting condition inside a loop, here's a refresher:
 
@@ -198,16 +219,18 @@ go func() {
 
 ### Cond.Wait()
 
-When we call Wait() on a sync.Cond, we're telling the current goroutine to hang tight until some condition is met. 
+When we call `Wait()` on a `sync.Cond`, the current goroutine waits until `Signal()` or `Broadcast()` notifies it that the shared state may have changed.
 
 Here's what's happening behind the scenes:
 
-1. The goroutine gets added to a list of other goroutines that are also waiting on this same condition. All these goroutines are blocked, meaning they can't continue until they're "woken up" by either a `Signal()` or `Broadcast()` call.
-2. The key part here is that the mutex must be locked before calling `Wait()` because `Wait()` does something important, it automatically releases the lock (calls `Unlock()`) before putting the goroutine to sleep. This allows other goroutines to grab the lock and do their work while the original goroutine is waiting.
-3. When the waiting goroutine gets woken up (by `Signal()` or `Broadcast()`), it doesn't immediately resume work. First, it has to re-acquire the lock (`Lock()`).
+1. `Wait()` registers the goroutine for a notification by giving it a ticket.
+2. It releases the lock by calling `Unlock()`. This allows other goroutines to acquire the lock and change the shared state.
+3. It checks whether that ticket has already been notified. If so, it does not sleep. Otherwise, the goroutine is added to the waiting list and put to sleep until `Signal()` or `Broadcast()` notifies it.
+4. Before `Wait()` returns, it acquires the lock again by calling `Lock()`.
 
 ![The `sync.Cond.Wait()` method](/blog/go-sync-cond/go-sync-cond-wait.webp)
-<figcaption style="text-align: center; font-style: italic;">The sync.Cond.Wait() method</figcaption>
+
+<figcaption style="text-align: center; font-style: italic;">Wait registers first, then unlocks, sleeps if needed, and locks again before returning.</figcaption>
 
 Here's a look at how Wait() works under the hood:
 
@@ -216,13 +239,13 @@ func (c *Cond) Wait() {
 	// Check if Cond has been copied
 	c.checker.check()
 
-	// Get the ticket number
+	// Register this waiter and get its ticket number
 	t := runtime_notifyListAdd(&c.notify)
 
-	// Unlock the mutex		
+	// Unlock the mutex
 	c.L.Unlock()
 
-	// Suspend the goroutine until being woken up
+	// Wait unless this ticket has already been notified
 	runtime_notifyListWait(&c.notify, t)
 
 	// Re-lock the mutex
@@ -230,12 +253,13 @@ func (c *Cond) Wait() {
 }
 ```
 
-Even though it's simple, we can take away 4 main points:
+Even though it's simple, we can take away 5 main points:
 
-1. There's a checker to prevent copying the `Cond` instance, it would be panic if you do so.
-2. Calling `cond.Wait()` immediately unlocks the mutex, so the mutex must be locked before calling `cond.Wait()`, otherwise, it will panic.
-3. After being woken up, `cond.Wait()` re-locks the mutex, which means you'll need to unlock it again after you're done with the shared data.
-4. Most of `sync.Cond`'s functionality is implemented in the Go runtime with an internal data structure called `notifyList`, which uses a ticket-based system for notifications.
+1. There's a checker that detects whether a `Cond` has been copied after its first use. Using such a copy causes a panic.
+2. `runtime_notifyListAdd()` registers the goroutine by assigning it a ticket before the mutex is unlocked. This order prevents a notification from being lost between the unlock and the actual wait.
+3. Calling `cond.Wait()` unlocks the mutex, so the mutex must be locked before calling `cond.Wait()`. Otherwise, it will panic.
+4. Before returning, `cond.Wait()` locks the mutex again, which means you'll need to unlock it after you're done with the shared data.
+5. Most of `sync.Cond`'s functionality is implemented in the Go runtime with an internal data structure called `notifyList`, which uses this ticket-based notification system.
 
 Because of this lock/unlock behavior, there's a typical pattern you'll follow when using `sync.Cond.Wait()` to avoid common mistakes:
 
@@ -249,6 +273,7 @@ c.L.Unlock()
 ```
 
 ![The typical pattern for using sync.Cond.Wait()](/blog/go-sync-cond/go-sync-cond-wait-flow.webp)
+
 <figcaption style="text-align: center; font-style: italic;">The typical pattern for using sync.Cond.Wait()</figcaption>
 
 > **_"Why not just use `c.Wait()` directly without a loop?"_**
@@ -263,8 +288,8 @@ The loop keeps things in check by continuously testing the condition, and only w
 
 The Signal() method is used to wake up one goroutine that's currently waiting on a condition variable.
 
-- If there are no goroutines currently waiting, `Signal()` doesn't do anything, it's basically a no-op in that case.
-- If there are goroutines waiting, `Signal()` wakes up the first one in the queue. So if you've fired off a bunch of goroutines, like from 0 to n, the 0th goroutine will be the first one woken up by the `Signal()` call.
+- If no goroutine has registered for a notification, `Signal()` doesn't do anything. It is a no-op in that case.
+- If goroutines are waiting, `Signal()` notifies one of them. The API does not guarantee which goroutine will run first after the notification.
 
 Let's walk through a quick example:
 
@@ -288,9 +313,11 @@ func main() {
 	time.Sleep(100 * time.Millisecond) // wait for goroutines to be woken up
 }
 
-// Output:
+// Possible output:
 // 0
 ```
+
+This run happened to print `0`, but another waiting goroutine could print its number instead. `Signal()` wakes one waiter without guaranteeing the order in which waiting goroutines resume execution.
 
 The idea here is that `Signal()` is used to wake up one goroutine and tell it that the condition **might** be satisfied. Here's what the `Signal()` implementation looks like:
 
@@ -301,7 +328,7 @@ func (c *Cond) Signal() {
 }
 ```
 
-You don't have to lock the mutex before calling `Signal()`, but it's generally a good idea to do so, especially if you're modifying shared data and it's being accessed concurrently.
+You don't have to hold `c.L` when calling `Signal()`. However, the shared condition must still be read and changed while holding `c.L`. A goroutine can change the condition under the lock, release the lock, and then call `Signal()`.
 
 How about `cond.Broadcast()`?
 
@@ -312,7 +339,7 @@ func (c *Cond) Broadcast() {
 }
 ```
 
-When you call `Broadcast()`, it wakes up all the waiting goroutines and removes them from the queue. The internal logic here is still pretty simple, hidden behind the `runtime_notifyListNotifyAll()` function.
+When you call `Broadcast()`, it notifies all goroutines that are currently waiting. Each goroutine still has to acquire `c.L` again before its call to `Wait()` can return. The internal logic here is hidden behind the `runtime_notifyListNotifyAll()` function.
 
 ```go
 func main() {
@@ -345,7 +372,7 @@ func main() {
 // 7
 ```
 
-This time, all the goroutines are woken up within the 100 milliseconds, but there's no specific order to how they're woken up. 
+This time, all the goroutines are woken up within the 100 milliseconds, but there's no specific order to how they're woken up.
 
 When `Broadcast()` is called, it marks all the waiting goroutines as ready to run, but they don't run immediately, they're picked based on the Go scheduler's underlying algorithm, which can be a bit unpredictable.
 
@@ -357,7 +384,7 @@ In all our Go blog posts, we like to include a section on how things work under 
 
 The copy checker (`copyChecker`) in the sync package is designed to catch if a `Cond` object has been copied after it's been used for the first time. The "first time" could be any of the public methods like `Wait()`, `Signal()`, or `Broadcast()`.
 
-If the `Cond` gets copied after that first use, the program will panic with the error: _"sync.Cond is copied"_. 
+If the `Cond` gets copied after that first use, the program will panic with the error: _"sync.Cond is copied"_.
 
 You might have seen something similar in `sync.WaitGroup` or `sync.Pool`, where they use a `noCopy` field to prevent copying, but in those cases, it just avoids the issue without causing a panic.
 
@@ -400,14 +427,15 @@ The final check `uintptr(*c) != uintptr(unsafe.Pointer(c))` (it's the same as th
 
 > **_"Why the extra check at the end? Isn't two checks enough to panic?"_**
 
-The reason for the third check is that the first and second checks aren't atomic. 
+The reason for the third check is that the first and second checks aren't atomic.
 
 ![Race condition during initialization](/blog/go-sync-cond/go-sync-cond-copychecker-race.webp)
+
 <figcaption style="text-align: center; font-style: italic;">Race condition during initialization</figcaption>
 
 If this is the first time the copyChecker is being used, it hasn't been initialized yet, and its value will be zero. In that case, the check will pass incorrectly, even though the object hasn't been copied but just hasn't been initialized.
 
-### notifyList - Tick-based Notification List
+### notifyList - Ticket-based Notification List
 
 Beyond the locking and copy-checking mechanisms, one of the other important parts of `sync.Cond` is the `notifyList`.
 
@@ -447,6 +475,7 @@ type notifyList struct {
 If you look at the head and tail, you probably guess this is some kind of linked list, and you'd be right. It's a linked list of sudog (short for "pseudo-goroutine"), which represents a goroutine waiting on synchronization events, like waiting to receive or send data on a channel or waiting on a condition variable.
 
 ![The `notifyList` data structure](/blog/go-sync-cond/go-sync-cond-notifylist.webp)
+
 <figcaption style="text-align: center; font-style: italic;">The notifyList data structure</figcaption>
 
 The `head` and `tail` are pointers to the first and last goroutine in this list. Meanwhile, the `wait` and `notify` fields act as "ticket" numbers that are continuously increasing, each representing a position in the queue of waiting goroutines.
@@ -458,15 +487,15 @@ And that's the core idea behind `notifyList`, let's put them together to see how
 
 #### notifyListAdd()
 
-When a goroutine is about to wait for a notification, it calls `notifyListAdd()` to get its "ticket" first.
+When a goroutine is about to wait for a notification, it calls `notifyListAdd()` to get its "ticket" first. Getting this ticket registers the goroutine for a future notification, even though the goroutine has not entered the linked list or gone to sleep yet.
 
 ```go
 func (c *Cond) Wait() {
 	c.checker.check()
-	// Get the ticket number
+	// Register this waiter and get its ticket number
 	t := runtime_notifyListAdd(&c.notify)
 	c.L.Unlock()
-	// Add the goroutine to the list and suspend it
+	// Wait unless this ticket has already been notified
 	runtime_notifyListWait(&c.notify, t)
 	c.L.Lock()
 }
@@ -478,15 +507,16 @@ func notifyListAdd(l *notifyList) uint32 {
 
 The ticket assignment is handled by an atomic counter. So when a goroutine calls notifyListAdd(), that counter ticks up, and the goroutine is handed the next available ticket number.
 
-Every goroutine gets its own unique ticket number, and this process happens **without any lock**. This means that multiple goroutines can request tickets at the same time without waiting for each other.
+Every goroutine gets its own unique ticket number, and this process does not acquire the `notifyList` lock. This means that multiple goroutines can request tickets at the same time without waiting for that internal lock.
 
 For example, if the current ticket counter is sitting at 5, the goroutine that calls `notifyListAdd()` next will get ticket number 5, and the wait counter will then bump up to 6, ready for the next one in line. The `wait` field always points to the next ticket number that'll be issued.
 
 But here's where things get a little tricky.
 
-Since many goroutines can grab a ticket at the same time, there's a small gap between when they call `notifyListAdd()` and when they actually enter `notifyListWait()`. Their order isn't necessarily guaranteed, even though the ticket numbers are issued sequentially, the order in which the goroutines get added to the linked list might not be `1, 2, 3`. Instead, it could end up being `3, 2, 1`, or `2, 1, 3`, it all depends on the timing.
+Since many goroutines can grab a ticket at the same time, there's a small gap between when they call `notifyListAdd()` and when they actually enter `notifyListWait()`. The ticket numbers are issued sequentially, but the goroutines might not enter the linked list in that same order. The list could contain tickets `3, 2, 1` or `2, 1, 3`, depending on when each goroutine reaches `notifyListWait()`.
 
 ![The ticket number is issued sequentially, but the order in which goroutines get added to the linked list is not guaranteed.](/blog/go-sync-cond/go-sync-cond-add-wait-race.webp)
+
 <figcaption style="text-align: center; font-style: italic;">The order in which goroutines get added to the linked list is not guaranteed.</figcaption>
 
 After getting its ticket, the next step for the goroutine is to "wait" for its turn to be notified. This happens when the goroutine calls `notifyListWait(t)`, where `t` is the ticket number it just got.
@@ -518,15 +548,15 @@ func notifyListWait(l *notifyList, t uint32) {
 }
 ```
 
-Before doing anything else, the goroutine checks if its ticket has already been notified. 
+After locking the `notifyList`, the goroutine first checks whether its ticket has already been notified.
 
-It compares its own ticket (`t`) with the current notify number. If the notify number has already passed the goroutine's ticket, it doesn't have to wait at all—it can jump straight to the shared resource and get to work
+It compares its own ticket (`t`) with the current notify number. If the notify number has already passed the goroutine's ticket, the notification has already arrived, so `notifyListWait()` returns without putting the goroutine to sleep. `Cond.Wait()` then locks `c.L` again before returning to the caller.
 
-It turns out, This quick check is really important, especially when we dive into how `Signal()` and `Broadcast()` work. But if the goroutine's ticket hasn't been notified yet, it adds itself to the waiting list and then goes to sleep, or "parks," until being notified.
+This quick check is important when we look at how `Signal()` and `Broadcast()` work. If the goroutine's ticket has not been notified yet, it adds itself to the waiting list and then goes to sleep, or "parks," until it is notified.
 
 #### notifyListNotifyOne()
 
-When it's time to notify waiting goroutines, the system starts with the smallest ticket number that hasn't been notified yet, this is tracked by `l.notify`.
+When it's time to notify a waiting goroutine, the system starts with the next ticket that has not been notified yet. This ticket is tracked by `l.notify`.
 
 ```go
 func notifyListNotifyOne(l *notifyList) {
@@ -570,24 +600,27 @@ func notifyListNotifyOne(l *notifyList) {
 }
 ```
 
-Remember how we talked about the ticket order not being guaranteed? 
+Remember how we talked about goroutines entering the linked list in a different order from their ticket numbers?
 
-You might have goroutines with tickets `2, 1, 3`, but the notify number is always increasing sequentially. So, when the system is ready to wake up a goroutine, it loops through the linked list, looking for the goroutine holding the next ticket in line (the 1st). Once it finds it, it removes the goroutine from the list and marks it as ready to run.
+The linked list might contain goroutines with tickets `2, 1, 3` in that order, while `l.notify` still advances one ticket at a time. `notifyListNotifyOne()` scans the list for the goroutine whose ticket matches the current `l.notify` value. If it finds that goroutine, it removes the goroutine from the list and marks it as ready to run.
 
-But here's where it gets interesting, there's sometimes a timing issue. Let's say a goroutine has grabbed a ticket, but it hasn't yet been added to the list of waiting goroutines by the time this function runs.
+This ticket order is part of the current runtime implementation, not an ordering guarantee provided by the `sync.Cond` API. A goroutine that has been marked as ready must also compete to acquire `c.L` before its call to `Wait()` can return.
+
+Another order is possible. A goroutine may have received a ticket but not yet entered the waiting list when `notifyListNotifyOne()` runs.
 
 What happens then? For example, the sequence could go like this: `notifyListAdd()` -> `notifyListNotifyOne()` -> `notifyListWait()`.
 
-In that case, the function scans through the list but doesn't find a goroutine with the matching ticket. No worries, though, `notifyListWait()` takes care of this situation when the goroutine eventually calls it. 
+In that case, the function scans the list but does not find a goroutine with the matching ticket. When the goroutine eventually calls `notifyListWait()`, it sees that its ticket has already been notified and does not go to sleep.
 
 ![Goroutine with ticket 3 is not in the list yet](/blog/go-sync-cond/go-sync-cond-notifyone-race.webp)
+
 <figcaption style="text-align: center; font-style: italic;">Goroutine with ticket 3 is not in the list yet</figcaption>
 
 Remember that important check I mentioned earlier? The one in the `notifyListWait()` function: `if less(t, l.notify) { ... }`?
 
-This check is important because it allows a goroutine holding a ticket number less than the current `l.notify` value to realize, _"Hey, my turn's already passed, I can go now."_ In that case, the goroutine skips waiting and immediately proceeds to access the shared resource.
+This check allows a goroutine with a ticket number lower than the current `l.notify` value to see that its notification has already arrived. In that case, the goroutine skips sleeping and returns from `notifyListWait()`. It still has to lock `c.L` again before `Cond.Wait()` returns.
 
-So, even if the goroutine hasn't entered the linked list yet, it can still be notified if it's holding a valid ticket. This is what makes the design so smooth, each goroutine can grab its ticket right away, without having to wait for others or for its turn to be added to the list. It keeps everything moving without unnecessary blocking.
+So, even if the goroutine has not entered the linked list yet, its ticket can still be notified. This is the important guarantee provided by the ticket system. A notification that arrives after `notifyListAdd()` but before `notifyListWait()` is not lost.
 
 #### notifyListNotifyAll()
 
@@ -618,7 +651,7 @@ func notifyListNotifyAll(l *notifyList) {
 }
 ```
 
-The code is pretty simple, and I think you've got the gist already. Basically, `Broadcast()` goes through the entire list of waiting goroutines, marks all of them as ready, and clears out the list.
+`Broadcast()` moves `l.notify` forward to the current value of `l.wait`, so every ticket that has already been issued counts as notified. It also removes all goroutines that are already in the waiting list and marks them as ready. A goroutine that has a ticket but has not entered the list yet will see the updated `l.notify` value when it reaches `notifyListWait()`, so it will not go to sleep.
 
 Let's wrap up the article with a final warning: it's very hard to get this right, very easy to misuse `sync.Cond` and bring in some tricky, hard-to-debug issues. After covering the technical side, I'd recommend checking out the [proposal: sync: remove the Cond type](https://github.com/golang/go/issues/21165) as the next step from an engineering perspective.
 

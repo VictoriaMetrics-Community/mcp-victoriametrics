@@ -43,7 +43,7 @@ In this blog post, we’d like to share a summary of these highlights.
 
 **Let's Encrypt support**
 
-All the VictoriaMetrics Enterprise components support automatic issuing of TLS certificates for public HTTPS servers via Let’s Encrypt service. [Read more](https://docs.victoriametrics.com/#automatic-issuing-of-tls-certificates).
+All the VictoriaMetrics Enterprise components support automatic issuing of TLS certificates for public HTTPS servers via Let’s Encrypt service. [Read more](https://docs.victoriametrics.com/victoriametrics/#automatic-issuing-of-tls-certificates).
 
 **VictoriaMetrics k8s operator**
 
@@ -186,8 +186,8 @@ We’ve had some nice press coverage in the past few months as well as some comm
 * [KubeCon24: VictoriaMetrics' Simpler Alternative to Prometheus](https://thenewstack.io/kubecon24-victoriametrics-simpler-alternative-to-prometheus/)
 * [VictoriaMetrics Machine Learning takes monitoring to the next level](https://digitalisationworld.com/news/67266/victoriametrics-machine-learning-takes-monitoring-to-the-next-level)
 * [OpenTelemetry Is Too Complicated, VictoriaMetrics Says](https://www.datanami.com/2024/04/01/opentelemetry-is-too-complicated-victoriametrics-says/)
-* [AI and Machine Learning will not save the planet (yet)](https://www.techradar.com/pro/ai-and-machine-learning-will-not-save-the-planet-yethttps:/)
-* [How VictoriaMetrics' open source approach led to mass industry adoption](https://tech.eu/2024/05/03/how-victoriametrics-open-source-approach-led-to-mass-industry-adoption/https:/)
+* [AI and Machine Learning will not save the planet (yet)](https://www.techradar.com/pro/ai-and-machine-learning-will-not-save-the-planet-yet)
+* [How VictoriaMetrics' open source approach led to mass industry adoption](https://tech.eu/2024/05/03/how-victoriametrics-open-source-approach-led-to-mass-industry-adoption/)
 * [Green coding - VictoriaMetrics: The efficiency vs complexity trade-off](https://www.computerweekly.com/blog/CW-Developer-Network/Green-coding-VictoriaMetrics-The-efficiency-vs-complexity-trade-off)
 * [How will energy prices affect data center costs in 2024 and beyond?](https://www.itpro.com/infrastructure/data-centres/how-will-energy-prices-affect-data-center-costs-in-2024-and-beyond)
 * [VictoriaMetrics slashes data storage bills by 90%](https://msp-channel.com/news/67792/victoriametrics-slashes-data-storage-bills-by-90)

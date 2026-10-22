@@ -26,6 +26,7 @@ This article is part of our ongoing series about handling concurrency in Go, a q
 - [Go sync.Pool and the Mechanics Behind It](/blog/go-sync-pool/)
 - [Go sync.Cond, the Most Overlooked Sync Mechanism](/blog/go-sync-cond/)
 - [Go sync.Map: The Right Tool for the Right Job](/blog/go-sync-map/)
+- [Understanding Go's sync.Map from API to Hash Trie](/blog/go-sync-map-hash-trie/)
 - Go sync.Once is Simple... Does It Really? (We're here) 
 - [Go Singleflight Melts in Your Code, Not in Your DB](/blog/go-singleflight/)
 

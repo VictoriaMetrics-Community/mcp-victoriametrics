@@ -84,7 +84,7 @@ Across all three events, these conferences provided valuable feedback from pract
 
 Beyond presenting technical work, we also used these events to actively support the broader cloud-native community. Through our talks and conversations, we highlighted initiatives such as the CNCF [Merge-Forward](https://community.cncf.io/merge-forward/), which focuses on welcoming and supporting underrepresented groups in tech. These discussions reinforced the idea that observability does not exist in isolation, but as part of a broader ecosystem that depends on shared standards, open governance, and sustained community investment.
 
-Check out [VictoriaMetrics](https://victoriametrics.com/products/open-source/), [VictoriaLogs](https://victoriametrics.com/products/victorialogs/), and [VictoriaTraces](https://docs.victoriametrics.com/victoriatraces/) for more details, and get involved with our [community](https://victoriametrics.com/community/). If you spot anything outdated or have questions, don’t hesitate to reach out. You can drop me a DM on [LinkedIn](https://www.linkedin.com/in/diana-todea-b2a79968/).
+Check out [VictoriaMetrics](https://victoriametrics.com/products/victoriametrics/), [VictoriaLogs](https://victoriametrics.com/products/victorialogs/), and [VictoriaTraces](https://docs.victoriametrics.com/victoriatraces/) for more details, and get involved with our [community](https://victoriametrics.com/community/). If you spot anything outdated or have questions, don’t hesitate to reach out. You can drop me a DM on [LinkedIn](https://www.linkedin.com/in/diana-todea-b2a79968/).
 
 ## Further reading:
 1. [VictoriaMetrics official documentation](https://docs.victoriametrics.com/)
