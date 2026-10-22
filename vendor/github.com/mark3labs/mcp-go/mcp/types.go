@@ -240,15 +240,16 @@ func (m *Meta) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// NewMetaFromMap builds metadata without modifying or retaining the caller's map.
+// Nested values are shared; only the top-level map is copied.
 func NewMetaFromMap(m map[string]any) *Meta {
-	progressToken := m["progressToken"]
-	if progressToken != nil {
-		delete(m, "progressToken")
-	}
+	fields := maps.Clone(m)
+	progressToken := fields["progressToken"]
+	delete(fields, "progressToken")
 
 	return &Meta{
 		ProgressToken:    progressToken,
-		AdditionalFields: m,
+		AdditionalFields: fields,
 	}
 }
 
@@ -1453,6 +1454,8 @@ func (t *ToolResultContent) UnmarshalJSON(data []byte) error {
 	t.ToolUseID = raw.ToolUseID
 	t.IsError = raw.IsError
 
+	t.RawStructuredContent = nil
+	t.StructuredContent = nil
 	if len(raw.StructuredContent) > 0 {
 		t.RawStructuredContent = append(json.RawMessage(nil), raw.StructuredContent...)
 		if err := json.Unmarshal(raw.StructuredContent, &t.StructuredContent); err != nil {
@@ -1460,7 +1463,8 @@ func (t *ToolResultContent) UnmarshalJSON(data []byte) error {
 		}
 	}
 
-	if len(raw.Content) > 0 {
+	t.Content = nil
+	if raw.Content != nil {
 		t.Content = make([]Content, 0, len(raw.Content))
 		for _, rawContent := range raw.Content {
 			c, err := UnmarshalContent(rawContent)
@@ -1815,7 +1819,22 @@ type TaskResultResult struct {
 	// Tool call result fields (for task-augmented tool calls)
 	Content           []Content `json:"content,omitempty"`
 	StructuredContent any       `json:"structuredContent,omitempty"`
-	IsError           bool      `json:"isError,omitempty"`
+	// RawStructuredContent preserves structured JSON precision when forwarding a parsed result.
+	RawStructuredContent json.RawMessage `json:"-"`
+	IsError              bool            `json:"isError,omitempty"`
+}
+
+// MarshalJSON preserves the original structured content of a parsed task result.
+func (r TaskResultResult) MarshalJSON() ([]byte, error) {
+	type alias TaskResultResult
+	out := struct {
+		alias
+		StructuredContent any `json:"structuredContent,omitempty"`
+	}{alias: alias(r), StructuredContent: r.StructuredContent}
+	if len(r.RawStructuredContent) > 0 {
+		out.StructuredContent = r.RawStructuredContent
+	}
+	return json.Marshal(out)
 }
 
 // CancelTaskRequest cancels an in-progress task.
