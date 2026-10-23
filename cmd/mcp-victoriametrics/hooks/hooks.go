@@ -99,13 +99,19 @@ func NewLoggerHooks() *server.Hooks {
 
 	hooks.AddOnSuccess(func(ctx context.Context, id any, method mcp.MCPMethod, message any, result any) {
 		sessionID := extractSessionID(ctx)
-		slog.Info("MCP request succeeded",
+		resultJSON := toJSON(result)
+		attrs := []any{
 			"request_id", id,
 			"session_id", sessionID,
 			"method", string(method),
 			"message", toJSON(message),
-			"result", toJSON(result),
-		)
+			"result_bytes", len(resultJSON),
+		}
+		// Tool results can be many MiB, so the full result is logged only at debug level
+		if slog.Default().Enabled(ctx, slog.LevelDebug) {
+			attrs = append(attrs, "result", resultJSON)
+		}
+		slog.Info("MCP request succeeded", attrs...)
 	})
 
 	hooks.AddOnError(func(ctx context.Context, id any, method mcp.MCPMethod, message any, err error) {
