@@ -205,27 +205,8 @@ In SSE and HTTP modes the MCP server provides the following endpoints:
 
 ## Setup in clients
 
-### Cursor
-
-Go to: `Settings` -> `Cursor Settings` -> `MCP` -> `Add new global MCP server` and paste the following configuration into your Cursor `~/.cursor/mcp.json` file:
-
-```json
-{
-  "mcpServers": {
-    "victoriametrics": {
-      "command": "/path/to/mcp-victoriametrics",
-      "env": {
-        "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
-        "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
-        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
-        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
-      }
-    }
-  }
-}
-```
-
-See [Cursor MCP docs](https://docs.cursor.com/context/model-context-protocol) for more info.
+<!-- clients:start -->
+<!-- Generated from web/src/clients.yaml by `make update-readme`, do not edit manually. -->
 
 ### Claude Desktop
 
@@ -247,6 +228,19 @@ Add this to your Claude Desktop `claude_desktop_config.json` file (you can find 
 }
 ```
 
+To connect to a server running in [Streamable HTTP](#modes) mode at `http://localhost:8080`:
+
+```json
+{
+  "mcpServers": {
+    "victoriametrics": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://localhost:8080/mcp"]
+    }
+  }
+}
+```
+
 See [Claude Desktop MCP docs](https://modelcontextprotocol.io/quickstart/user) for more info.
 
 ### Claude Code
@@ -254,14 +248,55 @@ See [Claude Desktop MCP docs](https://modelcontextprotocol.io/quickstart/user) f
 Run the command:
 
 ```sh
-claude mcp add victoriametrics -- /path/to/mcp-victoriametrics \
+claude mcp add victoriametrics \
   -e VM_INSTANCE_ENTRYPOINT=<YOUR_VM_INSTANCE> \
-  -e VM_INSTANCE_TYPE=<YOUR_VM_INSTANCE_TYPE>
-  -e VM_INSTANCE_BEARER_TOKEN=<YOUR_VM_BEARER_TOKEN>
-  -e VM_INSTANCE_HEADERS="<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+  -e VM_INSTANCE_TYPE=<YOUR_VM_INSTANCE_TYPE> \
+  -e VM_INSTANCE_BEARER_TOKEN=<YOUR_VM_BEARER_TOKEN> \
+  -e VM_INSTANCE_HEADERS="<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>" \
+  -- /path/to/mcp-victoriametrics
+```
+
+To connect to a server running in [Streamable HTTP](#modes) mode at `http://localhost:8080`:
+
+```sh
+claude mcp add victoriametrics --transport http http://localhost:8080/mcp
 ```
 
 See [Claude Code MCP docs](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp) for more info.
+
+### Cursor
+
+Go to: `Settings` -> `Cursor Settings` -> `MCP` -> `Add new global MCP server` and paste the following configuration into your Cursor `~/.cursor/mcp.json` file:
+
+```json
+{
+  "mcpServers": {
+    "victoriametrics": {
+      "command": "/path/to/mcp-victoriametrics",
+      "env": {
+        "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+        "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+      }
+    }
+  }
+}
+```
+
+To connect to a server running in [Streamable HTTP](#modes) mode at `http://localhost:8080`:
+
+```json
+{
+  "mcpServers": {
+    "victoriametrics": {
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
+See [Cursor MCP docs](https://docs.cursor.com/context/model-context-protocol) for more info.
 
 ### Codex
 
@@ -292,7 +327,7 @@ VM_INSTANCE_BEARER_TOKEN = "<YOUR_VM_BEARER_TOKEN>"
 VM_INSTANCE_HEADERS = "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
 ```
 
-If you run the server in Streamable HTTP mode, you can register it with:
+To connect to a server running in [Streamable HTTP](#modes) mode at `http://localhost:8080`:
 
 ```sh
 codex mcp add victoriametrics --url http://localhost:8080/mcp
@@ -321,28 +356,53 @@ Add this to your VS Code MCP config file:
 }
 ```
 
-See [VS Code MCP docs](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) for more info.
+To connect to a server running in [Streamable HTTP](#modes) mode at `http://localhost:8080`:
+
+```json
+{
+  "servers": {
+    "victoriametrics": {
+      "type": "http",
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
+See [Visual Studio Code MCP docs](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) for more info.
 
 ### Zed
 
 Add the following to your Zed config file:
 
 ```json
+"context_servers": {
+  "victoriametrics": {
+    "command": {
+      "path": "/path/to/mcp-victoriametrics",
+      "args": [],
+      "env": {
+        "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+        "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+      }
+    },
+    "settings": {}
+  }
+}
+```
+
+To connect to a server running in [Streamable HTTP](#modes) mode at `http://localhost:8080`:
+
+```json
+{
   "context_servers": {
     "victoriametrics": {
-      "command": {
-        "path": "/path/to/mcp-victoriametrics",
-        "args": [],
-        "env": {
-          "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
-          "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
-          "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
-          "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
-        }
-      },
-      "settings": {}
+      "url": "http://localhost:8080/mcp"
     }
   }
+}
 ```
 
 See [Zed MCP docs](https://zed.dev/docs/ai/mcp) for more info.
@@ -370,9 +430,21 @@ See [Zed MCP docs](https://zed.dev/docs/ai/mcp) for more info.
 }
 ```
 
+To connect to a server running in [Streamable HTTP](#modes) mode at `http://localhost:8080`:
+
+```json
+{
+  "mcpServers": {
+    "victoriametrics": {
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
 ### Windsurf
 
-Add the following to your Windsurf MCP config file.
+Add the following to your Windsurf MCP config file:
 
 ```json
 {
@@ -390,7 +462,86 @@ Add the following to your Windsurf MCP config file.
 }
 ```
 
+To connect to a server running in [Streamable HTTP](#modes) mode at `http://localhost:8080`:
+
+```json
+{
+  "mcpServers": {
+    "victoriametrics": {
+      "serverUrl": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
 See [Windsurf MCP docs](https://docs.windsurf.com/windsurf/mcp) for more info.
+
+### Gemini CLI
+
+Add the following to your Gemini CLI `~/.gemini/settings.json` file:
+
+```json
+{
+  "mcpServers": {
+    "victoriametrics": {
+      "command": "/path/to/mcp-victoriametrics",
+      "env": {
+        "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+        "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+      }
+    }
+  }
+}
+```
+
+To connect to a server running in [Streamable HTTP](#modes) mode at `http://localhost:8080`:
+
+```sh
+gemini mcp add victoriametrics --transport http http://localhost:8080/mcp
+```
+
+See [Gemini CLI MCP docs](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md) for more info.
+
+### OpenCode
+
+Add the following to your OpenCode config file in `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "mcp": {
+    "victoriametrics": {
+      "type": "local",
+      "command": ["/path/to/mcp-victoriametrics"],
+      "enabled": true,
+      "environment": {
+        "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+        "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+        "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+        "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+      }
+    }
+  }
+}
+```
+
+To connect to a server running in [Streamable HTTP](#modes) mode at `http://localhost:8080`:
+
+```json
+{
+  "mcp": {
+    "victoriametrics": {
+      "type": "remote",
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
+See [OpenCode MCP docs](https://opencode.ai/docs/mcp-servers/) for more info.
+
+<!-- clients:end -->
 
 ### Using Docker instead of binary
 
@@ -442,43 +593,47 @@ MCP VictoriaMetrics provides numerous tools for interacting with your VictoriaMe
 
 Here's a list of common available tools:
 
-| Tool                         | Description                                               | Enabled by default |
-|------------------------------|-----------------------------------------------------------|:------------------:|
-| `query`                      | Execute instant PromQL/MetricsQL queries                  |         ✅          |
-| `query_range`                | Execute range PromQL/MetricsQL queries over a time period |         ✅          |
-| `metrics`                    | List available metrics                                    |         ✅          |  
-| `metrics_metadata`           | Stored metrics metadata (type, help and unit)             |         ✅          |
-| `labels`                     | List available label names                                |         ✅          |
-| `label_values`               | List values for a specific label                          |         ✅          |
-| `series`                     | List available time series                                |         ✅          |
-| `export`                     | Export raw time series data to JSON or CSV                |         ❌          |
-| `rules`                      | View alerting and recording rules                         |         ✅          |
-| `alerts`                     | View current alerts (firing and pending)                  |         ✅          |
-| `flags`                      | View non-default flags of the VictoriaMetrics instance    |         ❌          |
-| `metric_statistics`          | Get metrics usage (in queries) statistics                 |         ✅          |
-| `active_queries`             | View currently executing queries                          |         ✅          |
-| `top_queries`                | View most frequent or slowest queries                     |         ✅          |
-| `tsdb_status`                | View TSDB cardinality statistics                          |         ✅          |
-| `tenants`                    | List available tenants in multi-tenant cluster setup      |         ✅          |
-| `documentation`              | Search in embedded VictoriaMetrics documentation          |         ✅          |
-| `metric_relabel_debug`       | Debug Prometheus-compatible relabeling rules              |         ❌          |
-| `downsampling_filters_debug` | Debug downsampling configuration                          |         ❌          |
-| `retention_filters_debug`    | Debug retention filters configuration                     |         ❌          |
-| `prettify_query`             | Prettify and format PromQL/MetricsQL queries              |         ✅          |
-| `explain_query`              | Parse PromQL/MetricsQL queries and explain how it works   |         ✅          |
-| `test_rules`                 | Unit-test alerting and recording rules using vmalert tool |         ❌          |
+<!-- tools:start -->
+<!-- Generated by `make update-readme`, do not edit manually. -->
+
+| Tool                         | Description                                            | Enabled by default |
+|------------------------------|--------------------------------------------------------|:------------------:|
+| `active_queries`             | Active queries                                         |         ✅         |
+| `alerts`                     | List of alerts                                         |         ✅         |
+| `documentation`              | Search documentation resources                         |         ✅         |
+| `downsampling_filters_debug` | Downsampling filters debugger                          |         ❌         |
+| `explain_query`              | Explain Query                                          |         ✅         |
+| `export`                     | Export time series                                     |         ❌         |
+| `flags`                      | List of non-default flags (parameters)                 |         ❌         |
+| `label_values`               | List of label values                                   |         ✅         |
+| `labels`                     | List of label names                                    |         ✅         |
+| `metric_relabel_debug`       | Metric relabel debugger                                |         ❌         |
+| `metric_statistics`          | Metric statistics                                      |         ✅         |
+| `metrics`                    | List of metric names                                   |         ✅         |
+| `metrics_metadata`           | List of metrics metadata (name, type, help and unit)   |         ✅         |
+| `prettify_query`             | Prettify Query                                         |         ✅         |
+| `query`                      | Instant Query                                          |         ✅         |
+| `query_range`                | Range Query                                            |         ✅         |
+| `retention_filters_debug`    | Retention filters debugger                             |         ❌         |
+| `rules`                      | List of alerting and recording rules                   |         ✅         |
+| `series`                     | List of time series                                    |         ✅         |
+| `tenants`                    | List of tenants (cluster mode only)                    |         ✅         |
+| `test_rules`                 | Unit test rules                                        |         ❌         |
+| `top_queries`                | Top queries                                            |         ✅         |
+| `tsdb_status`                | TSDB Stats (information about cardinality of the data) |         ✅         |
 
 Here are some additional tools that are available for [VictoriaMetrics Cloud](https://docs.victoriametrics.com/victoriametrics-cloud/) (with specifying `VMC_API_KEY` parameter) users:
 
-| Tool              | Description                                                                    | Enabled by default |
-|-------------------|--------------------------------------------------------------------------------|:------------------:|
-| `deployments`     | List available deployments in VictoriaMetrics Cloud                            |         ✅          |
-| `cloud_providers` | List available cloud providers in VictoriaMetrics Cloud                        |         ✅          |
-| `regions`         | List available cloud providers regions in VictoriaMetrics Cloud                |         ✅          |
-| `tiers`           | List available deployment tiers in VictoriaMetrics Cloud                       |         ✅          |
-| `access_tokens`   | List available deployment access tokens in VictoriaMetrics Cloud               |         ✅          |
-| `rule_filenames`  | List available alerting and recording rule filenames in VictoriaMetrics Cloud  |         ✅          |
-| `rule_file`       | Content of a specific alerting or recording rule file in VictoriaMetrics Cloud |         ✅          |
+| Tool              | Description                                       | Enabled by default |
+|-------------------|---------------------------------------------------|:------------------:|
+| `access_tokens`   | List of deployment access tokens                  |         ✅         |
+| `cloud_providers` | List of cloud providers                           |         ✅         |
+| `deployments`     | List of deployments                               |         ✅         |
+| `regions`         | List of regions                                   |         ✅         |
+| `rule_file`       | Get rules file content                            |         ✅         |
+| `rule_filenames`  | List of filenames of alerting and recording rules |         ✅         |
+| `tiers`           | List of tiers                                     |         ✅         |
+<!-- tools:end -->
 
 ### Prompts
 
@@ -486,11 +641,15 @@ The server includes pre-defined prompts for common tasks.
 
 These are just examples at the moment, the prompt library will be added to in the future:
 
-| Prompt | Description |
-|--------|-------------|
-| `unused_metrics` | Find metrics that are never queried and create relabel configs to stop ingesting them |
-| `documentation` | Search VictoriaMetrics documentation for specific topics |
-| `rarely_used_metrics_with_high_cardinality` | Identify high-cardinality metrics that are rarely queried |
+<!-- prompts:start -->
+<!-- Generated by `make update-readme`, do not edit manually. -->
+
+| Prompt                                      | Description                                                                           |
+|---------------------------------------------|---------------------------------------------------------------------------------------|
+| `documentation`                             | Search by VictoriaMetrics documentation or give context for answering questions       |
+| `rarely_used_metrics_with_high_cardinality` | List of rarely used metrics with high cardinality in the VictoriaMetrics instance API |
+| `unused_metrics`                            | List of unused (never queried) metrics in the VictoriaMetrics instance API            |
+<!-- prompts:end -->
 
 ## Dialog example
 

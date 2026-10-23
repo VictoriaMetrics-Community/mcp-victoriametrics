@@ -35,6 +35,6 @@ func promptUnusedMetricsHandler(_ context.Context, gpr mcp.GetPromptRequest) (*m
 	), nil
 }
 
-func RegisterPromptUnusedMetrics(s *server.MCPServer, _ *config.Config) {
+func registerPromptUnusedMetrics(s *server.MCPServer, _ *config.Config) {
 	s.AddPrompt(promptUnusedMetrics, promptUnusedMetricsHandler)
 }

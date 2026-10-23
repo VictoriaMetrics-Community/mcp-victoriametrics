@@ -1,0 +1,102 @@
+[
+  {
+    "id": "claude-desktop",
+    "title": "Claude Desktop",
+    "description": "Official Claude desktop app by Anthropic",
+    "badge": "Recommended",
+    "docs": "https://modelcontextprotocol.io/quickstart/user",
+    "remote": {
+      "lang": "json",
+      "code": "{\n  \"mcpServers\": {\n    \"victoriametrics\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"mcp-remote\", \"{{url}}/mcp\"]\n    }\n  }\n}\n"
+    }
+  },
+  {
+    "id": "claude-code",
+    "title": "Claude Code",
+    "description": "Anthropic's official CLI tool for developers",
+    "docs": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp",
+    "remote": {
+      "lang": "sh",
+      "code": "claude mcp add victoriametrics --transport http {{url}}/mcp\n"
+    }
+  },
+  {
+    "id": "cursor",
+    "title": "Cursor",
+    "description": "AI-powered code editor with MCP support",
+    "docs": "https://docs.cursor.com/context/model-context-protocol",
+    "remote": {
+      "lang": "json",
+      "code": "{\n  \"mcpServers\": {\n    \"victoriametrics\": {\n      \"url\": \"{{url}}/mcp\"\n    }\n  }\n}\n"
+    }
+  },
+  {
+    "id": "codex",
+    "title": "Codex",
+    "description": "OpenAI's open-source coding agent CLI",
+    "docs": "https://developers.openai.com/codex/mcp",
+    "remote": {
+      "lang": "sh",
+      "code": "codex mcp add victoriametrics --url {{url}}/mcp\n"
+    }
+  },
+  {
+    "id": "vscode",
+    "title": "Visual Studio Code",
+    "description": "Add to .vscode/mcp.json in your workspace",
+    "docs": "https://code.visualstudio.com/docs/copilot/chat/mcp-servers",
+    "remote": {
+      "lang": "json",
+      "code": "{\n  \"servers\": {\n    \"victoriametrics\": {\n      \"type\": \"http\",\n      \"url\": \"{{url}}/mcp\"\n    }\n  }\n}\n"
+    }
+  },
+  {
+    "id": "zed",
+    "title": "Zed",
+    "description": "Add to Zed settings.json or use Agent Panel settings",
+    "docs": "https://zed.dev/docs/ai/mcp",
+    "remote": {
+      "lang": "json",
+      "code": "{\n  \"context_servers\": {\n    \"victoriametrics\": {\n      \"url\": \"{{url}}/mcp\"\n    }\n  }\n}\n"
+    }
+  },
+  {
+    "id": "jetbrains",
+    "title": "JetBrains IDEs",
+    "description": "IntelliJ IDEA, GoLand, PyCharm, WebStorm, and others",
+    "remote": {
+      "lang": "json",
+      "code": "{\n  \"mcpServers\": {\n    \"victoriametrics\": {\n      \"url\": \"{{url}}/mcp\"\n    }\n  }\n}\n"
+    }
+  },
+  {
+    "id": "windsurf",
+    "title": "Windsurf",
+    "description": "AI-native IDE by Windsurf",
+    "docs": "https://docs.windsurf.com/windsurf/mcp",
+    "remote": {
+      "lang": "json",
+      "code": "{\n  \"mcpServers\": {\n    \"victoriametrics\": {\n      \"serverUrl\": \"{{url}}/mcp\"\n    }\n  }\n}\n"
+    }
+  },
+  {
+    "id": "gemini-cli",
+    "title": "Gemini CLI",
+    "description": "Google's AI coding agent for the terminal",
+    "docs": "https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md",
+    "remote": {
+      "lang": "sh",
+      "code": "gemini mcp add victoriametrics --transport http {{url}}/mcp\n"
+    }
+  },
+  {
+    "id": "opencode",
+    "title": "OpenCode",
+    "description": "Open-source TUI for AI-assisted coding",
+    "docs": "https://opencode.ai/docs/mcp-servers/",
+    "remote": {
+      "lang": "json",
+      "code": "{\n  \"mcp\": {\n    \"victoriametrics\": {\n      \"type\": \"remote\",\n      \"url\": \"{{url}}/mcp\"\n    }\n  }\n}\n"
+    }
+  }
+]

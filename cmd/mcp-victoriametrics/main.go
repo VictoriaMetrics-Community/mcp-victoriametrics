@@ -88,49 +88,11 @@ Try not to second guess information - if you don't know something or lack inform
 	`),
 	)
 
-	// Registering common tools
-	tools.RegisterToolQuery(s, c)
-	tools.RegisterToolFlags(s, c)
-	tools.RegisterToolRules(s, c)
-	tools.RegisterToolAlerts(s, c)
-	tools.RegisterToolLabels(s, c)
-	tools.RegisterToolSeries(s, c)
-	tools.RegisterToolExport(s, c)
-	tools.RegisterToolTenants(s, c)
-	tools.RegisterToolMetrics(s, c)
-	tools.RegisterToolTestRules(s, c)
-	tools.RegisterToolTSDBStatus(s, c)
-	tools.RegisterToolQueryRange(s, c)
-	tools.RegisterToolTopQueries(s, c)
-	tools.RegisterToolMetricStats(s, c)
-	tools.RegisterToolLabelValues(s, c)
-	tools.RegisterToolExplainQuery(s, c)
-	tools.RegisterToolActiveQueries(s, c)
-	tools.RegisterToolDocumentation(s, c)
-	tools.RegisterToolPrettifyQuery(s, c)
-	tools.RegisterToolMetricsMetadata(s, c)
-	tools.RegisterToolMetricRelabelDebug(s, c)
-	tools.RegisterToolRetentionFiltersDebug(s, c)
-	tools.RegisterToolDownsamplingFiltersDebug(s, c)
-
-	// Registering resources (only if documentation tool is not disabled)
+	tools.Register(s, c)
 	if !c.IsToolDisabled(tools.ToolNameDocumentation) {
 		resources.RegisterDocsResources(s, c)
 	}
-
-	// Registering cloud-specific tools
-	tools.RegisterToolTiers(s, c)
-	tools.RegisterToolRegions(s, c)
-	tools.RegisterToolRuleFile(s, c)
-	tools.RegisterToolDeployments(s, c)
-	tools.RegisterToolAccessTokens(s, c)
-	tools.RegisterToolRuleFilenames(s, c)
-	tools.RegisterToolCloudProviders(s, c)
-
-	// Registering prompts
-	prompts.RegisterPromptUnusedMetrics(s, c)
-	prompts.RegisterPromptDocumentation(s, c)
-	prompts.RegisterPromptRarelyUsedCardinalMetrics(s, c)
+	prompts.Register(s, c)
 
 	if c.IsStdio() {
 		if err := server.ServeStdio(s, server.WithErrorLogger(logger.StdLogger())); err != nil {

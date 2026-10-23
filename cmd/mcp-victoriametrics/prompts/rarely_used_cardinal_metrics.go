@@ -35,6 +35,6 @@ func promptRarelyUsedCardinalMetricsHandler(_ context.Context, gpr mcp.GetPrompt
 	), nil
 }
 
-func RegisterPromptRarelyUsedCardinalMetrics(s *server.MCPServer, _ *config.Config) {
+func registerPromptRarelyUsedCardinalMetrics(s *server.MCPServer, _ *config.Config) {
 	s.AddPrompt(promptRarelyUsedCardinalMetrics, promptRarelyUsedCardinalMetricsHandler)
 }

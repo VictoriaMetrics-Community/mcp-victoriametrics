@@ -98,7 +98,7 @@ func toolTopQueriesHandler(ctx context.Context, cfg *config.Config, tcr mcp.Call
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolTopQueries(s *server.MCPServer, c *config.Config) {
+func registerToolTopQueries(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameTopQueries) {
 		return
 	}

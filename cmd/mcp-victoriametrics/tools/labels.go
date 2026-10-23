@@ -117,7 +117,7 @@ func toolLabelsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolLabels(s *server.MCPServer, c *config.Config) {
+func registerToolLabels(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameLabels) {
 		return
 	}

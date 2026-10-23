@@ -1,0 +1,321 @@
+# Setup instructions for MCP clients.
+# Source for the "Setup in clients" section of README.md and for the client configs page of the web UI.
+# After editing run `make update-readme` and commit the generated files.
+#
+# local  - running the server binary over stdio (README only)
+# remote - connecting to a server running in Streamable HTTP mode, {{url}} is the server base URL
+
+- id: claude-desktop
+  title: Claude Desktop
+  description: Official Claude desktop app by Anthropic
+  badge: Recommended
+  docs: https://modelcontextprotocol.io/quickstart/user
+  local:
+    - text: "Add this to your Claude Desktop `claude_desktop_config.json` file (you can find it if open `Settings` -> `Developer` -> `Edit config`):"
+      lang: json
+      code: |
+        {
+          "mcpServers": {
+            "victoriametrics": {
+              "command": "/path/to/mcp-victoriametrics",
+              "env": {
+                "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+                "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+                "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+                "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+              }
+            }
+          }
+        }
+  remote:
+    lang: json
+    code: |
+      {
+        "mcpServers": {
+          "victoriametrics": {
+            "command": "npx",
+            "args": ["-y", "mcp-remote", "{{url}}/mcp"]
+          }
+        }
+      }
+
+- id: claude-code
+  title: Claude Code
+  description: Anthropic's official CLI tool for developers
+  docs: https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp
+  local:
+    - text: "Run the command:"
+      lang: sh
+      code: |
+        claude mcp add victoriametrics \
+          -e VM_INSTANCE_ENTRYPOINT=<YOUR_VM_INSTANCE> \
+          -e VM_INSTANCE_TYPE=<YOUR_VM_INSTANCE_TYPE> \
+          -e VM_INSTANCE_BEARER_TOKEN=<YOUR_VM_BEARER_TOKEN> \
+          -e VM_INSTANCE_HEADERS="<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>" \
+          -- /path/to/mcp-victoriametrics
+  remote:
+    lang: sh
+    code: |
+      claude mcp add victoriametrics --transport http {{url}}/mcp
+
+- id: cursor
+  title: Cursor
+  description: AI-powered code editor with MCP support
+  docs: https://docs.cursor.com/context/model-context-protocol
+  local:
+    - text: "Go to: `Settings` -> `Cursor Settings` -> `MCP` -> `Add new global MCP server` and paste the following configuration into your Cursor `~/.cursor/mcp.json` file:"
+      lang: json
+      code: |
+        {
+          "mcpServers": {
+            "victoriametrics": {
+              "command": "/path/to/mcp-victoriametrics",
+              "env": {
+                "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+                "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+                "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+                "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+              }
+            }
+          }
+        }
+  remote:
+    lang: json
+    code: |
+      {
+        "mcpServers": {
+          "victoriametrics": {
+            "url": "{{url}}/mcp"
+          }
+        }
+      }
+
+- id: codex
+  title: Codex
+  description: OpenAI's open-source coding agent CLI
+  docs: https://developers.openai.com/codex/mcp
+  local:
+    - text: |-
+        Codex CLI and the IDE extension use the same MCP configuration file: `~/.codex/config.toml`
+        (or `.codex/config.toml` in a trusted project).
+
+        Run the command:
+      lang: sh
+      code: |
+        codex mcp add victoriametrics \
+          --env VM_INSTANCE_ENTRYPOINT=<YOUR_VM_INSTANCE> \
+          --env VM_INSTANCE_TYPE=<YOUR_VM_INSTANCE_TYPE> \
+          --env VM_INSTANCE_BEARER_TOKEN=<YOUR_VM_BEARER_TOKEN> \
+          --env VM_INSTANCE_HEADERS="<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>" \
+          -- /path/to/mcp-victoriametrics
+    - text: "Or add the following to your Codex `~/.codex/config.toml` file:"
+      lang: toml
+      code: |
+        [mcp_servers.victoriametrics]
+        command = "/path/to/mcp-victoriametrics"
+
+        [mcp_servers.victoriametrics.env]
+        VM_INSTANCE_ENTRYPOINT = "<YOUR_VM_INSTANCE>"
+        VM_INSTANCE_TYPE = "<YOUR_VM_INSTANCE_TYPE>"
+        VM_INSTANCE_BEARER_TOKEN = "<YOUR_VM_BEARER_TOKEN>"
+        VM_INSTANCE_HEADERS = "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+  remote:
+    lang: sh
+    code: |
+      codex mcp add victoriametrics --url {{url}}/mcp
+
+- id: vscode
+  title: Visual Studio Code
+  description: Add to .vscode/mcp.json in your workspace
+  docs: https://code.visualstudio.com/docs/copilot/chat/mcp-servers
+  local:
+    - text: "Add this to your VS Code MCP config file:"
+      lang: json
+      code: |
+        {
+          "servers": {
+            "victoriametrics": {
+              "type": "stdio",
+              "command": "/path/to/mcp-victoriametrics",
+              "env": {
+                "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+                "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+                "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+                "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+              }
+            }
+          }
+        }
+  remote:
+    lang: json
+    code: |
+      {
+        "servers": {
+          "victoriametrics": {
+            "type": "http",
+            "url": "{{url}}/mcp"
+          }
+        }
+      }
+
+- id: zed
+  title: Zed
+  description: Add to Zed settings.json or use Agent Panel settings
+  docs: https://zed.dev/docs/ai/mcp
+  local:
+    - text: "Add the following to your Zed config file:"
+      lang: json
+      code: |
+        "context_servers": {
+          "victoriametrics": {
+            "command": {
+              "path": "/path/to/mcp-victoriametrics",
+              "args": [],
+              "env": {
+                "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+                "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+                "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+                "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+              }
+            },
+            "settings": {}
+          }
+        }
+  remote:
+    lang: json
+    code: |
+      {
+        "context_servers": {
+          "victoriametrics": {
+            "url": "{{url}}/mcp"
+          }
+        }
+      }
+
+- id: jetbrains
+  title: JetBrains IDEs
+  description: IntelliJ IDEA, GoLand, PyCharm, WebStorm, and others
+  local:
+    - text: |-
+        - Open `Settings` -> `Tools` -> `AI Assistant` -> `Model Context Protocol (MCP)`.
+        - Click `Add (+)`
+        - Select `As JSON`
+        - Put the following to the input field:
+      lang: json
+      code: |
+        {
+          "mcpServers": {
+            "victoriametrics": {
+              "command": "/path/to/mcp-victoriametrics",
+              "env": {
+                "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+                "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+                "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+                "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+              }
+            }
+          }
+        }
+  remote:
+    lang: json
+    code: |
+      {
+        "mcpServers": {
+          "victoriametrics": {
+            "url": "{{url}}/mcp"
+          }
+        }
+      }
+
+- id: windsurf
+  title: Windsurf
+  description: AI-native IDE by Windsurf
+  docs: https://docs.windsurf.com/windsurf/mcp
+  local:
+    - text: "Add the following to your Windsurf MCP config file:"
+      lang: json
+      code: |
+        {
+          "mcpServers": {
+            "victoriametrics": {
+              "command": "/path/to/mcp-victoriametrics",
+              "env": {
+                "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+                "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+                "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+                "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+              }
+            }
+          }
+        }
+  remote:
+    lang: json
+    code: |
+      {
+        "mcpServers": {
+          "victoriametrics": {
+            "serverUrl": "{{url}}/mcp"
+          }
+        }
+      }
+
+- id: gemini-cli
+  title: Gemini CLI
+  description: Google's AI coding agent for the terminal
+  docs: https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md
+  local:
+    - text: "Add the following to your Gemini CLI `~/.gemini/settings.json` file:"
+      lang: json
+      code: |
+        {
+          "mcpServers": {
+            "victoriametrics": {
+              "command": "/path/to/mcp-victoriametrics",
+              "env": {
+                "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+                "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+                "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+                "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+              }
+            }
+          }
+        }
+  remote:
+    lang: sh
+    code: |
+      gemini mcp add victoriametrics --transport http {{url}}/mcp
+
+- id: opencode
+  title: OpenCode
+  description: Open-source TUI for AI-assisted coding
+  docs: https://opencode.ai/docs/mcp-servers/
+  local:
+    - text: "Add the following to your OpenCode config file in `~/.config/opencode/opencode.json`:"
+      lang: json
+      code: |
+        {
+          "mcp": {
+            "victoriametrics": {
+              "type": "local",
+              "command": ["/path/to/mcp-victoriametrics"],
+              "enabled": true,
+              "environment": {
+                "VM_INSTANCE_ENTRYPOINT": "<YOUR_VM_INSTANCE>",
+                "VM_INSTANCE_TYPE": "<YOUR_VM_INSTANCE_TYPE>",
+                "VM_INSTANCE_BEARER_TOKEN": "<YOUR_VM_BEARER_TOKEN>",
+                "VM_INSTANCE_HEADERS": "<HEADER>=<HEADER_VALUE>,<HEADER>=<HEADER_VALUE>"
+              }
+            }
+          }
+        }
+  remote:
+    lang: json
+    code: |
+      {
+        "mcp": {
+          "victoriametrics": {
+            "type": "remote",
+            "url": "{{url}}/mcp"
+          }
+        }
+      }

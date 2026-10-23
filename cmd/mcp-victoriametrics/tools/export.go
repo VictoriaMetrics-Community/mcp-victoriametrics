@@ -127,7 +127,7 @@ func toolExportHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolExport(s *server.MCPServer, c *config.Config) {
+func registerToolExport(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameExport) {
 		return
 	}

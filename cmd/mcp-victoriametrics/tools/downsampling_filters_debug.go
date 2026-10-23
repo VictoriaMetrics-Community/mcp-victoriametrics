@@ -75,7 +75,7 @@ func toolDownsamplingFiltersDebugHandler(ctx context.Context, cfg *config.Config
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolDownsamplingFiltersDebug(s *server.MCPServer, c *config.Config) {
+func registerToolDownsamplingFiltersDebug(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameDownsamplingFiltersDebug) {
 		return
 	}

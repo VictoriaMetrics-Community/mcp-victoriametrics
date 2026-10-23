@@ -57,7 +57,7 @@ func toolAccessTokensHandler(ctx context.Context, cfg *config.Config, tcr mcp.Ca
 	return mcp.NewToolResultText(string(data)), nil
 }
 
-func RegisterToolAccessTokens(s *server.MCPServer, c *config.Config) {
+func registerToolAccessTokens(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameAccessTokens) {
 		return
 	}

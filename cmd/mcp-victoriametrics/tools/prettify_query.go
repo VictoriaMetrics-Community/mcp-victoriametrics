@@ -94,7 +94,7 @@ func toolPrettifyQueryHandler(ctx context.Context, cfg *config.Config, tcr mcp.C
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolPrettifyQuery(s *server.MCPServer, c *config.Config) {
+func registerToolPrettifyQuery(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNamePrettifyQuery) {
 		return
 	}

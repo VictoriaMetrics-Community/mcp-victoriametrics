@@ -359,7 +359,7 @@ export function MCPInspector() {
                 </CardTitle>
                 <CardDescription>
                   {isConnected && serverInfo
-                    ? `${serverInfo.name} v${serverInfo.version}`
+                    ? `${serverInfo.name} ${serverInfo.version}`
                     : 'Click connect to start inspecting'
                   }
                 </CardDescription>

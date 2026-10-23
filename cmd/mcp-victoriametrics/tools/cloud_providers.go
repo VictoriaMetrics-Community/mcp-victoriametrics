@@ -41,7 +41,7 @@ func toolCloudProvidersHandler(ctx context.Context, cfg *config.Config, tcr mcp.
 	return mcp.NewToolResultText(string(data)), nil
 }
 
-func RegisterToolCloudProviders(s *server.MCPServer, c *config.Config) {
+func registerToolCloudProviders(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameCloudProviders) {
 		return
 	}

@@ -76,7 +76,7 @@ func toolMetricRelabelDebugHandler(ctx context.Context, cfg *config.Config, tcr 
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolMetricRelabelDebug(s *server.MCPServer, c *config.Config) {
+func registerToolMetricRelabelDebug(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameMetricRelabelDebug) {
 		return
 	}

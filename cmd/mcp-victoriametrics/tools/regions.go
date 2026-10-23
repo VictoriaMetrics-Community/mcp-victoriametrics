@@ -41,7 +41,7 @@ func toolRegionsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToo
 	return mcp.NewToolResultText(string(data)), nil
 }
 
-func RegisterToolRegions(s *server.MCPServer, c *config.Config) {
+func registerToolRegions(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameRegions) {
 		return
 	}

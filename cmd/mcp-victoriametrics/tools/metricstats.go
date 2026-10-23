@@ -100,7 +100,7 @@ func toolMetricStatsHandler(ctx context.Context, cfg *config.Config, tcr mcp.Cal
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolMetricStats(s *server.MCPServer, c *config.Config) {
+func registerToolMetricStats(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameMetricStats) {
 		return
 	}

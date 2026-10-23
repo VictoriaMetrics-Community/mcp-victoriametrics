@@ -138,7 +138,7 @@ func toolTSDBStatusHandler(ctx context.Context, cfg *config.Config, tcr mcp.Call
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolTSDBStatus(s *server.MCPServer, c *config.Config) {
+func registerToolTSDBStatus(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameTSDBStatus) {
 		return
 	}

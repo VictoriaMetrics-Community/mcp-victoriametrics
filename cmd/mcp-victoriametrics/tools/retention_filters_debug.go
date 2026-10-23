@@ -74,7 +74,7 @@ func toolRetentionFiltersDebugHandler(ctx context.Context, cfg *config.Config, t
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolRetentionFiltersDebug(s *server.MCPServer, c *config.Config) {
+func registerToolRetentionFiltersDebug(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameRetentionFiltersDebug) {
 		return
 	}

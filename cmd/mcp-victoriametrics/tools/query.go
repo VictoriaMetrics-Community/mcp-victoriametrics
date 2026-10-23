@@ -137,7 +137,7 @@ func toolQueryHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolR
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolQuery(s *server.MCPServer, c *config.Config) {
+func registerToolQuery(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameQuery) {
 		return
 	}

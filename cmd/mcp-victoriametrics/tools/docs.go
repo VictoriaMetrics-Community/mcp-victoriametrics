@@ -68,7 +68,7 @@ func toolDocumentationHandler(_ context.Context, tcr mcp.CallToolRequest) (*mcp.
 	return result, nil
 }
 
-func RegisterToolDocumentation(s *server.MCPServer, c *config.Config) {
+func registerToolDocumentation(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(ToolNameDocumentation) {
 		return
 	}

@@ -57,7 +57,7 @@ func toolRuleFilenamesHandler(ctx context.Context, cfg *config.Config, tcr mcp.C
 	return mcp.NewToolResultText(string(data)), nil
 }
 
-func RegisterToolRuleFilenames(s *server.MCPServer, c *config.Config) {
+func registerToolRuleFilenames(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameRuleFilenames) {
 		return
 	}
