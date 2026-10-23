@@ -73,7 +73,7 @@ func toolRuleFileHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTo
 	return mcp.NewToolResultText(string(data)), nil
 }
 
-func RegisterToolRuleFile(s *server.MCPServer, c *config.Config) {
+func registerToolRuleFile(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameRuleFile) {
 		return
 	}

@@ -5,8 +5,22 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Copy, Check, ChevronDown } from "lucide-react"
+import { Copy, Check, ChevronDown, Wind } from "lucide-react"
 import {ClaudeAI, Cursor, Gemini, JetBrains, OpenAI, OpenCode, VisualStudioCode, Zed} from "@/components/tabs/icons.tsx";
+import clients from "@/clients.gen.json"
+
+const clientIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  "claude-desktop": ClaudeAI,
+  "claude-code": ClaudeAI,
+  "cursor": Cursor,
+  "codex": OpenAI,
+  "vscode": VisualStudioCode,
+  "zed": Zed,
+  "jetbrains": JetBrains,
+  "windsurf": Wind,
+  "gemini-cli": Gemini,
+  "opencode": OpenCode,
+}
 
 interface ConfigItemProps {
   title: string
@@ -89,103 +103,17 @@ export function ClientConfigs() {
     return 'http://localhost:8080'
   })
 
-  const configs: ConfigItemProps[] = [
-    {
-      title: "Claude Desktop",
-      description: "Official Claude desktop app by Anthropic",
-      icon: <ClaudeAI className="h-6 w-6" />,
-      badge: "Recommended",
-      defaultOpen: true,
-      config: `{
-  "mcpServers": {
-    "victoriametrics": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "${serverUrl}/mcp"]
+  const configs: ConfigItemProps[] = clients.map((client, i) => {
+    const Icon = clientIcons[client.id] ?? Wind
+    return {
+      title: client.title,
+      description: client.description,
+      icon: <Icon className="h-6 w-6" />,
+      badge: "badge" in client ? client.badge : undefined,
+      defaultOpen: i === 0,
+      config: client.remote.code.replaceAll("{{url}}", serverUrl).trimEnd(),
     }
-  }
-}`,
-    },
-    {
-      title: "Claude Code (CLI)",
-      description: "Anthropic's official CLI tool for developers",
-      icon: <ClaudeAI className="h-6 w-6" />,
-      config: `claude mcp add victoriametrics --transport http ${serverUrl}/mcp`,
-    },
-    {
-      title: "Cursor IDE",
-      description: "AI-powered code editor with MCP support",
-      icon: <Cursor className="h-6 w-6" />,
-      config: `{
-  "mcpServers": {
-    "victoriametrics": {
-      "url": "${serverUrl}/mcp"
-    }
-  }
-}`
-    },
-    {
-      title: "Codex CLI",
-      description: "OpenAI's open-source coding agent CLI",
-      icon: <OpenAI className="h-6 w-6" />,
-      config: `codex mcp add victoriametrics --url ${serverUrl}/mcp`,
-    },
-    {
-      title: "Visual Studio Code",
-      description: "Add to .vscode/mcp.json in your workspace",
-      icon: <VisualStudioCode className="h-6 w-6" />,
-      config: `{
-  "servers": {
-    "victoriametrics": {
-      "type": "http",
-      "url": "${serverUrl}/mcp"
-    }
-  }
-}`,
-    },
-    {
-      title: "Zed",
-      description: "Add to Zed settings.json or use Agent Panel settings",
-      icon: <Zed className="h-6 w-6" />,
-      config: `{
-  "context_servers": {
-    "victoriametrics": {
-      "url": "${serverUrl}/mcp"
-    }
-  }
-}`,
-    },
-    {
-      title: "JetBrains IDEs",
-      description: "IntelliJ IDEA, GoLand, PyCharm, WebStorm, and others",
-      icon: <JetBrains className="h-6 w-6" />,
-      config: `{
-  "mcpServers": {
-    "victoriametrics": {
-      "url": "${serverUrl}/mcp"
-    }
-  }
-}`,
-    },
-    {
-      title: "Gemini CLI",
-      description: "Google's AI coding agent for the terminal",
-      icon: <Gemini className="h-6 w-6" />,
-      config: `gemini mcp add victoriametrics --transport http ${serverUrl}/mcp`,
-    },
-    {
-      title: "OpenCode",
-      description: "Open-source TUI for AI-assisted coding",
-      icon: <OpenCode className="h-6 w-6" />,
-      config: `{
-  "mcp": {
-    "victoriametrics": {
-      "type": "remote",
-      "url": "${serverUrl}/mcp"
-    }
-  }
-}`,
-    }
-  ]
+  })
 
   return (
     <div className="space-y-6">

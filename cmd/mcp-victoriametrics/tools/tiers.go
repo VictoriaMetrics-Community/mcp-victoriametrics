@@ -41,7 +41,7 @@ func toolTiersHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolR
 	return mcp.NewToolResultText(string(data)), nil
 }
 
-func RegisterToolTiers(s *server.MCPServer, c *config.Config) {
+func registerToolTiers(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameTiers) {
 		return
 	}

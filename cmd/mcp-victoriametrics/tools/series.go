@@ -116,7 +116,7 @@ func toolSeriesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolSeries(s *server.MCPServer, c *config.Config) {
+func registerToolSeries(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameSeries) {
 		return
 	}

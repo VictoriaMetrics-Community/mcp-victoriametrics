@@ -149,7 +149,7 @@ func toolQueryRangeHandler(ctx context.Context, cfg *config.Config, tcr mcp.Call
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolQueryRange(s *server.MCPServer, c *config.Config) {
+func registerToolQueryRange(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameQueryRange) {
 		return
 	}

@@ -280,7 +280,7 @@ func toolTestRulesHandler(_ context.Context, _ *config.Config, tcr mcp.CallToolR
 	return mcp.NewToolResultText(string(data)), nil
 }
 
-func RegisterToolTestRules(s *server.MCPServer, c *config.Config) {
+func registerToolTestRules(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameTestRules) {
 		return
 	}

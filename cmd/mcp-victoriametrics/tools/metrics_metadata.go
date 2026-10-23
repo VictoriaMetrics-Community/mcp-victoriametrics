@@ -224,7 +224,7 @@ func toolMetricsMetadataHandler(ctx context.Context, cfg *config.Config, tcr mcp
 	return mcp.NewToolResultText(string(filteredJSON)), nil
 }
 
-func RegisterToolMetricsMetadata(s *server.MCPServer, c *config.Config) {
+func registerToolMetricsMetadata(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameMetricsMetadata) {
 		return
 	}

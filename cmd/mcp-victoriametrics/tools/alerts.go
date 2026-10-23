@@ -176,7 +176,7 @@ func toolAlertsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 	return GetTextBodyForRequest(req, cfg, processResult), nil
 }
 
-func RegisterToolAlerts(s *server.MCPServer, c *config.Config) {
+func registerToolAlerts(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameAlerts) {
 		return
 	}

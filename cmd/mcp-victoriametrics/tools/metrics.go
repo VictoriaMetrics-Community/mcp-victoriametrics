@@ -96,7 +96,7 @@ func toolMetricsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToo
 	return getLabelValues(ctx, cfg, tcr, "__name__", match, start, end, limit)
 }
 
-func RegisterToolMetrics(s *server.MCPServer, c *config.Config) {
+func registerToolMetrics(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameMetrics) {
 		return
 	}

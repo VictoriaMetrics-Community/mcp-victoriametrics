@@ -157,7 +157,7 @@ func toolRulesHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolR
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolRules(s *server.MCPServer, c *config.Config) {
+func registerToolRules(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameRules) {
 		return
 	}

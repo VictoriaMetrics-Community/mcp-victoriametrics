@@ -10,6 +10,9 @@ update-blog: download-blog
 
 update-resources: update-docs update-blog
 
+update-readme:
+	go run ./scripts/readmegen
+
 test:
 	bash ./scripts/test-all.sh
 

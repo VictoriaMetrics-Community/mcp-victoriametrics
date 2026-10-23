@@ -43,7 +43,7 @@ func toolTenantsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToo
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolTenants(s *server.MCPServer, c *config.Config) {
+func registerToolTenants(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameTenants) {
 		return
 	}

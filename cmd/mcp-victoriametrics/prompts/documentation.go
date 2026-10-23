@@ -36,6 +36,6 @@ func promptDocumentationHandler(_ context.Context, gpr mcp.GetPromptRequest) (*m
 	), nil
 }
 
-func RegisterPromptDocumentation(s *server.MCPServer, _ *config.Config) {
+func registerPromptDocumentation(s *server.MCPServer, _ *config.Config) {
 	s.AddPrompt(promptDocumentation, promptDocumentationHandler)
 }

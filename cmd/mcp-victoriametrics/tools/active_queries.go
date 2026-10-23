@@ -55,7 +55,7 @@ func toolActiveQueriesHandler(ctx context.Context, cfg *config.Config, tcr mcp.C
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolActiveQueries(s *server.MCPServer, c *config.Config) {
+func registerToolActiveQueries(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameActiveQueries) {
 		return
 	}

@@ -41,7 +41,7 @@ func toolDeploymentsHandler(ctx context.Context, cfg *config.Config, tcr mcp.Cal
 	return mcp.NewToolResultText(string(data)), nil
 }
 
-func RegisterToolDeployments(s *server.MCPServer, c *config.Config) {
+func registerToolDeployments(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameDeployments) {
 		return
 	}

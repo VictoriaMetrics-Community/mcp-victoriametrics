@@ -78,7 +78,7 @@ func toolFlagsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallToolR
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolFlags(s *server.MCPServer, c *config.Config) {
+func registerToolFlags(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameFlags) {
 		return
 	}

@@ -57,7 +57,7 @@ func toolExplainQueryHandler(ctx context.Context, cfg *config.Config, tcr mcp.Ca
 	return mcp.NewToolResultText(string(data)), nil
 }
 
-func RegisterToolExplainQuery(s *server.MCPServer, c *config.Config) {
+func registerToolExplainQuery(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameExplainQuery) {
 		return
 	}

@@ -132,7 +132,7 @@ func getLabelValues(ctx context.Context, cfg *config.Config, tcr mcp.CallToolReq
 	return GetTextBodyForRequest(req, cfg), nil
 }
 
-func RegisterToolLabelValues(s *server.MCPServer, c *config.Config) {
+func registerToolLabelValues(s *server.MCPServer, c *config.Config) {
 	if c.IsToolDisabled(toolNameLabelValues) {
 		return
 	}
