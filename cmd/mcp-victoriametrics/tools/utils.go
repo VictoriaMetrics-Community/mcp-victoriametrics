@@ -4,12 +4,15 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"math"
 	"net/http"
 	"net/url"
+	"strconv"
 	"sync"
 
 	"github.com/mark3labs/mcp-go/mcp"
 
+	"github.com/VictoriaMetrics/VictoriaMetrics/lib/auth"
 	vmcloud "github.com/VictoriaMetrics/victoriametrics-cloud-api-go/v1"
 
 	"github.com/VictoriaMetrics/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
@@ -232,7 +235,7 @@ func getSelectURL(ctx context.Context, cfg *config.Config, tcr mcp.CallToolReque
 	}
 
 	// Cluster mode
-	tenant, err := GetToolReqParam[string](tcr, "tenant", false)
+	tenant, err := GetToolReqTenantParam(tcr)
 	if err != nil {
 		return "", fmt.Errorf("failed to get tenant parameter: %v", err)
 	}
@@ -265,6 +268,16 @@ func GetTextBodyForRequest(req *http.Request, _ *config.Config, f ...func(s stri
 	return mcp.NewToolResultText(result)
 }
 
+// withTenantParam adds the tenant parameter to the tool input schema.
+func withTenantParam(description string) mcp.ToolOption {
+	return mcp.WithString("tenant",
+		mcp.Title("Tenant name"),
+		mcp.Description(description),
+		mcp.DefaultString("0"),
+		mcp.Pattern(`^([0-9]+)(:[0-9]+)?$`),
+	)
+}
+
 type ToolReqParamType interface {
 	string | float64 | bool | []string | []any
 }
@@ -281,6 +294,34 @@ func GetToolReqParam[T ToolReqParamType](tcr mcp.CallToolRequest, param string, 
 		return value, fmt.Errorf("%s param is required", param)
 	}
 	return value, nil
+}
+
+// GetToolReqTenantParam returns the tenant parameter in the `accountID[:projectID]` form.
+// Some models pass the tenant as a number despite the string schema, so whole non-negative
+// numbers are accepted as well. An absent tenant results in an empty string.
+func GetToolReqTenantParam(tcr mcp.CallToolRequest) (string, error) {
+	var tenant string
+	switch v := tcr.GetArguments()["tenant"].(type) {
+	case nil:
+		return "", nil
+	case string:
+		tenant = v
+	case float64:
+		if v < 0 || v > math.MaxUint32 || v != math.Trunc(v) {
+			return "", fmt.Errorf("tenant must be a non-negative integer, got %v", v)
+		}
+		tenant = strconv.FormatUint(uint64(v), 10)
+	default:
+		return "", fmt.Errorf("tenant has wrong type: %T", v)
+	}
+	if tenant == "" {
+		return "", nil
+	}
+	token, err := auth.NewToken(tenant)
+	if err != nil {
+		return "", fmt.Errorf("invalid tenant %q, expected accountID or accountID:projectID: %v", tenant, err)
+	}
+	return token.String(), nil
 }
 
 func withCloudAccessKey(ctx context.Context, tcr mcp.CallToolRequest) context.Context {
