@@ -64,11 +64,13 @@ func toolAlerts(c *config.Config) mcp.Tool {
 			mcp.Title("Limit the number of alerts"),
 			mcp.Description("Maximum number of alerts to return. If not specified, all alerts are returned."),
 			mcp.DefaultNumber(0),
+			mcp.Min(0),
 		),
 		mcp.WithNumber("offset",
 			mcp.Title("Offset for pagination"),
 			mcp.Description("Number of alerts to skip before starting to collect the result set. Default is 0."),
 			mcp.DefaultNumber(0),
+			mcp.Min(0),
 		),
 	)
 	return mcp.NewTool(toolNameAlerts, options...)
@@ -107,8 +109,8 @@ func toolAlertsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 	}
 
 	processResult := func(s string) (string, error) {
-		if state == "all" && group == "" {
-			return s, nil // No filtering needed
+		if state == "all" && group == "" && limit <= 0 && offset <= 0 {
+			return s, nil // No filtering or pagination needed
 		}
 
 		result := make(map[string]any)
@@ -159,17 +161,12 @@ func toolAlertsHandler(ctx context.Context, cfg *config.Config, tcr mcp.CallTool
 			bID, _ := b["id"].(string)
 			return strings.Compare(aID, bID)
 		})
+		start := min(max(int(offset), 0), len(filteredAlerts))
+		end := len(filteredAlerts)
 		if limit > 0 {
-			start := int(offset)
-			if start > len(filteredAlerts) {
-				start = len(filteredAlerts)
-			}
-			end := start + int(limit)
-			if end > len(filteredAlerts) {
-				end = len(filteredAlerts)
-			}
-			filteredAlerts = filteredAlerts[start:end]
+			end = min(start+int(limit), end)
 		}
+		filteredAlerts = filteredAlerts[start:end]
 		data["alerts"] = filteredAlerts // Update the alerts field with filtered alerts
 		result["data"] = data           // Update the data field with the modified alerts
 
