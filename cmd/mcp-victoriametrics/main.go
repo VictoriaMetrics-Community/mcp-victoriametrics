@@ -21,7 +21,7 @@ import (
 	"github.com/VictoriaMetrics/mcp-victoriametrics/cmd/mcp-victoriametrics/config"
 	"github.com/VictoriaMetrics/mcp-victoriametrics/cmd/mcp-victoriametrics/hooks"
 	"github.com/VictoriaMetrics/mcp-victoriametrics/cmd/mcp-victoriametrics/logging"
-	"github.com/VictoriaMetrics/mcp-victoriametrics/cmd/mcp-victoriametrics/prompts"
+	"github.com/VictoriaMetrics/mcp-victoriametrics/cmd/mcp-victoriametrics/registry"
 	"github.com/VictoriaMetrics/mcp-victoriametrics/cmd/mcp-victoriametrics/resources"
 	"github.com/VictoriaMetrics/mcp-victoriametrics/cmd/mcp-victoriametrics/tools"
 )
@@ -88,11 +88,10 @@ Try not to second guess information - if you don't know something or lack inform
 	`),
 	)
 
-	tools.Register(s, c)
+	registry.Register(s, c)
 	if !c.IsToolDisabled(tools.ToolNameDocumentation) {
 		resources.RegisterDocsResources(s, c)
 	}
-	prompts.Register(s, c)
 
 	if c.IsStdio() {
 		if err := server.ServeStdio(s, server.WithErrorLogger(logger.StdLogger())); err != nil {

@@ -1,0 +1,28 @@
+<!-- clients:start -->
+<!-- Generated from web/src/clients.yaml by `make update-readme`, do not edit manually. -->
+{{- range .Clients }}
+
+### {{ .Title }}
+{{- range .Local }}
+{{- if .Text }}
+
+{{ trim .Text }}
+{{- end }}
+
+```{{ .Lang }}
+{{ trim .Code }}
+```
+{{- end }}
+
+To connect to a server running in [Streamable HTTP](#modes) mode at `{{ $.ServerURL }}`:
+
+```{{ .Remote.Lang }}
+{{ trim .Remote.Code }}
+```
+{{- if .Docs }}
+
+See [{{ .Title }} MCP docs]({{ .Docs }}) for more info.
+{{- end }}
+{{- end }}
+
+<!-- clients:end -->

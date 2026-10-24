@@ -90,30 +90,16 @@ func loadClients(path string) ([]client, error) {
 	return clients, nil
 }
 
-func renderReadme(clients []client) string {
-	var b strings.Builder
-	b.WriteString(readmeStartMarker + "\n")
-	b.WriteString("<!-- Generated from web/src/clients.yaml by `make update-readme`, do not edit manually. -->\n")
-	for _, c := range clients {
-		fmt.Fprintf(&b, "\n### %s\n", c.Title)
-		for _, s := range c.Local {
-			writeSnippet(&b, s.Text, s.Lang, s.Code)
-		}
-		remoteText := fmt.Sprintf("To connect to a server running in [Streamable HTTP](#modes) mode at `%s`:", readmeServerURL)
-		writeSnippet(&b, remoteText, c.Remote.Lang, strings.ReplaceAll(c.Remote.Code, urlPlaceholder, readmeServerURL))
-		if c.Docs != "" {
-			fmt.Fprintf(&b, "\nSee [%s MCP docs](%s) for more info.\n", c.Title, c.Docs)
-		}
+func renderReadme(clients []client) (string, error) {
+	view := make([]client, len(clients))
+	for i, c := range clients {
+		c.Remote.Code = strings.ReplaceAll(c.Remote.Code, urlPlaceholder, readmeServerURL)
+		view[i] = c
 	}
-	b.WriteString("\n" + readmeEndMarker)
-	return b.String()
-}
-
-func writeSnippet(b *strings.Builder, text, lang, code string) {
-	if text != "" {
-		fmt.Fprintf(b, "\n%s\n", strings.TrimRight(text, "\n"))
-	}
-	fmt.Fprintf(b, "\n```%s\n%s\n```\n", lang, strings.TrimRight(code, "\n"))
+	return renderTemplate("clients.md.tmpl", map[string]any{
+		"Clients":   view,
+		"ServerURL": readmeServerURL,
+	})
 }
 
 func updateReadme(path string, clients []client, infos []*backendInfo) error {
@@ -122,10 +108,17 @@ func updateReadme(path string, clients []client, infos []*backendInfo) error {
 		return err
 	}
 	content := string(data)
+	clientsSection, err := renderReadme(clients)
+	if err != nil {
+		return err
+	}
+	toolsSection, err := renderTools(infos)
+	if err != nil {
+		return err
+	}
 	for _, section := range []struct{ start, end, text string }{
-		{readmeStartMarker, readmeEndMarker, renderReadme(clients)},
-		{toolsStartMarker, toolsEndMarker, renderTools(infos)},
-		{promptsStartMarker, promptsEndMarker, renderPrompts(infos)},
+		{readmeStartMarker, readmeEndMarker, clientsSection},
+		{toolsStartMarker, toolsEndMarker, toolsSection},
 	} {
 		if content, err = replaceBetween(content, section.start, section.end, section.text); err != nil {
 			return err
